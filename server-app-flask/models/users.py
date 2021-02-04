@@ -4,7 +4,6 @@ from database import Base
 
 
 class User(Base):
-
     __tablename__ = 'users'
     id = Column(Integer, primary_key=True)
     user = Column(String(20), index=True, nullable=False, unique=True)
@@ -18,3 +17,17 @@ class User(Base):
     delete_date = Column(DateTime)
     last_connection = Column(DateTime, nullable=False)
     active = Column(Boolean)
+
+    def json_only_user(self):
+        return {
+            "user": self.user
+        }
+
+    def json_non_important_info(self):
+        return {
+            "id": self.id,
+            "user": self.user,
+            "name": self.name,
+            "last_name": self.last_name,
+            "email": self.email
+        }

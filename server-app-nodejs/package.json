@@ -1,0 +1,34 @@
+{
+  "name": "iman-server-app",
+  "version": "0.0.0",
+  "description": "This is the main API server for iMan project",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/danaremar/iMan.git"
+  },
+  "keywords": [
+    "iMan",
+    "server",
+    "API"
+  ],
+  "author": "danaremar (Daniel Arellano Martínez)",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/danaremar/iMan/issues"
+  },
+  "homepage": "https://github.com/danaremar/iMan#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "mariadb": "^2.5.2",
+    "morgan": "^1.10.0",
+    "util": "^0.12.3"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7",
+    "standard": "^16.0.3"
+  }
+}
