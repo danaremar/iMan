@@ -1,0 +1,19 @@
+# Flask settings
+FLASK_SERVER_NAME = 'localhost:8000'
+FLASK_DEBUG = True  # Do not use debug mode in production
+
+# API route
+API_ROUTE = '/api/v1'
+
+# Swagger config
+SWAGGER_UI_DOC = 'docs'
+
+# SQLAlchemy settings
+SQLALCHEMY_MYSQL_CONNECTOR = 'mysql+pymysql'
+SQLALCHEMY_USER = 'root'
+SQLALCHEMY_PASS = 'aH4jK?21AZbX'
+SQLALCHEMY_HOST_URI = 'localhost:3306'
+SQLALCHEMY_DB_NAME= 'iman_db'
+SQLALCHEMY_DATABASE_URI = SQLALCHEMY_MYSQL_CONNECTOR + '://' + SQLALCHEMY_USER + ':' + SQLALCHEMY_PASS + '@' + SQLALCHEMY_HOST_URI + '/' + SQLALCHEMY_DB_NAME
+SQLALCHEMY_TRACK_MODIFICATIONS = False
+SQLALCHEMY_POPULATE_DB = False
