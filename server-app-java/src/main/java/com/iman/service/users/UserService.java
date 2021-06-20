@@ -3,6 +3,9 @@ package com.iman.service.users;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +19,9 @@ import com.iman.repository.users.UserRepository;
 public class UserService {
 
 	private UserRepository userRepository;
+	
+	@Autowired
+	PasswordEncoder passwordEncoder;
 
 	@Autowired
 	public UserService(UserRepository userRepository) {
@@ -69,6 +75,7 @@ public class UserService {
 		if (findUserByEmail(user.getEmail()) != null) {
 			throw new DuplicatedEmail();
 		}
+		user.setPassword(this.passwordEncoder.encode(user.getPassword()));
 		user.setActive(true);
 		user.setCreationDate(new Date());
 		user.setLastConnection(new Date());
@@ -101,5 +108,10 @@ public class UserService {
 		user.setDeleteDate(new Date());
 		user.setActive(false);
 		userRepository.save(user);
+	}
+	
+	public String getCurrentUsername() {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		return authentication.getName();
 	}
 }

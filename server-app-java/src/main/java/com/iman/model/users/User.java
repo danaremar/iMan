@@ -48,7 +48,7 @@ public class User {
 	private String email;
 
 	@NotBlank
-	@Length(max = 50)
+	@Length(max = 256)
 	private String password;
 
 	@NotBlank
