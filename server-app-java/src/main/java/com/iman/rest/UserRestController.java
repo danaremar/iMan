@@ -1,6 +1,10 @@
 package com.iman.rest;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -8,44 +12,76 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.iman.config.ImanMessages;
+import com.iman.exceptions.users.DuplicatedEmail;
+import com.iman.exceptions.users.UserNotFound;
 import com.iman.model.users.User;
 import com.iman.service.users.UserService;
 
+import io.swagger.annotations.Api;
+
 @RestController
+@Api(tags = "Users")
 public class UserRestController {
 
 	private final UserService userService;
-	
+
 	@Autowired
 	public UserRestController(final UserService userService) {
 		this.userService = userService;
 	}
-	
-	
+
+	private ResponseEntity<Object> userNotFoundResponse() {
+		return new ResponseEntity<>(ImanMessages.USER_NOT_FOUND_MESSAGE, HttpStatus.NOT_FOUND);
+	}
+
 	@GetMapping(value = "/user/{user_id}")
-	public User getUserById(@PathVariable(name = "user_id") Long id) {
-		return userService.findUserById(1L);
+	public ResponseEntity<Object> getUserById(@PathVariable(name = "user_id") Long id) {
+		try {
+			User user = userService.findUserById(id);
+			if (user != null) {
+				return new ResponseEntity<>(user, HttpStatus.OK);
+			} else {
+				return userNotFoundResponse();
+			}
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
-	
+
 	@GetMapping(value = "/user/count_all")
-	public Long countUsersFromSystem() {
-		return userService.countAllUsersFromSystem();
+	public ResponseEntity<Object> countUsersFromSystem() {
+		try {
+			Long userNumber = userService.countAllUsersFromSystem();
+			return new ResponseEntity<>(userNumber, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
-	
+
 	@PutMapping(value = "/user")
-	public void updateUser(@PathVariable Long id) {
-		userService.updateUser(null);
+	public ResponseEntity<Object> updateUser(@RequestBody @Valid User user) {
+		try {
+			userService.updateUser(user);
+			return new ResponseEntity<>(HttpStatus.OK);
+		} catch (UserNotFound e) {
+			return userNotFoundResponse();
+		} catch (DuplicatedEmail e) {
+			return new ResponseEntity<>(ImanMessages.USER_DUPLICATED_EMAIL_MESSAGE, HttpStatus.CONFLICT);
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
-	
+
 	@DeleteMapping(value = "/user/{user_id}")
-	public void deleteUserById(@PathVariable Long id) {
-		userService.deleteUserById(id);
+	public ResponseEntity<Object> deleteUserById(@PathVariable(name = "user_id") Long id) {
+		try {
+			userService.deleteUserById(id);
+			return new ResponseEntity<>(ImanMessages.USER_DISABLED_MESSAGE, HttpStatus.OK);
+		} catch (UserNotFound e) {
+			return new ResponseEntity<>(ImanMessages.USER_NOT_FOUND_MESSAGE, HttpStatus.NOT_FOUND);
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
-	
-	@DeleteMapping(value = "/user")
-	public void deleteUser(User user) {
-		userService.deleteUser(user);
-	}
-	
-	
 }
