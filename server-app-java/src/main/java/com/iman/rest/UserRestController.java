@@ -2,6 +2,7 @@ package com.iman.rest;
 
 import javax.validation.Valid;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,9 @@ import com.iman.config.ImanMessages;
 import com.iman.exceptions.users.DuplicatedEmail;
 import com.iman.exceptions.users.UserNotFound;
 import com.iman.model.users.User;
+import com.iman.model.users.UserCreateDto;
+import com.iman.model.users.UserMyProfileDto;
+import com.iman.model.users.UserShowDto;
 import com.iman.service.users.UserService;
 
 import io.swagger.annotations.Api;
@@ -24,7 +28,11 @@ import io.swagger.annotations.Api;
 @Api(tags = "Users")
 public class UserRestController {
 
-	private final UserService userService;
+	@Autowired
+	UserService userService;
+
+	@Autowired(required = true)
+	protected ModelMapper modelMapper;
 
 	@Autowired
 	public UserRestController(final UserService userService) {
@@ -35,12 +43,13 @@ public class UserRestController {
 		return new ResponseEntity<>(ImanMessages.USER_NOT_FOUND_MESSAGE, HttpStatus.NOT_FOUND);
 	}
 
-	@GetMapping(value = "/user/{user_id}")
-	public ResponseEntity<Object> getUserById(@PathVariable(name = "user_id") Long id) {
+	@GetMapping(value = "/user/{user_username}")
+	public ResponseEntity<Object> getUserById(@PathVariable(name = "user_username") String username) {
 		try {
-			User user = userService.findUserById(id);
+			User user = userService.findUserByUsername(username);
+			UserShowDto userShowDto = modelMapper.map(user, UserShowDto.class);
 			if (user != null) {
-				return new ResponseEntity<>(user, HttpStatus.OK);
+				return new ResponseEntity<>(userShowDto, HttpStatus.OK);
 			} else {
 				return userNotFoundResponse();
 			}
@@ -60,7 +69,8 @@ public class UserRestController {
 	}
 
 	@PutMapping(value = "/user")
-	public ResponseEntity<Object> updateUser(@RequestBody @Valid User user) {
+	public ResponseEntity<Object> updateUser(@RequestBody @Valid UserCreateDto userModifyDto) {
+		User user = modelMapper.map(userModifyDto, User.class);
 		try {
 			userService.updateUser(user);
 			return new ResponseEntity<>(HttpStatus.OK);
@@ -82,6 +92,17 @@ public class UserRestController {
 			return new ResponseEntity<>(ImanMessages.USER_NOT_FOUND_MESSAGE, HttpStatus.NOT_FOUND);
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	@GetMapping(value = "/my-profile")
+	public ResponseEntity<Object> getMyProfile() {
+		User user = userService.findUserByUsername(userService.getCurrentUsername());
+		if(user!=null) {
+			UserMyProfileDto userMyProfileDto = modelMapper.map(user, UserMyProfileDto.class);
+			return new ResponseEntity<>(userMyProfileDto, HttpStatus.OK);
+		} else {
+			return userNotFoundResponse();
 		}
 	}
 }

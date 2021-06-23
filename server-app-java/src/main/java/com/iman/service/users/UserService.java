@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.iman.exceptions.users.DuplicatedEmail;
 import com.iman.exceptions.users.DuplicatedUsername;
 import com.iman.exceptions.users.UserNotFound;
+import com.iman.exceptions.util.NotAuthorizedException;
 import com.iman.model.users.User;
 import com.iman.repository.users.UserRepository;
 
@@ -43,26 +44,6 @@ public class UserService {
 	}
 
 	@Transactional
-	public Boolean validatePasswordFromUsername(String username, String password) {
-		return userRepository.validatePasswordFromUsername(username, password) == 1;
-	}
-
-	@Transactional
-	public Boolean validatePasswordFromEmail(String email, String password) {
-		return userRepository.validatePasswordFromEmail(email, password) == 1;
-	}
-
-	@Transactional
-	public Boolean validatePasswordFromUsernameOrEmail(String username, String password) {
-		return userRepository.validatePasswordFromUsernameOrEmail(username, password) == 1;
-	}
-	
-	@Transactional
-	public Boolean findUserByPasswordUsernameOrEmail(String username, String password) {
-		return userRepository.validatePasswordFromUsernameOrEmail(username, password) == 1;
-	}
-
-	@Transactional
 	public Long countAllUsersFromSystem() {
 		return userRepository.countActiveUsers();
 	}
@@ -84,7 +65,8 @@ public class UserService {
 
 	@Transactional
 	public void updateUser(User user) throws UserNotFound, DuplicatedEmail, DuplicatedUsername {
-		User userBefore = findUserById(user.getId());
+		String username = getCurrentUsername();
+		User userBefore = findUserByUsername(username);
 		if (userBefore == null) {
 			throw new UserNotFound();
 		}
@@ -94,8 +76,16 @@ public class UserService {
 		if (!user.getEmail().equals(userBefore.getEmail()) && findUserByEmail(user.getEmail()) != null) {
 			throw new DuplicatedEmail();
 		}
-		user.setLastConnection(new Date());
-		userRepository.save(user);
+		userBefore.setUsername(user.getUsername());
+		userBefore.setName(user.getName());
+		userBefore.setLastName(user.getLastName());
+		userBefore.setEmail(user.getEmail());
+		userBefore.setPassword(this.passwordEncoder.encode(user.getPassword()));
+		userBefore.setCountry(user.getCountry());
+		userBefore.setSector(user.getSector());
+		userBefore.setLastConnection(new Date());
+		
+		userRepository.save(userBefore);
 	}
 
 	@Transactional

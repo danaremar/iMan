@@ -4,6 +4,7 @@ import java.util.Collections;
 
 import javax.validation.Valid;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,16 +14,18 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.iman.exceptions.users.DuplicatedEmail;
 import com.iman.exceptions.users.DuplicatedUsername;
 import com.iman.model.users.User;
+import com.iman.model.users.UserCreateDto;
+import com.iman.model.users.UserLoginDto;
 import com.iman.security.exception.UnverifiedUserException;
 import com.iman.security.jwt.JwtDto;
 import com.iman.security.jwt.JwtProvider;
@@ -32,15 +35,21 @@ import io.swagger.annotations.Api;
 
 @RestController
 @Api(tags = "Login")
-@RequestMapping("/auth")
+@RequestMapping
 @CrossOrigin
 public class AuthController {
 
 	@Autowired
 	UserService userService;
 	
+	@Autowired(required=true)
+	protected ModelMapper modelMapper;
+	
 	@Autowired
 	AuthenticationManager authenticationManager;
+	
+	@Autowired
+	PasswordEncoder passwordEncoder;
 	
 	@Autowired
 	private JwtProvider jwtProvider;
@@ -51,14 +60,13 @@ public class AuthController {
 	}
 
 	@PostMapping(value = "/login")
-	public ResponseEntity<Object> login(@RequestParam String username,
-			@RequestParam(name = "password") String password) {
+	public ResponseEntity<Object> login(@RequestBody @Valid UserLoginDto userDto) {
 		
 		Authentication authentication;
 		
 		try {
 			authentication = this.authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-					username, password, Collections.emptyList()));
+					userDto.getUsername(), userDto.getPassword(), Collections.emptyList()));
 		} catch (AuthenticationException e) {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
 					.body("User or password is invalid");
@@ -76,8 +84,9 @@ public class AuthController {
 		return new ResponseEntity<>(jwtDto, HttpStatus.CREATED);
 	}
 
-	@PostMapping(value = "/new")
-	public ResponseEntity<Object> register(@RequestBody @Valid User user) {
+	@PostMapping(value = "/register")
+	public ResponseEntity<Object> register(@RequestBody @Valid UserCreateDto userDto) {
+		User user = modelMapper.map(userDto, User.class);
 		try {
 			userService.addUser(user);
 			return new ResponseEntity<>(HttpStatus.CREATED);
