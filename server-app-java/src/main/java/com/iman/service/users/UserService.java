@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.iman.exceptions.users.DuplicatedEmail;
 import com.iman.exceptions.users.DuplicatedUsername;
 import com.iman.exceptions.users.UserNotFound;
-import com.iman.exceptions.util.NotAuthorizedException;
 import com.iman.model.users.User;
 import com.iman.repository.users.UserRepository;
 

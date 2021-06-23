@@ -20,7 +20,7 @@ import com.iman.security.user.UserDetailsServiceImpl;
 
 public class JwtTokenFilter extends OncePerRequestFilter {
 
-	private final Logger logger = LoggerFactory.getLogger(JwtTokenFilter.class);
+	private final Logger log = LoggerFactory.getLogger(JwtTokenFilter.class);
 
 	@Autowired
 	private JwtProvider jwtProvider;
@@ -42,7 +42,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 				SecurityContextHolder.getContext().setAuthentication(auth);
 			}
 		} catch (Exception e) {
-			logger.error("Fail on doFillter");
+			log.error("Fail on doFillter");
 		}
 
 		filterChain.doFilter(request, response);

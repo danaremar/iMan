@@ -44,7 +44,7 @@ public class UserRestController {
 	}
 
 	@GetMapping(value = "/user/{user_username}")
-	public ResponseEntity<Object> getUserById(@PathVariable(name = "user_username") String username) {
+	public ResponseEntity<Object> getUserByUsername(@PathVariable(name = "user_username") String username) {
 		try {
 			User user = userService.findUserByUsername(username);
 			UserShowDto userShowDto = modelMapper.map(user, UserShowDto.class);

@@ -30,9 +30,12 @@ public class JwtProvider {
 
 	public String generateToken(Authentication authentication) {
 		PrincipalUser principalUser = (PrincipalUser) authentication.getPrincipal();
-		return Jwts.builder().setSubject(principalUser.getUsername()).setIssuedAt(new Date())
+		return Jwts.builder()
+				.setSubject(principalUser.getUsername())
+				.setIssuedAt(new Date())
 				.setExpiration(new Date(new Date().getTime() + expiration * 1000))
-				.signWith(SignatureAlgorithm.HS512, secret).compact();
+				.signWith(SignatureAlgorithm.HS512, secret)
+				.compact();
 	}
 
 	public String getUsernameFromToken(String token) {
