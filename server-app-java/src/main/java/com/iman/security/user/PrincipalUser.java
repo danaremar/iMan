@@ -17,9 +17,9 @@ import lombok.Data;
 public class PrincipalUser implements UserDetails {
 	
 	private static final long serialVersionUID = 1L;
+	private Long id;
 	private String username;
 	private String password;
-
 	private String email;
 	private String firstName;
 	private String lastName;
@@ -30,7 +30,7 @@ public class PrincipalUser implements UserDetails {
 		List<GrantedAuthority> authorities = new ArrayList<>();
 		authorities.add(new SimpleGrantedAuthority(RoleTypeUtil.ROLE_USER));
 
-		return new PrincipalUser(user.getUsername(), user.getPassword(), user.getEmail(), user.getName(),
+		return new PrincipalUser(user.getId(), user.getUsername(), user.getPassword(), user.getEmail(), user.getName(),
 				user.getLastName(), authorities);
 	}
 

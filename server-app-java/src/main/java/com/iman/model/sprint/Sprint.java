@@ -1,4 +1,4 @@
-package com.iman.model.projects;
+package com.iman.model.sprint;
 
 import java.util.Date;
 
@@ -17,6 +17,8 @@ import javax.validation.constraints.PastOrPresent;
 
 import org.hibernate.validator.constraints.Length;
 import org.springframework.format.annotation.DateTimeFormat;
+
+import com.iman.model.projects.Project;
 
 import lombok.Data;
 

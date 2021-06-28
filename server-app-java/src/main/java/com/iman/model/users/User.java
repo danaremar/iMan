@@ -1,13 +1,16 @@
 package com.iman.model.users;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Index;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -15,6 +18,9 @@ import javax.validation.constraints.PastOrPresent;
 
 import org.hibernate.validator.constraints.Length;
 import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.iman.model.projects.ProjectRole;
 
 import lombok.Data;
 
@@ -47,6 +53,7 @@ public class User {
 	@Email
 	private String email;
 
+	@JsonIgnore
 	@NotBlank
 	@Length(max = 256)
 	private String password;
@@ -59,11 +66,13 @@ public class User {
 	@Length(max = 15)
 	private String sector;
 
+	@JsonIgnore
 	@PastOrPresent
 	@Column(name = "creation_date", nullable = false)
 	@DateTimeFormat(pattern = "HH:mm:ss dd/MM/yyyy 'GMT'")
 	private Date creationDate;
 
+	@JsonIgnore
 	@PastOrPresent
 	@Column(name = "delete_date")
 	@DateTimeFormat(pattern = "HH:mm:ss dd/MM/yyyy 'GMT'")
@@ -74,6 +83,10 @@ public class User {
 	@DateTimeFormat(pattern = "HH:mm:ss dd/MM/yyyy 'GMT'")
 	private Date lastConnection;
 
+	@JsonIgnore
 	@Column(nullable = false)
 	private Boolean active;
+	
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+	private List<ProjectRole> projectRoles;
 }

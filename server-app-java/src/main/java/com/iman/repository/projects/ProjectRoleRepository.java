@@ -7,5 +7,5 @@ import com.iman.model.projects.ProjectRole;
 
 @Repository
 public interface ProjectRoleRepository extends JpaRepository<ProjectRole, Long> {
-
+	
 }

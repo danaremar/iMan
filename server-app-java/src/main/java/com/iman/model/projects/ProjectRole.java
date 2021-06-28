@@ -11,8 +11,9 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.iman.model.users.User;
-
 import lombok.Data;
 
 @Entity
@@ -27,11 +28,15 @@ public class ProjectRole {
 	@NotNull
 	@ManyToOne
 	@JoinColumn(name = "user_id")
+	@JsonIgnoreProperties({
+		"id", "projectRoles"
+	})
 	private User user;
 
 	@NotNull
 	@ManyToOne
 	@JoinColumn(name = "project_id")
+	@JsonIgnore
 	private Project project;
 
 	/*
@@ -41,5 +46,8 @@ public class ProjectRole {
 	@Min(value = 0)
 	@Max(value = 3)
 	private Integer role;
+	
+	@NotNull
+	private Boolean accepted;
 
 }
