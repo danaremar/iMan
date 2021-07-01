@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.iman.config.ImanMessages;
 import com.iman.exceptions.users.DuplicatedEmail;
 import com.iman.exceptions.users.UserNotFound;
@@ -26,6 +26,7 @@ import com.iman.service.users.UserService;
 import io.swagger.annotations.Api;
 
 @RestController
+@RequestMapping("/user")
 @Api(tags = "Users")
 public class UserRestController {
 
@@ -44,7 +45,7 @@ public class UserRestController {
 		return new ResponseEntity<>(ImanMessages.USER_NOT_FOUND_MESSAGE, HttpStatus.NOT_FOUND);
 	}
 
-	@GetMapping(value = "/user/{user_username}")
+	@GetMapping(value = "/{user_username}")
 	public ResponseEntity<Object> getUserByUsername(@PathVariable(name = "user_username") String username) {
 		try {
 			User user = userService.findUserByUsername(username);
@@ -59,7 +60,7 @@ public class UserRestController {
 		}
 	}
 
-	@GetMapping(value = "/user/count_all")
+	@GetMapping(value = "/count_all")
 	public ResponseEntity<Object> countUsersFromSystem() {
 		try {
 			Long userNumber = userService.countAllUsersFromSystem();
@@ -69,7 +70,7 @@ public class UserRestController {
 		}
 	}
 
-	@PutMapping(value = "/user")
+	@PutMapping
 	public ResponseEntity<Object> updateUser(@RequestBody @Valid UserCreateDto userModifyDto) {
 		User user = modelMapper.map(userModifyDto, User.class);
 		try {
@@ -86,7 +87,7 @@ public class UserRestController {
 		}
 	}
 
-	@DeleteMapping(value = "/user/{user_id}")
+	@DeleteMapping(value = "/{user_id}")
 	public ResponseEntity<Object> deleteUserById(@PathVariable(name = "user_id") Long id) {
 		try {
 			userService.deleteUserById(id);

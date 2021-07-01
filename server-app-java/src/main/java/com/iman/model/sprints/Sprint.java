@@ -1,4 +1,4 @@
-package com.iman.model.sprint;
+package com.iman.model.sprints;
 
 import java.util.Date;
 

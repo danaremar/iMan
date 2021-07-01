@@ -47,7 +47,6 @@ public class ProjectRole {
 	@Max(value = 3)
 	private Integer role;
 	
-	@NotNull
 	private Boolean accepted;
 
 }
