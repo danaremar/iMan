@@ -2,3 +2,32 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+@import "~bootstrap-icons/font/bootstrap-icons.css";
+
+:root{
+    --dark-pallete-0:#007acc;
+    --dark-pallete-1:#3e3e42;
+    --dark-pallete-2:#2d2d30;
+    --dark-pallete-3:#252526;
+    --dark-pallete-4:#1e1e1e;
+    --dark-pallete-text:#6f7a85;
+}
+
+.bg-dark-0{
+    background-color: var(--dark-pallete-0) !important;
+}
+.bg-dark-1{
+    background-color: var(--dark-pallete-1) !important;
+}
+.bg-dark-2{
+    background-color: var(--dark-pallete-2) !important;
+    color: var(--dark-pallete-text) !important;
+}
+.bg-dark-3{
+    background-color: var(--dark-pallete-3) !important;
+    color: var(--dark-pallete-text) !important;
+}
+.bg-dark-4{
+    background-color: var(--dark-pallete-4) !important;
+    color: var(--dark-pallete-text) !important;
+}

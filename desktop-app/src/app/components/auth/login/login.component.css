@@ -1,0 +1,51 @@
+.login-dark {
+    height:100%;
+    width: 100%;
+    background:linear-gradient(90deg, rgba(37,37,38,1) 0%, rgba(45,45,48,1) 100%);
+    background-size:cover;
+    position:absolute;
+  }
+  
+  .login-dark form {
+    max-width:320px;
+    width:90%;
+    background-color:var( --dark-pallete-4);
+    padding:40px;
+    border-radius:20px;
+    transform:translate(-50%, -50%);
+    position:absolute;
+    top:50%;
+    left:50%;
+    color:white;
+  }
+  
+  .login-dark form .form-control {
+    padding-top: 1.5rem;
+    background:none;
+    border:none;
+    border-bottom:1px solid var(--dark-pallete-1);
+    border-radius:0;
+    box-shadow:none;
+    outline:none;
+    color:inherit;
+  }
+  
+  .login-dark form .forgot {
+    display:block;
+    text-align:center;
+    font-size:14px;
+    color:var(--dark-pallete-text);
+    opacity:0.9;
+    text-decoration:none;
+  }
+  
+  .login-dark form .forgot:hover, .login-dark form .forgot:active {
+    opacity:1;
+    text-decoration:none;
+  }
+
+  .login-dark .illustration {
+    fill: var(--dark-pallete-0);
+  }
+  
+  
