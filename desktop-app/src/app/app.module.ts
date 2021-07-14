@@ -10,12 +10,18 @@ import { ToastrModule } from 'ngx-toastr';
 import { interceptor } from './services/authentication/interceptor.service';
 import { HttpClientModule } from '@angular/common/http';
 import { RegisterComponent } from './components/auth/register/register.component';
+import { NavbarComponent } from './components/navbar/navbar.component';
+import { IndexComponent } from './components/index/index.component';
+import { SidebarComponent } from './components/sidebar/sidebar.component';
 
 @NgModule({
   declarations: [
     AppComponent,
+    IndexComponent,
     LoginComponent,
-    RegisterComponent
+    RegisterComponent,
+    NavbarComponent,
+    SidebarComponent
   ],
   imports: [
     BrowserModule,

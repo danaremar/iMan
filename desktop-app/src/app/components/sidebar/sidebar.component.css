@@ -1,0 +1,33 @@
+#sidebar {
+    background: var(--dark-pallete-4) !important;
+    color: var(--dark-pallete-text) !important;
+    transition: all .15s;
+    position: relative;
+    height: calc(100vh - 56px);
+    width: 65px;
+}
+
+.scroll-inside-sidebar {
+    width: 300px;
+    height: inherit;
+}
+
+/* VERTICAL SCROLL BAR */
+::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+    border-radius: 2.5px;
+}
+::-webkit-scrollbar-track {
+    background: var(--dark-pallete-4);
+    border-radius: 2.5px;
+    -webkit-animation: normal;
+}
+::-webkit-scrollbar-thumb {
+    background: var(--dark-pallete-text);
+    border-radius: 2.5px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: rgb(194, 194, 194);
+    border-radius: 2.5px;
+}

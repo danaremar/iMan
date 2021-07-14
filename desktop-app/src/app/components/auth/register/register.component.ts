@@ -40,7 +40,7 @@ export class RegisterComponent implements OnInit {
         if (this.tokenService.getToken()) {
             this.isLogged = true
             this.isRegistered = true
-            this.router.navigateByUrl("/")
+            this.router.navigateByUrl("/index")
         }
     }
 
@@ -68,7 +68,7 @@ export class RegisterComponent implements OnInit {
                         this.tokenService.setToken(responseLogin.token)
                         this.tokenService.setUsername(responseLogin.username)
 
-                        this.router.navigateByUrl("/")
+                        this.router.navigateByUrl("/index")
                     },
                     errLogin => {
                         this.isLoginFail = true
