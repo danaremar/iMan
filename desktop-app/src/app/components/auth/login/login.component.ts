@@ -29,6 +29,7 @@ export class LoginComponent implements OnInit {
     ngOnInit(): void {
         if (this.tokenService.getToken()) {
             this.isLogged = true
+            this.router.navigateByUrl("/")
         }
     }
 

@@ -40,16 +40,16 @@ public class User {
 	private String username;
 
 	@NotBlank
-	@Length(max = 15)
+	@Length(max = 20)
 	private String name;
 
 	@NotBlank
-	@Length(max = 30)
+	@Length(max = 50)
 	@Column(name = "last_name")
 	private String lastName;
 
 	@Column(unique = true, nullable = false)
-	@Length(max = 30)
+	@Length(max = 50)
 	@Email
 	private String email;
 
@@ -63,7 +63,7 @@ public class User {
 	private String country;
 
 	@NotBlank
-	@Length(max = 15)
+	@Length(max = 20)
 	private String sector;
 
 	@JsonIgnore

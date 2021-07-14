@@ -25,6 +25,7 @@ import com.iman.exceptions.users.DuplicatedUsername;
 import com.iman.model.users.User;
 import com.iman.model.users.UserCreateDto;
 import com.iman.model.users.UserLoginDto;
+import com.iman.model.util.Message;
 import com.iman.security.exception.UnverifiedUserException;
 import com.iman.security.jwt.JwtDto;
 import com.iman.security.jwt.JwtProvider;
@@ -68,10 +69,10 @@ public class AuthController {
 					userDto.getUsername(), userDto.getPassword(), Collections.emptyList()));
 		} catch (AuthenticationException e) {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-					.body("User or password is invalid");
+					.body(new Message("User or password is invalid"));
 		} catch (UnverifiedUserException e) {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-					.body("No verified");
+					.body(new Message("No verified"));
 		}
 		
 		SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -91,10 +92,10 @@ public class AuthController {
 			return new ResponseEntity<>(HttpStatus.CREATED);
 		} catch (DuplicatedUsername e) {
 			String message = "Username is duplicated";
-			return new ResponseEntity<>(message, HttpStatus.CONFLICT);
+			return new ResponseEntity<>(new Message(message), HttpStatus.CONFLICT);
 		} catch (DuplicatedEmail e) {
 			String message = "Email is duplicated";
-			return new ResponseEntity<>(message, HttpStatus.CONFLICT);
+			return new ResponseEntity<>(new Message(message), HttpStatus.CONFLICT);
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}

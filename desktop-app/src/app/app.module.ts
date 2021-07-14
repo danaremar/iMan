@@ -9,11 +9,13 @@ import { LoginComponent } from './components/auth/login/login.component';
 import { ToastrModule } from 'ngx-toastr';
 import { interceptor } from './services/authentication/interceptor.service';
 import { HttpClientModule } from '@angular/common/http';
+import { RegisterComponent } from './components/auth/register/register.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    LoginComponent
+    LoginComponent,
+    RegisterComponent
   ],
   imports: [
     BrowserModule,
