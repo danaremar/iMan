@@ -12,6 +12,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     --dark-pallete-4:#252526;
     --dark-pallete-5:#1e1e1e;
     --dark-pallete-text:#6f7a85;
+    --dark-contrast-text: rgb(206, 206, 206);
 }
 
 .bg-dark-0{

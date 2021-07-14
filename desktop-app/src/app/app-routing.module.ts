@@ -10,6 +10,17 @@ const routes: Routes = [
   {path: 'login' , component: LoginComponent},
   {path: 'register' , component: RegisterComponent},
   {path: 'index' , component: IndexComponent},
+
+  // TODO:
+  {path: 'time' , component: IndexComponent},
+  {path: 'kanban' , component: IndexComponent},
+  {path: 'chat' , component: IndexComponent},
+  {path: 'requirements' , component: IndexComponent},
+  {path: 'team' , component: IndexComponent},
+  {path: 'projects' , component: IndexComponent},
+  {path: 'user' , component: IndexComponent},
+  {path: 'config' , component: IndexComponent},
+  {path: 'logout' , component: IndexComponent},
 ];
 
 @NgModule({

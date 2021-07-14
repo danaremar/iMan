@@ -5,56 +5,57 @@
 
             <!-- UPSIDE -->
             <div class="flex-column">
-                <li class="nav-item">
-                    <a class="nav-link" href="/info" style="color: inherit;">
+                <li [routerLinkActive]="['active']" class="nav-item">
+                    <a class="nav-link" [routerLink]="['/time']" style="color: inherit;" data-bs-toggle="tooltip"
+                        data-bs-placement="right" data-bs-original-title="Tooltip on right">
                         <em class="bi bi-clock" style="font-size: 30px;"></em>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/info" style="color: inherit;">
+                <li [routerLinkActive]="['active']" class="nav-item">
+                    <a class="nav-link" [routerLink]="['/kanban']" style="color: inherit;">
                         <em class="bi bi-kanban" style="font-size: 30px;"></em>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/info" style="color: inherit;">
+                <li [routerLinkActive]="['active']" class="nav-item">
+                    <a class="nav-link" [routerLink]="['/chat']" style="color: inherit;">
                         <em class="bi bi-chat-dots" style="font-size: 30px;"></em>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/info" style="color: inherit;">
+                <li [routerLinkActive]="['active']" class="nav-item">
+                    <a class="nav-link" [routerLink]="['/requirements']" style="color: inherit;">
                         <em class="bi bi-key" style="font-size: 30px;"></em>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/info" style="color: inherit;">
+                <li [routerLinkActive]="['active']" class="nav-item">
+                    <a class="nav-link" [routerLink]="['/team']" style="color: inherit;">
                         <em class="bi bi-people" style="font-size: 30px;"></em>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/info" style="color: inherit;">
-                        <em class="bi bi-folder" style="font-size: 30px;"></em>
+                <li [routerLinkActive]="['active']" class="nav-item">
+                    <a class="nav-link" [routerLink]="['/projects']" style="color: inherit;">
+                        <em class="bi bi-folder2" style="font-size: 30px;"></em>
                     </a>
                 </li>
             </div>
 
-            
+
 
             <!-- DOWNSIDE -->
             <div class="flex-column mt-auto">
                 <hr style="height: 2px; margin: 0.3rem;">
                 <hr style="height: 2px; margin: 0.3rem;">
-                <li class="nav-item">
-                    <a class="nav-link" href="/info" style="color: inherit;">
+                <li [routerLinkActive]="['active']" class="nav-item">
+                    <a class="nav-link" [routerLink]="['/user']" style="color: inherit;">
                         <em class="bi bi-person-circle" style="font-size: 30px;"></em>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/info" style="color: inherit;">
+                <li [routerLinkActive]="['active']" class="nav-item">
+                    <a class="nav-link" [routerLink]="['/config']" style="color: inherit;">
                         <em class="bi bi-sliders" style="font-size: 30px;"></em>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/info" style="color: rgb(243, 34, 34);">
+                    <a class="nav-link" style="color: rgb(243, 34, 34);" (click)="onLogout()">
                         <em class="bi bi-x-circle" style="font-size: 30px;"></em>
                     </a>
                 </li>
