@@ -3,8 +3,8 @@
     color: var(--dark-pallete-text) !important;
     transition: all .15s;
     position: relative;
-    height: calc(100vh - 60px);
-    width: 65px;
+    height: calc(100vh - var(--navbar-size));
+    width: var(--sidebar-size);
 }
 
 .scroll-inside-sidebar {
@@ -19,3 +19,15 @@
     border-radius: 10px 0px 0px 10px;
 }
 
+.bi:hover {
+    color: var(--dark-contrast-text);
+}
+
+.log-out-button {
+    color: rgba(255, 0, 0, 0.699) !important;
+    cursor: pointer !important;
+}
+
+.log-out-button:hover {
+    color: rgb(255, 0, 0) !important;
+}

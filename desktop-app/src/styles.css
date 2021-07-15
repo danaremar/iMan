@@ -19,6 +19,8 @@ body {
     --dark-pallete-5: #1e1e1e;
     --dark-pallete-text: #6f7a85;
     --dark-contrast-text: rgb(206, 206, 206);
+    --navbar-size: 50px;
+    --sidebar-size: 65px;
 }
 
 .bg-dark-0 {
@@ -48,7 +50,7 @@ body {
     color: var(--dark-pallete-text) !important;
 }
 
-.icon .dark-text {
+.icon, .dark-text {
     color: var(--dark-pallete-text) !important;
 }
 
