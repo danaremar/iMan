@@ -25,14 +25,17 @@ body {
 
 .bg-dark-0 {
     background-color: var(--dark-pallete-0) !important;
+    color: var(--dark-pallete-text) !important;
 }
 
 .bg-dark-1 {
     background-color: var(--dark-pallete-1) !important;
+    color: var(--dark-pallete-text) !important;
 }
 
 .bg-dark-2 {
     background-color: var(--dark-pallete-2) !important;
+    color: var(--dark-pallete-text) !important;
 }
 
 .bg-dark-3 {

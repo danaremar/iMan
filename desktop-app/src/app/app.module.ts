@@ -8,18 +8,30 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ToastrModule } from 'ngx-toastr';
 import { interceptor } from './services/authentication/interceptor.service';
 import { HttpClientModule } from '@angular/common/http';
-import { NavbarComponent } from './components/navbar/navbar.component';
-import { IndexComponent } from './components/index/index.component';
-import { SidebarComponent } from './components/sidebar/sidebar.component';
+import { MenuComponent } from './components/menu/menu.component';
+import { SidebarComponent } from './components/menu/sidebar/sidebar.component';
 import { AuthComponent } from './components/auth/auth.component';
+import { NavbarComponent } from './components/menu/navbar/navbar.component';
+import { ProjectComponent } from './components/submodules/project/project.component';
+import { UserComponent } from './components/submodules/user/user.component';
+import { TimeComponent } from './components/submodules/time/time.component';
+import { KanbanComponent } from './components/submodules/kanban/kanban.component';
+import { TeamComponent } from './components/submodules/team/team.component';
+import { ConfigComponent } from './components/submodules/config/config.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    IndexComponent,
+    MenuComponent,
     AuthComponent,
     NavbarComponent,
-    SidebarComponent
+    SidebarComponent,
+    ProjectComponent,
+    UserComponent,
+    TimeComponent,
+    KanbanComponent,
+    TeamComponent,
+    ConfigComponent,
   ],
   imports: [
     BrowserModule,

@@ -2,23 +2,33 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AppComponent } from './app.component';
 import { AuthComponent } from './components/auth/auth.component';
-import { IndexComponent } from './components/index/index.component';
+import { MenuComponent } from './components/menu/menu.component';
+import { ConfigComponent } from './components/submodules/config/config.component';
+import { KanbanComponent } from './components/submodules/kanban/kanban.component';
+import { ProjectComponent } from './components/submodules/project/project.component';
+import { TeamComponent } from './components/submodules/team/team.component';
+import { TimeComponent } from './components/submodules/time/time.component';
+import { UserComponent } from './components/submodules/user/user.component';
 
 const routes: Routes = [
-  {path: '' , component: AppComponent},
-  {path: 'login' , component: AuthComponent},
-  {path: 'index' , component: IndexComponent},
+  { path: '', component: AppComponent },
+  { path: 'login', component: AuthComponent },
 
   // TODO:
-  {path: 'time' , component: IndexComponent},
-  {path: 'kanban' , component: IndexComponent},
-  {path: 'chat' , component: IndexComponent},
-  {path: 'requirements' , component: IndexComponent},
-  {path: 'team' , component: IndexComponent},
-  {path: 'projects' , component: IndexComponent},
-  {path: 'user' , component: IndexComponent},
-  {path: 'config' , component: IndexComponent},
-  {path: 'logout' , component: IndexComponent},
+  {
+    path: 'app', component: MenuComponent,
+    children: [
+      { path: 'projects', component: ProjectComponent },
+      { path: 'time', component: TimeComponent },
+      { path: 'kanban', component: KanbanComponent },
+      { path: 'chat', component: MenuComponent },
+      { path: 'requirements', component: MenuComponent },
+      { path: 'team', component: TeamComponent },
+      { path: 'user', component: UserComponent },
+      { path: 'config', component: ConfigComponent }
+    ],
+  },
+
 ];
 
 @NgModule({
