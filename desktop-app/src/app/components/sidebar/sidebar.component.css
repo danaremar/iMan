@@ -19,21 +19,3 @@
     border-radius: 10px 0px 0px 10px;
 }
 
-/* VERTICAL SCROLL BAR */
-::-webkit-scrollbar {
-    width: 5px;
-    height: 5px;
-    border-radius: 2.5px;
-}
-::-webkit-scrollbar-track {
-    background: var(--dark-pallete-4);
-    border-radius: 2.5px;
-}
-::-webkit-scrollbar-thumb {
-    background: var(--dark-pallete-text);
-    border-radius: 2.5px;
-}
-::-webkit-scrollbar-thumb:hover {
-    background: rgb(194, 194, 194);
-    border-radius: 2.5px;
-}

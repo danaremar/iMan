@@ -5,21 +5,19 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { LoginComponent } from './components/auth/login/login.component';
 import { ToastrModule } from 'ngx-toastr';
 import { interceptor } from './services/authentication/interceptor.service';
 import { HttpClientModule } from '@angular/common/http';
-import { RegisterComponent } from './components/auth/register/register.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { IndexComponent } from './components/index/index.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
+import { AuthComponent } from './components/auth/auth.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     IndexComponent,
-    LoginComponent,
-    RegisterComponent,
+    AuthComponent,
     NavbarComponent,
     SidebarComponent
   ],

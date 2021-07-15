@@ -1,42 +1,118 @@
 /* You can add global styles to this file, and also import other style files */
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
-@import "~bootstrap-icons/font/bootstrap-icons.css";
+html, body {
+    height: 100%;
+}
 
-:root{
-    --dark-pallete-0:#007acc;
-    --dark-pallete-1:#4b4b4e;
-    --dark-pallete-2:#3d3d41;
-    --dark-pallete-3:#2d2d30;
-    --dark-pallete-4:#252526;
-    --dark-pallete-5:#1e1e1e;
-    --dark-pallete-text:#6f7a85;
+body {
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+@import "~bootstrap-icons/font/bootstrap-icons.css";
+:root {
+    --dark-pallete-0: #007acc;
+    --dark-pallete-1: #4b4b4e;
+    --dark-pallete-2: #3d3d41;
+    --dark-pallete-3: #2d2d30;
+    --dark-pallete-4: #252526;
+    --dark-pallete-5: #1e1e1e;
+    --dark-pallete-text: #6f7a85;
     --dark-contrast-text: rgb(206, 206, 206);
 }
 
-.bg-dark-0{
+.bg-dark-0 {
     background-color: var(--dark-pallete-0) !important;
 }
-.bg-dark-1{
+
+.bg-dark-1 {
     background-color: var(--dark-pallete-1) !important;
 }
-.bg-dark-2{
+
+.bg-dark-2 {
     background-color: var(--dark-pallete-2) !important;
 }
-.bg-dark-3{
+
+.bg-dark-3 {
     background-color: var(--dark-pallete-3) !important;
     color: var(--dark-pallete-text) !important;
 }
-.bg-dark-4{
+
+.bg-dark-4 {
     background-color: var(--dark-pallete-4) !important;
     color: var(--dark-pallete-text) !important;
 }
-.bg-dark-5{
+
+.bg-dark-5 {
     background-color: var(--dark-pallete-5) !important;
     color: var(--dark-pallete-text) !important;
 }
 
 .icon .dark-text {
     color: var(--dark-pallete-text) !important;
+}
+
+.modal-header {
+    border-bottom: 0px solid var(--dark-pallete-text) !important;
+    color: var(--dark-contrast-text);
+}
+
+.modal-footer {
+    border-top: 0px solid var(--dark-pallete-text) !important;
+}
+
+/* CARD */
+
+.card {
+    border-radius: 20px !important;
+    background-color: var(--dark-pallete-5) !important;
+    color: var(--dark-contrast-text) !important;
+    border: 0px !important;
+}
+
+.close-card-button {
+    background-color: inherit !important;
+    color: var(--dark-pallete-text) !important;
+    font-size: 40px !important;
+}
+
+.close-card-button>em {
+    float: right !important;
+}
+
+.modal-content {
+    border-radius: 20px !important;
+}
+
+.form-control {
+    background: none;
+    border: none;
+    border-bottom: 2px solid var(--dark-pallete-1);
+    border-radius: 0;
+    color: inherit;
+    -webkit-box-shadow: 0 0 0 30px var(--dark-pallete-5) inset !important;
+    -webkit-text-fill-color: var(--dark-pallete-text) !important;
+}
+
+/* VERTICAL SCROLLBAR */
+
+::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+    border-radius: 2.5px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--dark-pallete-4);
+    border-radius: 2.5px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--dark-pallete-text);
+    border-radius: 2.5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgb(194, 194, 194);
+    border-radius: 2.5px;
 }
