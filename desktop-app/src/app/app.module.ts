@@ -18,6 +18,8 @@ import { TimeComponent } from './components/submodules/time/time.component';
 import { KanbanComponent } from './components/submodules/kanban/kanban.component';
 import { TeamComponent } from './components/submodules/team/team.component';
 import { ConfigComponent } from './components/submodules/config/config.component';
+import { ChatComponent } from './components/submodules/chat/chat.component';
+import { RequirementsComponent } from './components/submodules/requirements/requirements.component';
 
 @NgModule({
   declarations: [
@@ -32,6 +34,8 @@ import { ConfigComponent } from './components/submodules/config/config.component
     KanbanComponent,
     TeamComponent,
     ConfigComponent,
+    ChatComponent,
+    RequirementsComponent
   ],
   imports: [
     BrowserModule,
