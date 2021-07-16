@@ -1,7 +1,5 @@
 import { Component, OnInit } from "@angular/core";
 import { TokenService } from "src/app/services/authentication/token.service";
-declare var $: any;
-declare var bootstrap: any;
 
 @Component({
     selector: 'iMan-sidebar',
@@ -10,7 +8,8 @@ declare var bootstrap: any;
 })
 export class SidebarComponent implements OnInit {
 
-    constructor(private tokenService: TokenService) { }
+    constructor(private tokenService: TokenService) {
+    }
 
     ngOnInit(): void {
         // If it's neccesary

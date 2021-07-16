@@ -6,33 +6,32 @@
             <!-- UPSIDE -->
             <div class="flex-column">
                 <li [routerLinkActive]="['active']" class="nav-item">
-                    <a class="nav-link" [routerLink]="['/app/time']" style="color: inherit;" data-bs-toggle="tooltip"
-                        data-bs-placement="right" data-bs-original-title="Tooltip on right">
+                    <a class="nav-link" [routerLink]="['/app/time']" style="color: inherit;" ngbTooltip="Time" placement="right" [openDelay]="300">
                         <em class="bi bi-clock" style="font-size: 30px;"></em>
                     </a>
                 </li>
                 <li [routerLinkActive]="['active']" class="nav-item">
-                    <a class="nav-link" [routerLink]="['/app/kanban']" style="color: inherit;">
+                    <a class="nav-link" [routerLink]="['/app/kanban']" style="color: inherit;" ngbTooltip="Kanban" placement="right" [openDelay]="300">
                         <em class="bi bi-kanban" style="font-size: 30px;"></em>
                     </a>
                 </li>
                 <li [routerLinkActive]="['active']" class="nav-item">
-                    <a class="nav-link" [routerLink]="['/app/chat']" style="color: inherit;">
+                    <a class="nav-link" [routerLink]="['/app/chat']" style="color: inherit;" ngbTooltip="Chat" placement="right" [openDelay]="300">
                         <em class="bi bi-chat-dots" style="font-size: 30px;"></em>
                     </a>
                 </li>
                 <li [routerLinkActive]="['active']" class="nav-item">
-                    <a class="nav-link" [routerLink]="['/app/requirements']" style="color: inherit;">
+                    <a class="nav-link" [routerLink]="['/app/requirements']" style="color: inherit;" ngbTooltip="Requirements" placement="right" [openDelay]="300">
                         <em class="bi bi-key" style="font-size: 30px;"></em>
                     </a>
                 </li>
                 <li [routerLinkActive]="['active']" class="nav-item">
-                    <a class="nav-link" [routerLink]="['/app/team']" style="color: inherit;">
+                    <a class="nav-link" [routerLink]="['/app/team']" style="color: inherit;" ngbTooltip="Team" placement="right" [openDelay]="300">
                         <em class="bi bi-people" style="font-size: 30px;"></em>
                     </a>
                 </li>
                 <li [routerLinkActive]="['active']" class="nav-item">
-                    <a class="nav-link" [routerLink]="['/app/projects']" style="color: inherit;">
+                    <a class="nav-link" [routerLink]="['/app/projects']" style="color: inherit;" ngbTooltip="Projects" placement="right" [openDelay]="300">
                         <em class="bi bi-folder2" style="font-size: 30px;"></em>
                     </a>
                 </li>
@@ -45,17 +44,17 @@
                 <hr style="height: 2px; margin: 0.3rem;">
                 <hr style="height: 2px; margin: 0.3rem;">
                 <li [routerLinkActive]="['active']" class="nav-item">
-                    <a class="nav-link" [routerLink]="['/app/user']" style="color: inherit;">
+                    <a class="nav-link" [routerLink]="['/app/user']" style="color: inherit;" ngbTooltip="User settings" placement="right" [openDelay]="300">
                         <em class="bi bi-person-circle" style="font-size: 30px;"></em>
                     </a>
                 </li>
                 <li [routerLinkActive]="['active']" class="nav-item">
-                    <a class="nav-link" [routerLink]="['/app/config']" style="color: inherit;">
+                    <a class="nav-link" [routerLink]="['/app/config']" style="color: inherit;" ngbTooltip="Configuration" placement="right" [openDelay]="300">
                         <em class="bi bi-sliders" style="font-size: 30px;"></em>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" (click)="onLogout()">
+                    <a class="nav-link" (click)="onLogout()" ngbTooltip="Logout" placement="right" [openDelay]="300">
                         <em class="bi bi-x-circle log-out-button" style="font-size: 30px;"></em>
                     </a>
                 </li>

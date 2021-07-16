@@ -20,6 +20,7 @@ import { TeamComponent } from './components/submodules/team/team.component';
 import { ConfigComponent } from './components/submodules/config/config.component';
 import { ChatComponent } from './components/submodules/chat/chat.component';
 import { RequirementsComponent } from './components/submodules/requirements/requirements.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -47,6 +48,7 @@ import { RequirementsComponent } from './components/submodules/requirements/requ
     ToastrModule.forRoot({
       preventDuplicates: true
     }),
+    NgbModule,
   ],
   providers: [interceptor],
   bootstrap: [AppComponent]
