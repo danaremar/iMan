@@ -42,8 +42,8 @@ public class Project {
 	private Date creationDate;
 
 	@PastOrPresent
-	@Column(name = "delete_date")
-	private Date deleteDate;
+	@Column(name = "close_date")
+	private Date closeDate;
 
 	@NotNull
 	private Boolean active;

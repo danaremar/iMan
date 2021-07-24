@@ -1,1 +1,24 @@
-Project module
+<!-- OPERATIONS -->
+<div class="ms-auto">
+    <em class="bi bi-bell-fill me-3"></em>
+    <em class="bi bi-plus-lg"></em>
+</div>
+
+<!-- VIEW PROJECTS -->
+<div>
+    <div *ngFor="let project of myProjects">
+        <div class="card">
+            <div class="inside-card">
+                <div class="d-flex">
+                    <div class="flex-grow-1 center project-name align-middle">{{project.name}}</div>
+                    <div>
+                        <em class="bi bi-people-fill me-3"></em>
+                        <em class="bi bi-pencil-fill me-3"></em>
+                        <em class="bi bi-trash-fill"></em>
+                    </div>
+                </div>
+                <div>{{project.description}}</div>
+            </div>
+        </div>
+    </div>
+</div>

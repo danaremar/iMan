@@ -6,8 +6,8 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ToastrModule } from 'ngx-toastr';
-import { interceptor } from './services/authentication/interceptor.service';
-import { HttpClientModule } from '@angular/common/http';
+import { InterceptorService } from './services/authentication/interceptor.service';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { MenuComponent } from './components/menu/menu.component';
 import { SidebarComponent } from './components/menu/sidebar/sidebar.component';
 import { AuthComponent } from './components/auth/auth.component';
@@ -50,7 +50,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     }),
     NgbModule,
   ],
-  providers: [interceptor],
+  providers: [{ provide: HTTP_INTERCEPTORS, useClass: InterceptorService, multi: true }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

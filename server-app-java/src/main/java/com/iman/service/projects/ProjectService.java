@@ -69,9 +69,9 @@ public class ProjectService {
 		if (!oldProject.getActive().equals(newProject.getActive())) {
 			oldProject.setActive(newProject.getActive());
 			if (!newProject.getActive()) {
-				oldProject.setDeleteDate(new Date());
+				oldProject.setCloseDate(new Date());
 			} else {
-				oldProject.setDeleteDate(null);
+				oldProject.setCloseDate(null);
 			}
 		}
 
@@ -91,9 +91,9 @@ public class ProjectService {
 		Boolean activeNow = !project.getActive();
 		project.setActive(activeNow);
 		if (!activeNow) {
-			project.setDeleteDate(new Date());
+			project.setCloseDate(new Date());
 		} else {
-			project.setDeleteDate(null);
+			project.setCloseDate(null);
 		}
 		projectRepository.save(project);
 	}

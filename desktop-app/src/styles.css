@@ -99,6 +99,15 @@ body {
     -webkit-text-fill-color: var(--dark-pallete-text) !important;
 }
 
+.center {
+    margin: auto;
+    width: 50%;
+}
+
+.cursor-hover:hover{
+    cursor: pointer !important;
+}
+
 /* VERTICAL SCROLLBAR */
 
 ::-webkit-scrollbar {

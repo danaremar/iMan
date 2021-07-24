@@ -57,9 +57,9 @@ public class Sprint {
 	private Date finalDate;
 
 	@PastOrPresent
-	@Column(name = "delete_date")
+	@Column(name = "close_date")
 	@DateTimeFormat(pattern = "HH:mm:ss dd/MM/yyyy 'GMT'")
-	private Date deleteDate;
+	private Date closeDate;
 
 	@NotNull
 	@ManyToOne

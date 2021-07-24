@@ -3,11 +3,13 @@ INSERT INTO iman_db.users(id, username, name, last_name, email, password, countr
 INSERT INTO iman_db.users(id, active, country, creation_date, delete_date, email, last_connection, last_name, name, password, sector, username) VALUES(2, 1, 'ES', '2021-02-22 12:25:01', NULL, 'danny@danny.es', '2021-02-22 12:25:01', 'Arellano Martinez', 'Daniel', 'danny', 'Ingenieria', 'danny');
 
 -- PROJECTS
-INSERT INTO iman_db.projects(id, active, creation_date, delete_date, description, name) VALUES(1, 1, '2021-01-31 12:25:01', NULL, 'Incredible project', 'DEMO PROJECT');
+INSERT INTO iman_db.projects(id, active, creation_date, close_date, description, name) VALUES(1, 1, '2021-01-31 12:25:01', NULL, 'Incredible project', 'DEMO PROJECT');
+INSERT INTO iman_db.projects(id, active, creation_date, close_date, description, name) VALUES(2, 1, '2021-01-31 12:25:01', NULL, 'Incredible project', 'IMAN PROJECT');
+
 
 -- PROJECT2ROLE
 INSERT INTO iman_db.project2role(id, accepted, `role`, project_id, user_id) VALUES(1, 1, 0, 1, 1);
---INSERT INTO iman_db.project2role(id, accepted, `role`) VALUES(1, 1, 0);
+INSERT INTO iman_db.project2role(id, accepted, `role`, project_id, user_id) VALUES(2, 1, 0, 2, 1);
 
 --PROJECTS_PROJECT_ROLES
 --INSERT INTO iman_db.projects_project_roles(project_id, project_roles_id) VALUES(1, 1);

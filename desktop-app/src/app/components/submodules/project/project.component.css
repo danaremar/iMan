@@ -1,0 +1,26 @@
+.card {
+    background-color: var(--dark-pallete-2) !important;
+    color: var(--dark-pallete-text) !important;
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.inside-card {
+    margin: 1.5rem;
+    margin-top: 0.8rem;
+}
+
+.project-name {
+    text-transform: uppercase;
+    font-size: 1.5rem;
+    font-weight: 500;
+}
+
+.bi {
+    font-size: 30px !important;
+    cursor: pointer !important;
+}
+
+.bi:hover {
+    color: var(--dark-contrast-text) !important;
+}
