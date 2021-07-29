@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ProjectUpdateDto {
 
+	@NotNull
 	private Long id;
 
 	@NotBlank
@@ -22,8 +23,5 @@ public class ProjectUpdateDto {
 	@NotBlank
 	@Length(max = 255)
 	private String description;
-
-	@NotNull
-	private Boolean active;
 
 }

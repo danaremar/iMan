@@ -1,4 +1,29 @@
-import { ShowUser } from "../user/show-user"
+import { ProjectRole } from "./roles"
+
+
+export class NewProject {
+
+    constructor(name: string, description: string) {
+        this.name=name
+        this.description=description
+    }
+
+    name: string
+    description: string
+}
+
+export class UpdateProject {
+    
+    constructor(id: number, name: string, description: string) {
+        this.id=id
+        this.name=name
+        this.description=description
+    }
+
+    id: number
+    name: string
+    description: string
+}
 
 export class Project {
 
@@ -19,20 +44,5 @@ export class Project {
     closeDate: Date
     active: boolean
     projectRoles: ProjectRole
-
-
 }
 
-export class ProjectRole {
-    constructor(id: number, user: ShowUser, role: number, accepted: boolean) {
-        this.id = id
-        this.user = user
-        this.role = role
-        this.accepted = accepted
-    }
-
-    id: number
-    user: ShowUser
-    role: number
-    accepted: boolean
-}

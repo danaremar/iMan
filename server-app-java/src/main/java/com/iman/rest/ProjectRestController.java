@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,7 +21,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.iman.model.projects.Project;
 import com.iman.model.projects.ProjectCreateDto;
+import com.iman.model.projects.ProjectRole;
+import com.iman.model.projects.ProjectRoleCreateDto;
+import com.iman.model.projects.ProjectRoleUpdateDto;
 import com.iman.model.projects.ProjectUpdateDto;
+import com.iman.model.users.User;
+import com.iman.model.util.Message;
 import com.iman.service.projects.ProjectService;
 import com.iman.service.users.UserService;
 
@@ -31,16 +37,16 @@ import io.swagger.annotations.Api;
 @Api(tags = "Project")
 @CrossOrigin
 public class ProjectRestController {
-	
+
 	@Autowired
 	ProjectService projectService;
-	
+
 	@Autowired
 	UserService userService;
-	
+
 	@Autowired(required = true)
 	protected ModelMapper modelMapper;
-	
+
 	public ProjectRestController(ProjectService projectService, UserService userService, ModelMapper modelMapper) {
 		this.projectService = projectService;
 		this.userService = userService;
@@ -49,49 +55,105 @@ public class ProjectRestController {
 
 	@PostMapping
 	public ResponseEntity<Object> createProject(@RequestBody @Valid ProjectCreateDto projectCreateDto) {
-		Project project = modelMapper.map(projectCreateDto, Project.class);
-		project.setActive(true);
-		project.setCreationDate(new Date());
 		try {
+			Project project = modelMapper.map(projectCreateDto, Project.class);
+			project.setActive(true);
+			project.setCreationDate(new Date());
 			projectService.createProject(project);
 			return new ResponseEntity<>(HttpStatus.CREATED);
 		} catch (Exception e) {
-			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
-	
-	@PutMapping
-	public ResponseEntity<Object> updateProject(@RequestBody @Valid ProjectUpdateDto projectUpdateDto) {
-		Project project = modelMapper.map(projectUpdateDto, Project.class);
-		try {
-			projectService.update(project);
-			return new ResponseEntity<>(HttpStatus.CREATED);
-		} catch (Exception e) {
-			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
-	
-	@PutMapping(value="/enable-disable/{projectId}")
-	public ResponseEntity<Object> enableDisableProject(@PathVariable Long projectId) {
-		try {
-			projectService.enableOrDisableById(projectId);
-			return new ResponseEntity<>(HttpStatus.CREATED);
-		} catch (Exception e) {
-			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(new Message(e.getMessage()), HttpStatus.CONFLICT);
 		}
 	}
 
-	@GetMapping(value="/my-projects")
-	public ResponseEntity<Object> getAllUserProjects(){
+	@PutMapping
+	public ResponseEntity<Object> updateProject(@RequestBody @Valid ProjectUpdateDto projectUpdateDto) {
 		try {
-			List<Project> projects = projectService.findAllMyProjects();
-			return new ResponseEntity<>(projects, HttpStatus.OK);
+			Project project = modelMapper.map(projectUpdateDto, Project.class);
+			projectService.update(project);
+			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (Exception e) {
-			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(new Message(e.getMessage()), HttpStatus.CONFLICT);
 		}
 	}
-	
-	
-	
+
+	@PutMapping(value = "/enable-disable/{projectId}")
+	public ResponseEntity<Object> enableDisableProject(@PathVariable Long projectId) {
+		try {
+			projectService.enableOrDisableById(projectId);
+			return new ResponseEntity<>(HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(new Message(e.getMessage()), HttpStatus.CONFLICT);
+		}
+	}
+
+	@GetMapping(value = "/my-projects")
+	public ResponseEntity<Object> getAllUserProjects() {
+		List<Project> projects = projectService.findAllMyProjects();
+		try {
+			return new ResponseEntity<>(projects, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(new Message(e.getMessage()), HttpStatus.CONFLICT);
+		}
+
+	}
+
+	@PostMapping(value = "/role")
+	public ResponseEntity<Object> createRoleProject(@RequestBody @Valid ProjectRoleCreateDto projectRoleCreateDto) {
+		try {
+			User user = userService.findUserByUsername(projectRoleCreateDto.getUsername());
+			if (user == null) throw new NullPointerException("User doesn't exists in the system");
+
+			Project project = projectService.findProjectById(projectRoleCreateDto.getProjectId());
+			if (project == null) throw new NullPointerException("Project doesn't exists in the system");
+
+			ProjectRole projectRole = new ProjectRole();
+			projectRole.setProject(project);
+			projectRole.setUser(user);
+			projectRole.setRole(projectRoleCreateDto.getRole());
+
+			projectService.createRole(projectRole);
+
+			return new ResponseEntity<>(HttpStatus.CREATED);
+
+		} catch (Exception e) {
+			return new ResponseEntity<>(new Message(e.getMessage()), HttpStatus.CONFLICT);
+		}
+	}
+
+	@PutMapping(value = "/role")
+	public ResponseEntity<Object> updateRoleProject(@RequestBody @Valid ProjectRoleUpdateDto projectRoleUpdateDto) {
+		try {
+			ProjectRole projectRole = new ProjectRole();
+			projectRole.setId(projectRoleUpdateDto.getId());
+			projectRole.setRole(projectRoleUpdateDto.getRole());
+
+			projectService.updateRole(projectRole);
+
+			return new ResponseEntity<>(HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(new Message(e.getMessage()), HttpStatus.CONFLICT);
+		}
+	}
+
+	@PutMapping(value = "/role/{roleId}/accept")
+	public ResponseEntity<Object> acceptRoleProject(@PathVariable Long roleId) {
+		try {
+			projectService.acceptProjectRole(roleId);
+			return new ResponseEntity<>(HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(new Message(e.getMessage()), HttpStatus.CONFLICT);
+		}
+	}
+
+	@DeleteMapping(value = "/role/{roleId}/decline")
+	public ResponseEntity<Object> deleteRoleProject(@PathVariable Long roleId) {
+		try {
+			projectService.deleteProjectRole(roleId);
+			return new ResponseEntity<>(HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(new Message(e.getMessage()), HttpStatus.CONFLICT);
+		}
+	}
 
 }

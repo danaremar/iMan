@@ -99,6 +99,16 @@ body {
     -webkit-text-fill-color: var(--dark-pallete-text) !important;
 }
 
+input::-webkit-input-placeholder{
+    color: aqua;
+}
+
+select {
+    border-radius: 0.3rem;
+    background-color: var(--dark-pallete-4) !important;
+    color: var(--dark-pallete-text) !important;
+}
+
 .center {
     margin: auto;
     width: 50%;
@@ -106,6 +116,10 @@ body {
 
 .cursor-hover:hover{
     cursor: pointer !important;
+}
+
+.scrollable-content {
+    height: calc(100vh - 100px - var(--navbar-size)) !important;
 }
 
 /* VERTICAL SCROLLBAR */

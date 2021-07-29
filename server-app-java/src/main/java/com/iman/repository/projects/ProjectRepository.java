@@ -13,7 +13,7 @@ import com.iman.model.projects.Project;
 public interface ProjectRepository extends JpaRepository<Project, Long> {
 
 //	@Query("SELECT p FROM Project p LEFT JOIN ProjectRole pr ON pr.user.id=:user_id AND p.active=1")
-	@Query("SELECT p FROM Project p LEFT JOIN ProjectRole pr ON p.id = pr.project.id where pr.user.id=:user_id")
+	@Query("SELECT p FROM Project p LEFT JOIN ProjectRole pr ON p.id = pr.project.id where p.active=true and pr.user.id=:user_id")
 	List<Project> findAllProjectsByUserId(@Param("user_id") Long userId);
 	
 }

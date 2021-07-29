@@ -4,10 +4,16 @@ import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.ws.rs.NotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
+import org.springframework.data.domain.Example;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.iman.config.ImanMessages;
 import com.iman.model.projects.Project;
 import com.iman.model.projects.ProjectRole;
 import com.iman.repository.projects.ProjectRepository;
@@ -30,10 +36,11 @@ public class ProjectService {
 	@PersistenceContext
 	private EntityManager entityManager;
 
-	private void verifyOwner(String username, Project project) {
+	private void verifyOwner(Project project) {
+		String username = userService.getCurrentUsername();
 		if (project.getProjectRoles().stream()
-				.anyMatch(x -> (x.getRole() == 0) && (x.getUser().getUsername().equals(username)))) {
-			throw new UnverifiedUserException();
+				.noneMatch(x -> (x.getRole() == 0) && (x.getUser().getUsername().equals(username)))) {
+			throw new AccessDeniedException(ImanMessages.USER_NOT_ALLOWED);
 		}
 	}
 
@@ -53,6 +60,7 @@ public class ProjectService {
 
 		ProjectRole projectRole = new ProjectRole();
 		projectRole.setRole(0); // OWNER
+		projectRole.setAccepted(true);
 		projectRole.setUser(userService.getCurrentUser());
 		projectRole.setProject(projectSaved);
 
@@ -61,32 +69,20 @@ public class ProjectService {
 
 	@Transactional
 	public void update(Project newProject) {
-		String username = userService.getCurrentUsername();
 		Project oldProject = findProjectById(newProject.getId());
 
-		verifyOwner(username, oldProject);
-
-		if (!oldProject.getActive().equals(newProject.getActive())) {
-			oldProject.setActive(newProject.getActive());
-			if (!newProject.getActive()) {
-				oldProject.setCloseDate(new Date());
-			} else {
-				oldProject.setCloseDate(null);
-			}
-		}
+		verifyOwner(oldProject);
 
 		oldProject.setName(newProject.getName());
-		oldProject.setDescription(newProject.getName());
+		oldProject.setDescription(newProject.getDescription());
 
 		projectRepository.save(oldProject);
 	}
 
 	@Transactional
 	public void enableOrDisableById(Long projectId) {
-		String username = userService.getCurrentUsername();
 		Project project = findProjectById(projectId);
-
-		verifyOwner(username, project);
+		verifyOwner(project);
 
 		Boolean activeNow = !project.getActive();
 		project.setActive(activeNow);
@@ -114,36 +110,63 @@ public class ProjectService {
 	 * 
 	 */
 
-	@Transactional
-	public void acceptOrDeclineProjectRole(Long projectRoleId, Boolean accept) {
-		ProjectRole projectRole = findProjectRoleById(projectRoleId);
-		if (!projectRole.getUser().getUsername().equals(userService.getCurrentUsername())) {
-			throw new UnverifiedUserException();
-		}
-		projectRole.setAccepted(accept);
-		projectRoleRepository.save(projectRole);
-	}
-
-	@Transactional
-	public void changeRole(Long projectRoleId, Integer role) {
+	private void verifySaveRole(ProjectRole saveProjectRole) {
 		String username = userService.getCurrentUsername();
+		ProjectRole userProjectRole = saveProjectRole.getProject().getProjectRoles().stream()
+				.filter(x -> x.getUser().getUsername().equals(username)).findFirst()
+				.orElseThrow(() -> new AccessDeniedException(ImanMessages.USER_NOT_ALLOWED));
+
+		if (!saveProjectRole.getUser().getUsername().equals(userService.getCurrentUsername())
+				&& !List.of(1, 2, 3).contains(saveProjectRole.getRole()) // can't save an Owner role
+				&& !List.of(0, 1).contains(userProjectRole.getRole())) { // must only be edited by Owner or admin
+			throw new AccessDeniedException(ImanMessages.USER_NOT_ALLOWED);
+		}
+	}
+	
+	private void verifyChangeMyRole(ProjectRole projectRole) {
+		if (!projectRole.getUser().getUsername().equals(userService.getCurrentUsername())) {
+			throw new AccessDeniedException(ImanMessages.USER_NOT_ALLOWED);
+		}
+	}
+
+	@Transactional
+	public void acceptProjectRole(Long projectRoleId) {
 		ProjectRole projectRole = findProjectRoleById(projectRoleId);
-		verifyOwner(username, projectRole.getProject());
-		projectRole.setRole(role);
+		verifyChangeMyRole(projectRole);
+		projectRole.setAccepted(true);
 		projectRoleRepository.save(projectRole);
 	}
 
 	@Transactional
-	public void updateProjectRole(ProjectRole projectRole) {
+	public void deleteProjectRole(Long projectRoleId) {
+		ProjectRole projectRole = findProjectRoleById(projectRoleId);
+		verifyChangeMyRole(projectRole);
+		projectRoleRepository.deleteById(projectRoleId);
+	}
+	
+	public Boolean existsOtherRole(ProjectRole projectRole) {
+		ProjectRole exampleProjectRole = new ProjectRole();
+		exampleProjectRole.setProject(projectRole.getProject());
+		exampleProjectRole.setUser(projectRole.getUser());
+		
+		Example<ProjectRole> example = Example.of(exampleProjectRole);
+		return projectRoleRepository.exists(example);
+	}
+
+	@Transactional
+	public void createRole(ProjectRole projectRole) {
+		verifySaveRole(projectRole);
+		if(existsOtherRole(projectRole)) {
+			throw new DuplicateKeyException("This role already exists");
+		}
 		projectRoleRepository.save(projectRole);
 	}
 
 	@Transactional
-	public void insertProjectRole(Integer role, Long projectId, String username) {
-		Integer roleAssigned = role == null ? 3 : role;
-		Long userId = userService.findUserByUsername(username).getId();
-		entityManager.createNativeQuery("INSERT INTO project2role(`role`, project_id, user_id) VALUES(?, ?, ?);")
-				.setParameter(1, roleAssigned).setParameter(2, projectId).setParameter(3, userId).executeUpdate();
+	public void updateRole(ProjectRole projectRole) {
+		ProjectRole oldProjectRole = findProjectRoleById(projectRole.getId());
+		verifySaveRole(oldProjectRole);
+		oldProjectRole.setRole(projectRole.getRole());
+		projectRoleRepository.save(oldProjectRole);
 	}
-
 }
