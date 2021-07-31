@@ -22,12 +22,3 @@
 .bi:hover {
     color: var(--dark-contrast-text);
 }
-
-.log-out-button {
-    color: rgba(255, 0, 0, 0.699) !important;
-    cursor: pointer !important;
-}
-
-.log-out-button:hover {
-    color: rgb(255, 0, 0) !important;
-}

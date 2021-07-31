@@ -16,13 +16,20 @@ export class ProjectComponent implements OnInit {
     @ViewChild('closebuttonNew') closebuttonNew: any;
     @ViewChild('closebuttonUpdate') closebuttonUpdate: any;
     @ViewChild('closebuttonUsers') closebuttonUsers: any;
+    @ViewChild('closebuttonViewInvitations') closebuttonViewInvitations: any;
+
+    myUsername: any
 
     myProjects: any
     myRoles: any
     selectedProject: number = 0
+    notAcceptedProjects: any
 
     containError: boolean = false
     messageError: string | undefined
+
+    invitationsContainError: boolean = false
+    invitationsMessageError: string | undefined
 
     formNewProject: FormGroup
     newProjectContainError: boolean = false
@@ -58,6 +65,7 @@ export class ProjectComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.myUsername = this.tokenService.getUsername()
         this.loadMyProjects()
     }
 
@@ -66,16 +74,21 @@ export class ProjectComponent implements OnInit {
             data => {
                 this.myProjects = data
                 this.loadMyRoles()
+                this.loadNotAcceptedProjects()
             },
             err => {
-                var returned_error = err.error.text
-                if (returned_error == undefined) {
-                    returned_error = 'Ha ocurrido un error'
-                }
-                this.messageError = returned_error;
-                this.containError = true
+                this.returnPrincipalError(err)
             }
         )
+    }
+
+    returnPrincipalError(err: any) {
+        var returned_error = err.error.text
+        if (returned_error == undefined) {
+            returned_error = 'Ha ocurrido un error'
+        }
+        this.messageError = returned_error;
+        this.containError = true
     }
 
     loadMyRoles() {
@@ -89,6 +102,18 @@ export class ProjectComponent implements OnInit {
                 }
             }
         }
+    }
+
+    loadNotAcceptedProjects() {
+        this.projectService.getAllMineNotAcceptedProjectRoles().subscribe(
+            data => {
+                this.notAcceptedProjects = data
+            },
+            err => {
+                this.returnPrincipalError(err)
+            }
+
+        )
     }
 
     newProject() {
@@ -161,7 +186,7 @@ export class ProjectComponent implements OnInit {
             },
             err => {
                 var retErr = err.error.text
-                if(retErr == undefined){
+                if (retErr == undefined) {
                     retErr = "Error adding the user"
                 }
                 this.newProjectRoleContainError = true
@@ -180,16 +205,51 @@ export class ProjectComponent implements OnInit {
 
         this.projectService.updateProjectRole(updateProjectRole).subscribe(
             res => {
-                this.loadMyProjects()
                 this.closebuttonUsers.nativeElement.click()
-            }, 
+                this.loadMyProjects()
+                
+            },
             err => {
                 var retErr = err.error.text
-                if(retErr == undefined){
+                if (retErr == undefined) {
                     retErr = "Error updating the user"
                 }
                 this.newProjectRoleContainError = true
                 this.newProjectRoleMessageError = retErr
+            }
+        )
+    }
+
+    acceptRole(id: number) {
+        this.projectService.acceptProjectRole(id).subscribe(
+            res => {
+                this.loadMyProjects()
+                this.closebuttonViewInvitations.nativeElement.click()
+            },
+            err => {
+                var retErr = err.error.text
+                if (retErr == undefined) {
+                    retErr = "Error accepting invitation"
+                }
+                this.invitationsContainError = true
+                this.invitationsMessageError = retErr
+            }
+        )
+    }
+
+    declineRole(id: number) {
+        this.projectService.declineProjectRole(id).subscribe(
+            res => {
+                this.loadMyProjects()
+                this.closebuttonViewInvitations.nativeElement.click()
+            },
+            err => {
+                var retErr = err.error.text
+                if (retErr == undefined) {
+                    retErr = "Error declining invitation"
+                }
+                this.invitationsContainError = true
+                this.invitationsMessageError = retErr
             }
         )
     }

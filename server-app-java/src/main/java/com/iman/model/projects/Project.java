@@ -41,7 +41,6 @@ public class Project {
 	@Column(name = "creation_date")
 	private Date creationDate;
 
-	@PastOrPresent
 	@Column(name = "close_date")
 	private Date closeDate;
 

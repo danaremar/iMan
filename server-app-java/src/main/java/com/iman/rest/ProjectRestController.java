@@ -23,6 +23,7 @@ import com.iman.model.projects.Project;
 import com.iman.model.projects.ProjectCreateDto;
 import com.iman.model.projects.ProjectRole;
 import com.iman.model.projects.ProjectRoleCreateDto;
+import com.iman.model.projects.ProjectRoleNotAcceptedDto;
 import com.iman.model.projects.ProjectRoleUpdateDto;
 import com.iman.model.projects.ProjectUpdateDto;
 import com.iman.model.users.User;
@@ -89,8 +90,8 @@ public class ProjectRestController {
 
 	@GetMapping(value = "/my-projects")
 	public ResponseEntity<Object> getAllUserProjects() {
-		List<Project> projects = projectService.findAllMyProjects();
 		try {
+			List<Project> projects = projectService.findAllMyProjects();
 			return new ResponseEntity<>(projects, HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(new Message(e.getMessage()), HttpStatus.CONFLICT);
@@ -151,6 +152,17 @@ public class ProjectRestController {
 		try {
 			projectService.deleteProjectRole(roleId);
 			return new ResponseEntity<>(HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(new Message(e.getMessage()), HttpStatus.CONFLICT);
+		}
+	}
+	
+	@GetMapping(value= "/my-roles")
+	public ResponseEntity<Object> getAllMyInvitations() {
+		try {
+			User user = userService.getCurrentUser();
+			List<ProjectRoleNotAcceptedDto> allInvitations = projectService.getAllInvitationsFromUser(user);
+			return new ResponseEntity<>(allInvitations, HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(new Message(e.getMessage()), HttpStatus.CONFLICT);
 		}

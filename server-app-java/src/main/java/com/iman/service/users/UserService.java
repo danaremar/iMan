@@ -4,7 +4,6 @@ import java.util.Date;
 
 import javax.security.sasl.AuthenticationException;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -26,9 +25,6 @@ public class UserService {
 	
 	@Autowired
 	PasswordEncoder passwordEncoder;
-	
-	@Autowired(required = true)
-	protected ModelMapper modelMapper;
 
 	@Autowired
 	public UserService(UserRepository userRepository) {

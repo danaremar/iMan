@@ -75,6 +75,15 @@ body {
     border: 0px !important;
 }
 
+.card-title {
+    font-size: 1.5rem;
+    font-weight: 500;
+}
+
+.card-hover:hover {
+    background-color: var(--dark-pallete-4) !important;
+}
+
 .close-card-button {
     background-color: inherit !important;
     color: var(--dark-pallete-text) !important;
@@ -120,6 +129,24 @@ select {
 
 .scrollable-content {
     height: calc(100vh - 100px - var(--navbar-size)) !important;
+}
+
+.red-btn {
+    color: rgba(255, 0, 0, 0.7) !important;
+    cursor: pointer !important;
+}
+
+.red-btn:hover {
+    color: rgb(255, 0, 0) !important;
+}
+
+.green-btn {
+    color: rgba(0, 97, 0, 0.7) !important;
+    cursor: pointer !important;
+}
+
+.green-btn:hover {
+    color: rgb(0, 97, 0) !important;
 }
 
 /* VERTICAL SCROLLBAR */

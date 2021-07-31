@@ -15,9 +15,9 @@ export class ProjectRole {
 
 export class CreateProjectRole {
     constructor(projectId: number, username: string, role: number) {
-        this.projectId=projectId
-        this.username=username
-        this.role=role
+        this.projectId = projectId
+        this.username = username
+        this.role = role
     }
     projectId: number
     username: string
@@ -26,9 +26,20 @@ export class CreateProjectRole {
 
 export class UpdateProjectRole {
     constructor(id: number, role: number) {
-        this.id=id
-        this.role=role
+        this.id = id
+        this.role = role
     }
     id: number
     role: number
+}
+
+export class NotAcceptedProjectRole {
+    constructor(id: number, role: number, projectName: string) {
+        this.id = id
+        this.role = role
+        this.projectName = projectName
+    }
+    id: number
+    role: number
+    projectName: string
 }

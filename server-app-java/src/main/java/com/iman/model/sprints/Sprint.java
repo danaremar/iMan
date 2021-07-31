@@ -4,6 +4,7 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -16,8 +17,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
 
 import org.hibernate.validator.constraints.Length;
-import org.springframework.format.annotation.DateTimeFormat;
-
 import com.iman.model.projects.Project;
 
 import lombok.Data;
@@ -32,37 +31,32 @@ public class Sprint {
 	private Long id;
 
 	@NotNull
-	@Min(value = 1)
-	private Integer number;
+	@Min(value = 1L)
+	private Long number;
 
 	@NotBlank
-	@Length(max = 15)
+	@Length(max = 50)
+	private String title;
+	
+	@Length(max = 255)
 	private String description;
 
 	@NotNull
 	@PastOrPresent
-	@Column(unique = true, name = "creation_date")
-	@DateTimeFormat(pattern = "HH:mm:ss dd/MM/yyyy 'GMT'")
+	@Column(name = "creation_date")
 	private Date creationDate;
+	
+	@Column(name = "start_date")
+	private Date startDate;
 
-	@NotNull
-	@PastOrPresent
-	@Column(unique = true, name = "estimated_date")
-	@DateTimeFormat(pattern = "HH:mm:ss dd/MM/yyyy 'GMT'")
+	@Column(name = "estimated_date")
 	private Date estimatedDate;
 
-	@PastOrPresent
-	@Column(name = "final_date")
-	@DateTimeFormat(pattern = "HH:mm:ss dd/MM/yyyy 'GMT'")
-	private Date finalDate;
-
-	@PastOrPresent
 	@Column(name = "close_date")
-	@DateTimeFormat(pattern = "HH:mm:ss dd/MM/yyyy 'GMT'")
 	private Date closeDate;
 
 	@NotNull
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "project_id")
 	private Project project;
 

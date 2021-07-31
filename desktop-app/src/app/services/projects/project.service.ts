@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from "src/environments/environment";
 import { Observable } from "rxjs";
 import { NewProject, Project, UpdateProject } from "src/app/models/project/project";
-import { CreateProjectRole, UpdateProjectRole } from "src/app/models/project/roles";
+import { CreateProjectRole, NotAcceptedProjectRole, UpdateProjectRole } from "src/app/models/project/roles";
 
 @Injectable({
     providedIn: 'root'
@@ -60,6 +60,11 @@ export class ProjectService {
     public declineProjectRole(projectRoleId: number): Observable<any> {
         var url = this.hostUrl + '/project/role/' + projectRoleId + '/decline';
         return this.httpClient.delete<UpdateProjectRole>(url)
+    }
+
+    public getAllMineNotAcceptedProjectRoles(): Observable<any> {
+        var url = this.hostUrl + '/project/my-roles'
+        return this.httpClient.get<NotAcceptedProjectRole>(url)
     }
 
     public getAllRoles() {

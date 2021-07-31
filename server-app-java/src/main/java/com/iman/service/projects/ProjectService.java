@@ -2,9 +2,7 @@ package com.iman.service.projects;
 
 import java.util.Date;
 import java.util.List;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.ws.rs.NotFoundException;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
@@ -16,9 +14,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.iman.config.ImanMessages;
 import com.iman.model.projects.Project;
 import com.iman.model.projects.ProjectRole;
+import com.iman.model.projects.ProjectRoleNotAcceptedDto;
+import com.iman.model.users.User;
 import com.iman.repository.projects.ProjectRepository;
 import com.iman.repository.projects.ProjectRoleRepository;
-import com.iman.security.exception.UnverifiedUserException;
 import com.iman.service.users.UserService;
 
 @Service
@@ -33,13 +32,24 @@ public class ProjectService {
 	@Autowired
 	private UserService userService;
 
-	@PersistenceContext
-	private EntityManager entityManager;
-
-	private void verifyOwner(Project project) {
+	public void verifyOwner(Project project) {
+		if (project==null || project.getProjectRoles().stream()
+				.noneMatch(x -> (x.getRole() == 0) && (x.getUser().getUsername().equals(userService.getCurrentUsername())))) {
+			throw new AccessDeniedException(ImanMessages.USER_NOT_ALLOWED);
+		}
+	}
+	
+	public void verifyOwnerOrAdmin(Project project) {
 		String username = userService.getCurrentUsername();
-		if (project.getProjectRoles().stream()
-				.noneMatch(x -> (x.getRole() == 0) && (x.getUser().getUsername().equals(username)))) {
+		if (project==null || !project.getActive() || project.getProjectRoles().stream()
+				.noneMatch(x -> (List.of(0,1).contains(x.getRole())) && (x.getUser().getUsername().equals(username)))) {
+			throw new AccessDeniedException(ImanMessages.USER_NOT_ALLOWED);
+		}
+	}
+	
+	public void verifyUserRelatedWithProject(Project project) {
+		if (project==null || !project.getActive() || project.getProjectRoles().stream()
+				.noneMatch(x -> x.getUser().getUsername().equals(userService.getCurrentUsername()) )) {
 			throw new AccessDeniedException(ImanMessages.USER_NOT_ALLOWED);
 		}
 	}
@@ -122,7 +132,7 @@ public class ProjectService {
 			throw new AccessDeniedException(ImanMessages.USER_NOT_ALLOWED);
 		}
 	}
-	
+
 	private void verifyChangeMyRole(ProjectRole projectRole) {
 		if (!projectRole.getUser().getUsername().equals(userService.getCurrentUsername())) {
 			throw new AccessDeniedException(ImanMessages.USER_NOT_ALLOWED);
@@ -143,12 +153,12 @@ public class ProjectService {
 		verifyChangeMyRole(projectRole);
 		projectRoleRepository.deleteById(projectRoleId);
 	}
-	
+
 	public Boolean existsOtherRole(ProjectRole projectRole) {
 		ProjectRole exampleProjectRole = new ProjectRole();
 		exampleProjectRole.setProject(projectRole.getProject());
 		exampleProjectRole.setUser(projectRole.getUser());
-		
+
 		Example<ProjectRole> example = Example.of(exampleProjectRole);
 		return projectRoleRepository.exists(example);
 	}
@@ -156,7 +166,7 @@ public class ProjectService {
 	@Transactional
 	public void createRole(ProjectRole projectRole) {
 		verifySaveRole(projectRole);
-		if(existsOtherRole(projectRole)) {
+		if (existsOtherRole(projectRole)) {
 			throw new DuplicateKeyException("This role already exists");
 		}
 		projectRoleRepository.save(projectRole);
@@ -169,4 +179,20 @@ public class ProjectService {
 		oldProjectRole.setRole(projectRole.getRole());
 		projectRoleRepository.save(oldProjectRole);
 	}
+
+	@Transactional
+	public List<ProjectRoleNotAcceptedDto> getAllInvitationsFromUser(User user) {
+		ProjectRole exampleProjectRole = new ProjectRole();
+		exampleProjectRole.setAccepted(false);
+		exampleProjectRole.setUser(user);
+
+		Example<ProjectRole> example = Example.of(exampleProjectRole);
+		List<ProjectRole> projectRoles = projectRoleRepository.findAll(example);
+		
+		return projectRoles.stream()
+				.filter(x->x.getProject().getActive())
+				.map(x->new ProjectRoleNotAcceptedDto(x.getId(), x.getRole(), x.getProject().getName()))
+				.collect(Collectors.toList());
+	}
+
 }
