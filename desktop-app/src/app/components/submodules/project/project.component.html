@@ -1,6 +1,6 @@
 <!-- OPERATIONS -->
 <div class="mb-3 mr-3" style="text-align: right;">
-    <a data-bs-toggle="modal" data-bs-target="#viewNotAcceptedProjects">
+    <a ngbTooltip="Invitations" placement="left" [openDelay]="300" data-bs-toggle="modal" data-bs-target="#viewNotAcceptedProjects">
         <em class="bi bi-bell-fill me-3 position-relative">
             <span
                 class="position-absolute top-0 start-0 translate-middle badge rounded-pill notification-badge bg-danger">
@@ -9,7 +9,7 @@
         </em>
     </a>
 
-    <a data-bs-toggle="modal" data-bs-target="#createProjectModal">
+    <a ngbTooltip="Create project" placement="left" [openDelay]="300" data-bs-toggle="modal" data-bs-target="#createProjectModal">
         <em class="bi bi-plus-lg"></em>
     </a>
 </div>
@@ -88,7 +88,7 @@
                         <div class="form-group mb-4 mt-3">
                             <p class="mb-0">Name</p>
                             <input class="form-control {{inputClass(formNewProject, 'name')}}" type="text" name="name"
-                                id="name" formControlName="name" maxlength="30" minlength="2" placeholder="" />
+                                formControlName="name" maxlength="30" minlength="2" placeholder="" />
                             <div class="invalid-feedback"
                                 *ngIf="formNewProject.get('name')?.touched && formNewProject.get('name')?.invalid">
                                 <div *ngIf="formNewProject.get('name')?.errors?.required">Cannot be empty</div>
@@ -102,7 +102,7 @@
                         <div class="form-group mb-4">
                             <p class="mb-0">Description</p>
                             <input class="form-control {{inputClass(formNewProject, 'description')}}" type="text"
-                                name="description" id="description" formControlName="description" maxlength="255"
+                                name="description" formControlName="description" maxlength="255"
                                 minlength="2" placeholder="" />
                             <div class="invalid-feedback"
                                 *ngIf="formNewProject.get('description')?.touched && formNewProject.get('description')?.invalid">
@@ -135,7 +135,7 @@
         <div class="card card-list">
             <div class="inside-card">
                 <div class="d-flex ">
-                    <div class="flex-grow-1 center project-name align-middle">{{project.name}}</div>
+                    <div class="flex-grow-1 center b-text align-middle">{{project.name}}</div>
 
                     <div>
                         <!-- USERS -->
@@ -176,7 +176,7 @@
                                                         <div class="flex-grow-1 form-group me-3">
                                                             <input
                                                                 class="form-control {{inputClass(formNewProjectRole, 'username')}}"
-                                                                type="text" name="username" id="username"
+                                                                type="text" name="username"
                                                                 formControlName="username" maxlength="30" minlength="2"
                                                                 placeholder="User" />
                                                             <div class="invalid-feedback"
@@ -231,14 +231,14 @@
                                                     <div>
                                                         <em class="bi bi-person-circle me-3"></em>
                                                     </div>
-                                                    <div class="flex-grow-1 center user-name">
+                                                    <div class="flex-grow-1 center m-text">
                                                         @{{role.user.username}}
                                                     </div>
 
                                                     <!-- EDIT ROLE -->
                                                     <ng-container
                                                         *ngIf="[0,1].includes(myRoles[selectedProject]) && role.role!=0 && role.user.username!=myUsername else cantEditUser">
-                                                        <div class="user-name" style="margin: auto;">
+                                                        <div class="m-text" style="margin: auto;">
                                                             <select (change)="updateProjectRole(role, $event.target)">
                                                                 <option class="dark-text"
                                                                     [selected]="roleType==getRole(role.role)"
@@ -249,7 +249,7 @@
                                                     </ng-container>
 
                                                     <ng-template #cantEditUser>
-                                                        <div class="user-name" style="margin: auto;">
+                                                        <div class="m-text" style="margin: auto;">
                                                             {{getRole(role.role)}}
                                                         </div>
                                                     </ng-template>
@@ -266,7 +266,7 @@
                         </div>
 
                         <!-- EDIT -->
-                        <a *ngIf="myRoles[j]==0" (click)="selectedProject=j" ngbTooltip="Edit"
+                        <a *ngIf="myRoles[j]==0" ngbTooltip="Edit"
                             (click)="fillUpdateForm(project)" placement="left" [openDelay]="300" data-bs-toggle="modal"
                             data-bs-target="#updateProjectModal">
                             <em class="bi bi-pencil-fill me-3"></em>
@@ -298,7 +298,7 @@
                                                     <p class="mb-0">Name</p>
                                                     <input
                                                         class="form-control {{inputClass(formUpdateProject, 'name')}}"
-                                                        type="text" name="name" id="name" formControlName="name"
+                                                        type="text" name="name" formControlName="name"
                                                         maxlength="30" minlength="2" placeholder="" />
                                                     <div class="invalid-feedback"
                                                         *ngIf="formUpdateProject.get('name')?.touched && formUpdateProject.get('name')?.invalid">
@@ -320,7 +320,7 @@
                                                     <p class="mb-0">Description</p>
                                                     <input
                                                         class="form-control {{inputClass(formUpdateProject, 'description')}}"
-                                                        type="text" name="description" id="description"
+                                                        type="text" name="description" 
                                                         formControlName="description" maxlength="255" minlength="2"
                                                         placeholder="" />
                                                     <div class="invalid-feedback"

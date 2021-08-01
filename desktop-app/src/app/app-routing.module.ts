@@ -8,6 +8,7 @@ import { ConfigComponent } from './components/submodules/config/config.component
 import { KanbanComponent } from './components/submodules/kanban/kanban.component';
 import { ProjectComponent } from './components/submodules/project/project.component';
 import { RequirementsComponent } from './components/submodules/requirements/requirements.component';
+import { SprintComponent } from './components/submodules/sprints/sprint.component';
 import { TeamComponent } from './components/submodules/team/team.component';
 import { TimeComponent } from './components/submodules/time/time.component';
 import { UserComponent } from './components/submodules/user/user.component';
@@ -15,8 +16,6 @@ import { UserComponent } from './components/submodules/user/user.component';
 const routes: Routes = [
   { path: '', component: AppComponent },
   { path: 'login', component: AuthComponent },
-
-  // TODO:
   {
     path: 'app', component: MenuComponent,
     children: [
@@ -27,7 +26,8 @@ const routes: Routes = [
       { path: 'requirements', component: RequirementsComponent },
       { path: 'team', component: TeamComponent },
       { path: 'user', component: UserComponent },
-      { path: 'config', component: ConfigComponent }
+      { path: 'config', component: ConfigComponent },
+      { path: 'sprint', component: SprintComponent },
     ],
   },
 

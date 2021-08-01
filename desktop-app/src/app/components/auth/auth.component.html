@@ -4,18 +4,18 @@
 
         <form [formGroup]="formLogin" (ngSubmit)="onLogin()">
 
-            <div style="text-align: center; font-size: 80px;">
-                <em class="bi bi-lock icon"></em>
+            <div style="text-align: center;">
+                <em class="bi bi-lock icon" style="font-size: 80px !important;"></em>
             </div>
 
             <div *ngIf="isLoginFail" class="alert alert-danger mt-3"> {{messageErrorLogin}}</div>
 
             <div class="form-group mb-3">
-                <input class="form-control" type="text" name="username" id="username" formControlName="username"
+                <input class="form-control" type="text" name="username" formControlName="username"
                     maxlength="50" placeholder="Username">
             </div>
             <div class="form-group">
-                <input class="form-control" type="password" name="password" id="password" formControlName="password"
+                <input class="form-control" type="password" name="password" formControlName="password"
                     maxlength="50" placeholder="Password">
             </div>
 
@@ -57,14 +57,14 @@
 
                             <div *ngIf="isRegisterFail" class="alert alert-danger mt-5"> {{messageErrorRegister}}</div>
 
-                            <div style="text-align: center; font-size: 80px;">
-                                <em class="bi bi-person-plus icon"></em>
+                            <div style="text-align: center;">
+                                <em class="bi bi-person-plus icon" style="font-size: 80px !important;"></em>
                             </div>
 
                             <div class="form-group mb-4">
                                 <p class="mb-0">First name</p>
                                 <input class="form-control {{inputClass(formRegister, 'name')}}" type="text" name="name"
-                                    id="name" formControlName="name" maxlength="20" minlength="2" placeholder="John" />
+                                    formControlName="name" maxlength="20" minlength="2" placeholder="John" />
                                 <div class="invalid-feedback"
                                     *ngIf="formRegister.get('name')?.touched && formRegister.get('name')?.invalid">
                                     <div *ngIf="formRegister.get('name')?.errors?.required">Cannot be empty</div>
@@ -78,7 +78,7 @@
                             <div class="form-group mb-4">
                                 <p class="mb-0">Last name</p>
                                 <input class="form-control {{inputClass(formRegister, 'lastName')}}" type="text"
-                                    name="lastName" id="lastName" formControlName="lastName" maxlength="50"
+                                    name="lastName" formControlName="lastName" maxlength="50"
                                     placeholder="Doe" />
                                 <div class="invalid-feedback"
                                     *ngIf="formRegister.get('lastName')?.touched && formRegister.get('lastName')?.invalid">
@@ -93,7 +93,7 @@
                             <div class="form-group mb-4">
                                 <p class="mb-0">Email</p>
                                 <input class="form-control {{inputClass(formRegister, 'email')}}" type="text"
-                                    name="email" id="email" formControlName="email" maxlength="50" email
+                                    name="email" formControlName="email" maxlength="50" email
                                     placeholder="johndoe@example.com" />
                                 <div class="invalid-feedback"
                                     *ngIf="formRegister.get('email')?.touched && formRegister.get('email')?.invalid">
@@ -107,7 +107,7 @@
                             <div class="form-group mb-4">
                                 <p class="mb-0">Username</p>
                                 <input class="form-control {{inputClass(formRegister, 'username')}}" type="text"
-                                    name="username" id="username" formControlName="username" maxlength="15"
+                                    name="username" formControlName="username" maxlength="15"
                                     placeholder="johndoe" pattern="^[a-z0-9]+$" />
                                 <div class="invalid-feedback"
                                     *ngIf="formRegister.get('username')?.touched && formRegister.get('username')?.invalid">
@@ -123,7 +123,7 @@
                             <div class="form-group mb-4">
                                 <p class="mb-0">Password</p>
                                 <input class="form-control {{inputClass(formRegister, 'password')}}" type="password"
-                                    name="password" id="password" formControlName="password" minlength="8"
+                                    name="password" formControlName="password" minlength="8"
                                     maxlength="50" placeholder="Password"
                                     pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$@!%&*?])[A-Za-z\d#$@!%&*?]{8,50}$"
                                     placeholder="·········" />
@@ -157,7 +157,7 @@
                             <div class="form-group mb-4">
                                 <p class="mb-0">Sector</p>
                                 <input class="form-control {{inputClass(formRegister, 'sector')}}" type="text"
-                                    name="sector" id="sector" formControlName="sector" maxlength="20"
+                                    name="sector" formControlName="sector" maxlength="20"
                                     placeholder="Industry" />
                                 <div class="invalid-feedback"
                                     *ngIf="formRegister.get('sector')?.touched && formRegister.get('sector')?.invalid">

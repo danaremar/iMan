@@ -21,6 +21,7 @@ import { ConfigComponent } from './components/submodules/config/config.component
 import { ChatComponent } from './components/submodules/chat/chat.component';
 import { RequirementsComponent } from './components/submodules/requirements/requirements.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { SprintComponent } from './components/submodules/sprints/sprint.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +37,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     TeamComponent,
     ConfigComponent,
     ChatComponent,
-    RequirementsComponent
+    RequirementsComponent,
+    SprintComponent
   ],
   imports: [
     BrowserModule,

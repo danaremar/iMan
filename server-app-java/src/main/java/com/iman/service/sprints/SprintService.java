@@ -45,7 +45,7 @@ public class SprintService {
 		exampleSprint.setActive(true);
 
 		Example<Sprint> example = Example.of(exampleSprint);
-		return sprintRepository.findAll(example, Sort.by(Sort.Direction.ASC, "number"));
+		return sprintRepository.findAll(example, Sort.by(Sort.Direction.DESC, "number"));
 	}
 
 	@Transactional
@@ -85,7 +85,6 @@ public class SprintService {
 		sprintOld.setDescription(sprint.getDescription());
 		sprintOld.setStartDate(sprint.getStartDate());
 		sprintOld.setEstimatedDate(sprint.getEstimatedDate());
-		sprintOld.setCloseDate(sprint.getCloseDate());
 		
 		sprintRepository.save(sprintOld);
 	}

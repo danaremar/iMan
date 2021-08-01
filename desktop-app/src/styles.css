@@ -66,6 +66,34 @@ body {
     border-top: 0px solid var(--dark-pallete-text) !important;
 }
 
+.b-text {
+    font-size: 1.5rem;
+    font-weight: 500;
+}
+
+.m-text{
+    font-size: 1.2rem;
+    font-weight: 400;
+}
+
+.s-text{
+    font-size: 1.0rem;
+    font-weight: 400;
+}
+
+.contrast-text {
+    color: var(--dark-contrast-text) !important;
+}
+
+.bi {
+    font-size: 30px !important;
+    cursor: pointer !important;
+}
+
+.bi:hover {
+    color: var(--dark-contrast-text) !important;
+}
+
 /* CARD */
 
 .card {
@@ -82,6 +110,18 @@ body {
 
 .card-hover:hover {
     background-color: var(--dark-pallete-4) !important;
+}
+
+.card-list {
+    background-color: var(--dark-pallete-2) !important;
+    color: var(--dark-pallete-text) !important;
+    margin-top: 0rem;
+    margin-bottom: 1.5rem;
+}
+
+.inside-card {
+    margin: 1.5rem;
+    margin-top: 0.8rem;
 }
 
 .close-card-button {

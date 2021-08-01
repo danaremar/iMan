@@ -7,7 +7,7 @@
             <div class="flex-column">
                 <li [routerLinkActive]="['active']" class="nav-item">
                     <a class="nav-link" [routerLink]="['/app/time']" style="color: inherit;" ngbTooltip="Time" placement="right" [openDelay]="300">
-                        <em class="bi bi-clock" style="font-size: 30px;"></em>
+                        <em class="bi bi-stopwatch" style="font-size: 30px;"></em>
                     </a>
                 </li>
                 <li [routerLinkActive]="['active']" class="nav-item">
@@ -15,19 +15,24 @@
                         <em class="bi bi-kanban" style="font-size: 30px;"></em>
                     </a>
                 </li>
-                <li [routerLinkActive]="['active']" class="nav-item">
+                <li [routerLinkActive]="['active']" class="nav-item" hidden>
                     <a class="nav-link" [routerLink]="['/app/chat']" style="color: inherit;" ngbTooltip="Chat" placement="right" [openDelay]="300">
                         <em class="bi bi-chat-dots" style="font-size: 30px;"></em>
                     </a>
                 </li>
-                <li [routerLinkActive]="['active']" class="nav-item">
+                <li [routerLinkActive]="['active']" class="nav-item" hidden>
                     <a class="nav-link" [routerLink]="['/app/requirements']" style="color: inherit;" ngbTooltip="Requirements" placement="right" [openDelay]="300">
                         <em class="bi bi-key" style="font-size: 30px;"></em>
                     </a>
                 </li>
-                <li [routerLinkActive]="['active']" class="nav-item">
+                <li [routerLinkActive]="['active']" class="nav-item" hidden>
                     <a class="nav-link" [routerLink]="['/app/team']" style="color: inherit;" ngbTooltip="Team" placement="right" [openDelay]="300">
                         <em class="bi bi-people" style="font-size: 30px;"></em>
+                    </a>
+                </li>
+                <li [routerLinkActive]="['active']" class="nav-item">
+                    <a class="nav-link" [routerLink]="['/app/sprint']" style="color: inherit;" ngbTooltip="Sprints" placement="right" [openDelay]="300">
+                        <em class="bi bi-arrow-repeat" style="font-size: 30px;"></em>
                     </a>
                 </li>
                 <li [routerLinkActive]="['active']" class="nav-item">

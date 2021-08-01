@@ -30,7 +30,4 @@ public class SprintUpdateDto {
 
 	@FutureOrPresent
 	private Date estimatedDate;
-	
-	@FutureOrPresent
-	private Date closeDate;
 }

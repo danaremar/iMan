@@ -1,0 +1,117 @@
+<!-- OPERATIONS -->
+<div class="d-flex mb-3 mr-3" style="height: 45px;">
+    <div class="flex-grow-1 center">
+        <select (change)="loadSprintsByProjectIdEvent($event.target)">
+            <option class="dark-text" *ngFor="let p of myProjects" [ngValue]="p" value="{{p.id}}">
+                {{p.name}}</option>
+        </select>
+    </div>
+    <div>
+        <a *ngIf="accessToEdit" data-bs-toggle="modal" data-bs-target="#createSprintModal">
+            <em class="bi bi-plus-lg"></em>
+        </a>
+    </div>
+</div>
+
+<div class="modal fade" id="createSprintModal" tabindex="-1" aria-labelledby="createSprintModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content bg-dark-5">
+            <div class="modal-body">
+                <div class="card overflow-auto">
+
+                    <div class="d-flex">
+                        <div class="flex-grow-1 card-title mt-2">New sprint</div>
+                        <div class="close-card-button" data-bs-dismiss="modal">
+                            <em class="bi bi-x"></em>
+                        </div>
+                    </div>
+
+                    <form [formGroup]="formNewSprint" (ngSubmit)="createSprint()">
+
+                        <div *ngIf="newSprintContainError" class="alert alert-danger mt-5"> {{newSprintMessageError}}
+                        </div>
+
+                        <!-- title -->
+                        <div class="form-group mb-4 mt-3">
+                            <p class="mb-0">Title</p>
+                            <input class="form-control {{inputClass(formNewSprint, 'title')}}" type="text" name="title"
+                                formControlName="title" maxlength="30" placeholder="" />
+                            <div class="invalid-feedback"
+                                *ngIf="formNewSprint.get('title')?.touched && formNewSprint.get('title')?.invalid">
+                                <div *ngIf="formNewSprint.get('title')?.errors?.required">Cannot be empty</div>
+                                <div *ngIf="formNewSprint.get('title')?.errors?.maxlength">Only 50 characters are
+                                    allowed</div>
+                            </div>
+                        </div>
+
+                        <!-- description -->
+                        <div class="form-group mb-4 mt-3">
+                            <p class="mb-0">Description</p>
+                            <input class="form-control {{inputClass(formNewSprint, 'description')}}" type="text"
+                                name="description" formControlName="description" maxlength="255" placeholder="" />
+                            <div class="invalid-feedback"
+                                *ngIf="formNewSprint.get('description')?.touched && formNewSprint.get('description')?.invalid">
+                                <div *ngIf="formNewSprint.get('description')?.errors?.maxlength">Only 255 characters are
+                                    allowed</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group modal-footer">
+                            <button type="button" #closebuttonCreate class="btn btn-danger"
+                                data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-success"
+                                [disabled]="!formNewSprint.valid">Create</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- VIEW SPRINTS -->
+<div class="overflow-auto scrollable-content">
+    <div *ngFor="let s of mySprints; let i=index">
+        <div class="card card-list">
+            <div class="inside-card">
+                <div class="d-flex ">
+                    <div class="flex-grow-1 center b-text align-middle">Sprint {{mySprints.length-i}}: {{s.title}}</div>
+
+                    <div *ngIf="accessToEdit">
+
+
+                        <!-- START -->
+                        <a *ngIf="determineSprintTimeStatus(s)=='future'" ngbTooltip="Start" (click)="startSprint(s.id)"
+                            placement="left" [openDelay]="300">
+                            <em class="bi bi-play-circle-fill me-3"></em>
+                        </a>
+
+                        <!-- CLOSE -->
+                        <a *ngIf="determineSprintTimeStatus(s)=='present'" ngbTooltip="Close"
+                            (click)="closeSprint(s.id)" placement="left" [openDelay]="300">
+                            <em class="bi bi-square-fill me-3"></em>
+                        </a>
+
+                        <!-- EDIT -->
+                        <a ngbTooltip="Edit" (click)="fillUpdateForm(s)" placement="left" [openDelay]="300"
+                            data-bs-toggle="modal" data-bs-target="#updateProjectModal">
+                            <em class="bi bi-pencil-fill me-3"></em>
+                        </a>
+
+                        <!-- DISABLE -->
+                        <a ngbTooltip="Disable" (click)="disableSprint(s.id)" placement="left" [openDelay]="300">
+                            <em class="bi bi-trash-fill me-3"></em>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div class="m-text">{{s.description}}</div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
