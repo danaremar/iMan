@@ -13,6 +13,7 @@
     </div>
 </div>
 
+<!-- CREATE SPRINT -->
 <div class="modal fade" id="createSprintModal" tabindex="-1" aria-labelledby="createSprintModalLabel"
     aria-hidden="true">
     <div class="modal-dialog">
@@ -29,12 +30,13 @@
 
                     <form [formGroup]="formNewSprint" (ngSubmit)="createSprint()">
 
+                        <!-- errors -->
                         <div *ngIf="newSprintContainError" class="alert alert-danger mt-5"> {{newSprintMessageError}}
                         </div>
 
                         <!-- title -->
                         <div class="form-group mb-4 mt-3">
-                            <p class="mb-0">Title</p>
+                            <p class="mb-0">Title *</p>
                             <input class="form-control {{inputClass(formNewSprint, 'title')}}" type="text" name="title"
                                 formControlName="title" maxlength="30" placeholder="" />
                             <div class="invalid-feedback"
@@ -57,11 +59,103 @@
                             </div>
                         </div>
 
+                        <!-- startDate -->
+                        <div class="form-group mb-4 mt-3">
+                            <p class="mb-0">Start date</p>
+                            <input class="form-control {{inputClass(formNewSprint, 'startDate')}}" type="date"
+                                name="startDate" formControlName="startDate" placeholder="" min="{{actualDate}}" />
+                        </div>
+
+                        <!-- estimatedDate -->
+                        <div class="form-group mb-4 mt-3">
+                            <p class="mb-0">Close estimated date</p>
+                            <input class="form-control {{inputClass(formNewSprint, 'estimatedDate')}}" type="date"
+                                name="estimatedDate" formControlName="estimatedDate" placeholder=""
+                                min="{{actualDate}}" />
+                        </div>
+
+                        <!-- buttons -->
                         <div class="form-group modal-footer">
                             <button type="button" #closebuttonCreate class="btn btn-danger"
                                 data-bs-dismiss="modal">Close</button>
                             <button type="submit" class="btn btn-success"
                                 [disabled]="!formNewSprint.valid">Create</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- UPDATE SPRINT -->
+<div class="modal fade" id="updateSprintModal" tabindex="-1" aria-labelledby="updateSprintModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content bg-dark-5">
+            <div class="modal-body">
+                <div class="card overflow-auto">
+
+                    <div class="d-flex">
+                        <div class="flex-grow-1 card-title mt-2">Update sprint</div>
+                        <div class="close-card-button" #closebuttonUpdate data-bs-dismiss="modal">
+                            <em class="bi bi-x"></em>
+                        </div>
+                    </div>
+
+                    <form [formGroup]="formUpdateSprint" (ngSubmit)="updateSprint()">
+
+                        <!-- errors -->
+                        <div *ngIf="updateSprintContainError" class="alert alert-danger mt-5"> {{updateSprintMessageError}}
+                        </div>
+
+                        <!-- title -->
+                        <div class="form-group mb-4 mt-3">
+                            <p class="mb-0">Title *</p>
+                            <input class="form-control {{inputClass(formUpdateSprint, 'title')}}" type="text" name="title"
+                                formControlName="title" maxlength="30" placeholder="" />
+                            <div class="invalid-feedback"
+                                *ngIf="formUpdateSprint.get('title')?.touched && formUpdateSprint.get('title')?.invalid">
+                                <div *ngIf="formUpdateSprint.get('title')?.errors?.required">Cannot be empty</div>
+                                <div *ngIf="formUpdateSprint.get('title')?.errors?.maxlength">Only 50 characters are
+                                    allowed</div>
+                            </div>
+                        </div>
+
+                        <!-- description -->
+                        <div class="form-group mb-4 mt-3">
+                            <p class="mb-0">Description</p>
+                            <input class="form-control {{inputClass(formUpdateSprint, 'description')}}" type="text"
+                                name="description" formControlName="description" maxlength="255" placeholder="" />
+                            <div class="invalid-feedback"
+                                *ngIf="formUpdateSprint.get('description')?.touched && formUpdateSprint.get('description')?.invalid">
+                                <div *ngIf="formUpdateSprint.get('description')?.errors?.maxlength">Only 255 characters are
+                                    allowed</div>
+                            </div>
+                        </div>
+
+                        <!-- startDate -->
+                        <div class="form-group mb-4 mt-3">
+                            <p class="mb-0">Start date</p>
+                            <input class="form-control {{inputClass(formUpdateSprint, 'startDate')}}" type="date"
+                                name="startDate" formControlName="startDate" placeholder="" min="{{actualDate}}" />
+                        </div>
+
+                        <!-- estimatedDate -->
+                        <div class="form-group mb-4 mt-3">
+                            <p class="mb-0">Close estimated date</p>
+                            <input class="form-control {{inputClass(formUpdateSprint, 'estimatedDate')}}" type="date"
+                                name="estimatedDate" formControlName="estimatedDate" placeholder=""
+                                min="{{actualDate}}" />
+                        </div>
+
+                        <!-- buttons -->
+                        <div class="form-group modal-footer">
+                            <button type="button" class="btn btn-danger"
+                                data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-success"
+                                [disabled]="!formUpdateSprint.valid">Update</button>
                         </div>
                     </form>
                 </div>
@@ -96,7 +190,7 @@
 
                         <!-- EDIT -->
                         <a ngbTooltip="Edit" (click)="fillUpdateForm(s)" placement="left" [openDelay]="300"
-                            data-bs-toggle="modal" data-bs-target="#updateProjectModal">
+                            data-bs-toggle="modal" data-bs-target="#updateSprintModal">
                             <em class="bi bi-pencil-fill me-3"></em>
                         </a>
 

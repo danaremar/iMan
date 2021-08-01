@@ -1,5 +1,6 @@
 package com.iman.model.sprints;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -47,13 +48,13 @@ public class Sprint {
 	private Date creationDate;
 	
 	@Column(name = "start_date")
-	private Date startDate;
+	private LocalDate startDate;
 
 	@Column(name = "estimated_date")
-	private Date estimatedDate;
+	private LocalDate estimatedDate;
 
 	@Column(name = "close_date")
-	private Date closeDate;
+	private LocalDate closeDate;
 
 	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY)

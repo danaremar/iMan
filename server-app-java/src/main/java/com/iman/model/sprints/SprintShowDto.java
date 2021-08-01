@@ -1,7 +1,6 @@
 package com.iman.model.sprints;
 
-import java.util.Date;
-
+import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,9 +18,9 @@ public class SprintShowDto {
 	
 	private String description;
 	
-	private Date startDate;
+	private LocalDate startDate;
 
-	private Date estimatedDate;
+	private LocalDate estimatedDate;
 	
-	private Date closeDate;
+	private LocalDate closeDate;
 }

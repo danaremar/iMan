@@ -14,13 +14,15 @@ import { SprintService } from "src/app/services/sprints/sprint.service";
 })
 export class SprintComponent implements OnInit {
 
-    
+
     @ViewChild('closebuttonCreate') closebuttonCreate: any;
+    @ViewChild('closebuttonUpdate') closebuttonUpdate: any;
 
     myProjects: any
     accessToEdit: boolean = false
     mySprints: any
-    projectSelectedId: number = 0
+    projectSelectedId: number | undefined
+    actualDate: any
 
     containError: boolean = false
     messageError: string | undefined
@@ -32,6 +34,7 @@ export class SprintComponent implements OnInit {
     formUpdateSprint: FormGroup
     updateSprintContainError: boolean = false
     updateSprintMessageError: string | undefined
+    sprintSelectedId: any
 
     constructor(private sprintService: SprintService, private projectService: ProjectService, private formBuilder: FormBuilder, private tokenService: TokenService) {
         this.formNewSprint = formBuilder.group({
@@ -39,7 +42,6 @@ export class SprintComponent implements OnInit {
             description: ['', []],
             startDate: ['', []],
             estimatedDate: ['', []],
-            projectId: ['', []],
         })
 
         this.formUpdateSprint = formBuilder.group({
@@ -52,6 +54,7 @@ export class SprintComponent implements OnInit {
 
     ngOnInit(): void {
         this.loadMyProjects()
+        this.loadActualDate()
     }
 
     loadMyProjects(): any {
@@ -66,10 +69,25 @@ export class SprintComponent implements OnInit {
         )
     }
 
+    loadActualDate() {
+        let dtToday = new Date()
+
+        let month: string = String(dtToday.getMonth() + 1)
+        let day: string = String(dtToday.getDate())
+        let year: string = String(dtToday.getFullYear())
+
+        if (Number(month) < 10)
+            month = '0' + month.toString();
+        if (Number(day) < 10)
+            day = '0' + day.toString();
+
+        this.actualDate = year + '-' + month + '-' + day;
+    }
+
     returnPrincipalError(err: any) {
         var r = err.error.text
         if (r == undefined) {
-            r = 'Ha ocurrido un error'
+            r = 'Error produced'
         }
         this.messageError = r;
         this.containError = true
@@ -77,6 +95,7 @@ export class SprintComponent implements OnInit {
 
     loadFirstProject() {
         if (this.myProjects.length !== 0) {
+            this.projectSelectedId = this.myProjects[0].id
             this.loadSprintsByProjectId(this.myProjects[0].id)
         }
     }
@@ -104,8 +123,10 @@ export class SprintComponent implements OnInit {
         }
     }
 
-    reloadSprintsByProject(){
-        this.loadSprintsByProjectId(this.projectSelectedId);
+    reloadSprintsByProject() {
+        if (this.projectSelectedId != undefined) {
+            this.loadSprintsByProjectId(this.projectSelectedId)
+        }
     }
 
     loadSprintsByProjectId(projectId: number) {
@@ -121,11 +142,11 @@ export class SprintComponent implements OnInit {
         )
     }
 
-    determineSprintTimeStatus(sprint: SprintShow): string{
-        let isfuture = (new Date(sprint.startDate))>(new Date())
-        if(sprint.startDate==null || isfuture) {
+    determineSprintTimeStatus(sprint: SprintShow): string {
+        let isfuture = (new Date(sprint.startDate)) > (new Date())
+        if (sprint.startDate == null || isfuture) {
             return 'future'
-        } else if(sprint.closeDate!=null){
+        } else if (sprint.closeDate != null) {
             return 'past'
         } else {
             return 'present'
@@ -133,39 +154,51 @@ export class SprintComponent implements OnInit {
     }
 
     fillUpdateForm(sprint: SprintShow) {
+        this.sprintSelectedId = sprint.id
         this.formUpdateSprint = this.formBuilder.group({
             title: [sprint.title, [Validators.required]],
-            description: [sprint.closeDate, []],
+            description: [sprint.description, []],
             startDate: [sprint.startDate, []],
             estimatedDate: [sprint.estimatedDate, []]
         })
     }
 
     createSprint() {
-        let newSprint: SprintCreate = new SprintCreate(this.formNewSprint.value.title, this.formNewSprint.value.description, this.formNewSprint.value.startDate, this.formNewSprint.value.estimatedDate, this.projectSelectedId)
-    
-        this.sprintService.createSprint(newSprint).subscribe(
-            res => {
-                this.closebuttonCreate.nativeElement.click()
-                this.reloadSprintsByProject()
-                this.newSprintContainError = false
-            },
-            err => {
-                var r = err.error.text
-                if (r == undefined) {
-                    r = "Error adding the user"
+        if (this.projectSelectedId != undefined) {
+
+            let newSprint: SprintCreate = new SprintCreate(this.formNewSprint.value.title, this.formNewSprint.value.description, this.formNewSprint.value.startDate, this.formNewSprint.value.estimatedDate, this.projectSelectedId)
+
+            this.sprintService.createSprint(newSprint).subscribe(
+                res => {
+                    this.closebuttonCreate.nativeElement.click()
+                    this.reloadSprintsByProject()
+                    this.newSprintContainError = false
+                },
+                err => {
+                    this.returnNewError(err)
                 }
-                this.newSprintContainError = true
-                this.newSprintMessageError = r
-            }
-        )
+            )
+        } else {
+            this.newSprintContainError = true
+            this.newSprintMessageError = 'No project selected to create an Sprint'
+        }
     }
 
-    updateSprint(sprintId: number) {
-        let updateSprint: SprintUpdate = new SprintUpdate(sprintId, this.formUpdateSprint.value.title,this.formUpdateSprint.value.description, this.formUpdateSprint.value.startDate, this.formUpdateSprint.value.estimatedDate)
-    
+    returnNewError(err: any) {
+        var r = err.error.text
+        if (r == undefined) {
+            r = "Error adding the user"
+        }
+        this.newSprintContainError = true
+        this.newSprintMessageError = r
+    }
+
+    updateSprint() {
+        let updateSprint: SprintUpdate = new SprintUpdate(this.sprintSelectedId, this.formUpdateSprint.value.title, this.formUpdateSprint.value.description, this.formUpdateSprint.value.startDate, this.formUpdateSprint.value.estimatedDate)
+
         this.sprintService.updateSprint(updateSprint).subscribe(
             res => {
+                this.closebuttonUpdate.nativeElement.click()
                 this.reloadSprintsByProject()
                 this.updateSprintContainError = false
             },

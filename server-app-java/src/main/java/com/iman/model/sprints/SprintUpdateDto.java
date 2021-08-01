@@ -1,7 +1,6 @@
 package com.iman.model.sprints;
 
-import java.util.Date;
-
+import java.time.LocalDate;
 import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -26,8 +25,8 @@ public class SprintUpdateDto {
 	private String description;
 	
 	@FutureOrPresent
-	private Date startDate;
+	private LocalDate startDate;
 
 	@FutureOrPresent
-	private Date estimatedDate;
+	private LocalDate estimatedDate;
 }

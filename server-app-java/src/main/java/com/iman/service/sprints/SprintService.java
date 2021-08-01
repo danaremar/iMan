@@ -1,5 +1,6 @@
 package com.iman.service.sprints;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -93,7 +94,7 @@ public class SprintService {
 	public void startSprint(Long sprintId) {
 		Sprint sprintOld = findById(sprintId);
 		projectService.verifyOwnerOrAdmin(sprintOld.getProject());
-		sprintOld.setStartDate(new Date());
+		sprintOld.setStartDate(LocalDate.now());
 		sprintRepository.save(sprintOld);
 	}
 	
@@ -101,7 +102,7 @@ public class SprintService {
 	public void closeSprint(Long sprintId) {
 		Sprint sprintOld = findById(sprintId);
 		projectService.verifyOwnerOrAdmin(sprintOld.getProject());
-		sprintOld.setCloseDate(new Date());
+		sprintOld.setCloseDate(LocalDate.now());
 		sprintRepository.save(sprintOld);
 	}
 	
