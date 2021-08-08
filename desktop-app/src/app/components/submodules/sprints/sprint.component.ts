@@ -19,9 +19,9 @@ export class SprintComponent implements OnInit {
     @ViewChild('closebuttonUpdate') closebuttonUpdate: any;
 
     myProjects: any
-    accessToEdit: boolean = false
     mySprints: any
-    projectSelectedId: number | undefined
+    projectSelectedId: number | null | undefined
+    accessToEdit: boolean = false
     actualDate: any
 
     containError: boolean = false
@@ -61,6 +61,7 @@ export class SprintComponent implements OnInit {
         this.projectService.myProjects().subscribe(
             data => {
                 this.myProjects = data
+                this.projectSelectedId = this.projectService.getStoredProjectId()
                 this.loadFirstProject()
             },
             err => {
@@ -95,15 +96,18 @@ export class SprintComponent implements OnInit {
 
     loadFirstProject() {
         if (this.myProjects.length !== 0) {
-            this.projectSelectedId = this.myProjects[0].id
-            this.loadSprintsByProjectId(this.myProjects[0].id)
+            let projectId = this.projectService.getStoredProjectId()
+            if (projectId == null || projectId == 0) {
+                this.projectService.setStoredProjectId(this.myProjects[0].id)
+            }
+            this.loadSprintsBySelectedProject()
         }
     }
 
     loadSprintsByProjectIdEvent(projectIdEvent: any) {
         let projectIdStr = projectIdEvent.value
-        this.projectSelectedId = Number(projectIdStr)
-        this.loadSprintsByProjectId(this.projectSelectedId)
+        this.projectService.setStoredProjectId(Number(projectIdStr))
+        this.loadSprintsBySelectedProject()
     }
 
     editIsAllowed(projectId: number) {
@@ -123,23 +127,19 @@ export class SprintComponent implements OnInit {
         }
     }
 
-    reloadSprintsByProject() {
-        if (this.projectSelectedId != undefined) {
-            this.loadSprintsByProjectId(this.projectSelectedId)
+    loadSprintsBySelectedProject() {
+        let projectId = this.projectService.getStoredProjectId()
+        if (projectId != null && projectId != 0) {
+            this.editIsAllowed(projectId)
+            this.sprintService.sprintFromProject(projectId).subscribe(
+                data => {
+                    this.mySprints = data
+                },
+                err => {
+                    this.returnPrincipalError(err)
+                }
+            )
         }
-    }
-
-    loadSprintsByProjectId(projectId: number) {
-        this.editIsAllowed(projectId)
-
-        this.sprintService.sprintFromProject(projectId).subscribe(
-            data => {
-                this.mySprints = data
-            },
-            err => {
-                this.returnPrincipalError(err)
-            }
-        )
     }
 
     determineSprintTimeStatus(sprint: SprintShow): string {
@@ -164,14 +164,13 @@ export class SprintComponent implements OnInit {
     }
 
     createSprint() {
-        if (this.projectSelectedId != undefined) {
-
-            let newSprint: SprintCreate = new SprintCreate(this.formNewSprint.value.title, this.formNewSprint.value.description, this.formNewSprint.value.startDate, this.formNewSprint.value.estimatedDate, this.projectSelectedId)
-
+        let projectId = this.projectService.getStoredProjectId()
+        if (projectId != null && projectId != 0) {
+            let newSprint: SprintCreate = new SprintCreate(this.formNewSprint.value.title, this.formNewSprint.value.description, this.formNewSprint.value.startDate, this.formNewSprint.value.estimatedDate, projectId)
             this.sprintService.createSprint(newSprint).subscribe(
                 res => {
                     this.closebuttonCreate.nativeElement.click()
-                    this.reloadSprintsByProject()
+                    this.loadSprintsBySelectedProject()
                     this.newSprintContainError = false
                 },
                 err => {
@@ -199,7 +198,7 @@ export class SprintComponent implements OnInit {
         this.sprintService.updateSprint(updateSprint).subscribe(
             res => {
                 this.closebuttonUpdate.nativeElement.click()
-                this.reloadSprintsByProject()
+                this.loadSprintsBySelectedProject()
                 this.updateSprintContainError = false
             },
             err => {
@@ -216,7 +215,7 @@ export class SprintComponent implements OnInit {
     disableSprint(sprintId: number) {
         this.sprintService.disableSprint(sprintId).subscribe(
             res => {
-                this.reloadSprintsByProject()
+                this.loadSprintsBySelectedProject()
             },
             err => {
                 this.returnPrincipalError(err)
@@ -227,7 +226,7 @@ export class SprintComponent implements OnInit {
     startSprint(sprintId: number) {
         this.sprintService.startSprint(sprintId).subscribe(
             res => {
-                this.reloadSprintsByProject()
+                this.loadSprintsBySelectedProject()
             },
             err => {
                 this.returnPrincipalError(err)
@@ -238,7 +237,7 @@ export class SprintComponent implements OnInit {
     closeSprint(sprintId: number) {
         this.sprintService.closeSprint(sprintId).subscribe(
             res => {
-                this.reloadSprintsByProject()
+                this.loadSprintsBySelectedProject()
             },
             err => {
                 this.returnPrincipalError(err)

@@ -4,10 +4,13 @@ import { Observable } from "rxjs"
 import { SprintCreate, SprintShow, SprintUpdate } from "src/app/models/sprint/sprint"
 import { environment } from "src/environments/environment"
 
+const SPRINT_ID = 'SprintId'
+
 @Injectable({
     providedIn: 'root'
 })
 export class SprintService {
+
     // URL
     hostUrl = environment.backendEndpoint + '/sprint/'
 
@@ -54,6 +57,12 @@ export class SprintService {
         return this.httpClient.get<SprintShow>(url)
     }
 
+    public getStoredSprintId(): number | null {
+        return Number(localStorage.getItem(SPRINT_ID))
+    }
 
+    public setStoredSprintId(sprintId: number): void {
+        localStorage.setItem(SPRINT_ID, String(sprintId))
+    }
 
 }

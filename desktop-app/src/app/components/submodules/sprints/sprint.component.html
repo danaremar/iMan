@@ -1,10 +1,13 @@
 <!-- OPERATIONS -->
 <div class="d-flex mb-3 mr-3" style="height: 45px;">
-    <div class="flex-grow-1 center">
-        <select (change)="loadSprintsByProjectIdEvent($event.target)">
-            <option class="dark-text" *ngFor="let p of myProjects" [ngValue]="p" value="{{p.id}}">
-                {{p.name}}</option>
-        </select>
+    <div class="flex-grow-1 center d-flex">
+        <div *ngIf="myProjects.length!=0">
+            <select (change)="loadSprintsByProjectIdEvent($event.target)">
+                <option class="dark-text" *ngFor="let p of myProjects"
+                    [attr.selected]="p.id==projectSelectedId?true:null" [ngValue]="p" value="{{p.id}}">
+                    {{p.name}}</option>
+            </select>
+        </div>
     </div>
     <div>
         <a *ngIf="accessToEdit" data-bs-toggle="modal" data-bs-target="#createSprintModal">
@@ -12,6 +15,8 @@
         </a>
     </div>
 </div>
+
+<div *ngIf="containError" class="alert alert-danger mt-3 mb-3">{{messageError}}</div>
 
 <!-- CREATE SPRINT -->
 <div class="modal fade" id="createSprintModal" tabindex="-1" aria-labelledby="createSprintModalLabel"
@@ -107,14 +112,15 @@
                     <form [formGroup]="formUpdateSprint" (ngSubmit)="updateSprint()">
 
                         <!-- errors -->
-                        <div *ngIf="updateSprintContainError" class="alert alert-danger mt-5"> {{updateSprintMessageError}}
+                        <div *ngIf="updateSprintContainError" class="alert alert-danger mt-5">
+                            {{updateSprintMessageError}}
                         </div>
 
                         <!-- title -->
                         <div class="form-group mb-4 mt-3">
                             <p class="mb-0">Title *</p>
-                            <input class="form-control {{inputClass(formUpdateSprint, 'title')}}" type="text" name="title"
-                                formControlName="title" maxlength="30" placeholder="" />
+                            <input class="form-control {{inputClass(formUpdateSprint, 'title')}}" type="text"
+                                name="title" formControlName="title" maxlength="30" placeholder="" />
                             <div class="invalid-feedback"
                                 *ngIf="formUpdateSprint.get('title')?.touched && formUpdateSprint.get('title')?.invalid">
                                 <div *ngIf="formUpdateSprint.get('title')?.errors?.required">Cannot be empty</div>
@@ -130,7 +136,8 @@
                                 name="description" formControlName="description" maxlength="255" placeholder="" />
                             <div class="invalid-feedback"
                                 *ngIf="formUpdateSprint.get('description')?.touched && formUpdateSprint.get('description')?.invalid">
-                                <div *ngIf="formUpdateSprint.get('description')?.errors?.maxlength">Only 255 characters are
+                                <div *ngIf="formUpdateSprint.get('description')?.errors?.maxlength">Only 255 characters
+                                    are
                                     allowed</div>
                             </div>
                         </div>
@@ -152,8 +159,7 @@
 
                         <!-- buttons -->
                         <div class="form-group modal-footer">
-                            <button type="button" class="btn btn-danger"
-                                data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
                             <button type="submit" class="btn btn-success"
                                 [disabled]="!formUpdateSprint.valid">Update</button>
                         </div>

@@ -5,6 +5,8 @@ import { Observable } from "rxjs"
 import { NewProject, Project, UpdateProject } from "src/app/models/project/project"
 import { CreateProjectRole, NotAcceptedProjectRole, UpdateProjectRole } from "src/app/models/project/roles"
 
+const PROJECT_ID = 'ProjectId'
+
 @Injectable({
     providedIn: 'root'
 })
@@ -65,6 +67,14 @@ export class ProjectService {
     public getAllMineNotAcceptedProjectRoles(): Observable<any> {
         var url = this.hostUrl + '/project/my-roles'
         return this.httpClient.get<NotAcceptedProjectRole>(url)
+    }
+
+    public getStoredProjectId(): number | null {
+        return Number(localStorage.getItem(PROJECT_ID))
+    }
+
+    public setStoredProjectId(projectId: number): void {
+        localStorage.setItem(PROJECT_ID,String(projectId))
     }
 
     public getAllRoles() {

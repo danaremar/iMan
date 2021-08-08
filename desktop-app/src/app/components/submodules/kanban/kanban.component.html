@@ -1,1 +1,27 @@
-Kanban module
+<!-- OPERATIONS -->
+<div class="d-flex mb-3 mr-3" style="height: 45px;">
+    <div class="flex-grow-1 center d-flex">
+        <div *ngIf="myProjects.length!=0">
+            <select (change)="loadSprintsByProjectIdEvent($event.target)">
+                <option class="dark-text" *ngFor="let p of myProjects"
+                    [attr.selected]="p.id==projectSelectedId?true:null" [ngValue]="p" value="{{p.id}}">
+                    {{p.name}}</option>
+            </select>
+        </div>
+        <div *ngIf="mySprints.length!=0">
+            <select class="ms-3" (change)="loadKanbanBySprintIdEvent($event.target)">
+                <option class="dark-text" *ngFor="let s of mySprints" [attr.selected]="s.id==sprintSelectedId?true:null"
+                    [ngValue]="s" value="{{s.id}}">
+                    {{s.title}}</option>
+            </select>
+        </div>
+    </div>
+
+    <div>
+        <a *ngIf="adminAccess" data-bs-toggle="modal" data-bs-target="#createColumnModal">
+            <em class="bi bi-plus-lg"></em>
+        </a>
+    </div>
+</div>
+
+<div *ngIf="containError" class="alert alert-danger mt-3 mb-3">{{messageError}}</div>
