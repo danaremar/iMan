@@ -38,5 +38,19 @@ INSERT INTO sprint (id, active, close_date, creation_date, description, estimate
 INSERT INTO sprint (id, active, close_date, creation_date, description, estimated_date, `number`, start_date, title, project_id) VALUES(6, 1, NULL, '2021-07-20 12:35:00.335000000', 'Improve DB Queries', NULL, 5, '2021-11-01 12:35:00.335000000', 'DB Queries', 1);
 
 
+-- KANBAN COLUMNS
+INSERT INTO kanban_column (id, active, column_order, title, sprint_id) VALUES(1, 1, 0, 'To do', 4);
+INSERT INTO kanban_column (id, active, column_order, title, sprint_id) VALUES(2, 1, 1, 'In progress', 4);
+INSERT INTO kanban_column (id, active, column_order, title, sprint_id) VALUES(3, 1, 2, 'Done', 4);
+
+-- KANBAN TASKS
+INSERT INTO kanban_task (id, active, creation_date, description, estimated_time, `number`, order_in_column, title, kanban_column_id) VALUES(1, 1, '2021-08-07 11:03:42.561000000', 'Task C', 0.0, 0, 0, 'Example task', 1);
+INSERT INTO kanban_task (id, active, creation_date, description, estimated_time, `number`, order_in_column, title, kanban_column_id) VALUES(2, 0, '2021-08-07 11:03:56.523000000', 'Task B', 0.0, 1, 1, 'Example task', 1);
+INSERT INTO kanban_task (id, active, creation_date, description, estimated_time, `number`, order_in_column, title, kanban_column_id) VALUES(3, 1, '2021-08-07 11:04:04.432000000', 'Task A', 0.0, 2, 2, 'Example task', 1);
+INSERT INTO kanban_task (id, active, creation_date, description, estimated_time, `number`, order_in_column, title, kanban_column_id) VALUES(4, 1, '2021-08-07 11:05:26.597000000', 'Task E', 0.0, 3, 0, 'Example task', 2);
+INSERT INTO kanban_task (id, active, creation_date, description, estimated_time, `number`, order_in_column, title, kanban_column_id) VALUES(5, 1, '2021-08-07 11:05:32.290000000', 'Task D', 0.0, 4, 1, 'Example task', 2);
+INSERT INTO kanban_task (id, active, creation_date, description, estimated_time, `number`, order_in_column, title, kanban_column_id) VALUES(6, 1, '2021-08-07 11:06:55.721000000', 'Task F', 0.0, 5, 0, 'Example task', 3);
+
+
 
 --select * from sprint s where s.active = 1 order by s.`number` desc,

@@ -27,6 +27,7 @@ public class SprintService {
 	@Autowired
 	private ProjectService projectService;
 	
+	@Transactional
 	public Sprint findById(Long sprintId) {
 		Sprint exampleSprint = new Sprint();
 		exampleSprint.setId(sprintId);

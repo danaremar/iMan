@@ -15,14 +15,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.iman.model.users.User;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Entity
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 @Table(name = "project2role")
 public class ProjectRole {
 
@@ -33,9 +29,7 @@ public class ProjectRole {
 	@NotNull
 	@ManyToOne
 	@JoinColumn(name = "user_id")
-	@JsonIgnoreProperties({
-		"id", "projectRoles"
-	})
+	@JsonIgnoreProperties({ "id", "projectRoles" })
 	private User user;
 
 	@NotNull
@@ -51,7 +45,7 @@ public class ProjectRole {
 	@Min(value = 0)
 	@Max(value = 3)
 	private Integer role;
-	
+
 	private Boolean accepted;
 
 }

@@ -3,7 +3,6 @@ package com.iman.model.projects;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -29,7 +28,7 @@ public class Project {
 	private Long id;
 
 	@NotBlank
-	@Length(max = 30)
+	@Length(max = 50)
 	private String name;
 
 	@NotBlank
@@ -38,10 +37,8 @@ public class Project {
 
 	@NotNull
 	@PastOrPresent
-	@Column(name = "creation_date")
 	private Date creationDate;
 
-	@Column(name = "close_date")
 	private Date closeDate;
 
 	@NotNull

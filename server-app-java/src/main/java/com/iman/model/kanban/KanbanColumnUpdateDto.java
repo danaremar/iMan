@@ -1,8 +1,10 @@
-package com.iman.model.projects;
+package com.iman.model.kanban;
 
-import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.Length;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,16 +13,16 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProjectRoleUpdateDto {
+public class KanbanColumnUpdateDto {
 	
 	@NotNull
 	private Long id;
-
-	/*
-	 * ROLES : 0 -> OWNER; 1 -> ADMIN; 2 -> MEMBER; 3 -> VISITOR
-	 */
-	@NotNull
+	
+	@NotBlank
+	@Length(max = 50)
+	private String title;
+	
 	@Min(value = 0)
-	@Max(value = 3)
-	private Integer role;
+	private Long columnOrder;
+
 }
