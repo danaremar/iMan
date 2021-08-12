@@ -1,0 +1,20 @@
+.column-card {
+    background-color: var(--dark-pallete-3) !important;
+    min-width: 400px;
+    width: 400px;
+    height: calc(100vh - var(--navbar-size) - 135px);
+}
+
+.task-card {
+    background-color: var(--dark-pallete-2) !important;
+    border-radius: 10px;
+}
+
+.overflow-x{
+    overflow-x: auto;
+}
+
+.scrollable-x{
+    overflow-x: auto;
+    width: calc(100vw - 100px - var(--sidebar-size)) !important;
+}

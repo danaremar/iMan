@@ -1,5 +1,7 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ViewChild } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { KanbanColumnCreate, KanbanColumnShow, KanbanColumnUpdate } from "src/app/models/kanban/kanbanColumn";
+import { KanbanTask, KanbanTaskCreate, KanbanTaskUpdate } from "src/app/models/kanban/kanbanTask";
 import { Project } from "src/app/models/project/project";
 import { ProjectRole } from "src/app/models/project/roles";
 import { TokenService } from "src/app/services/authentication/token.service";
@@ -14,6 +16,11 @@ import { SprintService } from "src/app/services/sprints/sprint.service";
 })
 export class KanbanComponent implements OnInit {
 
+    @ViewChild('closebuttonCreateColumn') closebuttonCreateColumn: any;
+    @ViewChild('closebuttonUpdateColumn') closebuttonUpdateColumn: any;
+    @ViewChild('closebuttonCreateTask') closebuttonCreateTask: any;
+    @ViewChild('closebuttonUpdateTask') closebuttonUpdateTask: any;
+
     /***************************
             GENERAL
     ***************************/
@@ -24,6 +31,8 @@ export class KanbanComponent implements OnInit {
     memberAccess: boolean = false
     projectSelectedId: number | null | undefined
     sprintSelectedId: number | null | undefined
+    kanbanColumnSelected: any
+    kanbanTaskSelected: any
     kanban: any
 
     containError: boolean = false
@@ -71,7 +80,8 @@ export class KanbanComponent implements OnInit {
             title: ['', [Validators.required]]
         })
         this.formUpdateColumn = formBuilder.group({
-            title: ['', [Validators.required]]
+            title: ['', [Validators.required]],
+            columnOrder: ['', [Validators.required]],
         })
 
         // TASKS
@@ -210,7 +220,7 @@ export class KanbanComponent implements OnInit {
 
     loadKanbanBySelectedSprint() {
         let sprintId = this.sprintService.getStoredSprintId()
-        if (sprintId != null && sprintId != 0){
+        if (sprintId != null && sprintId != 0) {
             this.kanbanService.getAllKanbanBySprintId(sprintId).subscribe(
                 data => {
                     this.kanban = data
@@ -227,10 +237,118 @@ export class KanbanComponent implements OnInit {
         METHODS -> COLUMNS
     ***************************/
 
+    newColumn() {
+        let sprintId = this.sprintService.getStoredSprintId()
+        if (sprintId != null && sprintId != 0) {
+            let newColumn: KanbanColumnCreate = new KanbanColumnCreate(this.formNewColumn.value.title, sprintId)
+            this.kanbanService.createKanbanColumn(newColumn).subscribe(
+                res => {
+                    this.loadKanbanBySelectedSprint()
+                    this.closebuttonCreateColumn.nativeElement.click()
+                },
+                err => {
+                    var r = err.error.text
+                    if (r == undefined) {
+                        r = 'Error produced'
+                    }
+                    this.newColumnMessageError = r;
+                    this.newColumnContainError = true
+                }
+            )
+        }
+    }
 
+    fillColumnUpdateForm(kanbanColumn: KanbanColumnShow) {
+        this.kanbanColumnSelected = kanbanColumn
+
+        this.formUpdateColumn = this.formBuilder.group({
+            title: [kanbanColumn.title, [Validators.required]],
+            columnOrder:  [kanbanColumn.columnOrder, [Validators.required]],
+        })
+    }
+
+    editColumn() {
+        let updateColumn: KanbanColumnUpdate = new KanbanColumnUpdate(this.kanbanColumnSelected.id, this.formUpdateColumn.value.title, this.formUpdateColumn.value.columnOrder)
+        this.kanbanService.updateKanbanColumn(updateColumn).subscribe(
+            res => {
+                this.loadKanbanBySelectedSprint()
+                this.closebuttonUpdateColumn.nativeElement.click()
+            },
+            err => {
+                var r = err.error.text
+                if (r == undefined) {
+                    r = 'Error produced'
+                }
+                this.updateColumnMessageError = r;
+                this.updateColumnContainError = true
+            }
+        )
+    }
+
+    disableColumn(kanbanColumn: any) {
+        this.kanbanService.disableKanbanColumn(kanbanColumn.id).subscribe(
+            res => {
+                this.loadKanbanBySelectedSprint()
+            },
+            err => {
+                this.returnPrincipalError(err)
+            }
+        )
+    }
 
     /***************************
         METHODS -> TASKS
     ***************************/
+
+    newTask() {
+        let createTask: KanbanTaskCreate = new KanbanTaskCreate(this.formNewTask.value.title,this.formNewTask.value.description,this.formNewTask.value.estimatedTime,this.kanbanColumnSelected.id)
+        this.kanbanService.createKanbanTask(createTask).subscribe(
+            res => {
+                this.loadKanbanBySelectedSprint()
+                this.closebuttonCreateTask.nativeElement.click()
+            },
+            err => {
+                var r = err.error.text
+                if (r == undefined) {
+                    r = 'Error produced'
+                }
+                this.newTaskMessageError = r;
+                this.newTaskContainError = true
+            }
+        )
+    }
+
+    fillTaskUpdateForm(kanbanTask: KanbanTask) {
+        this.kanbanTaskSelected = kanbanTask
+    }
+
+    editTask() {
+        let updateTask: KanbanTaskUpdate = new KanbanTaskUpdate(this.kanbanTaskSelected,this.formUpdateTask.value.title,this.formUpdateTask.value.description,this.formUpdateTask.value.estimatedTime)
+        this.kanbanService.updateKanbanTask(updateTask).subscribe(
+            res => {
+                this.loadKanbanBySelectedSprint()
+                this.closebuttonUpdateTask.nativeElement.click()
+            },
+            err => {
+                var r = err.error.text
+                if (r == undefined) {
+                    r = 'Error produced'
+                }
+                this.updateTaskMessageError = r;
+                this.updateTaskContainError = true
+            }
+        )
+    }
+
+    disableTask(kanbanTask: any) {
+        this.kanbanService.disableKanbanTask(kanbanTask.id).subscribe(
+            res => {
+                this.loadKanbanBySelectedSprint()
+            },
+            err => {
+                this.returnPrincipalError(err)
+            }
+        )
+    }
 
 }

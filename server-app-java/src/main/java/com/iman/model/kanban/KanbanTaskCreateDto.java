@@ -18,7 +18,6 @@ public class KanbanTaskCreateDto {
 	@Length(max = 50)
 	private String title;
 
-	@NotBlank
 	@Length(max = 255)
 	private String description;
 

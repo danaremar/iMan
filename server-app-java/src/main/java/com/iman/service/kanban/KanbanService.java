@@ -95,7 +95,7 @@ public class KanbanService {
 		exampleKanbanColumn.setSprint(sprint);
 		exampleKanbanColumn.setActive(true);
 		Example<KanbanColumn> example = Example.of(exampleKanbanColumn);
-		return kanbanColumnRepository.findAll(example, Sort.by(Sort.Direction.DESC, "columnOrder"));
+		return kanbanColumnRepository.findAll(example, Sort.by(Sort.Direction.ASC, "columnOrder"));
 	}
 
 	private Long countKanbanColumns(Sprint sprint) {
@@ -124,6 +124,7 @@ public class KanbanService {
 		Sprint sprint = sprintService.findById(kanbanTaskCreateDto.getSprintId());
 		verifyAdminOrOwner(sprint);
 		KanbanColumn kanbanColumn = modelMapper.map(kanbanTaskCreateDto, KanbanColumn.class);
+		kanbanColumn.setId(null);
 		kanbanColumn.setColumnOrder(countKanbanColumns(sprint));
 		kanbanColumn.setSprint(sprint);
 		kanbanColumn.setActive(true);
@@ -195,12 +196,6 @@ public class KanbanService {
 		kanbanTask.setActive(false);
 		kanbanTaskRepository.save(kanbanTask);
 	}
-
-//	@Transactional
-//	public void reorderKanbanColumnOld(KanbanColumn kanbanColumn) {
-//		List<KanbanTask> ls = kanbanColumn.getTasks().stream().filter(x -> x.getActive()).collect(Collectors.toList());
-//		IntStream.range(0, ls.size()).forEach(x -> ls.get(x).setOrderInColumn((long) x - ls.size() - 1));
-//	}
 
 	private List<KanbanTask> filterActiveTask(List<KanbanTask> ls) {
 		return ls.stream().filter(x -> x.getActive()).collect(Collectors.toList());

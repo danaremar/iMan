@@ -10,7 +10,7 @@
         </div>
     </div>
     <div>
-        <a *ngIf="accessToEdit" data-bs-toggle="modal" data-bs-target="#createSprintModal">
+        <a ngbTooltip="Create sprint"  placement="left" [openDelay]="300" *ngIf="accessToEdit" data-bs-toggle="modal" data-bs-target="#createSprintModal">
             <em class="bi bi-plus-lg"></em>
         </a>
     </div>

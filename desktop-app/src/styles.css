@@ -73,7 +73,7 @@ body {
 
 .m-text{
     font-size: 1.2rem;
-    font-weight: 400;
+    font-weight: 500;
 }
 
 .s-text{
@@ -154,6 +154,8 @@ input::-webkit-input-placeholder{
 
 select {
     border-radius: 0.3rem;
+    height: 30px;
+    width: 150px;
     background-color: var(--dark-pallete-4) !important;
     color: var(--dark-pallete-text) !important;
 }
