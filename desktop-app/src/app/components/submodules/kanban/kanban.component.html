@@ -18,16 +18,17 @@
     </div>
 
     <div>
-        <a ngbTooltip="Add column"  placement="left" [openDelay]="300" *ngIf="adminAccess" data-bs-toggle="modal" data-bs-target="#createColumnModal">
+        <a ngbTooltip="Add column" placement="left" [openDelay]="300" *ngIf="adminAccess" data-bs-toggle="modal"
+            data-bs-target="#createColumnModal">
             <em class="bi bi-plus-lg"></em>
         </a>
     </div>
 </div>
 
 <div *ngIf="containError" class="alert alert-danger mt-3 mb-3">{{messageError}}</div>
-<div class="scrollable-x" >
+<div class="scrollable-x">
     <div class="d-flex" cdkDropListGroup>
-        <div class="card column-card m-3" *ngFor="let column of kanban" >
+        <div class="card column-card m-3" *ngFor="let column of kanban">
 
             <!-- COLUMN -->
             <div class="d-flex">
@@ -35,31 +36,48 @@
                 <div class="m-auto">
 
                     <!-- ADD TASK -->
-                    <a ngbTooltip="Add task" (click)="fillColumnUpdateForm(column)" placement="left" [openDelay]="300" *ngIf="memberAccess" 
-                        data-bs-toggle="modal" data-bs-target="#createTaskModal">
-                        <em class="bi bi-plus-lg me-3"></em>
+                    <a ngbTooltip="Add task" (click)="fillColumnUpdateForm(column)" placement="left" [openDelay]="300"
+                        *ngIf="memberAccess" data-bs-toggle="modal" data-bs-target="#createTaskModal">
+                        <em class="bi bi-medium bi-plus-lg me-3"></em>
                     </a>
 
                     <!-- EDIT COLUMN -->
-                    <a ngbTooltip="Edit" (click)="fillColumnUpdateForm(column)" placement="left" [openDelay]="300" *ngIf="memberAccess" 
-                        data-bs-toggle="modal" data-bs-target="#updateColumnModal">
-                        <em class="bi bi-pencil-fill me-3"></em>
+                    <a ngbTooltip="Edit" (click)="fillColumnUpdateForm(column)" placement="left" [openDelay]="300"
+                        *ngIf="adminAccess" data-bs-toggle="modal" data-bs-target="#updateColumnModal">
+                        <em class="bi bi-medium bi-pencil-fill me-3"></em>
                     </a>
 
                     <!-- DISABLE COLUMN -->
                     <!-- Only if not exists tasks & have member access -->
-                    <a *ngIf="column.tasks.length==0 && memberAccess" ngbTooltip="Disable" (click)="disableColumn(column)" placement="left" [openDelay]="300" >
-                        <em class="bi bi-trash-fill me-3"></em>
+                    <a *ngIf="column.tasks.length==0 && adminAccess" ngbTooltip="Delete" (click)="disableColumn(column)"
+                        placement="left" [openDelay]="300">
+                        <em class="bi bi-medium bi-trash-fill me-3"></em>
                     </a>
                 </div>
             </div>
 
 
             <!-- TASKS -->
-            <div class="overflow-auto scrollable-content" cdkDropList [cdkDropListData]="column" (cdkDropListDropped)="dropTask($event)">
+            <div class="overflow-auto scrollable-content" cdkDropList [cdkDropListData]="column"
+                (cdkDropListDropped)="dropTask($event)">
                 <div class="card task-card mb-3 mx-3" *ngFor="let task of column.tasks" cdkDrag [cdkDragData]="task">
                     <div class="m-3">
-                        <div class="m-text">#{{task.number}}: {{task.title}}</div>
+                        <div class="d-flex" *ngIf="memberAccess">
+                            <div class="m-text flex-grow-1">#{{task.number}}: {{task.title}}</div>
+
+                            <!-- UPDATE TASK -->
+                            <a (click)="fillTaskUpdateForm(task)" ngbTooltip="Edit" placement="left" [openDelay]="300"
+                                data-bs-toggle="modal" data-bs-target="#updateTaskModal">
+                                <em class="bi bi-reduced bi-pencil-fill me-2"></em>
+                            </a>
+
+                            <!-- DELETE TASK -->
+                            <a (click)="disableTask(task)" ngbTooltip="Archieve" placement="left" [openDelay]="300">
+                                <em class="bi bi-reduced bi-trash-fill me-2"></em>
+                            </a>
+
+                        </div>
+
                         <div class="s-text">{{task.description}}</div>
                     </div>
                 </div>
@@ -133,13 +151,14 @@
 
                     <form [formGroup]="formUpdateColumn" (ngSubmit)="editColumn()">
 
-                        <div *ngIf="updateColumnContainError" class="alert alert-danger mt-5"> {{updateColumnMessageError}}
+                        <div *ngIf="updateColumnContainError" class="alert alert-danger mt-5">
+                            {{updateColumnMessageError}}
                         </div>
 
                         <div class="form-group mb-4 mt-3">
                             <p class="mb-0">Title</p>
-                            <input class="form-control {{inputClass(formUpdateColumn, 'title')}}" type="text" name="title"
-                                formControlName="title" maxlength="50" minlength="2" placeholder="" />
+                            <input class="form-control {{inputClass(formUpdateColumn, 'title')}}" type="text"
+                                name="title" formControlName="title" maxlength="50" minlength="2" placeholder="" />
                             <div class="invalid-feedback"
                                 *ngIf="formUpdateColumn.get('title')?.touched && formUpdateColumn.get('title')?.invalid">
                                 <div *ngIf="formUpdateColumn.get('title')?.errors?.required">Cannot be empty</div>
@@ -165,8 +184,7 @@
 </div>
 
 <!-- CREATE TASK -->
-<div class="modal fade" id="createTaskModal" tabindex="-1" aria-labelledby="createTaskModalLabel"
-    aria-hidden="true">
+<div class="modal fade" id="createTaskModal" tabindex="-1" aria-labelledby="createTaskModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content bg-dark-5">
             <div class="modal-body">
@@ -200,8 +218,9 @@
 
                         <div class="form-group mb-4 mt-3">
                             <p class="mb-0">Description</p>
-                            <input class="form-control {{inputClass(formNewTask, 'description')}}" type="text" name="description"
-                                formControlName="description" maxlength="255" minlength="2" placeholder="" />
+                            <input class="form-control {{inputClass(formNewTask, 'description')}}" type="text"
+                                name="description" formControlName="description" maxlength="255" minlength="2"
+                                placeholder="" />
                             <div class="invalid-feedback"
                                 *ngIf="formNewTask.get('description')?.touched && formNewTask.get('description')?.invalid">
                                 <div *ngIf="formNewTask.get('description')?.errors?.maxlength">Only 255 characters are
@@ -211,8 +230,8 @@
 
                         <div class="form-group mb-4 mt-3">
                             <p class="mb-0">Estimated time</p>
-                            <input class="form-control {{inputClass(formNewTask, 'estimatedTime')}}" type="number" step="0.5" name="estimatedTime"
-                                formControlName="estimatedTime" min="0" value="0" />
+                            <input class="form-control {{inputClass(formNewTask, 'estimatedTime')}}" type="number"
+                                step="0.5" name="estimatedTime" formControlName="estimatedTime" min="0" value="0" />
                             <div class="invalid-feedback"
                                 *ngIf="formNewTask.get('estimatedTime')?.touched && formNewTask.get('estimatedTime')?.invalid">
                                 <div *ngIf="formNewTask.get('estimatedTime')?.errors?.min">Cannot be negative time</div>
@@ -234,3 +253,72 @@
 </div>
 
 <!-- UPDATE TASK -->
+<div class="modal fade" id="updateTaskModal" tabindex="-1" aria-labelledby="updateTaskModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content bg-dark-5">
+            <div class="modal-body">
+                <div class="card overflow-auto">
+
+                    <div class="d-flex">
+                        <div class="flex-grow-1 card-title mt-2">Update task</div>
+                        <div class="close-card-button" data-bs-dismiss="modal">
+                            <em class="bi bi-x"></em>
+                        </div>
+                    </div>
+
+                    <form [formGroup]="formUpdateTask" (ngSubmit)="editTask()">
+
+                        <div *ngIf="updateTaskContainError" class="alert alert-danger mt-5"> {{updateTaskMessageError}}
+                        </div>
+
+                        <div class="form-group mb-4 mt-3">
+                            <p class="mb-0">Title</p>
+                            <input class="form-control {{inputClass(formUpdateTask, 'title')}}" type="text" name="title"
+                                formControlName="title" maxlength="50" minlength="2" placeholder="" />
+                            <div class="invalid-feedback"
+                                *ngIf="formUpdateTask.get('title')?.touched && formUpdateTask.get('title')?.invalid">
+                                <div *ngIf="formUpdateTask.get('title')?.errors?.required">Cannot be empty</div>
+                                <div *ngIf="formUpdateTask.get('title')?.errors?.minlength">Must containt at least 2
+                                    characters</div>
+                                <div *ngIf="formUpdateTask.get('title')?.errors?.maxlength">Only 50 characters are
+                                    allowed</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-4 mt-3">
+                            <p class="mb-0">Description</p>
+                            <input class="form-control {{inputClass(formUpdateTask, 'description')}}" type="text"
+                                name="description" formControlName="description" maxlength="255" minlength="2"
+                                placeholder="" />
+                            <div class="invalid-feedback"
+                                *ngIf="formUpdateTask.get('description')?.touched && formUpdateTask.get('description')?.invalid">
+                                <div *ngIf="formUpdateTask.get('description')?.errors?.maxlength">Only 255 characters
+                                    are
+                                    allowed</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-4 mt-3">
+                            <p class="mb-0">Estimated time</p>
+                            <input class="form-control {{inputClass(formUpdateTask, 'estimatedTime')}}" type="number"
+                                step="0.5" name="estimatedTime" formControlName="estimatedTime" min="0" value="0" />
+                            <div class="invalid-feedback"
+                                *ngIf="formUpdateTask.get('estimatedTime')?.touched && formUpdateTask.get('estimatedTime')?.invalid">
+                                <div *ngIf="formUpdateTask.get('estimatedTime')?.errors?.min">Cannot be negative time
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group modal-footer">
+                            <button type="button" #closebuttonUpdateTask class="btn btn-danger"
+                                data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-success"
+                                [disabled]="!formUpdateTask.valid">Update</button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

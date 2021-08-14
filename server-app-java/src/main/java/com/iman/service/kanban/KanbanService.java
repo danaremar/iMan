@@ -10,6 +10,7 @@ import javax.ws.rs.NotFoundException;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Sort;
@@ -68,14 +69,12 @@ public class KanbanService {
 		}
 	}
 
-	@Transactional
-	public KanbanColumn findColumnById(Long kanbanColumnId) {
+	private KanbanColumn findColumnById(Long kanbanColumnId) {
 		return kanbanColumnRepository.findById(kanbanColumnId)
 				.orElseThrow(() -> new NotFoundException("Kanban column doesn't found"));
 	}
 
-	@Transactional
-	public KanbanTask findTaskById(Long kanbanTaskId) {
+	private KanbanTask findTaskById(Long kanbanTaskId) {
 		return kanbanTaskRepository.findById(kanbanTaskId)
 				.orElseThrow(() -> new NotFoundException("Kanban task doesn't found"));
 	}
@@ -146,6 +145,11 @@ public class KanbanService {
 	@Transactional
 	public void disableKanbanColumn(Long kanbanColumnId) {
 		KanbanColumn kanbanColumn = findColumnById(kanbanColumnId);
+		
+		if(kanbanColumn==null || !kanbanColumn.getTasks().isEmpty()) {
+			throw new DataIntegrityViolationException(ImanMessages.KANBAN_COLUMN_CANNOT_BE_DELETED_MESSAGE);
+		}
+		
 		verifyAdminOrOwner(kanbanColumn.getSprint());
 		kanbanColumn.setActive(false);
 		kanbanColumnRepository.save(kanbanColumn);
@@ -203,10 +207,14 @@ public class KanbanService {
 
 	private void saveKanbanTaskOrderInColumn(KanbanTask kanbanTask, KanbanColumn kanbanColumn, Long orderInColumn) {
 		kanbanTask.setOrderInColumn(orderInColumn);
-
 		if (kanbanColumn != null && !kanbanTask.getKanbanColumn().getId().equals(kanbanColumn.getId())) {
 			kanbanTask.setKanbanColumn(kanbanColumn);
 		}
+		kanbanTaskRepository.save(kanbanTask);
+	}
+	
+	private void saveKanbanTaskNumber(KanbanTask kanbanTask, Long taskNumber) {
+		kanbanTask.setNumber(taskNumber);
 		kanbanTaskRepository.save(kanbanTask);
 	}
 
@@ -219,7 +227,7 @@ public class KanbanService {
 
 		IntStream.range(0, ls.size()).filter(x -> ls.get(x).getActive())
 				.filter(x -> ls.get(x).getNumber().longValue() != (long) x + 1)
-				.forEach(x -> saveKanbanTaskOrderInColumn(ls.get(x), null, (long) x + 1));
+				.forEach(x -> saveKanbanTaskNumber(ls.get(x), (long) x + 1));
 	}
 
 	private void reorderOrderInColumnAndSaveKanbanTasks(List<KanbanTask> ls, KanbanColumn kanbanColumn) {
@@ -227,6 +235,15 @@ public class KanbanService {
 				.filter(x -> !ls.get(x).getKanbanColumn().getId().equals(kanbanColumn.getId())
 						|| ls.get(x).getOrderInColumn().intValue() != ls.size() - x - 1)
 				.forEach(x -> saveKanbanTaskOrderInColumn(ls.get(x), kanbanColumn, (long) ls.size() - x - 1));
+	}
+	
+	private void verifyColumns(KanbanColumn kc1, KanbanColumn kc2) {
+		if(kc1==null || kc2==null) {
+			throw new DataIntegrityViolationException(ImanMessages.KANBAN_COLUMN_DONT_EXISTS_MESSAGE);
+		}
+		if(!kc1.getSprint().getId().equals(kc2.getSprint().getId())) {
+			throw new DataIntegrityViolationException(ImanMessages.KANBAN_COLUMNS_DONT_RELATED_MESSAGE);
+		}
 	}
 
 	@Transactional // if fails -> rollback
@@ -237,6 +254,7 @@ public class KanbanService {
 		// validations
 		verifyMember(kanbanNewColumn.getSprint());
 		verifyMember(kanbanTask.getKanbanColumn().getSprint());
+		verifyColumns(kanbanNewColumn, kanbanTask.getKanbanColumn());
 		if (!kanbanNewColumn.getSprint().getId().equals(kanbanTask.getKanbanColumn().getSprint().getId())) {
 			throw new DuplicateKeyException(ImanMessages.KANBAN_NOT_CONTAINED_IN_SPRINT_MESSAGE);
 		}

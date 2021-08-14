@@ -244,8 +244,9 @@ export class KanbanComponent implements OnInit {
             let newColumn: KanbanColumnCreate = new KanbanColumnCreate(this.formNewColumn.value.title, sprintId)
             this.kanbanService.createKanbanColumn(newColumn).subscribe(
                 res => {
-                    this.loadKanbanBySelectedSprint()
+                    this.formNewColumn.reset()
                     this.closebuttonCreateColumn.nativeElement.click()
+                    this.loadKanbanBySelectedSprint()
                 },
                 err => {
                     var r = err.error.text
@@ -272,8 +273,9 @@ export class KanbanComponent implements OnInit {
         let updateColumn: KanbanColumnUpdate = new KanbanColumnUpdate(this.kanbanColumnSelected.id, this.formUpdateColumn.value.title, this.formUpdateColumn.value.columnOrder)
         this.kanbanService.updateKanbanColumn(updateColumn).subscribe(
             res => {
-                this.loadKanbanBySelectedSprint()
+                this.formUpdateColumn.reset()
                 this.closebuttonUpdateColumn.nativeElement.click()
+                this.loadKanbanBySelectedSprint()
             },
             err => {
                 var r = err.error.text
@@ -305,8 +307,9 @@ export class KanbanComponent implements OnInit {
         let createTask: KanbanTaskCreate = new KanbanTaskCreate(this.formNewTask.value.title, this.formNewTask.value.description, this.formNewTask.value.estimatedTime, this.kanbanColumnSelected.id)
         this.kanbanService.createKanbanTask(createTask).subscribe(
             res => {
-                this.loadKanbanBySelectedSprint()
+                this.formNewTask.reset()
                 this.closebuttonCreateTask.nativeElement.click()
+                this.loadKanbanBySelectedSprint()
             },
             err => {
                 var r = err.error.text
@@ -321,14 +324,21 @@ export class KanbanComponent implements OnInit {
 
     fillTaskUpdateForm(kanbanTask: KanbanTask) {
         this.kanbanTaskSelected = kanbanTask
+
+        this.formUpdateTask = this.formBuilder.group({
+            title: [kanbanTask.title, [Validators.required]],
+            description: [kanbanTask.description, []],
+            estimatedTime: [kanbanTask.estimatedTime, []],
+        })
     }
 
     editTask() {
-        let updateTask: KanbanTaskUpdate = new KanbanTaskUpdate(this.kanbanTaskSelected, this.formUpdateTask.value.title, this.formUpdateTask.value.description, this.formUpdateTask.value.estimatedTime)
+        let updateTask: KanbanTaskUpdate = new KanbanTaskUpdate(this.kanbanTaskSelected.id, this.formUpdateTask.value.title, this.formUpdateTask.value.description, this.formUpdateTask.value.estimatedTime)
         this.kanbanService.updateKanbanTask(updateTask).subscribe(
             res => {
-                this.loadKanbanBySelectedSprint()
+                this.formUpdateTask.reset()
                 this.closebuttonUpdateTask.nativeElement.click()
+                this.loadKanbanBySelectedSprint()
             },
             err => {
                 var r = err.error.text

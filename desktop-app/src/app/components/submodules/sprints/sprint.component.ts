@@ -169,6 +169,7 @@ export class SprintComponent implements OnInit {
             let newSprint: SprintCreate = new SprintCreate(this.formNewSprint.value.title, this.formNewSprint.value.description, this.formNewSprint.value.startDate, this.formNewSprint.value.estimatedDate, projectId)
             this.sprintService.createSprint(newSprint).subscribe(
                 res => {
+                    this.formNewSprint.reset()
                     this.closebuttonCreate.nativeElement.click()
                     this.loadSprintsBySelectedProject()
                     this.newSprintContainError = false
@@ -197,6 +198,7 @@ export class SprintComponent implements OnInit {
 
         this.sprintService.updateSprint(updateSprint).subscribe(
             res => {
+                this.formNewSprint.reset()
                 this.closebuttonUpdate.nativeElement.click()
                 this.loadSprintsBySelectedProject()
                 this.updateSprintContainError = false
