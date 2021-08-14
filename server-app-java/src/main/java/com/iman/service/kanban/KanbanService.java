@@ -1,5 +1,6 @@
 package com.iman.service.kanban;
 
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -111,8 +112,8 @@ public class KanbanService {
 		IntStream.range(0, ls.size()).filter(x -> ls.get(x).getColumnOrder().intValue() != x)
 				.forEach(x -> saveKanbanColumnOrder(ls.get(x), (long) x));
 	}
-	
-	private void moveKanbanColumn(Sprint sprint,KanbanColumn kanbanColumn, Integer columnOrder) {
+
+	private void moveKanbanColumn(Sprint sprint, KanbanColumn kanbanColumn, Integer columnOrder) {
 		List<KanbanColumn> ls = filterActiveColumn(sprint.getKanbanColums());
 		ls.remove(kanbanColumn);
 		ls.add(columnOrder, kanbanColumn);
@@ -137,7 +138,7 @@ public class KanbanService {
 		verifyAdminOrOwner(kanbanColumn.getSprint());
 		kanbanColumn.setTitle(kanbanColumnUpdateDto.getTitle());
 		kanbanColumnRepository.save(kanbanColumn);
-		if(kanbanColumnUpdateDto.getColumnOrder()!=null) {			
+		if (kanbanColumnUpdateDto.getColumnOrder() != null) {
 			moveKanbanColumn(kanbanColumn.getSprint(), kanbanColumn, kanbanColumnUpdateDto.getColumnOrder().intValue());
 		}
 	}
@@ -158,11 +159,9 @@ public class KanbanService {
 		Example<KanbanTask> example = Example.of(kanbanTaskExample);
 		return kanbanTaskRepository.count(example);
 	}
-	
+
 	private Long countKanbanTaskBySprint(Sprint sprint) {
-		return sprint.getKanbanColums().stream()
-				.flatMap(x -> x.getTasks().stream())
-				.count();
+		return sprint.getKanbanColums().stream().flatMap(x -> x.getTasks().stream()).count();
 	}
 
 	@Transactional
@@ -173,7 +172,7 @@ public class KanbanService {
 		kanbanTask.setId(null);
 		kanbanTask.setKanbanColumn(kanbanColumn);
 		kanbanTask.setCreationDate(new Date());
-		kanbanTask.setNumber(countKanbanTaskBySprint(kanbanColumn.getSprint()));
+		kanbanTask.setNumber(countKanbanTaskBySprint(kanbanColumn.getSprint()) + 1);
 		kanbanTask.setOrderInColumn(countKanbanTaskByColumn(kanbanColumn)); // set last orderInColumn
 		kanbanTask.setActive(true);
 		kanbanTaskRepository.save(kanbanTask);
@@ -195,6 +194,7 @@ public class KanbanService {
 		verifyMember(kanbanTask.getKanbanColumn().getSprint());
 		kanbanTask.setActive(false);
 		kanbanTaskRepository.save(kanbanTask);
+		reorderNumberAndSaveKanbanTasks(kanbanTask.getKanbanColumn().getSprint());
 	}
 
 	private List<KanbanTask> filterActiveTask(List<KanbanTask> ls) {
@@ -203,31 +203,44 @@ public class KanbanService {
 
 	private void saveKanbanTaskOrderInColumn(KanbanTask kanbanTask, KanbanColumn kanbanColumn, Long orderInColumn) {
 		kanbanTask.setOrderInColumn(orderInColumn);
-		
-		if(!kanbanTask.getKanbanColumn().getId().equals(kanbanColumn)) {
+
+		if (kanbanColumn != null && !kanbanTask.getKanbanColumn().getId().equals(kanbanColumn.getId())) {
 			kanbanTask.setKanbanColumn(kanbanColumn);
 		}
 		kanbanTaskRepository.save(kanbanTask);
 	}
 
-	private void reorderAndSaveKanbanTasks(List<KanbanTask> ls, KanbanColumn kanbanColumn) {
+	private void reorderNumberAndSaveKanbanTasks(Sprint sprint) {
+		List<KanbanTask> ls = sprint.getKanbanColums().stream()
+				.flatMap(x -> x.getTasks().stream())
+				.filter(x -> x.getActive())
+				.sorted(Comparator.comparing(KanbanTask::getNumber))
+				.collect(Collectors.toList());
+
+		IntStream.range(0, ls.size()).filter(x -> ls.get(x).getActive())
+				.filter(x -> ls.get(x).getNumber().longValue() != (long) x + 1)
+				.forEach(x -> saveKanbanTaskOrderInColumn(ls.get(x), null, (long) x + 1));
+	}
+
+	private void reorderOrderInColumnAndSaveKanbanTasks(List<KanbanTask> ls, KanbanColumn kanbanColumn) {
 		IntStream.range(0, ls.size())
-			.filter(x -> ls.get(x).getOrderInColumn().intValue() != ls.size() - x - 1)
-			.forEach(x -> saveKanbanTaskOrderInColumn(ls.get(x), kanbanColumn, (long) ls.size() - x - 1));
+				.filter(x -> !ls.get(x).getKanbanColumn().getId().equals(kanbanColumn.getId())
+						|| ls.get(x).getOrderInColumn().intValue() != ls.size() - x - 1)
+				.forEach(x -> saveKanbanTaskOrderInColumn(ls.get(x), kanbanColumn, (long) ls.size() - x - 1));
 	}
 
 	@Transactional // if fails -> rollback
 	public void moveKanbanTask(Long kanbanTaskId, Long newKanbanColumnId, Long newPosition) {
 		KanbanTask kanbanTask = findTaskById(kanbanTaskId);
 		KanbanColumn kanbanNewColumn = findColumnById(newKanbanColumnId);
-		
+
 		// validations
 		verifyMember(kanbanNewColumn.getSprint());
 		verifyMember(kanbanTask.getKanbanColumn().getSprint());
-		if(!kanbanNewColumn.getSprint().getId().equals(kanbanTask.getKanbanColumn().getSprint().getId())) {
+		if (!kanbanNewColumn.getSprint().getId().equals(kanbanTask.getKanbanColumn().getSprint().getId())) {
 			throw new DuplicateKeyException(ImanMessages.KANBAN_NOT_CONTAINED_IN_SPRINT_MESSAGE);
 		}
-		
+
 		List<KanbanTask> ls = filterActiveTask(kanbanNewColumn.getTasks());
 
 		// change column
@@ -235,13 +248,13 @@ public class KanbanService {
 			KanbanColumn oldKanbanColumn = kanbanTask.getKanbanColumn();
 			List<KanbanTask> lsOld = oldKanbanColumn.getTasks();
 			lsOld.remove(kanbanTask);
-			reorderAndSaveKanbanTasks(lsOld, oldKanbanColumn);
-		// same column
+			reorderOrderInColumnAndSaveKanbanTasks(lsOld, oldKanbanColumn);
+			// same column
 		} else {
 			ls.remove(kanbanTask);
 		}
-		
-		ls.add(ls.size() - newPosition.intValue(), kanbanTask);
-		reorderAndSaveKanbanTasks(ls, kanbanNewColumn);
+
+		ls.add(newPosition.intValue(), kanbanTask);
+		reorderOrderInColumnAndSaveKanbanTasks(ls, kanbanNewColumn);
 	}
 }

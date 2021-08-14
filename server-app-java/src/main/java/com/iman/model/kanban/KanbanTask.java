@@ -19,10 +19,12 @@ import org.hibernate.validator.constraints.Length;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Data;
+import lombok.ToString;
 
 @Entity
 @Data
 @Table(name = "kanban_task", indexes = {})
+@ToString
 public class KanbanTask {
 
 	@Id

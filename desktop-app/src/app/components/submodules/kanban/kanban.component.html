@@ -1,14 +1,14 @@
 <!-- OPERATIONS -->
 <div class="d-flex mb-3 mr-3" style="height: 45px;">
     <div class="flex-grow-1 center d-flex">
-        <div *ngIf="myProjects.length!=0">
+        <div *ngIf="myProjects && myProjects.length!=0">
             <select (change)="loadSprintsByProjectIdEvent($event.target)">
                 <option class="dark-text" *ngFor="let p of myProjects"
                     [attr.selected]="p.id==projectSelectedId?true:null" [ngValue]="p" value="{{p.id}}">
                     {{p.name}}</option>
             </select>
         </div>
-        <div *ngIf="mySprints.length!=0">
+        <div *ngIf="mySprints && mySprints.length!=0">
             <select class="ms-3" (change)="loadKanbanBySprintIdEvent($event.target)">
                 <option class="dark-text" *ngFor="let s of mySprints" [attr.selected]="s.id==sprintSelectedId?true:null"
                     [ngValue]="s" value="{{s.id}}">
@@ -25,9 +25,9 @@
 </div>
 
 <div *ngIf="containError" class="alert alert-danger mt-3 mb-3">{{messageError}}</div>
-<div class="scrollable-x">
-    <div class="d-flex">
-        <div class="card column-card m-3" *ngFor="let column of kanban">
+<div class="scrollable-x" >
+    <div class="d-flex" cdkDropListGroup>
+        <div class="card column-card m-3" *ngFor="let column of kanban" >
 
             <!-- COLUMN -->
             <div class="d-flex">
@@ -56,8 +56,8 @@
 
 
             <!-- TASKS -->
-            <div class="overflow-auto scrollable-content">
-                <div class="card task-card mb-3 mx-3" *ngFor="let task of column.tasks">
+            <div class="overflow-auto scrollable-content" cdkDropList [cdkDropListData]="column" (cdkDropListDropped)="dropTask($event)">
+                <div class="card task-card mb-3 mx-3" *ngFor="let task of column.tasks" cdkDrag [cdkDragData]="task">
                     <div class="m-3">
                         <div class="m-text">#{{task.number}}: {{task.title}}</div>
                         <div class="s-text">{{task.description}}</div>

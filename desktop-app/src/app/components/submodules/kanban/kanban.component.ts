@@ -1,7 +1,8 @@
+import { CdkDragDrop, moveItemInArray, transferArrayItem } from "@angular/cdk/drag-drop";
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { KanbanColumnCreate, KanbanColumnShow, KanbanColumnUpdate } from "src/app/models/kanban/kanbanColumn";
-import { KanbanTask, KanbanTaskCreate, KanbanTaskUpdate } from "src/app/models/kanban/kanbanTask";
+import { KanbanTask, KanbanTaskCreate, KanbanTaskMove, KanbanTaskUpdate } from "src/app/models/kanban/kanbanTask";
 import { Project } from "src/app/models/project/project";
 import { ProjectRole } from "src/app/models/project/roles";
 import { TokenService } from "src/app/services/authentication/token.service";
@@ -263,7 +264,7 @@ export class KanbanComponent implements OnInit {
 
         this.formUpdateColumn = this.formBuilder.group({
             title: [kanbanColumn.title, [Validators.required]],
-            columnOrder:  [kanbanColumn.columnOrder, [Validators.required]],
+            columnOrder: [kanbanColumn.columnOrder, [Validators.required]],
         })
     }
 
@@ -301,7 +302,7 @@ export class KanbanComponent implements OnInit {
     ***************************/
 
     newTask() {
-        let createTask: KanbanTaskCreate = new KanbanTaskCreate(this.formNewTask.value.title,this.formNewTask.value.description,this.formNewTask.value.estimatedTime,this.kanbanColumnSelected.id)
+        let createTask: KanbanTaskCreate = new KanbanTaskCreate(this.formNewTask.value.title, this.formNewTask.value.description, this.formNewTask.value.estimatedTime, this.kanbanColumnSelected.id)
         this.kanbanService.createKanbanTask(createTask).subscribe(
             res => {
                 this.loadKanbanBySelectedSprint()
@@ -323,7 +324,7 @@ export class KanbanComponent implements OnInit {
     }
 
     editTask() {
-        let updateTask: KanbanTaskUpdate = new KanbanTaskUpdate(this.kanbanTaskSelected,this.formUpdateTask.value.title,this.formUpdateTask.value.description,this.formUpdateTask.value.estimatedTime)
+        let updateTask: KanbanTaskUpdate = new KanbanTaskUpdate(this.kanbanTaskSelected, this.formUpdateTask.value.title, this.formUpdateTask.value.description, this.formUpdateTask.value.estimatedTime)
         this.kanbanService.updateKanbanTask(updateTask).subscribe(
             res => {
                 this.loadKanbanBySelectedSprint()
@@ -349,6 +350,47 @@ export class KanbanComponent implements OnInit {
                 this.returnPrincipalError(err)
             }
         )
+    }
+
+
+    /***************************
+       METHODS -> DRAG & DROP
+    ***************************/
+
+    dropColumn(event: CdkDragDrop<any>) {
+        if (event.container && event.previousContainer) {
+            let kanbanColumnUpdate: KanbanColumnUpdate = new KanbanColumnUpdate(event.item.data.id, event.item.data.title, event.currentIndex)
+
+            this.kanbanService.updateKanbanColumn(kanbanColumnUpdate).subscribe(
+                data => {
+                    transferArrayItem(event.previousContainer.data,
+                        event.container.data,
+                        event.previousIndex,
+                        event.currentIndex);
+
+                    this.loadKanbanBySelectedSprint()
+                },
+                err => {
+                    this.returnPrincipalError(err)
+                }
+            )
+        }
+    }
+
+    dropTask(event: CdkDragDrop<any>) {
+        if (event.container && event.previousContainer) {
+            let newPosition = event.currentIndex
+            let kanbanTaskMove: KanbanTaskMove = new KanbanTaskMove(event.item.data.id, event.container.data.id, newPosition)
+
+            this.kanbanService.moveKanbanTask(kanbanTaskMove).subscribe(
+                data => {
+                    this.loadKanbanBySelectedSprint()
+                },
+                err => {
+                    this.returnPrincipalError(err)
+                }
+            )
+        }
     }
 
 }

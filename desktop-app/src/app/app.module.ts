@@ -22,6 +22,7 @@ import { ChatComponent } from './components/submodules/chat/chat.component';
 import { RequirementsComponent } from './components/submodules/requirements/requirements.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { SprintComponent } from './components/submodules/sprints/sprint.component';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 @NgModule({
   declarations: [
@@ -41,6 +42,7 @@ import { SprintComponent } from './components/submodules/sprints/sprint.componen
     SprintComponent
   ],
   imports: [
+    DragDropModule,
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
