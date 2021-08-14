@@ -90,6 +90,10 @@ body {
     cursor: pointer !important;
 }
 
+.bi-reduced {
+    font-size: 20px !important;
+}
+
 .bi:hover {
     color: var(--dark-contrast-text) !important;
 }
