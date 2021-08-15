@@ -1,0 +1,253 @@
+/* You can add global styles to this file, and also import other style files */
+
+html, body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+@import "~bootstrap-icons/font/bootstrap-icons.css";
+:root {
+    --dark-pallete-0: #007acc;
+    --dark-pallete-1: #4b4b4e;
+    --dark-pallete-2: #3d3d41;
+    --dark-pallete-3: #2d2d30;
+    --dark-pallete-4: #252526;
+    --dark-pallete-5: #1e1e1e;
+    --dark-pallete-text: #6f7a85;
+    --dark-contrast-text: rgb(206, 206, 206);
+    --navbar-size: 50px;
+    --sidebar-size: 65px;
+}
+
+.bg-dark-0 {
+    background-color: var(--dark-pallete-0) !important;
+    color: var(--dark-pallete-text) !important;
+}
+
+.bg-dark-1 {
+    background-color: var(--dark-pallete-1) !important;
+    color: var(--dark-pallete-text) !important;
+}
+
+.bg-dark-2 {
+    background-color: var(--dark-pallete-2) !important;
+    color: var(--dark-pallete-text) !important;
+}
+
+.bg-dark-3 {
+    background-color: var(--dark-pallete-3) !important;
+    color: var(--dark-pallete-text) !important;
+}
+
+.bg-dark-4 {
+    background-color: var(--dark-pallete-4) !important;
+    color: var(--dark-pallete-text) !important;
+}
+
+.bg-dark-5 {
+    background-color: var(--dark-pallete-5) !important;
+    color: var(--dark-pallete-text) !important;
+}
+
+.icon, .dark-text {
+    color: var(--dark-pallete-text) !important;
+}
+
+.modal-header {
+    border-bottom: 0px solid var(--dark-pallete-text) !important;
+    color: var(--dark-contrast-text);
+}
+
+.modal-footer {
+    border-top: 0px solid var(--dark-pallete-text) !important;
+}
+
+.b-text {
+    font-size: 1.5rem;
+    font-weight: 500;
+}
+
+.m-text {
+    font-size: 1.2rem;
+    font-weight: 500;
+}
+
+.s-text {
+    font-size: 1.0rem;
+    font-weight: 400;
+}
+
+.contrast-text {
+    color: var(--dark-contrast-text) !important;
+}
+
+.bi {
+    font-size: 30px !important;
+    cursor: pointer !important;
+}
+
+.bi-medium {
+    font-size: 25px !important;
+}
+
+.bi-reduced {
+    font-size: 20px !important;
+}
+
+.bi:hover {
+    color: var(--dark-contrast-text) !important;
+}
+
+.progress {
+    border-radius: 5rem !important;
+}
+
+/* CARD */
+
+.card {
+    border-radius: 20px !important;
+    background-color: var(--dark-pallete-5) !important;
+    color: var(--dark-contrast-text) !important;
+    border: 0px !important;
+}
+
+.card-title {
+    font-size: 1.5rem;
+    font-weight: 500;
+}
+
+.card-hover:hover {
+    background-color: var(--dark-pallete-4) !important;
+}
+
+.card-list {
+    background-color: var(--dark-pallete-2) !important;
+    color: var(--dark-pallete-text) !important;
+    margin-top: 0rem;
+    margin-bottom: 1.5rem;
+}
+
+.inside-card {
+    margin: 1.5rem;
+    margin-top: 0.8rem;
+}
+
+.close-card-button {
+    background-color: inherit !important;
+    color: var(--dark-pallete-text) !important;
+    font-size: 40px !important;
+}
+
+.close-card-button>em {
+    float: right !important;
+}
+
+.modal-content {
+    border-radius: 20px !important;
+}
+
+.form-control {
+    background: none;
+    border: none;
+    border-bottom: 2px solid var(--dark-pallete-1);
+    border-radius: 0;
+    color: inherit;
+    -webkit-box-shadow: 0 0 0 30px var(--dark-pallete-5) inset !important;
+    -webkit-text-fill-color: var(--dark-pallete-text) !important;
+}
+
+input::-webkit-input-placeholder {
+    color: aqua;
+}
+
+select {
+    border-radius: 0.3rem;
+    height: 30px;
+    width: 150px;
+    background-color: var(--dark-pallete-4) !important;
+    color: var(--dark-pallete-text) !important;
+}
+
+.center {
+    margin: auto;
+    width: 50%;
+}
+
+.cursor-hover:hover {
+    cursor: pointer !important;
+}
+
+.scrollable-content {
+    height: calc(100vh - 100px - var(--navbar-size)) !important;
+}
+
+.red-btn {
+    color: rgba(255, 0, 0, 0.7) !important;
+    cursor: pointer !important;
+}
+
+.red-btn:hover {
+    color: rgb(255, 0, 0) !important;
+}
+
+.green-btn {
+    color: rgba(0, 97, 0, 0.7) !important;
+    cursor: pointer !important;
+}
+
+.green-btn:hover {
+    color: rgb(0, 97, 0) !important;
+}
+
+/* VERTICAL SCROLLBAR */
+
+::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+    border-radius: 2.5px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--dark-pallete-4);
+    border-radius: 2.5px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--dark-pallete-text);
+    border-radius: 2.5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgb(194, 194, 194);
+    border-radius: 2.5px;
+}
+
+.cdk-drag-preview {
+    box-sizing: border-box;
+    border-radius: 4px;
+    box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2), 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12);
+}
+
+.cdk-drag-placeholder {
+    opacity: 0;
+}
+
+.cdk-drag-animating {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.cdk-drop-list-dragging .cdk-drag {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.cdk-drag-animating {
+    transition: transform 300ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.column-card.cdk-drop-list-dragging .task-card:not(.cdk-drag-placeholder) {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+  }

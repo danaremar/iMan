@@ -1,0 +1,336 @@
+<!-- OPERATIONS -->
+<div class="d-flex mb-3 mr-3" style="height: 45px;">
+    <div class="flex-grow-1 center d-flex">
+        <div *ngIf="myProjects && myProjects.length!=0">
+            <select (change)="loadSprintsByProjectIdEvent($event.target)">
+                <option class="dark-text" *ngFor="let p of myProjects"
+                    [attr.selected]="p.id==projectSelectedId?true:null" [ngValue]="p" value="{{p.id}}">
+                    {{p.name}}</option>
+            </select>
+        </div>
+        <div *ngIf="mySprints && mySprints.length!=0">
+            <select class="ms-3" (change)="loadKanbanBySprintIdEvent($event.target)">
+                <option class="dark-text" *ngFor="let s of mySprints" [attr.selected]="s.id==sprintSelectedId?true:null"
+                    [ngValue]="s" value="{{s.id}}">
+                    {{s.title}}</option>
+            </select>
+        </div>
+    </div>
+
+    <div>
+        <a ngbTooltip="Add column" placement="left" [openDelay]="300" *ngIf="adminAccess" data-bs-toggle="modal"
+            data-bs-target="#createColumnModal">
+            <em class="bi bi-plus-lg"></em>
+        </a>
+    </div>
+</div>
+
+<div *ngIf="containError" class="alert alert-danger mt-3 mb-3">{{messageError}}</div>
+<div class="scrollable-x">
+    <div class="d-flex" cdkDropListGroup>
+        <div class="card column-card m-3" *ngFor="let column of kanban">
+
+            <!-- COLUMN -->
+            <div class="d-flex">
+                <div class="b-text my-4 text-center flex-grow-1">{{column.title}}</div>
+                <div class="m-auto">
+
+                    <!-- ADD TASK -->
+                    <a ngbTooltip="Add task" (click)="fillColumnUpdateForm(column)" placement="left" [openDelay]="300"
+                        *ngIf="memberAccess" data-bs-toggle="modal" data-bs-target="#createTaskModal">
+                        <em class="bi bi-medium bi-plus-lg me-3"></em>
+                    </a>
+
+                    <!-- EDIT COLUMN -->
+                    <a ngbTooltip="Edit" (click)="fillColumnUpdateForm(column)" placement="left" [openDelay]="300"
+                        *ngIf="adminAccess" data-bs-toggle="modal" data-bs-target="#updateColumnModal">
+                        <em class="bi bi-medium bi-pencil-fill me-3"></em>
+                    </a>
+
+                    <!-- DISABLE COLUMN -->
+                    <!-- Only if not exists tasks & have member access -->
+                    <a *ngIf="column.tasks.length==0 && adminAccess" ngbTooltip="Delete" (click)="disableColumn(column)"
+                        placement="left" [openDelay]="300">
+                        <em class="bi bi-medium bi-trash-fill me-3"></em>
+                    </a>
+                </div>
+            </div>
+
+
+            <!-- TASKS -->
+            <div class="overflow-auto scrollable-content" cdkDropList [cdkDropListData]="column"
+                (cdkDropListDropped)="dropTask($event)">
+                <div class="card task-card mb-3 mx-3" *ngFor="let task of column.tasks" cdkDrag [cdkDragData]="task">
+                    <div class="m-3">
+                        <div class="d-flex" *ngIf="memberAccess">
+                            <div class="m-text flex-grow-1">#{{task.number}}: {{task.title}}</div>
+
+                            <!-- UPDATE TASK -->
+                            <a (click)="fillTaskUpdateForm(task)" ngbTooltip="Edit" placement="left" [openDelay]="300"
+                                data-bs-toggle="modal" data-bs-target="#updateTaskModal">
+                                <em class="bi bi-reduced bi-pencil-fill me-2"></em>
+                            </a>
+
+                            <!-- DELETE TASK -->
+                            <a (click)="disableTask(task)" ngbTooltip="Archieve" placement="left" [openDelay]="300">
+                                <em class="bi bi-reduced bi-trash-fill me-2"></em>
+                            </a>
+
+                        </div>
+
+                        <div class="s-text">{{task.description}}</div>
+                        
+                        <div *ngIf="task.computedTime!=0 && task.estimatedTime" class="progress my-3">
+                            <ng-container *ngIf="task.computedTime<=task.estimatedTime; else overloadTime">
+                                <div class="progress-bar progress-bar-striped bg-info " role="progressbar" [style]="'width: ' + (100 - (task.computedTime/task.estimatedTime)*100) + '%'" aria-valuemin="0" aria-valuemax="100"></div>
+                                <div class="progress-bar bg-success" role="progressbar" [style]="'width: ' + (task.computedTime/task.estimatedTime)*100 + '%'" aria-valuemin="0" aria-valuemax="100"></div>
+                            </ng-container>
+                            <ng-template #overloadTime>
+                                <div class="progress-bar progress-bar-striped bg-info " role="progressbar" [style]="'width: ' + (100 - (task.estimatedTime/task.computedTime)*100) + '%'" aria-valuemin="0" aria-valuemax="100"></div>
+                                <div class="progress-bar bg-danger" role="progressbar" [style]="'width: ' + (task.estimatedTime/task.computedTime)*100 + '%'" aria-valuemin="0" aria-valuemax="100"></div>
+                            </ng-template>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CREATE COLUMN -->
+<div class="modal fade" id="createColumnModal" tabindex="-1" aria-labelledby="createColumnModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content bg-dark-5">
+            <div class="modal-body">
+                <div class="card overflow-auto">
+
+                    <div class="d-flex">
+                        <div class="flex-grow-1 card-title mt-2">New column</div>
+                        <div class="close-card-button" data-bs-dismiss="modal">
+                            <em class="bi bi-x"></em>
+                        </div>
+                    </div>
+
+                    <form [formGroup]="formNewColumn" (ngSubmit)="newColumn()">
+
+                        <div *ngIf="newColumnContainError" class="alert alert-danger mt-5"> {{newColumnMessageError}}
+                        </div>
+
+                        <div class="form-group mb-4 mt-3">
+                            <p class="mb-0">Title</p>
+                            <input class="form-control {{inputClass(formNewColumn, 'title')}}" type="text" name="title"
+                                formControlName="title" maxlength="50" minlength="2" placeholder="" />
+                            <div class="invalid-feedback"
+                                *ngIf="formNewColumn.get('title')?.touched && formNewColumn.get('title')?.invalid">
+                                <div *ngIf="formNewColumn.get('title')?.errors?.required">Cannot be empty</div>
+                                <div *ngIf="formNewColumn.get('title')?.errors?.minlength">Must containt at least 2
+                                    characters</div>
+                                <div *ngIf="formNewColumn.get('title')?.errors?.maxlength">Only 50 characters are
+                                    allowed</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group modal-footer">
+                            <button type="button" #closebuttonCreateColumn class="btn btn-danger"
+                                data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-success"
+                                [disabled]="!formNewColumn.valid">Create</button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- UPDATE COLUMN -->
+<div class="modal fade" id="updateColumnModal" tabindex="-1" aria-labelledby="updateColumnModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content bg-dark-5">
+            <div class="modal-body">
+                <div class="card overflow-auto">
+
+                    <div class="d-flex">
+                        <div class="flex-grow-1 card-title mt-2">Update column</div>
+                        <div class="close-card-button" data-bs-dismiss="modal">
+                            <em class="bi bi-x"></em>
+                        </div>
+                    </div>
+
+                    <form [formGroup]="formUpdateColumn" (ngSubmit)="editColumn()">
+
+                        <div *ngIf="updateColumnContainError" class="alert alert-danger mt-5">
+                            {{updateColumnMessageError}}
+                        </div>
+
+                        <div class="form-group mb-4 mt-3">
+                            <p class="mb-0">Title</p>
+                            <input class="form-control {{inputClass(formUpdateColumn, 'title')}}" type="text"
+                                name="title" formControlName="title" maxlength="50" minlength="2" placeholder="" />
+                            <div class="invalid-feedback"
+                                *ngIf="formUpdateColumn.get('title')?.touched && formUpdateColumn.get('title')?.invalid">
+                                <div *ngIf="formUpdateColumn.get('title')?.errors?.required">Cannot be empty</div>
+                                <div *ngIf="formUpdateColumn.get('title')?.errors?.minlength">Must containt at least 2
+                                    characters</div>
+                                <div *ngIf="formUpdateColumn.get('title')?.errors?.maxlength">Only 50 characters are
+                                    allowed</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group modal-footer">
+                            <button type="button" #closebuttonUpdateColumn class="btn btn-danger"
+                                data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-success"
+                                [disabled]="!formUpdateColumn.valid">Update</button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CREATE TASK -->
+<div class="modal fade" id="createTaskModal" tabindex="-1" aria-labelledby="createTaskModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content bg-dark-5">
+            <div class="modal-body">
+                <div class="card overflow-auto">
+
+                    <div class="d-flex">
+                        <div class="flex-grow-1 card-title mt-2">New task</div>
+                        <div class="close-card-button" data-bs-dismiss="modal">
+                            <em class="bi bi-x"></em>
+                        </div>
+                    </div>
+
+                    <form [formGroup]="formNewTask" (ngSubmit)="newTask()">
+
+                        <div *ngIf="newTaskContainError" class="alert alert-danger mt-5"> {{newTaskMessageError}}
+                        </div>
+
+                        <div class="form-group mb-4 mt-3">
+                            <p class="mb-0">Title</p>
+                            <input class="form-control {{inputClass(formNewTask, 'title')}}" type="text" name="title"
+                                formControlName="title" maxlength="50" minlength="2" placeholder="" />
+                            <div class="invalid-feedback"
+                                *ngIf="formNewTask.get('title')?.touched && formNewTask.get('title')?.invalid">
+                                <div *ngIf="formNewTask.get('title')?.errors?.required">Cannot be empty</div>
+                                <div *ngIf="formNewTask.get('title')?.errors?.minlength">Must containt at least 2
+                                    characters</div>
+                                <div *ngIf="formNewTask.get('title')?.errors?.maxlength">Only 50 characters are
+                                    allowed</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-4 mt-3">
+                            <p class="mb-0">Description</p>
+                            <input class="form-control {{inputClass(formNewTask, 'description')}}" type="text"
+                                name="description" formControlName="description" maxlength="255" minlength="2"
+                                placeholder="" />
+                            <div class="invalid-feedback"
+                                *ngIf="formNewTask.get('description')?.touched && formNewTask.get('description')?.invalid">
+                                <div *ngIf="formNewTask.get('description')?.errors?.maxlength">Only 255 characters are
+                                    allowed</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-4 mt-3">
+                            <p class="mb-0">Estimated time</p>
+                            <input class="form-control {{inputClass(formNewTask, 'estimatedTime')}}" type="number"
+                                step="0.5" name="estimatedTime" formControlName="estimatedTime" min="0" value="0" />
+                            <div class="invalid-feedback"
+                                *ngIf="formNewTask.get('estimatedTime')?.touched && formNewTask.get('estimatedTime')?.invalid">
+                                <div *ngIf="formNewTask.get('estimatedTime')?.errors?.min">Cannot be negative time</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group modal-footer">
+                            <button type="button" #closebuttonCreateTask class="btn btn-danger"
+                                data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-success"
+                                [disabled]="!formNewTask.valid">Create</button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- UPDATE TASK -->
+<div class="modal fade" id="updateTaskModal" tabindex="-1" aria-labelledby="updateTaskModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content bg-dark-5">
+            <div class="modal-body">
+                <div class="card overflow-auto">
+
+                    <div class="d-flex">
+                        <div class="flex-grow-1 card-title mt-2">Update task</div>
+                        <div class="close-card-button" data-bs-dismiss="modal">
+                            <em class="bi bi-x"></em>
+                        </div>
+                    </div>
+
+                    <form [formGroup]="formUpdateTask" (ngSubmit)="editTask()">
+
+                        <div *ngIf="updateTaskContainError" class="alert alert-danger mt-5"> {{updateTaskMessageError}}
+                        </div>
+
+                        <div class="form-group mb-4 mt-3">
+                            <p class="mb-0">Title</p>
+                            <input class="form-control {{inputClass(formUpdateTask, 'title')}}" type="text" name="title"
+                                formControlName="title" maxlength="50" minlength="2" placeholder="" />
+                            <div class="invalid-feedback"
+                                *ngIf="formUpdateTask.get('title')?.touched && formUpdateTask.get('title')?.invalid">
+                                <div *ngIf="formUpdateTask.get('title')?.errors?.required">Cannot be empty</div>
+                                <div *ngIf="formUpdateTask.get('title')?.errors?.minlength">Must containt at least 2
+                                    characters</div>
+                                <div *ngIf="formUpdateTask.get('title')?.errors?.maxlength">Only 50 characters are
+                                    allowed</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-4 mt-3">
+                            <p class="mb-0">Description</p>
+                            <input class="form-control {{inputClass(formUpdateTask, 'description')}}" type="text"
+                                name="description" formControlName="description" maxlength="255" minlength="2"
+                                placeholder="" />
+                            <div class="invalid-feedback"
+                                *ngIf="formUpdateTask.get('description')?.touched && formUpdateTask.get('description')?.invalid">
+                                <div *ngIf="formUpdateTask.get('description')?.errors?.maxlength">Only 255 characters
+                                    are
+                                    allowed</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-4 mt-3">
+                            <p class="mb-0">Estimated time</p>
+                            <input class="form-control {{inputClass(formUpdateTask, 'estimatedTime')}}" type="number"
+                                step="0.5" name="estimatedTime" formControlName="estimatedTime" min="0" value="0" />
+                            <div class="invalid-feedback"
+                                *ngIf="formUpdateTask.get('estimatedTime')?.touched && formUpdateTask.get('estimatedTime')?.invalid">
+                                <div *ngIf="formUpdateTask.get('estimatedTime')?.errors?.min">Cannot be negative time
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group modal-footer">
+                            <button type="button" #closebuttonUpdateTask class="btn btn-danger"
+                                data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-success"
+                                [disabled]="!formUpdateTask.valid">Update</button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

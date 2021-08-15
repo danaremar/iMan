@@ -1,0 +1,186 @@
+<div class="dark-background overflow-auto">
+
+    <div id="loginCard" class="card bg-dark-5" style="width: 320px;">
+
+        <form [formGroup]="formLogin" (ngSubmit)="onLogin()">
+
+            <div style="text-align: center;">
+                <em class="bi bi-lock icon" style="font-size: 80px !important;"></em>
+            </div>
+
+            <div *ngIf="isLoginFail" class="alert alert-danger mt-3"> {{messageErrorLogin}}</div>
+
+            <div class="form-group mb-3">
+                <input class="form-control" type="text" name="username" formControlName="username"
+                    maxlength="50" placeholder="Username">
+            </div>
+            <div class="form-group">
+                <input class="form-control" type="password" name="password" formControlName="password"
+                    maxlength="50" placeholder="Password">
+            </div>
+
+            <a href="#" class="forgot mt-5 mb-2">Forgot your email or password?</a>
+
+            <div class="form-group">
+                <button class="btn btn-primary w-100" [disabled]="!formLogin.valid">Login</button>
+            </div>
+
+            <div class="forgot mt-3">or</div>
+
+            <button class="btn btn-success w-100 mt-3" type="button" data-bs-toggle="modal"
+                data-bs-target="#exampleModal">
+                Register
+            </button>
+        </form>
+    </div>
+
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content bg-dark-5">
+
+                <!-- IF WANTS HEADER IN THE CARD -->
+                <!-- 
+                <div class="modal-header">
+                    <h5 class="modal-title " id="exampleModalLabel">Register</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div> 
+                -->
+                <div class="modal-body">
+                    <div class="card  overflow-auto">
+
+                        <div class="close-card-button" style="background-color: inherit;" data-bs-dismiss="modal">
+                            <em class="bi bi-x"></em>
+                        </div>
+
+                        <form [formGroup]="formRegister" (ngSubmit)="onRegister()">
+
+                            <div *ngIf="isRegisterFail" class="alert alert-danger mt-5"> {{messageErrorRegister}}</div>
+
+                            <div style="text-align: center;">
+                                <em class="bi bi-person-plus icon" style="font-size: 80px !important;"></em>
+                            </div>
+
+                            <div class="form-group mb-4">
+                                <p class="mb-0">First name</p>
+                                <input class="form-control {{inputClass(formRegister, 'name')}}" type="text" name="name"
+                                    formControlName="name" maxlength="20" minlength="2" placeholder="John" />
+                                <div class="invalid-feedback"
+                                    *ngIf="formRegister.get('name')?.touched && formRegister.get('name')?.invalid">
+                                    <div *ngIf="formRegister.get('name')?.errors?.required">Cannot be empty</div>
+                                    <div *ngIf="formRegister.get('name')?.errors?.minlength">Must containt at least 2
+                                        characters</div>
+                                    <div *ngIf="formRegister.get('name')?.errors?.maxlength">Only 20 characters are
+                                        allowed</div>
+                                </div>
+                            </div>
+
+                            <div class="form-group mb-4">
+                                <p class="mb-0">Last name</p>
+                                <input class="form-control {{inputClass(formRegister, 'lastName')}}" type="text"
+                                    name="lastName" formControlName="lastName" maxlength="50"
+                                    placeholder="Doe" />
+                                <div class="invalid-feedback"
+                                    *ngIf="formRegister.get('lastName')?.touched && formRegister.get('lastName')?.invalid">
+                                    <div *ngIf="formRegister.get('lastName')?.errors?.required">Cannot be empty</div>
+                                    <div *ngIf="formRegister.get('lastName')?.errors?.minlength">Must containt at least
+                                        2 characters</div>
+                                    <div *ngIf="formRegister.get('lastName')?.errors?.maxlength">Only 50 characters are
+                                        allowed</div>
+                                </div>
+                            </div>
+
+                            <div class="form-group mb-4">
+                                <p class="mb-0">Email</p>
+                                <input class="form-control {{inputClass(formRegister, 'email')}}" type="text"
+                                    name="email" formControlName="email" maxlength="50" email
+                                    placeholder="johndoe@example.com" />
+                                <div class="invalid-feedback"
+                                    *ngIf="formRegister.get('email')?.touched && formRegister.get('email')?.invalid">
+                                    <div *ngIf="formRegister.get('email')?.errors?.required">Cannot be empty</div>
+                                    <div *ngIf="formRegister.get('email')?.errors?.email">Must be email format</div>
+                                    <div *ngIf="formRegister.get('email')?.errors?.maxlength">Only 50 characters are
+                                        allowed</div>
+                                </div>
+                            </div>
+
+                            <div class="form-group mb-4">
+                                <p class="mb-0">Username</p>
+                                <input class="form-control {{inputClass(formRegister, 'username')}}" type="text"
+                                    name="username" formControlName="username" maxlength="15"
+                                    placeholder="johndoe" pattern="^[a-z0-9]+$" />
+                                <div class="invalid-feedback"
+                                    *ngIf="formRegister.get('username')?.touched && formRegister.get('username')?.invalid">
+                                    <div *ngIf="formRegister.get('username')?.errors?.required">Cannot be empty</div>
+                                    <div *ngIf="formRegister.get('username')?.errors?.pattern">Must contain only lower
+                                        case characters and
+                                        numbers</div>
+                                    <div *ngIf="formRegister.get('username')?.errors?.maxlength">Only 15 characters are
+                                        allowed</div>
+                                </div>
+                            </div>
+
+                            <div class="form-group mb-4">
+                                <p class="mb-0">Password</p>
+                                <input class="form-control {{inputClass(formRegister, 'password')}}" type="password"
+                                    name="password" formControlName="password" minlength="8"
+                                    maxlength="50" placeholder="Password"
+                                    pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$@!%&*?])[A-Za-z\d#$@!%&*?]{8,50}$"
+                                    placeholder="·········" />
+                                <div class="invalid-feedback"
+                                    *ngIf="formRegister.get('password')?.touched && formRegister.get('password')?.invalid">
+                                    <div *ngIf="formRegister.get('password')?.errors?.required">Cannot be empty</div>
+                                    <div *ngIf="formRegister.get('password')?.errors?.pattern">Must contain upper and
+                                        lower case letters,
+                                        numbers and special characters</div>
+                                    <div *ngIf="formRegister.get('password')?.errors?.minlength">Must contain at least 8
+                                        characters</div>
+                                    <div *ngIf="formRegister.get('password')?.errors?.maxlength">Only 50 characters are
+                                        allowed</div>
+                                </div>
+                            </div>
+
+                            <div class="form-group mb-4">
+                                <p class="mb-0">Country</p>
+                                <select class="form-control {{inputClass(formRegister, 'country')}}"
+                                    formControlName="country">
+                                    <option class="dark-text" value="" disabled>Country</option>
+                                    <option class="dark-text" *ngFor="let country of countries" [ngValue]="country">
+                                        {{country}}</option>
+                                </select>
+                                <div class="invalid-feedback"
+                                    *ngIf="formRegister.get('country')?.touched && formRegister.get('country')?.invalid">
+                                    <div *ngIf="formRegister.get('country')?.errors?.required">Cannot be empty</div>
+                                </div>
+                            </div>
+
+                            <div class="form-group mb-4">
+                                <p class="mb-0">Sector</p>
+                                <input class="form-control {{inputClass(formRegister, 'sector')}}" type="text"
+                                    name="sector" formControlName="sector" maxlength="20"
+                                    placeholder="Industry" />
+                                <div class="invalid-feedback"
+                                    *ngIf="formRegister.get('sector')?.touched && formRegister.get('sector')?.invalid">
+                                    <div *ngIf="formRegister.get('sector')?.errors?.required">Cannot be empty</div>
+                                    <div *ngIf="formRegister.get('sector')?.errors?.maxlength">Only 20 characters are
+                                        allowed</div>
+                                </div>
+                            </div>
+                            <!-- <div class="modal-footer"> -->
+                            
+                            
+                            <div class="form-group modal-footer">
+                                <button type="button" #closebutton class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-success" [disabled]="!formRegister.valid">Register</button>
+                            </div>
+                            <!-- </div> -->
+
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>

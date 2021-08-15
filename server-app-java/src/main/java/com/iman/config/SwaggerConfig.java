@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
@@ -22,32 +23,6 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableSwagger2
 public class SwaggerConfig {
 	
-	@Bean
-	public Docket apiDocket() {
-		return new Docket(DocumentationType.SWAGGER_2)
-				.select()
-				.apis(RequestHandlerSelectors.basePackage("com.codmind.swaggerapi.controllers"))
-				.paths(PathSelectors.any())
-				.build()
-				.securityContexts(Arrays.asList(securityContext()))
-			    .securitySchemes(Arrays.asList(apiKey()))
-				.apiInfo(getApiInfo())
-				;
-	}
-	
-	private ApiInfo getApiInfo() {
-		return new ApiInfo(
-				"iMan API",
-				"API developed for iMan services",
-				"1.0",
-				"http://iMan.com/terms",
-				new Contact("iMan", "https://iMan.com", "apis@iMan.com"),
-					"LICENSE",
-					"LICENSE URL",
-					Collections.emptyList()
-				);
-	}
-	
 	private ApiKey apiKey() { 
 	    return new ApiKey("JWT", "Authorization", "header"); 
 	}
@@ -62,5 +37,27 @@ public class SwaggerConfig {
 	    authorizationScopes[0] = authorizationScope; 
 	    return Arrays.asList(new SecurityReference("JWT", authorizationScopes)); 
 	}
+	
+	private ApiInfo apiInfo() {
+	    return new ApiInfo(
+	      "iMan API",
+	      "API requests documentation abour iMan project",
+	      "1.0",
+	      "Terms of service",
+	      new Contact("Daniel Arellano Martínez", "iMan.com", "danielarellano99@gmail.com"),
+	      "License of API",
+	      "API license URL",
+	      Collections.emptyList());
+	}
 
+	@Bean
+	public Docket api() {
+		return new Docket(DocumentationType.SWAGGER_2)
+				.apiInfo(apiInfo())
+				.securityContexts(Arrays.asList(securityContext()))
+			    .securitySchemes(Arrays.asList(apiKey()))
+				.select()
+					.apis(RequestHandlerSelectors.basePackage("com.iman"))
+					.paths(PathSelectors.any()).build();
+	}
 }

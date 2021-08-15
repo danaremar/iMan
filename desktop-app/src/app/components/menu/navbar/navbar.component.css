@@ -1,0 +1,16 @@
+#title {
+    font-size: 1.5rem;
+    font-weight: 500;
+}
+
+#title:hover {
+    color: var(--dark-contrast-text) !important;
+}
+
+.navbar {
+    height: var(--navbar-size) !important;
+}
+
+.bi {
+    font-size: 20px !important;
+}
