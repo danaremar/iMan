@@ -20,6 +20,7 @@ import org.hibernate.validator.constraints.Length;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.iman.model.effort.Effort;
 import com.iman.model.projects.ProjectRole;
 
 import lombok.Data;
@@ -90,5 +91,8 @@ public class User {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
 	private List<ProjectRole> projectRoles;
 	
+	@JsonIgnore
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+	private List<Effort> efforts;
 	
 }

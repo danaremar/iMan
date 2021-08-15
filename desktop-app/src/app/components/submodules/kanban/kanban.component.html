@@ -79,6 +79,18 @@
                         </div>
 
                         <div class="s-text">{{task.description}}</div>
+                        
+                        <div *ngIf="task.computedTime!=0 && task.estimatedTime" class="progress my-3">
+                            <ng-container *ngIf="task.computedTime<=task.estimatedTime; else overloadTime">
+                                <div class="progress-bar progress-bar-striped bg-info " role="progressbar" [style]="'width: ' + (100 - (task.computedTime/task.estimatedTime)*100) + '%'" aria-valuemin="0" aria-valuemax="100"></div>
+                                <div class="progress-bar bg-success" role="progressbar" [style]="'width: ' + (task.computedTime/task.estimatedTime)*100 + '%'" aria-valuemin="0" aria-valuemax="100"></div>
+                            </ng-container>
+                            <ng-template #overloadTime>
+                                <div class="progress-bar progress-bar-striped bg-info " role="progressbar" [style]="'width: ' + (100 - (task.estimatedTime/task.computedTime)*100) + '%'" aria-valuemin="0" aria-valuemax="100"></div>
+                                <div class="progress-bar bg-danger" role="progressbar" [style]="'width: ' + (task.estimatedTime/task.computedTime)*100 + '%'" aria-valuemin="0" aria-valuemax="100"></div>
+                            </ng-template>
+                        </div>
+                        
                     </div>
                 </div>
             </div>

@@ -14,7 +14,6 @@ import { AuthComponent } from './components/auth/auth.component';
 import { NavbarComponent } from './components/menu/navbar/navbar.component';
 import { ProjectComponent } from './components/submodules/project/project.component';
 import { UserComponent } from './components/submodules/user/user.component';
-import { TimeComponent } from './components/submodules/time/time.component';
 import { KanbanComponent } from './components/submodules/kanban/kanban.component';
 import { TeamComponent } from './components/submodules/team/team.component';
 import { ConfigComponent } from './components/submodules/config/config.component';
@@ -23,6 +22,7 @@ import { RequirementsComponent } from './components/submodules/requirements/requ
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { SprintComponent } from './components/submodules/sprints/sprint.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { EffortComponent } from './components/submodules/effort/effort.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +33,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     SidebarComponent,
     ProjectComponent,
     UserComponent,
-    TimeComponent,
+    EffortComponent,
     KanbanComponent,
     TeamComponent,
     ConfigComponent,

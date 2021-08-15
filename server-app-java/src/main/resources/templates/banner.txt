@@ -10,7 +10,7 @@
 
 	Project: iMan ©
 	License: GPLv3
-	Version: v1.0
+	Version: v1.1
 	Author: Daniel Arellano Martínez
 	
 	

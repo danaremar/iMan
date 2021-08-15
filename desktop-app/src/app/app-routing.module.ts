@@ -10,7 +10,7 @@ import { ProjectComponent } from './components/submodules/project/project.compon
 import { RequirementsComponent } from './components/submodules/requirements/requirements.component';
 import { SprintComponent } from './components/submodules/sprints/sprint.component';
 import { TeamComponent } from './components/submodules/team/team.component';
-import { TimeComponent } from './components/submodules/time/time.component';
+import { EffortComponent } from './components/submodules/effort/effort.component';
 import { UserComponent } from './components/submodules/user/user.component';
 
 const routes: Routes = [
@@ -20,7 +20,7 @@ const routes: Routes = [
     path: 'app', component: MenuComponent,
     children: [
       { path: 'projects', component: ProjectComponent },
-      { path: 'time', component: TimeComponent },
+      { path: 'effort', component: EffortComponent },
       { path: 'kanban', component: KanbanComponent },
       { path: 'chat', component: ChatComponent },
       { path: 'requirements', component: RequirementsComponent },

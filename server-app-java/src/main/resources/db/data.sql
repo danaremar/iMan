@@ -43,14 +43,25 @@ INSERT INTO kanban_column (id, active, column_order, title, sprint_id) VALUES(1,
 INSERT INTO kanban_column (id, active, column_order, title, sprint_id) VALUES(2, 1, 1, 'In progress', 4);
 INSERT INTO kanban_column (id, active, column_order, title, sprint_id) VALUES(3, 1, 2, 'Done', 4);
 
--- KANBAN TASKS
-INSERT INTO kanban_task (id, active, creation_date, description, estimated_time, `number`, order_in_column, title, kanban_column_id) VALUES(1, 1, '2021-08-07 11:03:42.561000000', 'This is an example task C', 0.0, 1, 0, 'Task C', 1);
-INSERT INTO kanban_task (id, active, creation_date, description, estimated_time, `number`, order_in_column, title, kanban_column_id) VALUES(2, 0, '2021-08-07 11:03:56.523000000', 'This is an example task B', 0.0, 2, 1, 'Task B', 1);
-INSERT INTO kanban_task (id, active, creation_date, description, estimated_time, `number`, order_in_column, title, kanban_column_id) VALUES(3, 1, '2021-08-07 11:04:04.432000000', 'This is an example task A', 0.0, 2, 2, 'Task A', 1);
-INSERT INTO kanban_task (id, active, creation_date, description, estimated_time, `number`, order_in_column, title, kanban_column_id) VALUES(4, 1, '2021-08-07 11:05:26.597000000', 'This is an example task E', 0.0, 3, 0, 'Task E', 2);
-INSERT INTO kanban_task (id, active, creation_date, description, estimated_time, `number`, order_in_column, title, kanban_column_id) VALUES(5, 1, '2021-08-07 11:05:32.290000000', 'This is an example task D', 0.0, 4, 1, 'Task D', 2);
-INSERT INTO kanban_task (id, active, creation_date, description, estimated_time, `number`, order_in_column, title, kanban_column_id) VALUES(6, 1, '2021-08-07 11:06:55.721000000', 'This is an example task F', 0.0, 5, 0, 'Task F', 3);
 
+-- KANBAN TASKS
+INSERT INTO kanban_task (id, active, creation_date, description, estimated_time, `number`, order_in_column, title, kanban_column_id) VALUES(1, 1, '2021-08-07 11:03:42.561000000', 'This is an example task C', 12.0, 1, 0, 'Task C', 3);
+INSERT INTO kanban_task (id, active, creation_date, description, estimated_time, `number`, order_in_column, title, kanban_column_id) VALUES(2, 0, '2021-08-07 11:03:56.523000000', 'This is an example task B', 4.0, 2, 1, 'Task B', 1);
+INSERT INTO kanban_task (id, active, creation_date, description, estimated_time, `number`, order_in_column, title, kanban_column_id) VALUES(3, 1, '2021-08-07 11:04:04.432000000', 'This is an example task A', 3.0, 2, 0, 'Task A', 2);
+INSERT INTO kanban_task (id, active, creation_date, description, estimated_time, `number`, order_in_column, title, kanban_column_id) VALUES(4, 1, '2021-08-07 11:05:26.597000000', 'This is an example task E', 2.0, 3, 0, 'Task E', 1);
+INSERT INTO kanban_task (id, active, creation_date, description, estimated_time, `number`, order_in_column, title, kanban_column_id) VALUES(5, 1, '2021-08-07 11:05:32.290000000', 'This is an example task D', 2.0, 4, 1, 'Task D', 2);
+INSERT INTO kanban_task (id, active, creation_date, description, estimated_time, `number`, order_in_column, title, kanban_column_id) VALUES(6, 1, '2021-08-07 11:06:55.721000000', 'This is an example task F', 1.0, 5, 1, 'Task F', 1);
+
+
+
+-- EFFORT
+INSERT INTO effort (id, description, end_date, start_date, kanban_task_id, user_id) VALUES(1, NULL, '2021-08-15 10:23:13.557000000', '2021-08-15 08:52:01.793000000', 3, 1);
+INSERT INTO effort (id, description, end_date, start_date, kanban_task_id, user_id) VALUES(2, NULL, '2021-08-15 10:23:13.557000000', '2021-08-15 08:52:01.793000000', 3, 1);
+INSERT INTO effort (id, description, end_date, start_date, kanban_task_id, user_id) VALUES(3, NULL, '2021-08-15 10:23:13.557000000', '2021-08-15 08:52:01.793000000', 3, 1);
+INSERT INTO effort (id, description, end_date, start_date, kanban_task_id, user_id) VALUES(4, NULL, '2021-08-15 10:23:13.557000000', '2021-08-15 08:52:01.793000000', 1, 1);
+INSERT INTO effort (id, description, end_date, start_date, kanban_task_id, user_id) VALUES(5, NULL, '2021-08-15 10:23:13.557000000', '2021-08-15 08:52:01.793000000', 1, 1);
+INSERT INTO effort (id, description, end_date, start_date, kanban_task_id, user_id) VALUES(6, NULL, '2021-08-15 10:23:13.557000000', '2021-08-15 08:52:01.793000000', 5, 1);
+INSERT INTO effort (id, description, end_date, start_date, kanban_task_id, user_id) VALUES(7, 'Effort without assigned task', '2021-08-15 10:23:13.557000000', '2021-08-15 08:52:01.793000000', NULL, 1);
 
 
 --select * from sprint s where s.active = 1 order by s.`number` desc,

@@ -48,7 +48,7 @@ public class KanbanService {
 	@Autowired(required = true)
 	protected ModelMapper modelMapper;
 
-	private void verifyAdminOrOwner(Sprint sprint) {
+	public void verifyAdminOrOwner(Sprint sprint) {
 		String username = userService.getCurrentUsername();
 		if (username == null || sprint == null || sprint.getProject() == null || !sprint.getProject().getActive()
 				|| sprint.getProject().getProjectRoles() == null
@@ -58,7 +58,7 @@ public class KanbanService {
 		}
 	}
 
-	private void verifyMember(Sprint sprint) {
+	public void verifyMember(Sprint sprint) {
 		String username = userService.getCurrentUsername();
 		if (username == null || sprint == null || sprint.getProject() == null || !sprint.getProject().getActive()
 				|| sprint.getProject().getProjectRoles() == null
@@ -68,19 +68,30 @@ public class KanbanService {
 			throw new AccessDeniedException(ImanMessages.USER_NOT_ALLOWED);
 		}
 	}
+	
+	public void verifyVisitor(Sprint sprint) {
+		String username = userService.getCurrentUsername();
+		if (username == null || sprint == null || sprint.getProject() == null || !sprint.getProject().getActive()
+				|| sprint.getProject().getProjectRoles() == null
+				|| sprint.getProject().getProjectRoles().stream()
+						.noneMatch(x -> (List.of(0, 1, 2,0).contains(x.getRole()))
+								&& (x.getUser().getUsername().equals(username)))) {
+			throw new AccessDeniedException(ImanMessages.USER_NOT_ALLOWED);
+		}
+	}
 
-	private KanbanColumn findColumnById(Long kanbanColumnId) {
+	public KanbanColumn findColumnById(Long kanbanColumnId) {
 		return kanbanColumnRepository.findById(kanbanColumnId)
 				.orElseThrow(() -> new NotFoundException("Kanban column doesn't found"));
 	}
 
-	private KanbanTask findTaskById(Long kanbanTaskId) {
+	public KanbanTask findTaskById(Long kanbanTaskId) {
 		return kanbanTaskRepository.findById(kanbanTaskId)
 				.orElseThrow(() -> new NotFoundException("Kanban task doesn't found"));
 	}
 
 	private List<KanbanColumn> filterActiveColumn(List<KanbanColumn> ls) {
-		return ls.stream().filter(x -> x.getActive()).collect(Collectors.toList());
+		return ls.stream().filter(KanbanColumn::getActive).collect(Collectors.toList());
 	}
 
 	private void saveKanbanColumnOrder(KanbanColumn kanbanColumn, Long order) {
@@ -202,7 +213,7 @@ public class KanbanService {
 	}
 
 	private List<KanbanTask> filterActiveTask(List<KanbanTask> ls) {
-		return ls.stream().filter(x -> x.getActive()).collect(Collectors.toList());
+		return ls.stream().filter(KanbanTask::getActive).collect(Collectors.toList());
 	}
 
 	private void saveKanbanTaskOrderInColumn(KanbanTask kanbanTask, KanbanColumn kanbanColumn, Long orderInColumn) {
@@ -221,7 +232,7 @@ public class KanbanService {
 	private void reorderNumberAndSaveKanbanTasks(Sprint sprint) {
 		List<KanbanTask> ls = sprint.getKanbanColums().stream()
 				.flatMap(x -> x.getTasks().stream())
-				.filter(x -> x.getActive())
+				.filter(KanbanTask::getActive)
 				.sorted(Comparator.comparing(KanbanTask::getNumber))
 				.collect(Collectors.toList());
 

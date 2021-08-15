@@ -64,7 +64,8 @@ export class KanbanTask {
         number: number,
         orderInColumn: number,
         active: boolean,
-        kanbanColumn: KanbanColumn
+        kanbanColumn: KanbanColumn,
+        computedTime: number
     ) {
         this.id = id
         this.title = title
@@ -75,7 +76,9 @@ export class KanbanTask {
         this.orderInColumn = orderInColumn
         this.active = active
         this.kanbanColumn = kanbanColumn
+        this.computedTime = computedTime
     }
+
 
     id: number
     title: string
@@ -86,4 +89,5 @@ export class KanbanTask {
     orderInColumn: number
     active: boolean
     kanbanColumn: KanbanColumn
+    computedTime: number
 }
