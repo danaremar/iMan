@@ -24,34 +24,38 @@ import lombok.Data;
 @Data
 @Table(name = "effort", indexes = {})
 public class Effort {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
+
 	@Length(max = 255)
 	private String description;
-	
+
 	@NotNull
 	@PastOrPresent
 	private Date startDate;
-	
+
 	private Date endDate;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "kanban_task_id")
 	@JsonIgnore
 	private KanbanTask kanbanTask;
-	
+
 	@NotNull
 	@ManyToOne
 	@JoinColumn(name = "user_id")
 	@JsonIgnore
 	private User user;
-	
+
 	public Double getTime() {
-		Long msDiff = Math.abs(getEndDate().getTime() - getStartDate().getTime());
-		return ((double) msDiff / (1000 * 60 * 60)) % 24;
+		if (getEndDate() != null && getStartDate() != null) {
+			Long msDiff = Math.abs(getEndDate().getTime() - getStartDate().getTime());
+			return ((double) msDiff / (1000 * 60 * 60)) % 24;
+		} else {
+			return 0.0;
+		}
 	}
 
 }

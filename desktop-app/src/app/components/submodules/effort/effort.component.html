@@ -1,1 +1,133 @@
-Time module
+<!-- OPERATIONS -->
+<div class="d-flex mb-3 mr-3" style="height: 45px;">
+    <div class="flex-grow-1 m-auto d-flex">
+
+        <!-- my projects -->
+        <div class="d-flex mx-3" *ngIf="myProjects && myProjects.length!=0 && !changedToDescription">
+            <em class="bi bi-medium bi-folder2 me-2" ngbTooltip="Project" placement="bottom" [openDelay]="300"></em>
+            <select class="m-auto" (change)="loadSprintsByProjectIdEvent($event.target)">
+                <option class="dark-text" *ngFor="let p of myProjects"
+                    [attr.selected]="p.id==projectSelectedId?true:null" [ngValue]="p" value="{{p.id}}">
+                    {{p.name}}</option>
+            </select>
+        </div>
+
+        <!-- my sprints -->
+        <div class="d-flex mx-3" *ngIf="mySprints && mySprints.length!=0  && !changedToDescription">
+            <em class="bi bi-medium bi-arrow-repeat me-2" ngbTooltip="Sprint" placement="bottom" [openDelay]="300"></em>
+            <select class="m-auto" (change)="loadKanbanBySprintIdEvent($event.target)">
+                <option class="dark-text" *ngFor="let s of mySprints" [attr.selected]="s.id==sprintSelectedId?true:null"
+                    [ngValue]="s" value="{{s.id}}">
+                    #{{s.number}}: {{s.title}}</option>
+            </select>
+        </div>
+
+        <!-- my tasks -->
+        <div class="d-flex mx-3" *ngIf="myTasks && myTasks.length!=0 && !changedToDescription">
+            <em class="bi bi-medium bi-check2-square me-2" ngbTooltip="Task" placement="bottom" [openDelay]="300"></em>
+            <select class="m-auto" (change)="loadTasksBySprintIdEvent($event.target)">
+                <option class="dark-text" *ngFor="let t of myTasks"
+                    [attr.selected]="t.id==kanbanTaskSelectedId?true:null" [ngValue]="t.id" value="{{t.id}}">
+                    #{{t.number}}: {{t.title}}</option>
+            </select>
+        </div>
+
+        <!-- change assigned/without assigned -->
+        <div class="d-flex mx-3">
+            <a (click)="changeViewDescription()" ngbTooltip="Unnasigned task" placement="left" [openDelay]="300" data-bs-toggle="modal">
+                <em *ngIf="changedToDescription" class="bi bi-medium bi-check2-square me-2"></em>
+                <em *ngIf="!changedToDescription" class="bi bi-medium bi-chat-left-text-fill me-2"></em>
+            </a>
+        </div>
+        
+
+    </div>
+
+    <div>
+        <ng-container
+            *ngIf="activeEffort==null || (activeEffort!=null && kanbanTaskSelectedId!=activeEffort.kanbanTask.id); else startedTask">
+
+            <!-- START TASK -->
+            <a (click)="startEffort()" ngbTooltip="Start effort" placement="left" [openDelay]="300"
+                data-bs-toggle="modal">
+                <em class="bi bi-play-circle-fill me-2"></em>
+            </a>
+
+        </ng-container>
+        <ng-template #startedTask>
+
+            <!-- END TASK -->
+            <a (click)="endEffort()" ngbTooltip="Stop effort" placement="left" [openDelay]="300" data-bs-toggle="modal">
+                <em class="bi bi-square-fill me-2"></em>
+            </a>
+
+        </ng-template>
+    </div>
+</div>
+
+<hr style="height: 2px">
+
+<div *ngIf="containError" class="alert alert-danger mt-3 mb-3">{{messageError}}</div>
+<div class="mt-3 overflow-auto scrollable-content">
+    <div *ngFor="let effort of efforts; let j=index">
+        <div class="card card-list me-3">
+            <div class="d-flex m-3">
+                <div class="flex-grow-1">
+
+                    <!-- EFFORT INFORMATION -->
+                    <div class="d-flex flex-wrap">
+
+                        <!-- SHOW EFFORT WITH ASSIGNED TASK -->
+                        <ng-container *ngIf="effort!=null && effort.kanbanTask != null; else descriptionEffort">
+
+                            <!-- project name -->
+                            <div *ngIf="effort.project!=null" class="d-flex mx-3">
+                                <em class="bi bi-medium bi-folder2 me-2" ngbTooltip="Project" placement="bottom" [openDelay]="300"></em>
+                                <div class="m-auto">{{effort.project.name}}</div>
+                            </div>
+
+                            <!-- sprint -->
+                            <div *ngIf="effort.sprint!=null" class="d-flex mx-3">
+                                <em class="bi bi-medium bi-arrow-repeat me-2" ngbTooltip="Sprint" placement="bottom" [openDelay]="300"></em>
+                                <div class="m-auto">#{{effort.sprint.number}}: {{effort.sprint.title}}</div>
+                            </div>
+
+                            <!-- task -->
+                            <div class="d-flex mx-3">
+                                <em class="bi bi-medium bi-check2-square me-2" ngbTooltip="Task" placement="bottom" [openDelay]="300"></em>
+                                <div class="m-auto">#{{effort.kanbanTask.number}}: {{effort.kanbanTask.title}}</div>
+                            </div>
+                        </ng-container>
+
+                        <!-- SHOW EFFORT WITH DESCRIPTION -->
+                        <ng-template #descriptionEffort>
+                            <div class="d-flex mx-3">
+                                <em class="bi bi-medium bi-card-text me-2"></em>
+                                <div class="m-auto">{{effort.description}}</div>
+                            </div>
+                        </ng-template>
+                    </div>
+
+                </div>
+
+                <!-- EFFORT TIME -->
+                <div class="m-auto m-text me-3">
+                    {{effort.time.toFixed(3)}} h
+                </div>
+
+                <div class="d-flex">
+
+                    <!-- EDIT EFFORT -->
+                    <a (click)="startEffort()" ngbTooltip="Edit effort" placement="left" [openDelay]="300">
+                        <em class="bi bi-medium bi-pencil-fill me-2 m-auto"></em>
+                    </a>
+
+                    <!-- DELETE EFFORT -->
+                    <a (click)="startEffort()" ngbTooltip="Delete effort" placement="left" [openDelay]="300">
+                        <em class="bi bi-medium bi-trash-fill me-2 m-auto"></em>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

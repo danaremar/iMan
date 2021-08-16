@@ -62,6 +62,4 @@ INSERT INTO effort (id, description, end_date, start_date, kanban_task_id, user_
 INSERT INTO effort (id, description, end_date, start_date, kanban_task_id, user_id) VALUES(5, NULL, '2021-08-15 10:23:13.557000000', '2021-08-15 08:52:01.793000000', 1, 1);
 INSERT INTO effort (id, description, end_date, start_date, kanban_task_id, user_id) VALUES(6, NULL, '2021-08-15 10:23:13.557000000', '2021-08-15 08:52:01.793000000', 5, 1);
 INSERT INTO effort (id, description, end_date, start_date, kanban_task_id, user_id) VALUES(7, 'Effort without assigned task', '2021-08-15 10:23:13.557000000', '2021-08-15 08:52:01.793000000', NULL, 1);
-
-
---select * from sprint s where s.active = 1 order by s.`number` desc,
+INSERT INTO effort (id, description, end_date, start_date, kanban_task_id, user_id) VALUES(8, NULL, NULL, '2021-08-15 17:31:33.652000000', 3, 1);

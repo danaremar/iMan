@@ -7,6 +7,7 @@ import javax.validation.Valid;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.relational.core.mapping.Embedded.Nullable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -48,28 +49,38 @@ public class EffortRestController {
 	@GetMapping
 	public ResponseEntity<Object> getAllMyEfforts() {
 		try {
-			List<Effort> efforts = effortService.getAllMyEfforts();
-			List<EffortShowDto> effortsShowList = efforts.stream().map(x -> modelMapper.map(x, EffortShowDto.class))
-					.collect(Collectors.toList());
-			return new ResponseEntity<>(effortsShowList, HttpStatus.OK);
+			List<EffortShowDto> efforts = effortService.getAllMyEfforts();
+			return new ResponseEntity<>(efforts, HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(new Message(e.getMessage()), HttpStatus.CONFLICT);
 		}
 	}
-	
+
 	@GetMapping(value = "/task/{taskId}")
 	public ResponseEntity<Object> getAllEffortsByTaskId(@PathVariable Long taskId) {
 		try {
-			List<Effort> efforts = effortService.getAllEffortsByTaskId(taskId);
-			List<EffortShowDto> effortsShowList = efforts.stream().map(x -> modelMapper.map(x, EffortShowDto.class))
-					.collect(Collectors.toList());
-			return new ResponseEntity<>(effortsShowList, HttpStatus.OK);
+			List<EffortShowDto> efforts = effortService.getAllEffortsByTaskId(taskId);
+			return new ResponseEntity<>(efforts, HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(new Message(e.getMessage()), HttpStatus.CONFLICT);
 		}
 	}
-	
-	
+
+	@GetMapping(value = "/active")
+	public ResponseEntity<Object> getActiveEffort() {
+		try {
+			Effort effort = effortService.findMyStartedEffort();
+			if (effort != null) {
+				EffortShowDto effortShow = modelMapper.map(effort, EffortShowDto.class);
+				return new ResponseEntity<>(effortShow, HttpStatus.OK);
+			} else {
+				return new ResponseEntity<>(null, HttpStatus.OK);
+			}
+		} catch (Exception e) {
+			return new ResponseEntity<>(new Message(e.getMessage()), HttpStatus.CONFLICT);
+		}
+	}
+
 	@PostMapping
 	public ResponseEntity<Object> startEffort(@RequestBody @Valid EffortStartDto effortStartDto) {
 		try {
@@ -79,8 +90,7 @@ public class EffortRestController {
 			return new ResponseEntity<>(new Message(e.getMessage()), HttpStatus.CONFLICT);
 		}
 	}
-	
-	
+
 	@PutMapping
 	public ResponseEntity<Object> updateEffort(@RequestBody @Valid EffortUpdateDto effortUpdateDto) {
 		try {
@@ -90,7 +100,7 @@ public class EffortRestController {
 			return new ResponseEntity<>(new Message(e.getMessage()), HttpStatus.CONFLICT);
 		}
 	}
-	
+
 	@PutMapping(value = "/{effortId}/end")
 	public ResponseEntity<Object> endEffort(@PathVariable Long effortId) {
 		try {
@@ -100,7 +110,7 @@ public class EffortRestController {
 			return new ResponseEntity<>(new Message(e.getMessage()), HttpStatus.CONFLICT);
 		}
 	}
-	
+
 	@DeleteMapping(value = "/{effortId}")
 	public ResponseEntity<Object> deleteEffort(@PathVariable Long effortId) {
 		try {
@@ -110,13 +120,5 @@ public class EffortRestController {
 			return new ResponseEntity<>(new Message(e.getMessage()), HttpStatus.CONFLICT);
 		}
 	}
-	
-	
-	
-	
-	
-	
-	
-	
 
 }

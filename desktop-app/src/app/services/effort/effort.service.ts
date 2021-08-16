@@ -30,6 +30,10 @@ export class EffortService {
         var url = this.hostUrl + 'task/' + taskId
         return this.httpClient.get<Effort>(url)
     }
+    public getActiveEffort(): Observable<any> {
+        var url = this.hostUrl + 'active/'
+        return this.httpClient.get<Effort>(url)
+    }
 
     // START
     public startEffort(effortStart: EffortStart): Observable<any> {

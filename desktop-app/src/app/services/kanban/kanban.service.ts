@@ -2,8 +2,10 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { KanbanColumnCreate, KanbanColumnShow, KanbanColumnUpdate } from "src/app/models/kanban/kanbanColumn";
-import { KanbanTaskCreate, KanbanTaskMove, KanbanTaskUpdate } from "src/app/models/kanban/kanbanTask";
+import { KanbanTask, KanbanTaskCreate, KanbanTaskMove, KanbanTaskUpdate } from "src/app/models/kanban/kanbanTask";
 import { environment } from "src/environments/environment";
+
+const KANBAN_TASK_ID = 'KanbanTaskId'
 
 @Injectable({
     providedIn: 'root'
@@ -23,7 +25,7 @@ export class KanbanService {
     * OPERATIONS
     * 
     */
-   
+
     // GET ALL
     public getAllKanbanBySprintId(sprintId: number): Observable<any> {
         var url = this.hostUrl + 'sprint/' + sprintId
@@ -47,6 +49,10 @@ export class KanbanService {
 
 
     // TASKS
+    public getAllKanbanTasksBySprintId(sprintId: number): Observable<any> {
+        var url = this.hostUrl + 'task/sprint/' + sprintId
+        return this.httpClient.get<KanbanTask>(url)
+    }
     public createKanbanTask(kanbanTask: KanbanTaskCreate): Observable<any> {
         var url = this.kanbanTaskUrl
         return this.httpClient.post<KanbanTaskCreate>(url, kanbanTask)
@@ -62,6 +68,15 @@ export class KanbanService {
     public moveKanbanTask(kanbanTask: KanbanTaskMove): Observable<any> {
         var url = this.kanbanTaskUrl + 'move'
         return this.httpClient.put<KanbanTaskMove>(url, kanbanTask)
+    }
+
+    // SAVE
+    public getStoredKanbanTaskId(): number | null {
+        return Number(localStorage.getItem(KANBAN_TASK_ID))
+    }
+
+    public setStoredKanbanTaskId(sprintId: number): void {
+        localStorage.setItem(KANBAN_TASK_ID, String(sprintId))
     }
 
 }

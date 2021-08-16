@@ -1,4 +1,6 @@
 import { KanbanTask } from "../kanban/kanbanTask"
+import { UpdateProject } from "../project/project"
+import { SprintShow } from "../sprint/sprint"
 import { ShowUser } from "../user/show-user"
 
 export class Effort {
@@ -9,7 +11,9 @@ export class Effort {
         endDate: Date,
         kanbanTask: KanbanTask,
         user: ShowUser,
-        time: number
+        time: number,
+        sprint: SprintShow,
+        project: UpdateProject
     ) {
         this.id = id
         this.description = description
@@ -18,6 +22,8 @@ export class Effort {
         this.kanbanTask = kanbanTask
         this.user = user
         this.time = time
+        this.sprint = sprint
+        this.project = project
     }
 
     id: number
@@ -27,6 +33,8 @@ export class Effort {
     kanbanTask: KanbanTask
     user: ShowUser
     time: number
+    sprint: SprintShow
+    project: UpdateProject
 }
 
 export class EffortStart {

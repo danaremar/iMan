@@ -1,11 +1,13 @@
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from "@angular/cdk/drag-drop";
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { EffortStart } from "src/app/models/effort/effort";
 import { KanbanColumnCreate, KanbanColumnShow, KanbanColumnUpdate } from "src/app/models/kanban/kanbanColumn";
 import { KanbanTask, KanbanTaskCreate, KanbanTaskMove, KanbanTaskUpdate } from "src/app/models/kanban/kanbanTask";
 import { Project } from "src/app/models/project/project";
 import { ProjectRole } from "src/app/models/project/roles";
 import { TokenService } from "src/app/services/authentication/token.service";
+import { EffortService } from "src/app/services/effort/effort.service";
 import { KanbanService } from "src/app/services/kanban/kanban.service";
 import { ProjectService } from "src/app/services/projects/project.service";
 import { SprintService } from "src/app/services/sprints/sprint.service";
@@ -35,6 +37,7 @@ export class KanbanComponent implements OnInit {
     kanbanColumnSelected: any
     kanbanTaskSelected: any
     kanban: any
+    activeEffort: any
 
     containError: boolean = false
     messageError: string | undefined
@@ -74,7 +77,7 @@ export class KanbanComponent implements OnInit {
             CONSTRUCTOR
     ***************************/
 
-    constructor(private kanbanService: KanbanService, private sprintService: SprintService, private projectService: ProjectService, private formBuilder: FormBuilder, private tokenService: TokenService) {
+    constructor(private effortService: EffortService, private kanbanService: KanbanService, private sprintService: SprintService, private projectService: ProjectService, private formBuilder: FormBuilder, private tokenService: TokenService) {
 
         // COLUMNS
         this.formNewColumn = formBuilder.group({
@@ -160,8 +163,6 @@ export class KanbanComponent implements OnInit {
         this.loadSprintsBySelectedProject()
     }
 
-
-
     editIsAllowed(projectId: number) {
         let projects: Project[] = this.myProjects
         let selectedProject = projects.find(
@@ -224,6 +225,7 @@ export class KanbanComponent implements OnInit {
         if (sprintId != null && sprintId != 0) {
             this.kanbanService.getAllKanbanBySprintId(sprintId).subscribe(
                 data => {
+                    this.loadActiveEffort()
                     this.kanban = data
                 },
                 err => {
@@ -232,6 +234,47 @@ export class KanbanComponent implements OnInit {
             )
         }
     }
+
+
+
+    /***************************
+        METHODS -> EFFORT
+    ***************************/
+
+    loadActiveEffort(){
+        this.effortService.getActiveEffort().subscribe(
+            data => {
+                this.activeEffort = data
+            },
+            err => {
+                this.returnPrincipalError(err)
+            }
+        )
+    }
+
+    startEffort(kanbanTaskId: number){
+        let newEffort: EffortStart = new EffortStart("", kanbanTaskId)
+        this.effortService.startEffort(newEffort).subscribe(
+            data => {
+                this.loadKanbanBySelectedSprint()
+            },
+            err => {
+                this.returnPrincipalError(err)
+            }
+        )
+    }
+
+    endEffort(){
+        this.effortService.endEffort(this.activeEffort.id).subscribe(
+            data => {
+                this.loadKanbanBySelectedSprint()
+            },
+            err => {
+                this.returnPrincipalError(err)
+            }
+        )
+    }
+
 
 
     /***************************

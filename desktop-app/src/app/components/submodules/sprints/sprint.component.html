@@ -1,8 +1,9 @@
 <!-- OPERATIONS -->
 <div class="d-flex mb-3 mr-3" style="height: 45px;">
     <div class="flex-grow-1 center d-flex">
-        <div *ngIf="myProjects.length!=0">
-            <select (change)="loadSprintsByProjectIdEvent($event.target)">
+        <div class="d-flex mx-3" *ngIf="myProjects && myProjects.length!=0">
+            <em class="bi bi-medium bi-folder2 me-2" ngbTooltip="Project" placement="bottom" [openDelay]="300"></em>
+            <select class="m-auto" (change)="loadSprintsByProjectIdEvent($event.target)">
                 <option class="dark-text" *ngFor="let p of myProjects"
                     [attr.selected]="p.id==projectSelectedId?true:null" [ngValue]="p" value="{{p.id}}">
                     {{p.name}}</option>
@@ -15,6 +16,8 @@
         </a>
     </div>
 </div>
+
+<hr style="height: 2px">
 
 <div *ngIf="containError" class="alert alert-danger mt-3 mb-3">{{messageError}}</div>
 
@@ -172,12 +175,12 @@
 
 
 <!-- VIEW SPRINTS -->
-<div class="overflow-auto scrollable-content">
+<div class="mt-3 overflow-auto scrollable-content">
     <div *ngFor="let s of mySprints; let i=index">
         <div class="card card-list">
             <div class="inside-card">
                 <div class="d-flex ">
-                    <div class="flex-grow-1 center b-text align-middle">Sprint {{mySprints.length-i}}: {{s.title}}</div>
+                    <div class="flex-grow-1 center b-text align-middle">#{{mySprints.length-i}}: {{s.title}}</div>
 
                     <div *ngIf="accessToEdit">
 

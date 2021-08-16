@@ -68,13 +68,13 @@ public class KanbanService {
 			throw new AccessDeniedException(ImanMessages.USER_NOT_ALLOWED);
 		}
 	}
-	
+
 	public void verifyVisitor(Sprint sprint) {
 		String username = userService.getCurrentUsername();
 		if (username == null || sprint == null || sprint.getProject() == null || !sprint.getProject().getActive()
 				|| sprint.getProject().getProjectRoles() == null
 				|| sprint.getProject().getProjectRoles().stream()
-						.noneMatch(x -> (List.of(0, 1, 2,0).contains(x.getRole()))
+						.noneMatch(x -> (List.of(0, 1, 2, 0).contains(x.getRole()))
 								&& (x.getUser().getUsername().equals(username)))) {
 			throw new AccessDeniedException(ImanMessages.USER_NOT_ALLOWED);
 		}
@@ -102,11 +102,22 @@ public class KanbanService {
 	@Transactional
 	public List<KanbanColumn> findKanbanColumnsBySprintId(Long sprintId) {
 		Sprint sprint = sprintService.findById(sprintId);
+		verifyVisitor(sprint);
 		KanbanColumn exampleKanbanColumn = new KanbanColumn();
 		exampleKanbanColumn.setSprint(sprint);
 		exampleKanbanColumn.setActive(true);
 		Example<KanbanColumn> example = Example.of(exampleKanbanColumn);
 		return kanbanColumnRepository.findAll(example, Sort.by(Sort.Direction.ASC, "columnOrder"));
+	}
+
+	@Transactional
+	public List<KanbanTask> findKanbanTasksBySprintId(Long sprintId) {
+//		List<KanbanColumn> kc = findKanbanColumnsBySprintId(sprintId);
+//		return kc.stream().flatMap(x -> x.getTasks().stream()).collect(Collectors.toList());
+		Sprint sprint = sprintService.findById(sprintId);
+		verifyVisitor(sprint);
+		return kanbanTaskRepository.findAllKanbanTaskBySprintId(sprint.getId());
+		
 	}
 
 	private Long countKanbanColumns(Sprint sprint) {
@@ -156,11 +167,11 @@ public class KanbanService {
 	@Transactional
 	public void disableKanbanColumn(Long kanbanColumnId) {
 		KanbanColumn kanbanColumn = findColumnById(kanbanColumnId);
-		
-		if(kanbanColumn==null || !kanbanColumn.getTasks().isEmpty()) {
+
+		if (kanbanColumn == null || !kanbanColumn.getTasks().isEmpty()) {
 			throw new DataIntegrityViolationException(ImanMessages.KANBAN_COLUMN_CANNOT_BE_DELETED_MESSAGE);
 		}
-		
+
 		verifyAdminOrOwner(kanbanColumn.getSprint());
 		kanbanColumn.setActive(false);
 		kanbanColumnRepository.save(kanbanColumn);
@@ -223,17 +234,15 @@ public class KanbanService {
 		}
 		kanbanTaskRepository.save(kanbanTask);
 	}
-	
+
 	private void saveKanbanTaskNumber(KanbanTask kanbanTask, Long taskNumber) {
 		kanbanTask.setNumber(taskNumber);
 		kanbanTaskRepository.save(kanbanTask);
 	}
 
 	private void reorderNumberAndSaveKanbanTasks(Sprint sprint) {
-		List<KanbanTask> ls = sprint.getKanbanColums().stream()
-				.flatMap(x -> x.getTasks().stream())
-				.filter(KanbanTask::getActive)
-				.sorted(Comparator.comparing(KanbanTask::getNumber))
+		List<KanbanTask> ls = sprint.getKanbanColums().stream().flatMap(x -> x.getTasks().stream())
+				.filter(KanbanTask::getActive).sorted(Comparator.comparing(KanbanTask::getNumber))
 				.collect(Collectors.toList());
 
 		IntStream.range(0, ls.size()).filter(x -> ls.get(x).getActive())
@@ -247,12 +256,12 @@ public class KanbanService {
 						|| ls.get(x).getOrderInColumn().intValue() != ls.size() - x - 1)
 				.forEach(x -> saveKanbanTaskOrderInColumn(ls.get(x), kanbanColumn, (long) ls.size() - x - 1));
 	}
-	
+
 	private void verifyColumns(KanbanColumn kc1, KanbanColumn kc2) {
-		if(kc1==null || kc2==null) {
+		if (kc1 == null || kc2 == null) {
 			throw new DataIntegrityViolationException(ImanMessages.KANBAN_COLUMN_DONT_EXISTS_MESSAGE);
 		}
-		if(!kc1.getSprint().getId().equals(kc2.getSprint().getId())) {
+		if (!kc1.getSprint().getId().equals(kc2.getSprint().getId())) {
 			throw new DataIntegrityViolationException(ImanMessages.KANBAN_COLUMNS_DONT_RELATED_MESSAGE);
 		}
 	}

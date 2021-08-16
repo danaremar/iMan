@@ -17,7 +17,7 @@ body {
     --dark-pallete-3: #2d2d30;
     --dark-pallete-4: #252526;
     --dark-pallete-5: #1e1e1e;
-    --dark-pallete-text: #6f7a85;
+    --dark-pallete-text: #8d949b;
     --dark-contrast-text: rgb(206, 206, 206);
     --navbar-size: 50px;
     --sidebar-size: 65px;
@@ -167,7 +167,7 @@ input::-webkit-input-placeholder {
 select {
     border-radius: 0.3rem;
     height: 30px;
-    width: 150px;
+    width: 200px;
     background-color: var(--dark-pallete-4) !important;
     color: var(--dark-pallete-text) !important;
 }
@@ -182,7 +182,7 @@ select {
 }
 
 .scrollable-content {
-    height: calc(100vh - 100px - var(--navbar-size)) !important;
+    height: calc(100vh - 120px - var(--navbar-size)) !important;
 }
 
 .red-btn {

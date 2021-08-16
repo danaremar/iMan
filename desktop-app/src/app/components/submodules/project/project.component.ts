@@ -2,7 +2,6 @@ import { Component, OnInit, ViewChild } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { NewProject, Project, UpdateProject } from "src/app/models/project/project";
 import { CreateProjectRole, UpdateProjectRole } from "src/app/models/project/roles";
-import { AuthenticationService } from "src/app/services/authentication/authentication.service";
 import { TokenService } from "src/app/services/authentication/token.service";
 import { ProjectService } from "src/app/services/projects/project.service";
 

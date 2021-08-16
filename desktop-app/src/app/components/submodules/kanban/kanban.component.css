@@ -2,7 +2,7 @@
     background-color: var(--dark-pallete-3) !important;
     min-width: 400px;
     width: 400px;
-    height: calc(100vh - var(--navbar-size) - 135px);
+    height: calc(100vh - var(--navbar-size) - 150px);
 }
 
 .task-card {
