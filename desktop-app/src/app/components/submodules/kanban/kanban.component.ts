@@ -245,6 +245,9 @@ export class KanbanComponent implements OnInit {
         this.effortService.getActiveEffort().subscribe(
             data => {
                 this.activeEffort = data
+                if(data.project!=null) this.projectService.setStoredProjectId(data.project.id)
+                if(data.sprint!=null) this.sprintService.setStoredSprintId(data.sprint.id)
+                if(data.kanbanTask!=null) this.kanbanService.setStoredKanbanTaskId(data.kanbanTask.id)
             },
             err => {
                 this.returnPrincipalError(err)

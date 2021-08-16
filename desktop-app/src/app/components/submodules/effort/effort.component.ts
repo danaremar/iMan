@@ -30,7 +30,7 @@ export class EffortComponent implements OnInit {
     myTasks: any
     projectSelectedId: number | null | undefined
     sprintSelectedId: number | null | undefined
-    kanbanTaskSelectedId: any
+    kanbanTaskSelectedId: number | null | undefined
     adminAccess: boolean = false
     memberAccess: boolean = false
     efforts: any
@@ -206,8 +206,8 @@ export class EffortComponent implements OnInit {
             this.kanbanService.getAllKanbanTasksBySprintId(sprintId).subscribe(
                 data => {
                     this.myTasks = data
+                    this.loadFirstTask()
                     this.kanbanTaskSelectedId = this.kanbanService.getStoredKanbanTaskId()
-                    this.loadActiveEffort()
                     this.loadEfforts()
                 },
                 err => {
@@ -220,10 +220,9 @@ export class EffortComponent implements OnInit {
     loadFirstTask() {
         if (this.myTasks.length !== 0) {
             let taskId = this.kanbanService.getStoredKanbanTaskId()
-            if (taskId == null && taskId == 0) {
-                this.sprintService.setStoredSprintId(this.mySprints[0].id)
+            if (taskId == undefined && taskId == 0) {
+                this.kanbanService.setStoredKanbanTaskId(this.myTasks[0].id)
             }
-            this.loadTasksBySelectedSprint()
         }
     }
 
@@ -240,6 +239,7 @@ export class EffortComponent implements OnInit {
     ***************************/
 
     loadEfforts() {
+        this.loadActiveEffort()
         this.effortService.getAllMyEfforts().subscribe(
             data => {
                 this.efforts = data
@@ -254,6 +254,7 @@ export class EffortComponent implements OnInit {
         this.effortService.getActiveEffort().subscribe(
             data => {
                 this.activeEffort = data
+                this.loadDescriptionOrTaskEffort()
             },
             err => {
                 this.returnPrincipalError(err)
@@ -261,13 +262,26 @@ export class EffortComponent implements OnInit {
         )
     }
 
+    loadDescriptionOrTaskEffort(){
+        if(this.activeEffort!=null && this.activeEffort.kanbanTask==null && this.activeEffort.description!=null && this.activeEffort.description!='') {
+            this.changedToDescription = true
+            this.formNewEffort = this.formBuilder.group({
+                description: [this.activeEffort.description, []],
+            })
+        }
+    }
+
     startEffort() {
-        let newEffort: EffortStart = new EffortStart("", this.kanbanTaskSelectedId)
+        let newEffort: EffortStart
+        let taskId = this.kanbanService.getStoredKanbanTaskId()
+        if (this.changedToDescription || taskId==null) {
+            newEffort = new EffortStart(this.formNewEffort.value.description, 0)
+        } else {
+            newEffort = new EffortStart("", taskId)
+        }
         this.effortService.startEffort(newEffort).subscribe(
             data => {
-                this.loadMyProjects()
-
-                // TODO
+                this.loadEfforts()
             },
             err => {
                 this.returnPrincipalError(err)
@@ -278,9 +292,18 @@ export class EffortComponent implements OnInit {
     endEffort() {
         this.effortService.endEffort(this.activeEffort.id).subscribe(
             data => {
-                this.loadMyProjects()
+                this.loadEfforts()
+            },
+            err => {
+                this.returnPrincipalError(err)
+            }
+        )
+    }
 
-                // TODO
+    deleteEffort(effortId: number) {
+        this.effortService.deleteEffort(effortId).subscribe(
+            data => {
+                this.loadEfforts()
             },
             err => {
                 this.returnPrincipalError(err)
@@ -289,11 +312,12 @@ export class EffortComponent implements OnInit {
     }
 
 
+
     /***************************
        METHODS -> CHANGE VIEW
     ***************************/
 
-    changeViewDescription(){
+    changeViewDescription() {
         this.changedToDescription = !this.changedToDescription
     }
 }

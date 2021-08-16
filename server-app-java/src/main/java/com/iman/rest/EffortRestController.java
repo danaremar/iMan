@@ -1,13 +1,9 @@
 package com.iman.rest;
 
 import java.util.List;
-import java.util.stream.Collectors;
-
 import javax.validation.Valid;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.relational.core.mapping.Embedded.Nullable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -20,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.iman.model.effort.Effort;
 import com.iman.model.effort.EffortShowDto;
 import com.iman.model.effort.EffortStartDto;
 import com.iman.model.effort.EffortUpdateDto;
@@ -38,12 +33,9 @@ public class EffortRestController {
 	@Autowired
 	EffortService effortService;
 
-	@Autowired(required = true)
-	protected ModelMapper modelMapper;
 
-	public EffortRestController(EffortService effortService, ModelMapper modelMapper) {
+	public EffortRestController(EffortService effortService) {
 		this.effortService = effortService;
-		this.modelMapper = modelMapper;
 	}
 
 	@GetMapping
@@ -69,10 +61,9 @@ public class EffortRestController {
 	@GetMapping(value = "/active")
 	public ResponseEntity<Object> getActiveEffort() {
 		try {
-			Effort effort = effortService.findMyStartedEffort();
+			EffortShowDto effort = effortService.findMyStartedEffortDto();
 			if (effort != null) {
-				EffortShowDto effortShow = modelMapper.map(effort, EffortShowDto.class);
-				return new ResponseEntity<>(effortShow, HttpStatus.OK);
+				return new ResponseEntity<>(effort, HttpStatus.OK);
 			} else {
 				return new ResponseEntity<>(null, HttpStatus.OK);
 			}

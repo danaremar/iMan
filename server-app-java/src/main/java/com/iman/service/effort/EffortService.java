@@ -110,6 +110,16 @@ public class EffortService {
 			return ls.get(0);
 		}
 	}
+	
+	@Transactional
+	public EffortShowDto findMyStartedEffortDto() {
+		Effort effort = findMyStartedEffort();
+		if (effort==null) {
+			return null;
+		} else {
+			return getEffortShowDto(effort);
+		}
+	}
 
 	@Transactional
 	public void startEffort(EffortStartDto effortStartDto) {

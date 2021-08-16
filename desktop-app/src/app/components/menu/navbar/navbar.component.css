@@ -9,6 +9,7 @@
 
 .navbar {
     height: var(--navbar-size) !important;
+    width: 100vw;
 }
 
 .bi {
