@@ -42,7 +42,7 @@
 
             <div class="mx-3 m-auto w-100" *ngIf="changedToDescription">
                 <form [formGroup]="formNewEffort">
-                <input id="formDescription" class="m-auto w-100" type="text" name="description"
+                <input id="formDescription" (keydown.enter)="(activeEffort==null || (activeEffort!=null && activeEffort.kanbanTask!=null && kanbanTaskSelectedId!=activeEffort.kanbanTask.id))?startEffort():endEffort()" class="m-auto w-100" type="text" name="description"
                     formControlName="description" maxlength="255" placeholder="" />
                 </form>
             </div>
@@ -124,7 +124,6 @@
                 </div>
 
                 <div class="d-flex me-3 flex-wrap">
-                    
                     <div class="m-auto mx-3">{{formatDateTime(effort.startDate)}}</div>
                     <div class="m-auto b-text">-</div>
                     <div class="m-auto mx-3">{{formatDateTime(effort.endDate)}}</div>
