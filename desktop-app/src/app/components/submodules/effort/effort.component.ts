@@ -331,11 +331,15 @@ export class EffortComponent implements OnInit {
 
     getDifferenceFormatted(d1: any, d2: any): string {
         var time: number = Math.abs((new Date(d1)).getTime() - (new Date(d2)).getTime())
-        return this.transformNumberToString(Math.floor(time / 3600000), 2, 0) + ':' + this.transformNumberToString((Math.floor(time / 60000)) % 60, 2, 0) + ':' + this.transformNumberToString((Math.floor(time / 1000)) % 60, 2, 0)
+        return this.transformNumberToString(Math.floor(time / 3600000), 1, 0) + ':' + this.transformNumberToString((Math.floor(time / 60000)) % 60, 2, 0) + ':' + this.transformNumberToString((Math.floor(time / 1000)) % 60, 2, 0)
     }
 
-    formatDateTime(date: Date): any {
-        return this.getFormatedDate(date,'dd-mm-yyyy HH:mm:ss')
+    formatDate(date: Date): any {
+        return this.getFormatedDate(date,'dd/MM/yyyy')
+    }
+
+    formatTime(date: Date): any {
+        return this.getFormatedDate(date,'HH:mm:ss')
     }
 
     getFormatedDate(date: Date, format: string) {

@@ -123,10 +123,18 @@
 
                 </div>
 
-                <div class="d-flex me-3 flex-wrap">
-                    <div class="m-auto mx-3">{{formatDateTime(effort.startDate)}}</div>
-                    <div class="m-auto b-text">-</div>
-                    <div class="m-auto mx-3">{{formatDateTime(effort.endDate)}}</div>
+                <div class="d-flex ms-3 me-4 flex-wrap">
+                    <div class="d-flex my-auto">
+                        <div class="{{formatDate(effort.startDate)!=formatDate(effort.endDate)?'me-2':''}}">{{formatTime(effort.startDate)}}</div>
+                        <div *ngIf="formatDate(effort.startDate)!=formatDate(effort.endDate)">{{formatDate(effort.startDate)}}</div>
+                    </div>
+                    
+                    <div class="my-auto mx-2 b-text">-</div>
+
+                    <div class="d-flex my-auto">
+                        <div class="{{formatDate(effort.startDate)!=formatDate(effort.endDate)?'me-2':'me-3'}}">{{formatTime(effort.endDate)}}</div>
+                        <div>{{formatDate(effort.endDate)}}</div>
+                    </div>
                 </div>
 
 
