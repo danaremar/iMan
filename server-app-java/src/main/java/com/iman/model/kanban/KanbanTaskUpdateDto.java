@@ -21,7 +21,6 @@ public class KanbanTaskUpdateDto {
 	@Length(max = 50)
 	private String title;
 
-	@NotBlank
 	@Length(max = 255)
 	private String description;
 

@@ -36,6 +36,7 @@
                     </div>
 
                     <div class="mt-3">
+
                         <div *ngIf="notAcceptedProjects.length==0">
                             There are no pending invitations
                         </div>
@@ -61,8 +62,6 @@
                                     </a>
                                 </div>
                             </div>
-
-
                         </div>
 
                     </div>
@@ -142,7 +141,7 @@
     <div *ngFor="let project of myProjects; let j=index">
         <div class="card card-list">
             <div class="inside-card">
-                <div class="d-flex ">
+                <div class="d-flex flex-wrap">
                     <div class="flex-grow-1 center b-text align-middle">{{project.name}}</div>
 
                     <div>
@@ -152,126 +151,7 @@
                             <em class="bi bi-people-fill me-3"></em>
                         </a>
 
-                        <div class="modal fade" id="userProjectModal" tabindex="-1"
-                            aria-labelledby="userProjectModalLabel" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content bg-dark-5">
 
-                                    <div class="modal-body">
-                                        <div class="card overflow-auto">
-
-                                            <div class="d-flex">
-                                                <div class="flex-grow-1 card-title mt-2">Users:
-                                                    {{myProjects[selectedProject].name}}</div>
-                                                <div #closebuttonUsers class="close-card-button"
-                                                    data-bs-dismiss="modal">
-                                                    <em class="bi bi-x"></em>
-                                                </div>
-                                            </div>
-
-                                            <div *ngIf="newProjectRoleContainError" class="alert alert-danger">
-                                                {{newProjectRoleMessageError}}
-                                            </div>
-
-                                            <!-- IMPORTANT -> RIGHTS
-                                            {{[0,1].includes(myRoles[j])}}
-                                            -->
-
-                                            <!-- ADD NEW USER -->
-                                            <div *ngIf="[0,1].includes(myRoles[selectedProject])">
-                                                <form [formGroup]="formNewProjectRole" (ngSubmit)="newProject()">
-
-                                                    <div class="d-flex mt-3 mb-4">
-                                                        <div class="flex-grow-1 form-group me-3">
-                                                            <input
-                                                                class="form-control {{inputClass(formNewProjectRole, 'username')}}"
-                                                                type="text" name="username" formControlName="username"
-                                                                maxlength="30" minlength="2" placeholder="User" />
-                                                            <div class="invalid-feedback"
-                                                                *ngIf="formNewProjectRole.get('username')?.touched && formNewProjectRole.get('username')?.invalid">
-                                                                <div
-                                                                    *ngIf="formNewProjectRole.get('username')?.errors?.required">
-                                                                    Cannot be empty</div>
-                                                                <div
-                                                                    *ngIf="formNewProjectRole.get('username')?.errors?.minlength">
-                                                                    Must containt at least 2
-                                                                    characters</div>
-                                                                <div
-                                                                    *ngIf="formNewProjectRole.get('username')?.errors?.maxlength">
-                                                                    Only 30 characters are
-                                                                    allowed</div>
-                                                            </div>
-                                                        </div>
-
-
-                                                        <div class="form-group me-3" style="margin: auto;">
-                                                            <select class=" {{inputClass(formNewProjectRole, 'role')}}"
-                                                                formControlName="role">
-                                                                <option class="dark-text" *ngFor="let role of roles"
-                                                                    [ngValue]="role">
-                                                                    {{role}}</option>
-                                                            </select>
-                                                            <div class="invalid-feedback"
-                                                                *ngIf="formNewProjectRole.get('role')?.touched && formNewProjectRole.get('role')?.invalid">
-                                                                <div
-                                                                    *ngIf="formNewProjectRole.get('role')?.errors?.required">
-                                                                    Cannot be empty</div>
-                                                            </div>
-                                                        </div>
-
-                                                        <div>
-                                                            <button class="btn btn-success"
-                                                                [disabled]="!formNewProjectRole.valid"
-                                                                (click)="newProjectRole()">
-                                                                Add
-                                                            </button>
-                                                        </div>
-                                                    </div>
-
-                                                </form>
-                                            </div>
-
-
-                                            <!-- USER LIST -->
-                                            <div *ngFor="let role of myProjects[selectedProject].projectRoles">
-
-                                                <div *ngIf="role.accepted" class="card m-3 flex-row">
-                                                    <div>
-                                                        <em class="bi bi-person-circle me-3"></em>
-                                                    </div>
-                                                    <div class="flex-grow-1 center m-text">
-                                                        @{{role.user.username}}
-                                                    </div>
-
-                                                    <!-- EDIT ROLE -->
-                                                    <ng-container
-                                                        *ngIf="[0,1].includes(myRoles[selectedProject]) && role.role!=0 && role.user.username!=myUsername else cantEditUser">
-                                                        <div class="m-text" style="margin: auto;">
-                                                            <select (change)="updateProjectRole(role, $event.target)">
-                                                                <option class="dark-text"
-                                                                    [selected]="roleType==getRole(role.role)"
-                                                                    *ngFor="let roleType of roles" [ngValue]="roleType">
-                                                                    {{roleType}}</option>
-                                                            </select>
-                                                        </div>
-                                                    </ng-container>
-
-                                                    <ng-template #cantEditUser>
-                                                        <div class="m-text" style="margin: auto;">
-                                                            {{getRole(role.role)}}
-                                                        </div>
-                                                    </ng-template>
-
-
-                                                </div>
-
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
 
                         <!-- EDIT -->
                         <a *ngIf="myRoles[j]==0" ngbTooltip="Edit" (click)="fillUpdateForm(project)" placement="left"
@@ -279,86 +159,7 @@
                             <em class="bi bi-pencil-fill me-3"></em>
                         </a>
 
-                        <div class="modal fade" id="updateProjectModal" tabindex="-1"
-                            aria-labelledby="updateProjectModalLabel" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content bg-dark-5">
 
-                                    <div class="modal-body">
-                                        <div class="card overflow-auto">
-
-                                            <div class="d-flex">
-                                                <div class="flex-grow-1 card-title mt-2">Edit:
-                                                    {{myProjects[selectedProject].name}}</div>
-                                                <div class="close-card-button" data-bs-dismiss="modal">
-                                                    <em class="bi bi-x"></em>
-                                                </div>
-                                            </div>
-
-                                            <form [formGroup]="formUpdateProject" (ngSubmit)="updateProject()">
-
-                                                <div *ngIf="updateProjectContainError" class="alert alert-danger mt-5">
-                                                    {{updateProjectMessageError}}</div>
-
-                                                <div class="form-group mb-4 mt-3">
-
-                                                    <p class="mb-0">Name</p>
-                                                    <input
-                                                        class="form-control {{inputClass(formUpdateProject, 'name')}}"
-                                                        type="text" name="name" formControlName="name" maxlength="30"
-                                                        minlength="2" placeholder="" />
-                                                    <div class="invalid-feedback"
-                                                        *ngIf="formUpdateProject.get('name')?.touched && formUpdateProject.get('name')?.invalid">
-                                                        <div *ngIf="formUpdateProject.get('name')?.errors?.required">
-                                                            Cannot
-                                                            be empty</div>
-                                                        <div *ngIf="formUpdateProject.get('name')?.errors?.minlength">
-                                                            Must
-                                                            containt at least 2
-                                                            characters</div>
-                                                        <div *ngIf="formUpdateProject.get('name')?.errors?.maxlength">
-                                                            Only
-                                                            30 characters are
-                                                            allowed</div>
-                                                    </div>
-                                                </div>
-
-                                                <div class="form-group mb-4">
-                                                    <p class="mb-0">Description</p>
-                                                    <input
-                                                        class="form-control {{inputClass(formUpdateProject, 'description')}}"
-                                                        type="text" name="description" formControlName="description"
-                                                        maxlength="255" minlength="2" placeholder="" />
-                                                    <div class="invalid-feedback"
-                                                        *ngIf="formUpdateProject.get('description')?.touched && formUpdateProject.get('description')?.invalid">
-                                                        <div
-                                                            *ngIf="formUpdateProject.get('description')?.errors?.required">
-                                                            Cannot be empty</div>
-                                                        <div
-                                                            *ngIf="formUpdateProject.get('description')?.errors?.minlength">
-                                                            Must containt at least
-                                                            2 characters</div>
-                                                        <div
-                                                            *ngIf="formUpdateProject.get('description')?.errors?.maxlength">
-                                                            Only 255 characters
-                                                            are allowed</div>
-                                                    </div>
-                                                </div>
-
-                                                <div class="form-group modal-footer">
-                                                    <button type="button" #closebuttonUpdate class="btn btn-danger"
-                                                        data-bs-dismiss="modal">Close</button>
-                                                    <button type="submit" class="btn btn-success"
-                                                        [disabled]="!formUpdateProject.valid">Update</button>
-                                                </div>
-
-                                            </form>
-
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
 
                         <!-- DISABLE -->
                         <a *ngIf="myRoles[j]==0" (click)="enableDisableProject(project.id)" ngbTooltip="Disable"
@@ -368,6 +169,189 @@
                     </div>
                 </div>
                 <div>{{project.description}}</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- EDIT PROJECT -->
+<div class="modal fade" id="updateProjectModal" tabindex="-1" aria-labelledby="updateProjectModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content bg-dark-5">
+
+            <div class="modal-body">
+                <div class="card overflow-auto">
+
+                    <div class="d-flex">
+                        <div class="flex-grow-1 card-title mt-2 text-break">Edit:
+                            {{myProjects[selectedProject].name}}</div>
+                        <div class="close-card-button" data-bs-dismiss="modal">
+                            <em class="bi bi-x"></em>
+                        </div>
+                    </div>
+
+                    <form [formGroup]="formUpdateProject" (ngSubmit)="updateProject()">
+
+                        <div *ngIf="updateProjectContainError" class="alert alert-danger mt-5">
+                            {{updateProjectMessageError}}</div>
+
+                        <div class="form-group mb-4 mt-3">
+
+                            <p class="mb-0">Name</p>
+                            <input class="form-control {{inputClass(formUpdateProject, 'name')}}" type="text"
+                                name="name" formControlName="name" maxlength="30" minlength="2" placeholder="" />
+                            <div class="invalid-feedback"
+                                *ngIf="formUpdateProject.get('name')?.touched && formUpdateProject.get('name')?.invalid">
+                                <div *ngIf="formUpdateProject.get('name')?.errors?.required">
+                                    Cannot
+                                    be empty</div>
+                                <div *ngIf="formUpdateProject.get('name')?.errors?.minlength">
+                                    Must
+                                    containt at least 2
+                                    characters</div>
+                                <div *ngIf="formUpdateProject.get('name')?.errors?.maxlength">
+                                    Only
+                                    30 characters are
+                                    allowed</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-4">
+                            <p class="mb-0">Description</p>
+                            <input class="form-control {{inputClass(formUpdateProject, 'description')}}" type="text"
+                                name="description" formControlName="description" maxlength="255" minlength="2"
+                                placeholder="" />
+                            <div class="invalid-feedback"
+                                *ngIf="formUpdateProject.get('description')?.touched && formUpdateProject.get('description')?.invalid">
+                                <div *ngIf="formUpdateProject.get('description')?.errors?.required">
+                                    Cannot be empty</div>
+                                <div *ngIf="formUpdateProject.get('description')?.errors?.minlength">
+                                    Must containt at least
+                                    2 characters</div>
+                                <div *ngIf="formUpdateProject.get('description')?.errors?.maxlength">
+                                    Only 255 characters
+                                    are allowed</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group modal-footer">
+                            <button type="button" #closebuttonUpdate class="btn btn-danger"
+                                data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-success"
+                                [disabled]="!formUpdateProject.valid">Update</button>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- EDIT USERS -->
+<div class="modal fade" id="userProjectModal" tabindex="-1" aria-labelledby="userProjectModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content bg-dark-5">
+
+            <div class="modal-body">
+                <div class="card overflow-auto">
+
+                    <div class="d-flex">
+                        <div class="flex-grow-1 card-title mt-2 text-break">Users:
+                            {{myProjects[selectedProject].name}}</div>
+                        <div #closebuttonUsers class="close-card-button" data-bs-dismiss="modal">
+                            <em class="bi bi-x"></em>
+                        </div>
+                    </div>
+
+                    <div *ngIf="newProjectRoleContainError" class="alert alert-danger">
+                        {{newProjectRoleMessageError}}
+                    </div>
+
+                    <!-- ADD NEW USER -->
+                    <div *ngIf="[0,1].includes(myRoles[selectedProject])">
+                        <form [formGroup]="formNewProjectRole" (ngSubmit)="newProject()">
+
+                            <div class="d-flex mt-3 mb-4">
+                                <div class="flex-grow-1 form-group me-3">
+                                    <input class="form-control {{inputClass(formNewProjectRole, 'username')}}"
+                                        type="text" name="username" formControlName="username" maxlength="30"
+                                        minlength="2" placeholder="User" />
+                                    <div class="invalid-feedback"
+                                        *ngIf="formNewProjectRole.get('username')?.touched && formNewProjectRole.get('username')?.invalid">
+                                        <div *ngIf="formNewProjectRole.get('username')?.errors?.required">
+                                            Cannot be empty</div>
+                                        <div *ngIf="formNewProjectRole.get('username')?.errors?.minlength">
+                                            Must containt at least 2
+                                            characters</div>
+                                        <div *ngIf="formNewProjectRole.get('username')?.errors?.maxlength">
+                                            Only 30 characters are
+                                            allowed</div>
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group me-3" style="margin: auto;">
+                                    <select class="sm-select {{inputClass(formNewProjectRole, 'role')}}" formControlName="role">
+                                        <option class="dark-text" *ngFor="let role of roles" [ngValue]="role">
+                                            {{role}}</option>
+                                    </select>
+                                    <div class="invalid-feedback"
+                                        *ngIf="formNewProjectRole.get('role')?.touched && formNewProjectRole.get('role')?.invalid">
+                                        <div *ngIf="formNewProjectRole.get('role')?.errors?.required">
+                                            Cannot be empty</div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <button class="btn btn-success my-auto" [disabled]="!formNewProjectRole.valid"
+                                        (click)="newProjectRole()">
+                                        Add
+                                    </button>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+
+
+                    <!-- USER LIST -->
+                    <div *ngFor="let role of myProjects[selectedProject].projectRoles">
+
+                        <div *ngIf="role.accepted" class="card m-3 flex-row">
+                            <div>
+                                <em class="bi bi-person-circle me-3"></em>
+                            </div>
+                            <div class="flex-grow-1 center m-text">
+                                @{{role.user.username}}
+                            </div>
+
+                            <!-- EDIT ROLE -->
+                            <ng-container
+                                *ngIf="[0,1].includes(myRoles[selectedProject]) && role.role!=0 && role.user.username!=myUsername else cantEditUser">
+                                <div class="m-text" style="margin: auto;">
+                                    <select class="sm-select" (change)="updateProjectRole(role, $event.target)">
+                                        <option class="dark-text" [selected]="roleType==getRole(role.role)"
+                                            *ngFor="let roleType of roles" [ngValue]="roleType">
+                                            {{roleType}}</option>
+                                    </select>
+                                </div>
+                            </ng-container>
+
+                            <ng-template #cantEditUser>
+                                <div class="m-text" style="margin: auto;">
+                                    {{getRole(role.role)}}
+                                </div>
+                            </ng-template>
+
+
+                        </div>
+
+                    </div>
+
+                </div>
             </div>
         </div>
     </div>

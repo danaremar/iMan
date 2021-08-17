@@ -52,7 +52,7 @@
 
     </div>
 
-    <div class="mx-3">
+    <div class="mx-3 ms-auto">
         <ng-container
             *ngIf="activeEffort==null || (activeEffort!=null && activeEffort.kanbanTask!=null && kanbanTaskSelectedId!=activeEffort.kanbanTask.id); else startedTask">
 
@@ -81,7 +81,7 @@
     <div *ngFor="let effort of efforts; let j=index">
         <div class="card card-list me-3"
             *ngIf="activeEffort==null || (activeEffort!=null && effort.id!=activeEffort.id)">
-            <div class="d-flex m-3">
+            <div class="d-flex m-3 flex-wrap">
                 <div class="flex-grow-1">
 
                     <!-- EFFORT INFORMATION -->
@@ -116,19 +116,28 @@
                         <ng-template #descriptionEffort>
                             <div class="d-flex mx-3">
                                 <em class="bi bi-medium bi-card-text"></em>
-                                <div class="m-auto mx-3">{{effort.description}}</div>
+                                <div class="m-auto mx-3 text-break">{{effort.description}}</div>
                             </div>
                         </ng-template>
                     </div>
 
                 </div>
 
-                <!-- EFFORT TIME -->
-                <div class="m-auto m-text me-3">
-                    {{effort.time.toFixed(3)}} h
+                <div class="d-flex me-3 flex-wrap">
+                    
+                    <div class="m-auto mx-3">{{formatDateTime(effort.startDate)}}</div>
+                    <div class="m-auto b-text">-</div>
+                    <div class="m-auto mx-3">{{formatDateTime(effort.endDate)}}</div>
                 </div>
 
-                <div class="d-flex">
+
+                <div class="d-flex ms-auto">
+
+                    <!-- EFFORT TIME -->
+                    <div class="m-auto m-text me-3">
+                        <!-- {{effort.time.toFixed(3)}} h -->
+                        {{getDifferenceFormatted(effort.startDate, effort.endDate)}}
+                    </div>
 
                     <!-- EDIT EFFORT -->
                     <a (click)="startEffort()" ngbTooltip="Edit effort" placement="left" [openDelay]="300">

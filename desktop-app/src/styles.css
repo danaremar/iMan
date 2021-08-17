@@ -172,6 +172,10 @@ select {
     color: var(--dark-pallete-text) !important;
 }
 
+.sm-select {
+    width: 100px !important;
+}
+
 .center {
     margin: auto;
     width: 50%;

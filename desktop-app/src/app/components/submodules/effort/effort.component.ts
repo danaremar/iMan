@@ -1,3 +1,4 @@
+import { DatePipe, Time } from "@angular/common";
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { EffortStart } from "src/app/models/effort/effort";
@@ -262,8 +263,8 @@ export class EffortComponent implements OnInit {
         )
     }
 
-    loadDescriptionOrTaskEffort(){
-        if(this.activeEffort!=null && this.activeEffort.kanbanTask==null && this.activeEffort.description!=null && this.activeEffort.description!='') {
+    loadDescriptionOrTaskEffort() {
+        if (this.activeEffort != null && this.activeEffort.kanbanTask == null && this.activeEffort.description != null && this.activeEffort.description != '') {
             this.changedToDescription = true
             this.formNewEffort = this.formBuilder.group({
                 description: [this.activeEffort.description, []],
@@ -274,7 +275,7 @@ export class EffortComponent implements OnInit {
     startEffort() {
         let newEffort: EffortStart
         let taskId = this.kanbanService.getStoredKanbanTaskId()
-        if (this.changedToDescription || taskId==null) {
+        if (this.changedToDescription || taskId == null) {
             newEffort = new EffortStart(this.formNewEffort.value.description, 0)
         } else {
             newEffort = new EffortStart("", taskId)
@@ -314,10 +315,31 @@ export class EffortComponent implements OnInit {
 
 
     /***************************
-       METHODS -> CHANGE VIEW
+       METHODS -> OTHERS
     ***************************/
 
     changeViewDescription() {
         this.changedToDescription = !this.changedToDescription
+    }
+
+    transformNumberToString(n: number, integers: number, fraction: number): string {
+        return n.toLocaleString('en-US', {
+            minimumIntegerDigits: integers,
+            minimumFractionDigits: fraction
+        })
+    }
+
+    getDifferenceFormatted(d1: any, d2: any): string {
+        var time: number = Math.abs((new Date(d1)).getTime() - (new Date(d2)).getTime())
+        return this.transformNumberToString(Math.floor(time / 3600000), 2, 0) + ':' + this.transformNumberToString((Math.floor(time / 60000)) % 60, 2, 0) + ':' + this.transformNumberToString((Math.floor(time / 1000)) % 60, 2, 0)
+    }
+
+    formatDateTime(date: Date): any {
+        return this.getFormatedDate(date,'dd-mm-yyyy HH:mm:ss')
+    }
+
+    getFormatedDate(date: Date, format: string) {
+        let datePipe = new DatePipe('en-US');
+        return datePipe.transform(date, format);
     }
 }

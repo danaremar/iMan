@@ -179,11 +179,10 @@
     <div *ngFor="let s of mySprints; let i=index">
         <div class="card card-list">
             <div class="inside-card">
-                <div class="d-flex ">
+                <div class="d-flex flex-wrap">
                     <div class="flex-grow-1 center b-text align-middle">#{{mySprints.length-i}}: {{s.title}}</div>
 
                     <div *ngIf="accessToEdit">
-
 
                         <!-- START -->
                         <a *ngIf="determineSprintTimeStatus(s)=='future'" ngbTooltip="Start" (click)="startSprint(s.id)"
@@ -207,11 +206,11 @@
                         <a ngbTooltip="Disable" (click)="disableSprint(s.id)" placement="left" [openDelay]="300">
                             <em class="bi bi-trash-fill me-3"></em>
                         </a>
-
+                        
                     </div>
                 </div>
 
-                <div class="m-text">{{s.description}}</div>
+                <div class="m-text text-break">{{s.description}}</div>
 
             </div>
         </div>

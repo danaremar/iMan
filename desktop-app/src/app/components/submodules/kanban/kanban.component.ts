@@ -1,4 +1,4 @@
-import { CdkDragDrop, moveItemInArray, transferArrayItem } from "@angular/cdk/drag-drop";
+import { CdkDragDrop, transferArrayItem } from "@angular/cdk/drag-drop";
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { EffortStart } from "src/app/models/effort/effort";
@@ -241,13 +241,15 @@ export class KanbanComponent implements OnInit {
         METHODS -> EFFORT
     ***************************/
 
-    loadActiveEffort(){
+    loadActiveEffort() {
         this.effortService.getActiveEffort().subscribe(
             data => {
                 this.activeEffort = data
-                if(data.project!=null) this.projectService.setStoredProjectId(data.project.id)
-                if(data.sprint!=null) this.sprintService.setStoredSprintId(data.sprint.id)
-                if(data.kanbanTask!=null) this.kanbanService.setStoredKanbanTaskId(data.kanbanTask.id)
+                if (data != null) {
+                    if (data.project != null) this.projectService.setStoredProjectId(data.project.id)
+                    if (data.sprint != null) this.sprintService.setStoredSprintId(data.sprint.id)
+                    if (data.kanbanTask != null) this.kanbanService.setStoredKanbanTaskId(data.kanbanTask.id)
+                }
             },
             err => {
                 this.returnPrincipalError(err)
@@ -255,7 +257,7 @@ export class KanbanComponent implements OnInit {
         )
     }
 
-    startEffort(kanbanTaskId: number){
+    startEffort(kanbanTaskId: number) {
         let newEffort: EffortStart = new EffortStart("", kanbanTaskId)
         this.effortService.startEffort(newEffort).subscribe(
             data => {
@@ -267,7 +269,7 @@ export class KanbanComponent implements OnInit {
         )
     }
 
-    endEffort(){
+    endEffort() {
         this.effortService.endEffort(this.activeEffort.id).subscribe(
             data => {
                 this.loadKanbanBySelectedSprint()
