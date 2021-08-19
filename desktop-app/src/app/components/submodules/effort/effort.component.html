@@ -34,16 +34,17 @@
 
         <!-- change assigned/without assigned -->
         <div class="d-flex mx-3 {{changedToDescription?'w-100':''}}">
-            <a (click)="changeViewDescription()" ngbTooltip="Unnasigned task" placement="left" [openDelay]="300"
-                data-bs-toggle="modal">
-                <em *ngIf="changedToDescription" class="bi bi-medium bi-check2-square me-2"></em>
-                <em *ngIf="!changedToDescription" class="bi bi-medium bi-chat-left-text-fill me-2"></em>
+            <a (click)="changeViewDescription()">
+                <em *ngIf="changedToDescription" class="bi bi-medium bi-check2-square me-2" ngbTooltip="Asigned task" placement="left" [openDelay]="300"></em>
+                <em *ngIf="!changedToDescription" class="bi bi-medium bi-chat-left-text-fill me-2" ngbTooltip="Unnasigned task" placement="left" [openDelay]="300"></em>
             </a>
 
             <div class="mx-3 m-auto w-100" *ngIf="changedToDescription">
                 <form [formGroup]="formNewEffort">
-                <input id="formDescription" (keydown.enter)="(activeEffort==null || (activeEffort!=null && activeEffort.kanbanTask!=null && kanbanTaskSelectedId!=activeEffort.kanbanTask.id))?startEffort():endEffort()" class="m-auto w-100" type="text" name="description"
-                    formControlName="description" maxlength="255" placeholder="" />
+                    <input id="formDescription"
+                        (keydown.enter)="(activeEffort==null || (activeEffort!=null && activeEffort.kanbanTask!=null && kanbanTaskSelectedId!=activeEffort.kanbanTask.id))?startEffort():endEffort()"
+                        class="m-auto w-100" type="text" name="description" formControlName="description"
+                        maxlength="255" placeholder="" />
                 </form>
             </div>
 
@@ -125,14 +126,17 @@
 
                 <div class="d-flex ms-3 me-4 flex-wrap">
                     <div class="d-flex my-auto">
-                        <div class="{{formatDate(effort.startDate)!=formatDate(effort.endDate)?'me-2':''}}">{{formatTime(effort.startDate)}}</div>
-                        <div *ngIf="formatDate(effort.startDate)!=formatDate(effort.endDate)">{{formatDate(effort.startDate)}}</div>
+                        <div class="{{formatDate(effort.startDate)!=formatDate(effort.endDate)?'me-2':''}}">
+                            {{formatTime(effort.startDate)}}</div>
+                        <div *ngIf="formatDate(effort.startDate)!=formatDate(effort.endDate)">
+                            {{formatDate(effort.startDate)}}</div>
                     </div>
-                    
+
                     <div class="my-auto mx-2 b-text">-</div>
 
                     <div class="d-flex my-auto">
-                        <div class="{{formatDate(effort.startDate)!=formatDate(effort.endDate)?'me-2':'me-3'}}">{{formatTime(effort.endDate)}}</div>
+                        <div class="{{formatDate(effort.startDate)!=formatDate(effort.endDate)?'me-2':'me-3'}}">
+                            {{formatTime(effort.endDate)}}</div>
                         <div>{{formatDate(effort.endDate)}}</div>
                     </div>
                 </div>
@@ -147,7 +151,8 @@
                     </div>
 
                     <!-- EDIT EFFORT -->
-                    <a (click)="startEffort()" ngbTooltip="Edit effort" placement="left" [openDelay]="300">
+                    <a (click)="fillUpdateForm(effort)" ngbTooltip="Edit effort" placement="left" [openDelay]="300"
+                        data-bs-toggle="modal" data-bs-target="#updateEffortModal">
                         <em class="bi bi-medium bi-pencil-fill me-2 m-auto"></em>
                     </a>
 
@@ -155,6 +160,70 @@
                     <a (click)="deleteEffort(effort.id)" ngbTooltip="Delete effort" placement="left" [openDelay]="300">
                         <em class="bi bi-medium bi-trash-fill me-2 m-auto"></em>
                     </a>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- UPDATE SPRINT -->
+<div class="modal fade" id="updateEffortModal" tabindex="-1" aria-labelledby="updateEffortModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content bg-dark-5">
+            <div class="modal-body">
+                <div class="card overflow-auto">
+
+                    <div class="d-flex">
+                        <div class="flex-grow-1 card-title mt-2">Update sprint</div>
+                        <div class="close-card-button" #closebuttonUpdate data-bs-dismiss="modal">
+                            <em class="bi bi-x"></em>
+                        </div>
+                    </div>
+
+                    <form [formGroup]="formUpdateEffort" (ngSubmit)="updateEffort()">
+
+                        <!-- errors -->
+                        <div *ngIf="updateEffortContainError" class="alert alert-danger mt-5">
+                            {{updateEffortMessageError}}
+                        </div>
+
+                        <!-- description -->
+                        <div *ngIf="effortSelected!=undefined && effortSelected.kanbanTask==null"
+                            class="form-group mb-4 mt-3">
+                            <p class="mb-0">Description</p>
+                            <input id="formDescription"
+                                class="form-control {{inputClass(formUpdateEffort, 'description')}}" type="text"
+                                name="description" formControlName="description" maxlength="255" placeholder="" />
+                        </div>
+
+                        <!-- startDate -->
+                        <div class="form-group mb-4 mt-3">
+                            <p class="mb-0">Start date</p>
+                            <input class="form-control {{inputClass(formUpdateEffort, 'startDate')}}"
+                                type="datetime-local" name="startDate" formControlName="startDate" placeholder=""
+                                max="{{actualDate}}" />
+                        </div>
+
+                        <!-- endDate -->
+                        <div class="form-group mb-4 mt-3">
+                            <p class="mb-0">End date</p>
+                            <input class="form-control {{inputClass(formUpdateEffort, 'endDate')}}"
+                                type="datetime-local" name="endDate" formControlName="endDate" placeholder=""
+                                min="{{getFormatedDateTimeLikeInput(formUpdateEffort.value.startDate)}}"
+                                max="{{actualDate}}" />
+                        </div>
+
+                        <!-- buttons -->
+                        <div class="form-group modal-footer">
+                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal"
+                                #closebuttonUpdateEffort>Close</button>
+                            <button type="submit" class="btn btn-success"
+                                [disabled]="!formUpdateEffort.valid">Update</button>
+                        </div>
+
+                    </form>
                 </div>
             </div>
         </div>

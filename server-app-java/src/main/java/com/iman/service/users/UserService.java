@@ -15,6 +15,7 @@ import com.iman.exceptions.users.DuplicatedEmail;
 import com.iman.exceptions.users.DuplicatedUsername;
 import com.iman.exceptions.users.UserNotFound;
 import com.iman.model.users.User;
+import com.iman.model.users.UserUpdateDto;
 import com.iman.repository.users.UserRepository;
 import com.iman.security.user.PrincipalUser;
 
@@ -66,10 +67,11 @@ public class UserService {
 	}
 
 	@Transactional
-	public void updateUser(User user) throws UserNotFound, DuplicatedEmail, DuplicatedUsername, AuthenticationException {
+	public void updateUser(UserUpdateDto user) throws UserNotFound, DuplicatedEmail, DuplicatedUsername, AuthenticationException {
 		String username = getCurrentUsername();
 		User userBefore = findUserByUsername(username);
-		String cypheredPassword = this.passwordEncoder.encode(user.getPassword());
+		String oldCypheredPassword = this.passwordEncoder.encode(user.getOldPassword());
+		
 		if (userBefore == null) {
 			throw new UserNotFound();
 		}
@@ -79,14 +81,16 @@ public class UserService {
 		if (!user.getEmail().equals(userBefore.getEmail()) && findUserByEmail(user.getEmail()) != null) {
 			throw new DuplicatedEmail();
 		}
-		if(!userBefore.getPassword().equals(cypheredPassword)) {
-			throw new AuthenticationException();
+		if(!userBefore.getPassword().equals(oldCypheredPassword)) {
+			throw new AuthenticationException("Old password doesn't match with actual");
 		}
+		
+		String newCypheredPassword = this.passwordEncoder.encode(user.getNewPassword());
 		userBefore.setUsername(user.getUsername());
 		userBefore.setName(user.getName());
 		userBefore.setLastName(user.getLastName());
 		userBefore.setEmail(user.getEmail());
-		userBefore.setPassword(cypheredPassword);
+		userBefore.setPassword(newCypheredPassword);
 		userBefore.setCountry(user.getCountry());
 		userBefore.setSector(user.getSector());
 		userBefore.setLastConnection(new Date());
@@ -95,8 +99,8 @@ public class UserService {
 	}
 
 	@Transactional
-	public void deleteUserById(Long id) throws UserNotFound {
-		User user = findUserById(id);
+	public void deleteUserById() throws UserNotFound {
+		User user = getCurrentUser();
 		if (user == null) {
 			throw new UserNotFound();
 		}

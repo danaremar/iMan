@@ -1,7 +1,7 @@
 import { DatePipe, Time } from "@angular/common";
 import { Component, OnInit, ViewChild } from "@angular/core";
-import { FormBuilder, FormGroup } from "@angular/forms";
-import { EffortStart } from "src/app/models/effort/effort";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { Effort, EffortStart, EffortUpdate } from "src/app/models/effort/effort";
 import { Project } from "src/app/models/project/project";
 import { ProjectRole } from "src/app/models/project/roles";
 import { TokenService } from "src/app/services/authentication/token.service";
@@ -32,9 +32,11 @@ export class EffortComponent implements OnInit {
     projectSelectedId: number | null | undefined
     sprintSelectedId: number | null | undefined
     kanbanTaskSelectedId: number | null | undefined
+    effortSelected: Effort | undefined
     adminAccess: boolean = false
     memberAccess: boolean = false
     efforts: any
+    actualDate: any
 
     activeEffort: any
     changedToDescription: boolean = false
@@ -50,8 +52,6 @@ export class EffortComponent implements OnInit {
 
     // NEW
     formNewEffort: FormGroup
-    newEffortContainError: boolean = false
-    newEffortMessageError: string | undefined
 
     // UPDATE
     formUpdateEffort: FormGroup
@@ -70,7 +70,9 @@ export class EffortComponent implements OnInit {
         })
 
         this.formUpdateEffort = formBuilder.group({
-
+            description: ['', []],
+            startDate: ['', [Validators.required]],
+            endDate: ['', []],
         })
     }
 
@@ -102,6 +104,16 @@ export class EffortComponent implements OnInit {
         this.messageError = r;
         this.containError = true
     }
+
+    getFormatedDateTimeLikeInput(date: Date) {
+        return this.getFormatedDate(date, 'yyyy-MM-ddTHH:mm:ss')
+    }
+
+    loadActualDate() {
+        let today = new Date()
+        this.actualDate = this.getFormatedDateTimeLikeInput(today)
+    }
+
 
 
 
@@ -290,6 +302,44 @@ export class EffortComponent implements OnInit {
         )
     }
 
+    fillUpdateForm(effort: Effort) {
+        this.effortSelected = effort
+        this.loadActualDate()
+
+        this.formUpdateEffort = this.formBuilder.group({
+            description: [effort.description, []],
+            startDate: [this.getFormatedDateTimeLikeInput(effort.startDate), [Validators.required]],
+            endDate: [this.getFormatedDateTimeLikeInput(effort.endDate), [Validators.required]],
+        })
+
+    }
+
+    updateEffort() {
+        if (this.effortSelected != undefined && this.effortSelected != null) {
+            let kanbanTaskId: any = this.effortSelected.kanbanTask==null?0:this.effortSelected.kanbanTask.id
+            let updateEffort: EffortUpdate = new EffortUpdate(this.effortSelected.id, this.formUpdateEffort.value.description, kanbanTaskId, new Date(this.formUpdateEffort.value.startDate), new Date(this.formUpdateEffort.value.endDate))
+            this.effortService.updateEffort(updateEffort).subscribe(
+                data => {
+                    this.effortSelected = undefined
+                    this.formUpdateEffort.reset()
+                    this.closebuttonUpdateEffort.nativeElement.click()
+                    this.updateEffortContainError = false
+                    this.loadEfforts()
+                },
+                err => {
+                    var r = err.error.text
+                    if (r == undefined) {
+                        r = 'Error produced'
+                    }
+                    this.updateEffortMessageError = r;
+                    this.updateEffortContainError = true
+                }
+            )
+        }
+
+    }
+
+
     endEffort() {
         this.effortService.endEffort(this.activeEffort.id).subscribe(
             data => {
@@ -335,11 +385,11 @@ export class EffortComponent implements OnInit {
     }
 
     formatDate(date: Date): any {
-        return this.getFormatedDate(date,'dd/MM/yyyy')
+        return this.getFormatedDate(date, 'dd/MM/yyyy')
     }
 
     formatTime(date: Date): any {
-        return this.getFormatedDate(date,'HH:mm:ss')
+        return this.getFormatedDate(date, 'HH:mm:ss')
     }
 
     getFormatedDate(date: Date, format: string) {

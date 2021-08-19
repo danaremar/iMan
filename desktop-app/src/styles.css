@@ -102,9 +102,10 @@ body {
     color: var(--dark-contrast-text) !important;
 }
 
-.progress {
+.progress, .progress-bar {
     border-radius: 5rem !important;
 }
+
 
 /* CARD */
 

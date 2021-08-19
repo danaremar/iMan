@@ -1,1 +1,126 @@
-User module
+<form [formGroup]="formUpdateProfile" (ngSubmit)="editProfile()" class="m-4 overflow-auto scrollable-content">
+
+    <div *ngIf="containError" class="alert alert-danger mt-5"> {{messageError}}</div>
+
+    <div class="form-group modal-footer">
+        <button type="submit" class="btn btn-success" [disabled]="!formUpdateProfile.valid">Edit</button>
+    </div>
+
+    <div class="form-group mb-4">
+        <p class="mb-0">First name</p>
+        <input class="form-control {{inputClass(formUpdateProfile, 'name')}}" type="text" name="name" formControlName="name"
+            maxlength="20" minlength="2" placeholder="John" />
+        <div class="invalid-feedback" *ngIf="formUpdateProfile.get('name')?.touched && formUpdateProfile.get('name')?.invalid">
+            <div *ngIf="formUpdateProfile.get('name')?.errors?.required">Cannot be empty</div>
+            <div *ngIf="formUpdateProfile.get('name')?.errors?.minlength">Must containt at least 2
+                characters</div>
+            <div *ngIf="formUpdateProfile.get('name')?.errors?.maxlength">Only 20 characters are
+                allowed</div>
+        </div>
+    </div>
+
+    <div class="form-group mb-4">
+        <p class="mb-0">Last name</p>
+        <input class="form-control {{inputClass(formUpdateProfile, 'lastName')}}" type="text" name="lastName"
+            formControlName="lastName" maxlength="50" placeholder="Doe" />
+        <div class="invalid-feedback"
+            *ngIf="formUpdateProfile.get('lastName')?.touched && formUpdateProfile.get('lastName')?.invalid">
+            <div *ngIf="formUpdateProfile.get('lastName')?.errors?.required">Cannot be empty</div>
+            <div *ngIf="formUpdateProfile.get('lastName')?.errors?.minlength">Must containt at least
+                2 characters</div>
+            <div *ngIf="formUpdateProfile.get('lastName')?.errors?.maxlength">Only 50 characters are
+                allowed</div>
+        </div>
+    </div>
+
+    <div class="form-group mb-4">
+        <p class="mb-0">Email</p>
+        <input class="form-control {{inputClass(formUpdateProfile, 'email')}}" type="text" name="email"
+            formControlName="email" maxlength="50" email placeholder="johndoe@example.com" />
+        <div class="invalid-feedback" *ngIf="formUpdateProfile.get('email')?.touched && formUpdateProfile.get('email')?.invalid">
+            <div *ngIf="formUpdateProfile.get('email')?.errors?.required">Cannot be empty</div>
+            <div *ngIf="formUpdateProfile.get('email')?.errors?.email">Must be email format</div>
+            <div *ngIf="formUpdateProfile.get('email')?.errors?.maxlength">Only 50 characters are
+                allowed</div>
+        </div>
+    </div>
+
+    <div class="form-group mb-4">
+        <p class="mb-0">Username</p>
+        <input class="form-control {{inputClass(formUpdateProfile, 'username')}}" type="text" name="username"
+            formControlName="username" maxlength="15" placeholder="johndoe" pattern="^[a-z0-9]+$" />
+        <div class="invalid-feedback"
+            *ngIf="formUpdateProfile.get('username')?.touched && formUpdateProfile.get('username')?.invalid">
+            <div *ngIf="formUpdateProfile.get('username')?.errors?.required">Cannot be empty</div>
+            <div *ngIf="formUpdateProfile.get('username')?.errors?.pattern">Must contain only lower
+                case characters and
+                numbers</div>
+            <div *ngIf="formUpdateProfile.get('username')?.errors?.maxlength">Only 15 characters are
+                allowed</div>
+        </div>
+    </div>
+
+    <div class="form-group mb-4">
+        <p class="mb-0">Old password</p>
+        <input class="form-control {{inputClass(formUpdateProfile, 'oldPassword')}}" type="oldPassword" name="oldPassword"
+            formControlName="oldPassword" minlength="8" maxlength="50" placeholder="oldPassword"
+            pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$@!%&*?])[A-Za-z\d#$@!%&*?]{8,50}$"
+            placeholder="·········" />
+        <div class="invalid-feedback"
+            *ngIf="formUpdateProfile.get('oldPassword')?.touched && formUpdateProfile.get('oldPassword')?.invalid">
+            <div *ngIf="formUpdateProfile.get('oldPassword')?.errors?.required">Cannot be empty</div>
+            <div *ngIf="formUpdateProfile.get('oldPassword')?.errors?.pattern">Must contain upper and
+                lower case letters,
+                numbers and special characters</div>
+            <div *ngIf="formUpdateProfile.get('oldPassword')?.errors?.minlength">Must contain at least 8
+                characters</div>
+            <div *ngIf="formUpdateProfile.get('oldPassword')?.errors?.maxlength">Only 50 characters are
+                allowed</div>
+        </div>
+    </div>
+
+    <div class="form-group mb-4">
+        <p class="mb-0">New password</p>
+        <input class="form-control {{inputClass(formUpdateProfile, 'newPassword')}}" type="newPassword" name="newPassword"
+            formControlName="newPassword" minlength="8" maxlength="50" placeholder="newPassword"
+            pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$@!%&*?])[A-Za-z\d#$@!%&*?]{8,50}$"
+            placeholder="·········" />
+        <div class="invalid-feedback"
+            *ngIf="formUpdateProfile.get('newPassword')?.touched && formUpdateProfile.get('oldPassword')?.invalid">
+            <div *ngIf="formUpdateProfile.get('newPassword')?.errors?.required">Cannot be empty</div>
+            <div *ngIf="formUpdateProfile.get('newPassword')?.errors?.pattern">Must contain upper and
+                lower case letters,
+                numbers and special characters</div>
+            <div *ngIf="formUpdateProfile.get('newPassword')?.errors?.minlength">Must contain at least 8
+                characters</div>
+            <div *ngIf="formUpdateProfile.get('newPassword')?.errors?.maxlength">Only 50 characters are
+                allowed</div>
+        </div>
+    </div>
+
+    <div class="form-group mb-4">
+        <p class="mb-0">Country</p>
+        <select class="form-control {{inputClass(formUpdateProfile, 'country')}}" formControlName="country">
+            <option class="dark-text" value="" disabled>Country</option>
+            <option class="dark-text" *ngFor="let country of countries" [ngValue]="country">
+                {{country}}</option>
+        </select>
+        <div class="invalid-feedback"
+            *ngIf="formUpdateProfile.get('country')?.touched && formUpdateProfile.get('country')?.invalid">
+            <div *ngIf="formUpdateProfile.get('country')?.errors?.required">Cannot be empty</div>
+        </div>
+    </div>
+
+    <div class="form-group mb-4">
+        <p class="mb-0">Sector</p>
+        <input class="form-control {{inputClass(formUpdateProfile, 'sector')}}" type="text" name="sector"
+            formControlName="sector" maxlength="20" placeholder="Industry" />
+        <div class="invalid-feedback"
+            *ngIf="formUpdateProfile.get('sector')?.touched && formUpdateProfile.get('sector')?.invalid">
+            <div *ngIf="formUpdateProfile.get('sector')?.errors?.required">Cannot be empty</div>
+            <div *ngIf="formUpdateProfile.get('sector')?.errors?.maxlength">Only 20 characters are
+                allowed</div>
+        </div>
+    </div>
+
+</form>
