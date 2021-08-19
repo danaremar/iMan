@@ -8,6 +8,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
@@ -20,7 +21,7 @@ import lombok.Data;
 
 @Entity
 @Data
-@Table(name = "projects", indexes = {})
+@Table(name = "projects", indexes = {@Index(columnList ="name"), @Index(columnList ="creationDate"), @Index(columnList ="active") })
 public class Project {
 
 	@Id

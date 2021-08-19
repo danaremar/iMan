@@ -8,6 +8,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -26,7 +27,7 @@ import lombok.Data;
 
 @Entity
 @Data
-@Table(name = "kanban_task", indexes = {})
+@Table(name = "kanban_task", indexes = { @Index(columnList ="title"), @Index(columnList ="number"), @Index(columnList ="orderInColumn"), @Index(columnList ="active"), @Index(columnList ="creationDate") })
 public class KanbanTask {
 
 	@Id

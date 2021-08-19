@@ -150,8 +150,8 @@ public class EffortService {
 		if (effortUpdateDto.getEndDate() != null) {
 			effort.setEndDate(effortUpdateDto.getEndDate());
 		}
-		if (effortUpdateDto.getKanbanTaskId().equals(effort.getKanbanTask().getId())) {
-			addKanbanTaskToEffort(effortUpdateDto.getId(), effort);
+		if (effort.getKanbanTask()!=null && effortUpdateDto.getKanbanTaskId().equals(effort.getKanbanTask().getId())) {
+			addKanbanTaskToEffort(effortUpdateDto.getKanbanTaskId(), effort);
 		}
 		effortRepository.save(effort);
 	}
