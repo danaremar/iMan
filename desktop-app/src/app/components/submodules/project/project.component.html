@@ -5,7 +5,7 @@
         <em class="bi bi-bell-fill me-3 position-relative">
             <span
                 class="position-absolute top-0 start-0 translate-middle badge rounded-pill notification-badge bg-danger">
-                {{this.notAcceptedProjects.length}}
+                {{this.notAcceptedProjects==undefined?0:this.notAcceptedProjects.length}}
             </span>
         </em>
     </a>

@@ -11,7 +11,7 @@
         </div>
     </div>
     <div>
-        <a ngbTooltip="Create sprint" placement="left" [openDelay]="300" *ngIf="accessToEdit" data-bs-toggle="modal"
+        <a ngbTooltip="Create sprint" placement="left" [openDelay]="300" *ngIf="adminAccess" data-bs-toggle="modal"
             data-bs-target="#createSprintModal">
             <em class="bi bi-plus-lg"></em>
         </a>
@@ -30,7 +30,7 @@
                 <div class="d-flex flex-wrap">
                     <div class="flex-grow-1 center b-text align-middle">#{{mySprints.length-i}}: {{s.title}}</div>
 
-                    <div *ngIf="accessToEdit">
+                    <div *ngIf="adminAccess">
 
                         <!-- START -->
                         <a *ngIf="determineSprintTimeStatus(s)=='future'" ngbTooltip="Start" (click)="startSprint(s.id)"

@@ -4,16 +4,19 @@ import { Project } from "src/app/models/project/project";
 import { ProjectRole } from "src/app/models/project/roles";
 import { SprintCreate, SprintShow, SprintUpdate } from "src/app/models/sprint/sprint";
 import { TokenService } from "src/app/services/authentication/token.service";
+import { EffortService } from "src/app/services/effort/effort.service";
+import { KanbanService } from "src/app/services/kanban/kanban.service";
 import { ProjectService } from "src/app/services/projects/project.service";
 import { EffortReportService } from "src/app/services/reports/effortReport.service";
 import { SprintService } from "src/app/services/sprints/sprint.service";
+import { ImanSubmodule } from "../submodule.component";
 
 @Component({
     selector: 'iMan-sprint',
     templateUrl: './sprint.component.html',
     styleUrls: ['./sprint.component.css']
 })
-export class SprintComponent implements OnInit {
+export class SprintComponent extends ImanSubmodule implements OnInit {
 
     @ViewChild('closebuttonCreate') closebuttonCreate: any;
     @ViewChild('closebuttonUpdate') closebuttonUpdate: any;
@@ -41,7 +44,10 @@ export class SprintComponent implements OnInit {
     pieChartEffortsByTask = [] as any
     pieChartEffortsByUser = [] as any
 
-    constructor(private effortReportService: EffortReportService, private sprintService: SprintService, private projectService: ProjectService, private formBuilder: FormBuilder, private tokenService: TokenService) {
+    constructor(private effortReportService: EffortReportService, effortService: EffortService, kanbanService: KanbanService, sprintService: SprintService, projectService: ProjectService, formBuilder: FormBuilder, tokenService: TokenService) {
+        
+        super(effortService,kanbanService,sprintService,projectService,formBuilder,tokenService)
+
         this.formNewSprint = formBuilder.group({
             title: ['', [Validators.required]],
             description: ['', []],
@@ -60,77 +66,6 @@ export class SprintComponent implements OnInit {
     ngOnInit(): void {
         this.loadMyProjects()
         this.loadActualDate()
-    }
-
-    loadMyProjects(): any {
-        this.projectService.myProjects().subscribe(
-            data => {
-                this.myProjects = data
-                this.containError = false
-                this.projectSelectedId = this.projectService.getStoredProjectId()
-                this.loadFirstProject()
-            },
-            err => {
-                this.returnPrincipalError(err)
-            }
-        )
-    }
-
-    loadActualDate() {
-        let dtToday = new Date()
-
-        let month: string = String(dtToday.getMonth() + 1)
-        let day: string = String(dtToday.getDate())
-        let year: string = String(dtToday.getFullYear())
-
-        if (Number(month) < 10)
-            month = '0' + month.toString();
-        if (Number(day) < 10)
-            day = '0' + day.toString();
-
-        this.actualDate = year + '-' + month + '-' + day;
-    }
-
-    returnPrincipalError(err: any) {
-        var r = err.error.text
-        if (r == undefined) {
-            r = 'Error produced'
-        }
-        this.messageError = r;
-        this.containError = true
-    }
-
-    loadFirstProject() {
-        if (this.myProjects.length !== 0) {
-            let projectId = this.projectService.getStoredProjectId()
-            if (projectId == null || projectId == 0) {
-                this.projectService.setStoredProjectId(this.myProjects[0].id)
-            }
-            this.loadSprintsBySelectedProject()
-        }
-    }
-
-    loadSprintsByProjectIdEvent(projectIdEvent: any) {
-        let projectIdStr = projectIdEvent.value
-        this.projectService.setStoredProjectId(Number(projectIdStr))
-        this.loadSprintsBySelectedProject()
-    }
-
-    editIsAllowed(projectId: number) {
-        this.accessToEdit = false
-
-        let projects: Project[] = this.myProjects
-        let selectedProject = projects.find(
-            (a) => a.id === projectId
-        )
-        if (selectedProject != undefined) {
-
-            let projectRoles: any = selectedProject.projectRoles
-
-            this.accessToEdit = projectRoles.some(
-                (a: ProjectRole) => a.user.username == this.tokenService.getUsername() && [0, 1].includes(a.role)
-            )
-        }
     }
 
     loadSprintsBySelectedProject() {
@@ -302,16 +237,5 @@ export class SprintComponent implements OnInit {
             })
         }
     }
-
-    inputClass(form: FormGroup, property: string) {
-        if (form?.get(property)?.touched && form?.get(property)?.valid) {
-            return "is-valid"
-        } else if (form?.get(property)?.touched && form?.get(property)?.invalid) {
-            return "is-invalid"
-        } else {
-            return ""
-        }
-    }
-
-
+    
 }
