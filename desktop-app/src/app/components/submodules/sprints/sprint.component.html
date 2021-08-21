@@ -11,7 +11,8 @@
         </div>
     </div>
     <div>
-        <a ngbTooltip="Create sprint"  placement="left" [openDelay]="300" *ngIf="accessToEdit" data-bs-toggle="modal" data-bs-target="#createSprintModal">
+        <a ngbTooltip="Create sprint" placement="left" [openDelay]="300" *ngIf="accessToEdit" data-bs-toggle="modal"
+            data-bs-target="#createSprintModal">
             <em class="bi bi-plus-lg"></em>
         </a>
     </div>
@@ -43,6 +44,12 @@
                             <em class="bi bi-square-fill me-3"></em>
                         </a>
 
+                        <!-- EFFORT REPORT -->
+                        <a ngbTooltip="Effort report" data-bs-toggle="modal" data-bs-target="#effortReportModal"
+                            (click)="loadEffortReport(s,mySprints.length-i)" placement="left" [openDelay]="300">
+                            <em class="bi bi-clock-history me-3"></em>
+                        </a>
+
                         <!-- EDIT -->
                         <a ngbTooltip="Edit" (click)="fillUpdateForm(s)" placement="left" [openDelay]="300"
                             data-bs-toggle="modal" data-bs-target="#updateSprintModal">
@@ -50,10 +57,10 @@
                         </a>
 
                         <!-- DISABLE -->
-                        <a ngbTooltip="Disable" (click)="disableSprint(s.id)" placement="left" [openDelay]="300">
+                        <a ngbTooltip="Disable" (click)="disableSprint(s, mySprints.length-i)" placement="left" [openDelay]="300">
                             <em class="bi bi-trash-fill me-3"></em>
                         </a>
-                        
+
                     </div>
                 </div>
 
@@ -215,3 +222,166 @@
         </div>
     </div>
 </div>
+
+
+<!-- EFFORT REPORT -->
+<div *ngIf="effortReport!=null && effortReport!=undefined" class="modal fade" id="effortReportModal" tabindex="-1"
+    aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content big-modal-content bg-dark-5">
+
+            <div class="modal-body">
+                <div class="card overflow-auto">
+
+                    <div class="d-flex">
+                        <div class="flex-grow-1 card-title mt-2 text-break">
+                            Effort in: #{{sprintSelected?.number}} {{sprintSelected?.title}}</div>
+                        <div class="close-card-button" data-bs-dismiss="modal">
+                            <em class="bi bi-x"></em>
+                        </div>
+                    </div>
+
+                    <!-- GENERAL -->
+                    <div class="mt-4">
+                        <div class="fs-4">General</div>
+                        <div class="d-flex ms-4 my-3">
+                            <em class="bi bi-reduced bi-hourglass-top me-2" ngbTooltip="Estimed effort"
+                                placement="bottom" [openDelay]="300" data-bs-toggle="modal"></em>
+                            <div class="fs-6 ms-2 my-auto">Estimed time:
+                                {{timeToDoubleString(effortReport.totalEstimedTime)}}h</div>
+                        </div>
+                        <div class="d-flex ms-4 my-3">
+                            <em class="bi bi-reduced bi-hourglass-bottom me-2" ngbTooltip="Computed effort"
+                                placement="bottom" [openDelay]="300" data-bs-toggle="modal"></em>
+                            <div class="fs-6 ms-2 my-auto">Computed time:
+                                {{timeToDoubleString(effortReport.totalComputedTime)}}h</div>
+                        </div>
+
+                        <!-- <div>
+                            <ngx-charts-pie-chart class="mx-4" *ngIf="effortReport.effortsByTask!=undefined"
+                                [view]="[300,300]" [results]="pieChartEffortsByTask" [gradient]="false" [legend]="false"
+                                [labels]="false" [doughnut]="false">
+                            </ngx-charts-pie-chart>
+                            <div class="fs-6 ms-2 my-auto">*by task</div>
+                        </div>
+
+                        <div>
+                            <ngx-charts-pie-chart class="mx-4" *ngIf="effortReport.effortsByTask!=undefined"
+                                [view]="[300,300]" [results]="pieChartEffortsByUser" [gradient]="false" [legend]="false"
+                                [labels]="false" [doughnut]="false">
+                            </ngx-charts-pie-chart>
+                            <div class="fs-6 ms-2 my-auto">*by user</div>
+                        </div> -->
+
+                    </div>
+
+                    <div *ngIf="effortReport.effortsByTask!=undefined">
+
+
+                        <!-- EFFORT BY USER -->
+                        <div class="w-100 me-3 mt-4">
+                            <div class="fs-4">By task</div>
+                            <div class="d-flex flex-wrap">
+
+                                <!-- chart -->
+                                <ngx-charts-pie-chart class="mx-4" *ngIf="effortReport.effortsByTask!=undefined"
+                                    [view]="[250,250]" [results]="pieChartEffortsByUser" [gradient]="false"
+                                    [legend]="false" [labels]="false" [doughnut]="false">
+                                </ngx-charts-pie-chart>
+
+                                <!-- list -->
+                                <div class="flex-grow-1 m-auto me-3">
+                                    <div class="card effort-report-card-list my-3 p-2"
+                                        *ngFor="let e of effortReport.effortsByUser; let i=index">
+                                        <div class="d-flex flex-wrap">
+                                            <div class="flex-grow-1 fs-6 ms-2 my-auto">@{{e.user.username}}</div>
+                                            <div class="d-flex flex-wrap">
+
+                                                <!-- computed effort -->
+                                                <div class="d-flex mx-3 card-list-field">
+                                                    <em class="bi bi-reduced bi-hourglass-bottom me-1"
+                                                        ngbTooltip="Computed effort" placement="bottom"
+                                                        [openDelay]="300" data-bs-toggle="modal"></em>
+                                                    <div class="fs-6 ms-2 my-auto">
+                                                        {{timeToDoubleString(e.computedEffort)}}h
+                                                    </div>
+                                                </div>
+
+                                                <!-- percentage of total effort -->
+                                                <div class="d-flex mx-3 card-list-field">
+                                                    <em class="bi bi-reduced bi-percent me-1"
+                                                        ngbTooltip="Percent of total computed effort" placement="bottom"
+                                                        [openDelay]="300" data-bs-toggle="modal"></em>
+                                                    <div class="fs-6 ms-2 my-auto">
+                                                        {{timeToDoubleString(e.percentageEffort)}}%</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- EFFORT BY TASK -->
+                            <div class="w-100 me-3 mt-4">
+                                <div class="fs-4">By task</div>
+                                <div class="d-flex flex-wrap">
+
+                                    <!-- chart -->
+                                    <ngx-charts-pie-chart class="mx-4" *ngIf="effortReport.effortsByTask!=undefined"
+                                        [view]="[250,250]" [results]="pieChartEffortsByTask" [gradient]="false"
+                                        [legend]="false" [labels]="false" [doughnut]="false">
+                                    </ngx-charts-pie-chart>
+
+                                    <!-- list -->
+                                    <div class="flex-grow-1 my-auto me-3">
+                                        <div class="card effort-report-card-list my-3 p-2"
+                                            *ngFor="let e of effortReport.effortsByTask; let i=index">
+                                            <div class="d-flex flex-wrap">
+                                                <div class="flex-grow-1 fs-6 ms-2 my-auto">#{{e.kanbanTask.number}}:
+                                                    {{e.kanbanTask.title}}</div>
+                                                <div class="d-flex flex-wrap">
+
+                                                    <!-- estimated effort -->
+                                                    <div class="d-flex mx-3 card-list-field">
+                                                        <em class="bi bi-reduced bi-hourglass-top me-1"
+                                                            ngbTooltip="Estimed effort" placement="bottom"
+                                                            [openDelay]="300" data-bs-toggle="modal"></em>
+                                                        <div class="fs-6 ms-2 my-auto">
+                                                            {{timeToDoubleString(e.estimedEffort)}}h
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- computed effort -->
+                                                    <div class="d-flex mx-3 card-list-field">
+                                                        <em class="bi bi-reduced bi-hourglass-bottom me-1"
+                                                            ngbTooltip="Computed effort" placement="bottom"
+                                                            [openDelay]="300" data-bs-toggle="modal"></em>
+                                                        <div class="fs-6 ms-2 my-auto">
+                                                            {{timeToDoubleString(e.computedEffort)}}h
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- percentage of total effort -->
+                                                    <div class="d-flex mx-3 card-list-field">
+                                                        <em class="bi bi-reduced bi-percent me-1"
+                                                            ngbTooltip="Percent of total computed effort"
+                                                            placement="bottom" [openDelay]="300"
+                                                            data-bs-toggle="modal"></em>
+                                                        <div class="fs-6 ms-2 my-auto">
+                                                            {{timeToDoubleString(e.percentageEffort)}}%</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

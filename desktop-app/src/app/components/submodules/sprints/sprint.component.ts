@@ -5,6 +5,7 @@ import { ProjectRole } from "src/app/models/project/roles";
 import { SprintCreate, SprintShow, SprintUpdate } from "src/app/models/sprint/sprint";
 import { TokenService } from "src/app/services/authentication/token.service";
 import { ProjectService } from "src/app/services/projects/project.service";
+import { EffortReportService } from "src/app/services/reports/effortReport.service";
 import { SprintService } from "src/app/services/sprints/sprint.service";
 
 @Component({
@@ -13,7 +14,6 @@ import { SprintService } from "src/app/services/sprints/sprint.service";
     styleUrls: ['./sprint.component.css']
 })
 export class SprintComponent implements OnInit {
-
 
     @ViewChild('closebuttonCreate') closebuttonCreate: any;
     @ViewChild('closebuttonUpdate') closebuttonUpdate: any;
@@ -36,7 +36,12 @@ export class SprintComponent implements OnInit {
     updateSprintMessageError: string | undefined
     sprintSelectedId: any
 
-    constructor(private sprintService: SprintService, private projectService: ProjectService, private formBuilder: FormBuilder, private tokenService: TokenService) {
+    effortReport: any
+    sprintSelected: any
+    pieChartEffortsByTask = [] as any
+    pieChartEffortsByUser = [] as any
+
+    constructor(private effortReportService: EffortReportService, private sprintService: SprintService, private projectService: ProjectService, private formBuilder: FormBuilder, private tokenService: TokenService) {
         this.formNewSprint = formBuilder.group({
             title: ['', [Validators.required]],
             description: ['', []],
@@ -61,6 +66,7 @@ export class SprintComponent implements OnInit {
         this.projectService.myProjects().subscribe(
             data => {
                 this.myProjects = data
+                this.containError = false
                 this.projectSelectedId = this.projectService.getStoredProjectId()
                 this.loadFirstProject()
             },
@@ -133,6 +139,7 @@ export class SprintComponent implements OnInit {
             this.editIsAllowed(projectId)
             this.sprintService.sprintFromProject(projectId).subscribe(
                 data => {
+                    this.containError = false
                     this.mySprints = data
                 },
                 err => {
@@ -214,10 +221,58 @@ export class SprintComponent implements OnInit {
         )
     }
 
-    disableSprint(sprintId: number) {
-        this.sprintService.disableSprint(sprintId).subscribe(
-            res => {
-                this.loadSprintsBySelectedProject()
+    disableSprint(sprint: SprintShow, number: number) {
+        if (confirm("Are you sure to disable sprint #" + number + " " + sprint.title + "?")) {
+            this.sprintService.disableSprint(sprint.id).subscribe(
+                res => {
+                    this.containError = false
+                    this.loadSprintsBySelectedProject()
+                },
+                err => {
+                    this.returnPrincipalError(err)
+                }
+            )
+        }
+    }
+
+    startSprint(sprint: SprintShow) {
+        if (confirm("Are you sure to start sprint " + sprint.title + '?')) {
+            this.sprintService.startSprint(sprint.id).subscribe(
+                res => {
+                    this.containError = false
+                    this.loadSprintsBySelectedProject()
+                },
+                err => {
+                    this.returnPrincipalError(err)
+                }
+            )
+        }
+    }
+
+    closeSprint(sprint: SprintShow) {
+        if (confirm("Are you sure to close sprint " + sprint.title + '?')) {
+            this.sprintService.closeSprint(sprint.id).subscribe(
+                res => {
+                    this.containError = false
+                    this.loadSprintsBySelectedProject()
+                },
+                err => {
+                    this.returnPrincipalError(err)
+                }
+            )
+        }
+    }
+
+
+    loadEffortReport(sprint: SprintShow, number: number) {
+        this.sprintSelected = sprint
+        this.sprintSelected.number = number
+        this.effortReportService.getEffortReportBySprintId(sprint.id).subscribe(
+            data => {
+                this.effortReport = data
+                this.containError = false
+                this.loadPieChartEffortsByTask()
+                this.loadPieChartEffortsByUser()
             },
             err => {
                 this.returnPrincipalError(err)
@@ -225,26 +280,27 @@ export class SprintComponent implements OnInit {
         )
     }
 
-    startSprint(sprintId: number) {
-        this.sprintService.startSprint(sprintId).subscribe(
-            res => {
-                this.loadSprintsBySelectedProject()
-            },
-            err => {
-                this.returnPrincipalError(err)
-            }
-        )
+    timeToDoubleString(number: number): string {
+        if (number == null) number = 0
+        return (number % 1 ? number.toFixed(3) : number) + ''
     }
 
-    closeSprint(sprintId: number) {
-        this.sprintService.closeSprint(sprintId).subscribe(
-            res => {
-                this.loadSprintsBySelectedProject()
-            },
-            err => {
-                this.returnPrincipalError(err)
-            }
-        )
+    loadPieChartEffortsByTask() {
+        for (let e of this.effortReport.effortsByTask) {
+            this.pieChartEffortsByTask.push({
+                name: '#' + e.kanbanTask.number + ': ' + e.kanbanTask.title,
+                value: e.percentageEffort
+            })
+        }
+    }
+
+    loadPieChartEffortsByUser() {
+        for (let e of this.effortReport.effortsByUser) {
+            this.pieChartEffortsByUser.push({
+                name: '@' + e.user.username,
+                value: e.percentageEffort
+            })
+        }
     }
 
     inputClass(form: FormGroup, property: string) {
@@ -256,5 +312,6 @@ export class SprintComponent implements OnInit {
             return ""
         }
     }
+
 
 }
