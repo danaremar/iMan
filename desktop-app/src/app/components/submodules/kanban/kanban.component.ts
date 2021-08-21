@@ -337,14 +337,17 @@ export class KanbanComponent implements OnInit {
     }
 
     disableColumn(kanbanColumn: any) {
-        this.kanbanService.disableKanbanColumn(kanbanColumn.id).subscribe(
-            res => {
-                this.loadKanbanBySelectedSprint()
-            },
-            err => {
-                this.returnPrincipalError(err)
-            }
-        )
+        if (confirm("Are you sure to delete " + kanbanColumn.title + '?')) {
+            this.kanbanService.disableKanbanColumn(kanbanColumn.id).subscribe(
+                res => {
+                    this.containError = false
+                    this.loadKanbanBySelectedSprint()
+                },
+                err => {
+                    this.returnPrincipalError(err)
+                }
+            )
+        }
     }
 
     /***************************
@@ -400,14 +403,17 @@ export class KanbanComponent implements OnInit {
     }
 
     disableTask(kanbanTask: any) {
-        this.kanbanService.disableKanbanTask(kanbanTask.id).subscribe(
-            res => {
-                this.loadKanbanBySelectedSprint()
-            },
-            err => {
-                this.returnPrincipalError(err)
-            }
-        )
+        if (confirm("Are you sure to delete #" + kanbanTask.number + ' ' + kanbanTask.title + '?')) {
+            this.kanbanService.disableKanbanTask(kanbanTask.id).subscribe(
+                res => {
+                    this.containError = false
+                    this.loadKanbanBySelectedSprint()
+                },
+                err => {
+                    this.returnPrincipalError(err)
+                }
+            )
+        }
     }
 
 
@@ -421,6 +427,7 @@ export class KanbanComponent implements OnInit {
 
             this.kanbanService.updateKanbanColumn(kanbanColumnUpdate).subscribe(
                 data => {
+                    this.containError = false
                     transferArrayItem(event.previousContainer.data,
                         event.container.data,
                         event.previousIndex,
@@ -442,6 +449,7 @@ export class KanbanComponent implements OnInit {
 
             this.kanbanService.moveKanbanTask(kanbanTaskMove).subscribe(
                 data => {
+                    this.containError = false
                     this.loadKanbanBySelectedSprint()
                 },
                 err => {

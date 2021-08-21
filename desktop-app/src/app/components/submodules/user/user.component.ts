@@ -83,16 +83,19 @@ export class UserComponent implements OnInit {
         this.containError = true
     }
 
-    editProfile(){
-        let userUpdate: UserUpdate = new UserUpdate(this.formUpdateProfile.value.username, this.formUpdateProfile.value.name, this.formUpdateProfile.value.lastName, this.formUpdateProfile.value.email, this.formUpdateProfile.value.country, this.formUpdateProfile.value.sector, this.formUpdateProfile.value.oldPassword, this.formUpdateProfile.value.newPassword)
-        this.userService.updateProfile(userUpdate).subscribe(
-            data => {
-                this.loadMyProfile()
-            },
-            err => {
-                this.returnPrincipalError(err)
-            }
-        )
+    editProfile() {
+        if (confirm("Are you sure to modify your profile?")) {
+            let userUpdate: UserUpdate = new UserUpdate(this.formUpdateProfile.value.username, this.formUpdateProfile.value.name, this.formUpdateProfile.value.lastName, this.formUpdateProfile.value.email, this.formUpdateProfile.value.country, this.formUpdateProfile.value.sector, this.formUpdateProfile.value.oldPassword, this.formUpdateProfile.value.newPassword)
+            this.userService.updateProfile(userUpdate).subscribe(
+                data => {
+                    this.containError = false
+                    this.loadMyProfile()
+                },
+                err => {
+                    this.returnPrincipalError(err)
+                }
+            )
+        }
     }
 
     getKeyByValue(object: any, value: any) {

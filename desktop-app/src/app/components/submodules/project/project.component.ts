@@ -74,6 +74,7 @@ export class ProjectComponent implements OnInit {
                 this.myProjects = data
                 this.loadMyRoles()
                 this.loadNotAcceptedProjects()
+                this.containError = false
             },
             err => {
                 this.returnPrincipalError(err)
@@ -107,6 +108,7 @@ export class ProjectComponent implements OnInit {
         this.projectService.getAllMineNotAcceptedProjectRoles().subscribe(
             data => {
                 this.notAcceptedProjects = data
+                this.containError = false
             },
             err => {
                 this.returnPrincipalError(err)
@@ -157,17 +159,19 @@ export class ProjectComponent implements OnInit {
         )
     }
 
-    enableDisableProject(projectId: number) {
-        this.projectService.enableDisableProject(projectId).subscribe(
-            res => {
-                this.containError = false
-                this.loadMyProjects()           // refresh my projects from API
-            },
-            err => {
-                this.containError = true
-                this.messageError = err.error.text
-            }
-        )
+    enableDisableProject(project: Project) {
+        if (confirm("Are you sure to start sprint " + project.name + '?')) {
+            this.projectService.enableDisableProject(project.id).subscribe(
+                res => {
+                    this.containError = false
+                    this.loadMyProjects()           // refresh my projects from API
+                },
+                err => {
+                    this.containError = true
+                    this.messageError = err.error.text
+                }
+            )
+        }
     }
 
     newProjectRole() {
@@ -206,7 +210,7 @@ export class ProjectComponent implements OnInit {
             res => {
                 this.closebuttonUsers.nativeElement.click()
                 this.loadMyProjects()
-                
+
             },
             err => {
                 var retErr = err.error.text

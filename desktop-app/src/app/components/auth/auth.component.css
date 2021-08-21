@@ -19,19 +19,10 @@
   color: white;
 }
 
-.card form .forgot {
-  display: block;
-  text-align: center;
-  font-size: 14px;
-  color: var(--dark-pallete-text);
-  opacity: 0.9;
-  text-decoration: none;
-}
-
 .dark-background {
   height: 100%;
   width: 100%;
-  background: linear-gradient(90deg, rgba(37, 37, 38, 1) 0%, rgba(45, 45, 48, 1) 100%);
+  background: var(--dark-pallete-1);
   background-size: cover;
   position: absolute;
 }

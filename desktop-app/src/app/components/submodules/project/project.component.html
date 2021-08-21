@@ -151,18 +151,14 @@
                             <em class="bi bi-people-fill me-3"></em>
                         </a>
 
-
-
                         <!-- EDIT -->
                         <a *ngIf="myRoles[j]==0" ngbTooltip="Edit" (click)="fillUpdateForm(project)" placement="left"
                             [openDelay]="300" data-bs-toggle="modal" data-bs-target="#updateProjectModal">
                             <em class="bi bi-pencil-fill me-3"></em>
                         </a>
 
-
-
                         <!-- DISABLE -->
-                        <a *ngIf="myRoles[j]==0" (click)="enableDisableProject(project.id)" ngbTooltip="Disable"
+                        <a *ngIf="myRoles[j]==0" (click)="enableDisableProject(project)" ngbTooltip="Disable"
                             placement="left" [openDelay]="300">
                             <em class="bi bi-trash-fill"></em>
                         </a>

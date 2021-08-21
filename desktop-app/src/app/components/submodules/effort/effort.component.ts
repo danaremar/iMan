@@ -125,6 +125,7 @@ export class EffortComponent implements OnInit {
         this.projectService.myProjects().subscribe(
             data => {
                 this.myProjects = data
+                this.containError = false
                 this.projectSelectedId = this.projectService.getStoredProjectId()
                 this.loadFirstProject()
             },
@@ -181,6 +182,7 @@ export class EffortComponent implements OnInit {
             this.sprintService.sprintFromProject(projectId).subscribe(
                 data => {
                     this.mySprints = data
+                    this.containError = false
                     this.sprintSelectedId = this.sprintService.getStoredSprintId()
                     this.loadFirstSprint()
                 },
@@ -219,6 +221,7 @@ export class EffortComponent implements OnInit {
             this.kanbanService.getAllKanbanTasksBySprintId(sprintId).subscribe(
                 data => {
                     this.myTasks = data
+                    this.containError = false
                     this.loadFirstTask()
                     this.kanbanTaskSelectedId = this.kanbanService.getStoredKanbanTaskId()
                     this.loadEfforts()
@@ -255,6 +258,7 @@ export class EffortComponent implements OnInit {
         this.loadActiveEffort()
         this.effortService.getAllMyEfforts().subscribe(
             data => {
+                this.containError = false
                 this.efforts = data
             },
             err => {
@@ -267,6 +271,7 @@ export class EffortComponent implements OnInit {
         this.effortService.getActiveEffort().subscribe(
             data => {
                 this.activeEffort = data
+                this.containError = false
                 this.loadDescriptionOrTaskEffort()
             },
             err => {
@@ -294,6 +299,7 @@ export class EffortComponent implements OnInit {
         }
         this.effortService.startEffort(newEffort).subscribe(
             data => {
+                this.containError = false
                 this.loadEfforts()
             },
             err => {
@@ -343,6 +349,7 @@ export class EffortComponent implements OnInit {
     endEffort() {
         this.effortService.endEffort(this.activeEffort.id).subscribe(
             data => {
+                this.containError = false
                 this.loadEfforts()
             },
             err => {
@@ -352,14 +359,17 @@ export class EffortComponent implements OnInit {
     }
 
     deleteEffort(effortId: number) {
+        if (confirm("Are you sure to delete this effort?")) {
         this.effortService.deleteEffort(effortId).subscribe(
             data => {
+                this.containError = false
                 this.loadEfforts()
             },
             err => {
                 this.returnPrincipalError(err)
             }
         )
+        }
     }
 
 
