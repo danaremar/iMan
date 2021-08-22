@@ -38,7 +38,7 @@ export class UserComponent implements OnInit {
             email: ['', [Validators.required]],
             username: ['', [Validators.required]],
             oldPassword: ['', [Validators.required]],
-            newPassword: ['', [Validators.required]],
+            newPassword: ['', []],
             country: ['', [Validators.required]],
             sector: ['', [Validators.required]],
         })
@@ -57,14 +57,15 @@ export class UserComponent implements OnInit {
         this.userService.getMyProfile().subscribe(
             data => {
                 this.myProfile = data
+                let country = this.countriesDictionary[this.myProfile.country]
                 this.formUpdateProfile = this.formBuilder.group({
                     name: [this.myProfile.name, [Validators.required]],
                     lastName: [this.myProfile.lastName, [Validators.required]],
                     email: [this.myProfile.email, [Validators.required]],
                     username: [this.myProfile.username, [Validators.required]],
                     oldPassword: ['', [Validators.required]],
-                    newPassword: ['', [Validators.required]],
-                    country: [this.myProfile.country, [Validators.required]],
+                    newPassword: ['', []],
+                    country: [country, [Validators.required]],
                     sector: [this.myProfile.sector, [Validators.required]],
                 })
             },
@@ -85,7 +86,8 @@ export class UserComponent implements OnInit {
 
     editProfile() {
         if (confirm("Are you sure to modify your profile?")) {
-            let userUpdate: UserUpdate = new UserUpdate(this.formUpdateProfile.value.username, this.formUpdateProfile.value.name, this.formUpdateProfile.value.lastName, this.formUpdateProfile.value.email, this.formUpdateProfile.value.country, this.formUpdateProfile.value.sector, this.formUpdateProfile.value.oldPassword, this.formUpdateProfile.value.newPassword)
+            let country = this.getKeyByValue(this.countriesDictionary, this.formUpdateProfile.value.country)
+            let userUpdate: UserUpdate = new UserUpdate(this.formUpdateProfile.value.username, this.formUpdateProfile.value.name, this.formUpdateProfile.value.lastName, this.formUpdateProfile.value.email, country == undefined ? "" : country, this.formUpdateProfile.value.sector, this.formUpdateProfile.value.oldPassword, this.formUpdateProfile.value.newPassword)
             this.userService.updateProfile(userUpdate).subscribe(
                 data => {
                     this.containError = false

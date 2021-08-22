@@ -73,6 +73,7 @@ export class EffortComponent extends ImanSubmodule implements OnInit {
     ***************************/
 
     ngOnInit(): void {
+        this.loadFirstActiveEffort()
         this.loadMyProjects()
     }
 
@@ -92,7 +93,7 @@ export class EffortComponent extends ImanSubmodule implements OnInit {
         this.loadTasksBySelectedSprint()
     }
 
-    loadActiveEffort() {
+    loadFirstActiveEffort() {
         this.effortService.getActiveEffort().subscribe(
             data => {
                 this.containError = false
@@ -102,6 +103,19 @@ export class EffortComponent extends ImanSubmodule implements OnInit {
                     if (data.sprint != null) this.sprintService.setStoredSprintId(data.sprint.id)
                     if (data.kanbanTask != null) this.kanbanService.setStoredKanbanTaskId(data.kanbanTask.id)
                 }
+                this.loadDescriptionOrTaskEffort()
+            },
+            err => {
+                this.returnPrincipalError(err)
+            }
+        )
+    }
+
+    loadActiveEffort() {
+        this.effortService.getActiveEffort().subscribe(
+            data => {
+                this.containError = false
+                this.activeEffort = data
             },
             err => {
                 this.returnPrincipalError(err)

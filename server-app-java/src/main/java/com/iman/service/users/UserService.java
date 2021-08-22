@@ -2,17 +2,19 @@ package com.iman.service.users;
 
 import java.util.Date;
 
-import javax.security.sasl.AuthenticationException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import com.iman.exceptions.users.DuplicatedEmail;
 import com.iman.exceptions.users.DuplicatedUsername;
+import com.iman.exceptions.users.IncorrectPassword;
 import com.iman.exceptions.users.UserNotFound;
 import com.iman.model.users.User;
 import com.iman.model.users.UserUpdateDto;
@@ -67,7 +69,7 @@ public class UserService {
 	}
 
 	@Transactional
-	public void updateUser(UserUpdateDto user) throws UserNotFound, DuplicatedEmail, DuplicatedUsername, AuthenticationException {
+	public void updateUser(UserUpdateDto user) throws UserNotFound, DuplicatedEmail, DuplicatedUsername, AuthenticationException, IncorrectPassword {
 		String username = getCurrentUsername();
 		User userBefore = findUserByUsername(username);
 		String oldCypheredPassword = this.passwordEncoder.encode(user.getOldPassword());
@@ -82,15 +84,18 @@ public class UserService {
 			throw new DuplicatedEmail();
 		}
 		if(!userBefore.getPassword().equals(oldCypheredPassword)) {
-			throw new AuthenticationException("Old password doesn't match with actual");
+			throw new IncorrectPassword();
 		}
 		
-		String newCypheredPassword = this.passwordEncoder.encode(user.getNewPassword());
+		
 		userBefore.setUsername(user.getUsername());
 		userBefore.setName(user.getName());
 		userBefore.setLastName(user.getLastName());
 		userBefore.setEmail(user.getEmail());
-		userBefore.setPassword(newCypheredPassword);
+		if(StringUtils.isEmpty(user.getNewPassword())) {
+			String newCypheredPassword = this.passwordEncoder.encode(user.getNewPassword());
+			userBefore.setPassword(newCypheredPassword);
+		}
 		userBefore.setCountry(user.getCountry());
 		userBefore.setSector(user.getSector());
 		userBefore.setLastConnection(new Date());

@@ -74,7 +74,7 @@ public class KanbanService {
 		if (username == null || sprint == null || sprint.getProject() == null || !sprint.getProject().getActive()
 				|| sprint.getProject().getProjectRoles() == null
 				|| sprint.getProject().getProjectRoles().stream()
-						.noneMatch(x -> (List.of(0, 1, 2, 0).contains(x.getRole()))
+						.noneMatch(x -> (List.of(0, 1, 2, 3).contains(x.getRole()))
 								&& (x.getUser().getUsername().equals(username)))) {
 			throw new AccessDeniedException(ImanMessages.USER_NOT_ALLOWED);
 		}

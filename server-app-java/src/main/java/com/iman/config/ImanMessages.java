@@ -11,7 +11,8 @@ public class ImanMessages {
 	public static final String USER_USERNAME_DUPLICATED_MESSAGE = "Username is duplicated";
 	public static final String USER_DISABLED_MESSAGE = "User has been disabled";
 	public static final String USER_NOT_ALLOWED = "Your user isn't allowed to perform this operation";
-
+	public static final String USER_OLD_PASSWORD_INCORRECT = "Old password doesn't match with actual";
+	
 	// KANBAN
 	public static final String KANBAN_NOT_CONTAINED_IN_SPRINT_MESSAGE = "Sprint columns are not contained in the same sprint";
 	public static final String KANBAN_COLUMN_DONT_EXISTS_MESSAGE = "Column don't exists";

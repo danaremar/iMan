@@ -44,7 +44,7 @@
                         <div class="card card-hover" *ngFor="let i of notAcceptedProjects">
                             <div class="d-flex mt-3 mb-3">
                                 <div class="flex-grow-1 ms-3 center">
-                                    {{i.projectName}} - [{{i.role}}]
+                                    {{i.projectName}} - [{{rolesDictionary[i.role]}}]
                                 </div>
 
                                 <div class="me-3">

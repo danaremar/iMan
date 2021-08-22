@@ -126,6 +126,11 @@ export class ImanSubmodule {
             this.sprintService.sprintFromProject(projectId).subscribe(
                 data => {
                     this.mySprints = data
+                    if(this.mySprints!=undefined && this.mySprints.length==0){
+                        this.sprintService.setStoredSprintId(0)
+                        this.myTasks = null
+                        this.kanban = null
+                    }
                     this.sprintSelectedId = this.sprintService.getStoredSprintId()
                     this.loadFirstSprint()
                 },

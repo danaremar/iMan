@@ -36,7 +36,6 @@ public class UserUpdateDto {
 	@Length(max = 50)
 	private String oldPassword;
 
-	@NotBlank
 	@Length(max = 50)
 	private String newPassword;
 

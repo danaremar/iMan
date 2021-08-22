@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.iman.config.ImanMessages;
 import com.iman.exceptions.users.DuplicatedEmail;
 import com.iman.exceptions.users.DuplicatedUsername;
+import com.iman.exceptions.users.IncorrectPassword;
 import com.iman.exceptions.users.UserNotFound;
 import com.iman.model.users.User;
 import com.iman.model.users.UserMyProfileDto;
@@ -85,8 +86,8 @@ public class UserRestController {
 			return new ResponseEntity<>(new Message(ImanMessages.USER_DUPLICATED_EMAIL_MESSAGE), HttpStatus.CONFLICT);
 		} catch (DuplicatedUsername e) {
 			return new ResponseEntity<>(new Message(ImanMessages.USER_USERNAME_DUPLICATED_MESSAGE), HttpStatus.CONFLICT);
-		} catch (AuthenticationException e) {
-			return new ResponseEntity<>(new Message(e.getMessage()), HttpStatus.CONFLICT);
+		} catch (IncorrectPassword e) {
+			return new ResponseEntity<>(new Message(ImanMessages.USER_OLD_PASSWORD_INCORRECT), HttpStatus.CONFLICT);
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}

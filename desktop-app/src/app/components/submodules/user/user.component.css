@@ -9,3 +9,7 @@
 .scrollable-content {
     height: calc(100vh - 60px - var(--navbar-size)) !important;
 }
+
+select {
+    height: 40px !important;
+}
