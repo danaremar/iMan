@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.iman.model.effort.Effort;
@@ -30,16 +29,6 @@ public class ReportEffortService extends EffortService {
 	@Autowired
 	private ProjectService projectService;
 
-	@Autowired(required = true)
-	protected ModelMapper modelMapper;
-
-	public Integer getTotalEstimedTimeBySprintId(Long sprintId) {
-		return null;
-	}
-
-	public Integer getTotalEffortTimeBySprintId(Long sprintId) {
-		return null;
-	}
 
 	/*
 	 * 

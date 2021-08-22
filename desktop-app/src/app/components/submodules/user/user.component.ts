@@ -1,17 +1,21 @@
 import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { MyUser } from "src/app/models/user/my-user";
 import { UserUpdate } from "src/app/models/user/update-user";
 import { TokenService } from "src/app/services/authentication/token.service";
+import { EffortService } from "src/app/services/effort/effort.service";
+import { KanbanService } from "src/app/services/kanban/kanban.service";
+import { ProjectService } from "src/app/services/projects/project.service";
+import { SprintService } from "src/app/services/sprints/sprint.service";
 import { UserService } from "src/app/services/user/user.service";
 import { CountryService } from "src/app/services/util/country-service";
+import { ImanSubmodule } from "../submodule.component";
 
 @Component({
     selector: 'iMan-user',
     templateUrl: './user.component.html',
     styleUrls: ['./user.component.css']
 })
-export class UserComponent implements OnInit {
+export class UserComponent extends ImanSubmodule implements OnInit {
 
 
     /***************************
@@ -31,7 +35,9 @@ export class UserComponent implements OnInit {
             CONSTRUCTOR
     ***************************/
 
-    constructor(private userService: UserService, private countryService: CountryService, private formBuilder: FormBuilder, private tokenService: TokenService) {
+    constructor(private userService: UserService, private countryService: CountryService,effortService: EffortService, kanbanService: KanbanService, sprintService: SprintService, projectService: ProjectService, formBuilder: FormBuilder, tokenService: TokenService) {
+        super(effortService,kanbanService,sprintService,projectService,formBuilder,tokenService)
+        
         this.formUpdateProfile = formBuilder.group({
             name: ['', [Validators.required]],
             lastName: ['', [Validators.required]],
@@ -75,15 +81,6 @@ export class UserComponent implements OnInit {
         )
     }
 
-    returnPrincipalError(err: any) {
-        var r = err.error.text
-        if (r == undefined) {
-            r = 'Error produced'
-        }
-        this.messageError = r;
-        this.containError = true
-    }
-
     editProfile() {
         if (confirm("Are you sure to modify your profile?")) {
             let country = this.getKeyByValue(this.countriesDictionary, this.formUpdateProfile.value.country)
@@ -97,20 +94,6 @@ export class UserComponent implements OnInit {
                     this.returnPrincipalError(err)
                 }
             )
-        }
-    }
-
-    getKeyByValue(object: any, value: any) {
-        return Object.keys(object).find(key => object[key] === value);
-    }
-
-    inputClass(form: FormGroup, property: string) {
-        if (form?.get(property)?.touched && form?.get(property)?.valid) {
-            return "is-valid"
-        } else if (form?.get(property)?.touched && form?.get(property)?.invalid) {
-            return "is-invalid"
-        } else {
-            return ""
         }
     }
 

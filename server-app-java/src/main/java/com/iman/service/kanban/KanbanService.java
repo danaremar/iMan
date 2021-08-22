@@ -112,8 +112,6 @@ public class KanbanService {
 
 	@Transactional
 	public List<KanbanTask> findKanbanTasksBySprintId(Long sprintId) {
-//		List<KanbanColumn> kc = findKanbanColumnsBySprintId(sprintId);
-//		return kc.stream().flatMap(x -> x.getTasks().stream()).collect(Collectors.toList());
 		Sprint sprint = sprintService.findById(sprintId);
 		verifyVisitor(sprint);
 		return kanbanTaskRepository.findAllKanbanTaskBySprintId(sprint.getId());

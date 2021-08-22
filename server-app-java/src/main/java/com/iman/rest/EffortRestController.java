@@ -33,7 +33,6 @@ public class EffortRestController {
 	@Autowired
 	EffortService effortService;
 
-
 	public EffortRestController(EffortService effortService) {
 		this.effortService = effortService;
 	}
@@ -62,11 +61,7 @@ public class EffortRestController {
 	public ResponseEntity<Object> getActiveEffort() {
 		try {
 			EffortShowDto effort = effortService.findMyStartedEffortDto();
-			if (effort != null) {
-				return new ResponseEntity<>(effort, HttpStatus.OK);
-			} else {
-				return new ResponseEntity<>(null, HttpStatus.OK);
-			}
+			return new ResponseEntity<>(effort, HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(new Message(e.getMessage()), HttpStatus.CONFLICT);
 		}

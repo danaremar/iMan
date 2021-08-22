@@ -1,7 +1,5 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { Project } from "src/app/models/project/project";
-import { ProjectRole } from "src/app/models/project/roles";
 import { SprintCreate, SprintShow, SprintUpdate } from "src/app/models/sprint/sprint";
 import { TokenService } from "src/app/services/authentication/token.service";
 import { EffortService } from "src/app/services/effort/effort.service";

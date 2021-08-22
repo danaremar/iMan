@@ -45,7 +45,7 @@ export class ProjectComponent extends ImanSubmodule implements OnInit {
     roles: any = Object.values(this.rolesDictionary)
 
     constructor(effortService: EffortService, kanbanService: KanbanService, sprintService: SprintService, projectService: ProjectService, formBuilder: FormBuilder, tokenService: TokenService) {
-        super(effortService,kanbanService,sprintService,projectService,formBuilder,tokenService);
+        super(effortService, kanbanService, sprintService, projectService, formBuilder, tokenService);
         this.formNewProject = formBuilder.group({
             name: ['', [Validators.required]],
             description: ['', [Validators.required]],
@@ -98,8 +98,8 @@ export class ProjectComponent extends ImanSubmodule implements OnInit {
     loadNotAcceptedProjects() {
         this.projectService.getAllMineNotAcceptedProjectRoles().subscribe(
             data => {
-                this.containError = false   
-                this.notAcceptedProjects = data            
+                this.containError = false
+                this.notAcceptedProjects = data
             },
             err => {
                 this.returnPrincipalError(err)
@@ -156,11 +156,19 @@ export class ProjectComponent extends ImanSubmodule implements OnInit {
                     this.loadMyProjects()           // refresh my projects from API
                 },
                 err => {
-                    this.containError = true
-                    this.messageError = err.error.text
+                    this.returnPrincipalError(err)
                 }
             )
         }
+    }
+
+    projectRoleError(err: any, msg: string) {
+        var retErr = err.error.text
+        if (retErr == undefined) {
+            retErr = msg
+        }
+        this.newProjectRoleContainError = true
+        this.newProjectRoleMessageError = retErr
     }
 
     newProjectRole() {
@@ -176,12 +184,7 @@ export class ProjectComponent extends ImanSubmodule implements OnInit {
                 this.closebuttonUsers.nativeElement.click()
             },
             err => {
-                var retErr = err.error.text
-                if (retErr == undefined) {
-                    retErr = "Error adding the user"
-                }
-                this.newProjectRoleContainError = true
-                this.newProjectRoleMessageError = retErr
+                this.projectRoleError(err, "Error adding the user")
             }
         )
     }
@@ -198,30 +201,33 @@ export class ProjectComponent extends ImanSubmodule implements OnInit {
                 this.loadMyProjects()
             },
             err => {
-                var retErr = err.error.text
-                if (retErr == undefined) {
-                    retErr = "Error updating the user"
-                }
-                this.newProjectRoleContainError = true
-                this.newProjectRoleMessageError = retErr
+                this.projectRoleError(err, "Error updating the user")
             }
         )
+    }
+
+    roleInvitationError() {
+        this.invitationsContainError = false
+        this.loadMyProjects()
+        this.closebuttonViewInvitations.nativeElement.click()
+    }
+
+    roleError(err: any, msg: string) {
+        var retErr = err.error.text
+        if (retErr == undefined) {
+            retErr = msg
+        }
+        this.invitationsContainError = true
+        this.invitationsMessageError = retErr
     }
 
     acceptRole(id: number) {
         this.projectService.acceptProjectRole(id).subscribe(
             res => {
-                this.invitationsContainError = false
-                this.loadMyProjects()
-                this.closebuttonViewInvitations.nativeElement.click()
+                this.roleInvitationError()
             },
             err => {
-                var retErr = err.error.text
-                if (retErr == undefined) {
-                    retErr = "Error accepting invitation"
-                }
-                this.invitationsContainError = true
-                this.invitationsMessageError = retErr
+                this.roleError(err, "Error accepting invitation")
             }
         )
     }
@@ -229,17 +235,10 @@ export class ProjectComponent extends ImanSubmodule implements OnInit {
     declineRole(id: number) {
         this.projectService.declineProjectRole(id).subscribe(
             res => {
-                this.invitationsContainError = false
-                this.loadMyProjects()
-                this.closebuttonViewInvitations.nativeElement.click()
+                this.roleInvitationError()
             },
             err => {
-                var retErr = err.error.text
-                if (retErr == undefined) {
-                    retErr = "Error declining invitation"
-                }
-                this.invitationsContainError = true
-                this.invitationsMessageError = retErr
+                this.roleError(err, "Error declining invitation")
             }
         )
     }
