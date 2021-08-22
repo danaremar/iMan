@@ -30,7 +30,7 @@ export class AppComponent {
       this.toastr.error("Expired session")
       this.router.navigate(["/"]).then(() => { this.reload() })
     } else {
-      this.router.navigate(["/app"])
+      this.router.navigate(["/app/effort"])
     }
 
     Aos.init({
