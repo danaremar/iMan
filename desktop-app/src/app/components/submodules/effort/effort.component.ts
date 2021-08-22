@@ -1,9 +1,6 @@
-import { DatePipe, Time } from "@angular/common";
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { Effort, EffortStart, EffortUpdate } from "src/app/models/effort/effort";
-import { Project } from "src/app/models/project/project";
-import { ProjectRole } from "src/app/models/project/roles";
 import { TokenService } from "src/app/services/authentication/token.service";
 import { EffortService } from "src/app/services/effort/effort.service";
 import { KanbanService } from "src/app/services/kanban/kanban.service";
@@ -55,9 +52,9 @@ export class EffortComponent extends ImanSubmodule implements OnInit {
     ***************************/
 
     constructor(effortService: EffortService, kanbanService: KanbanService, sprintService: SprintService, projectService: ProjectService, formBuilder: FormBuilder, tokenService: TokenService) {
-        
-        super(effortService,kanbanService,sprintService,projectService,formBuilder,tokenService)
-        
+
+        super(effortService, kanbanService, sprintService, projectService, formBuilder, tokenService)
+
         this.formNewEffort = formBuilder.group({
             description: ['', []],
         })
@@ -88,6 +85,29 @@ export class EffortComponent extends ImanSubmodule implements OnInit {
     /***************************
         METHODS -> EFFORT
     ***************************/
+
+    loadKanbanBySprintIdEvent(sprintIdEvent: any) {
+        let sprintIdStr = sprintIdEvent.value
+        this.sprintService.setStoredSprintId(Number(sprintIdStr))
+        this.loadTasksBySelectedSprint()
+    }
+
+    loadActiveEffort() {
+        this.effortService.getActiveEffort().subscribe(
+            data => {
+                this.containError = false
+                this.activeEffort = data
+                if (data != null) {
+                    if (data.project != null) this.projectService.setStoredProjectId(data.project.id)
+                    if (data.sprint != null) this.sprintService.setStoredSprintId(data.sprint.id)
+                    if (data.kanbanTask != null) this.kanbanService.setStoredKanbanTaskId(data.kanbanTask.id)
+                }
+            },
+            err => {
+                this.returnPrincipalError(err)
+            }
+        )
+    }
 
     loadDescriptionOrTaskEffort() {
         if (this.activeEffort != null && this.activeEffort.kanbanTask == null && this.activeEffort.description != null && this.activeEffort.description != '') {
@@ -131,7 +151,7 @@ export class EffortComponent extends ImanSubmodule implements OnInit {
 
     updateEffort() {
         if (this.effortSelected != undefined && this.effortSelected != null) {
-            let kanbanTaskId: any = this.effortSelected.kanbanTask==null?0:this.effortSelected.kanbanTask.id
+            let kanbanTaskId: any = this.effortSelected.kanbanTask == null ? 0 : this.effortSelected.kanbanTask.id
             let updateEffort: EffortUpdate = new EffortUpdate(this.effortSelected.id, this.formUpdateEffort.value.description, kanbanTaskId, new Date(this.formUpdateEffort.value.startDate), new Date(this.formUpdateEffort.value.endDate))
             this.effortService.updateEffort(updateEffort).subscribe(
                 data => {
@@ -169,15 +189,15 @@ export class EffortComponent extends ImanSubmodule implements OnInit {
 
     deleteEffort(effortId: number) {
         if (confirm("Are you sure to delete this effort?")) {
-        this.effortService.deleteEffort(effortId).subscribe(
-            data => {
-                this.containError = false
-                this.loadEfforts()
-            },
-            err => {
-                this.returnPrincipalError(err)
-            }
-        )
+            this.effortService.deleteEffort(effortId).subscribe(
+                data => {
+                    this.containError = false
+                    this.loadEfforts()
+                },
+                err => {
+                    this.returnPrincipalError(err)
+                }
+            )
         }
     }
 

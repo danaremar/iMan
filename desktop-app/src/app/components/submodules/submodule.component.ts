@@ -1,5 +1,5 @@
 import { DatePipe } from "@angular/common"
-import { Component, Injectable } from "@angular/core"
+import { Injectable } from "@angular/core"
 import { FormBuilder, FormGroup } from "@angular/forms"
 import { Project } from "src/app/models/project/project"
 import { ProjectRole } from "src/app/models/project/roles"
@@ -214,12 +214,8 @@ export class ImanSubmodule {
     loadActiveEffort() {
         this.effortService.getActiveEffort().subscribe(
             data => {
+                this.containError = false
                 this.activeEffort = data
-                if (data != null) {
-                    if (data.project != null) this.projectService.setStoredProjectId(data.project.id)
-                    if (data.sprint != null) this.sprintService.setStoredSprintId(data.sprint.id)
-                    if (data.kanbanTask != null) this.kanbanService.setStoredKanbanTaskId(data.kanbanTask.id)
-                }
             },
             err => {
                 this.returnPrincipalError(err)

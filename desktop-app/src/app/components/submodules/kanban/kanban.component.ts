@@ -112,6 +112,7 @@ export class KanbanComponent extends ImanSubmodule implements OnInit {
         let newEffort: EffortStart = new EffortStart("", kanbanTaskId)
         this.effortService.startEffort(newEffort).subscribe(
             data => {
+                this.containError = false
                 this.loadKanbanBySelectedSprint()
             },
             err => {
@@ -123,6 +124,7 @@ export class KanbanComponent extends ImanSubmodule implements OnInit {
     endEffort() {
         this.effortService.endEffort(this.activeEffort.id).subscribe(
             data => {
+                this.containError = false
                 this.loadKanbanBySelectedSprint()
             },
             err => {

@@ -221,6 +221,7 @@ export class SprintComponent extends ImanSubmodule implements OnInit {
     }
 
     loadPieChartEffortsByTask() {
+        this.pieChartEffortsByTask=[]
         for (let e of this.effortReport.effortsByTask) {
             this.pieChartEffortsByTask.push({
                 name: '#' + e.kanbanTask.number + ': ' + e.kanbanTask.title,
@@ -230,6 +231,7 @@ export class SprintComponent extends ImanSubmodule implements OnInit {
     }
 
     loadPieChartEffortsByUser() {
+        this.pieChartEffortsByUser=[]
         for (let e of this.effortReport.effortsByUser) {
             this.pieChartEffortsByUser.push({
                 name: '@' + e.user.username,

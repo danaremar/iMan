@@ -60,8 +60,7 @@ public class ReportEffortService extends EffortService {
 	private List<KanbanTask> getTaskList(Long sprintId) {
 		Sprint s = sprintService.findById(sprintId);
 		projectService.verifyUserRelatedWithProject(s.getProject());
-		return s.getKanbanColums().stream().flatMap(x -> x.getTasks().stream())
-				.collect(Collectors.toList());
+		return s.getKanbanColums().stream().flatMap(x -> x.getTasks().stream()).collect(Collectors.toList());
 	}
 
 	private List<Effort> getEffortList(List<KanbanTask> ls) {
@@ -69,11 +68,12 @@ public class ReportEffortService extends EffortService {
 	}
 
 	private Double getTotalEstimedEffort(Stream<KanbanTask> stream) {
-		return stream.collect(Collectors.summingDouble(KanbanTask::getEstimatedTime));
+		return stream.filter(x -> x.getEstimatedTime() != null)
+				.collect(Collectors.summingDouble(KanbanTask::getEstimatedTime));
 	}
 
 	private Double getTotalComputedEffort(Stream<Effort> stream) {
-		return stream.collect(Collectors.summingDouble(Effort::getTime));
+		return stream.filter(x -> x.getTime() != null).collect(Collectors.summingDouble(Effort::getTime));
 	}
 
 	/*
@@ -93,7 +93,7 @@ public class ReportEffortService extends EffortService {
 
 	private List<EffortByTask> getEffortsByTask(Stream<Effort> stream, Double totalComputedEffort) {
 		List<EffortByTask> ls = new ArrayList<>();
-		Map<KanbanTask, Double> map = stream
+		Map<KanbanTask, Double> map = stream.filter(x -> x.getTime() != null)
 				.collect(Collectors.groupingBy(Effort::getKanbanTask, Collectors.summingDouble(Effort::getTime)));
 		map.keySet().stream().forEach(x -> ls.add(createEffortByTask(x, map.get(x), totalComputedEffort)));
 		return ls;
@@ -115,7 +115,7 @@ public class ReportEffortService extends EffortService {
 
 	private List<EffortByUser> getEffortsByUser(Stream<Effort> stream, Double totalComputedEffort) {
 		List<EffortByUser> ls = new ArrayList<>();
-		Map<User, Double> map = stream
+		Map<User, Double> map = stream.filter(x -> x.getTime() != null)
 				.collect(Collectors.groupingBy(Effort::getUser, Collectors.summingDouble(Effort::getTime)));
 		map.keySet().stream().forEach(x -> ls.add(createEffortByUser(x, map.get(x), totalComputedEffort)));
 		return ls;

@@ -23,6 +23,10 @@ body {
     --sidebar-size: 65px;
 }
 
+a{
+    color: inherit !important;
+}
+
 .bg-dark-0 {
     background-color: var(--dark-pallete-0) !important;
     color: var(--dark-pallete-text) !important;
