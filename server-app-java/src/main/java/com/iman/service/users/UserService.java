@@ -92,7 +92,7 @@ public class UserService {
 		userBefore.setName(user.getName());
 		userBefore.setLastName(user.getLastName());
 		userBefore.setEmail(user.getEmail());
-		if(StringUtils.isEmpty(user.getNewPassword())) {
+		if(user.getNewPassword()!=null && user.getNewPassword().length()!=0) {
 			String newCypheredPassword = this.passwordEncoder.encode(user.getNewPassword());
 			userBefore.setPassword(newCypheredPassword);
 		}
