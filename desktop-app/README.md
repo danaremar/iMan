@@ -1,27 +1,39 @@
-# DesktopApp
+# iMan user application
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 12.1.1.
+Project focused on product software management. It's free copyleft software, you can use whatever you want to, but please do NOT distribute this project or sell it. If you want to collaborate, please send me an e-mail.
 
-## Development server
+This project was made in september 2021, but it's growing and I'm adding new submodules like: chat, config, requirements, team, company... If you want to develop some submodule please contact me and contribute the community, we all mates!
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+Thanks to my friend Andrew for doing the logo!
 
-## Code scaffolding
+Technology between this project: Angular, Sprint Boot & Bootstrap (including Icons)
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
 
-## Build
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+## Desktop
 
-## Running unit tests
+Please modify "src/index.html" with `<base href="./">` and set property `enableElectron: true` in "environment.prod.ts" and "environment.ts"
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+### Requirements
+- NodeJS: v6.14.10
+- Server app deployed and put host url in "environment.prod.ts" and "environment.ts".
 
-## Running end-to-end tests
+### Commands
+- Install npm: `npm i`
+- Run: `ng s --o`
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
 
-## Further help
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+## Web
+
+Please modify "src/index.html" with `<base href="/">` and set property `enableElectron: false` in "environment.prod.ts" and "environment.ts"
+
+### Requirements
+- NodeJS: v6.14.10
+- Server app deployed and put host url in "environment.prod.ts" and "environment.ts".
+
+### Commands
+- Install npm: `npm i`
+- Run: `npm run electron`
+
+

@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark bg-dark-5"
     style="padding-top: 0px !important; padding-bottom: 0px !important;">
-    <div class="container-fluid">
-        <a id="title" class="navbar-brand dark-text" href="/app">iMan</a>
+    <div class="container-fluid d-flex">
+        <a id="title" class="navbar-brand dark-text flex-grow-1" href="/app">iMan</a>
 
         <!-- HIDE BUTTON -->
         <!-- 
@@ -31,24 +31,24 @@
                 </div>
 
                 <!-- MINIMIZE -->
-                <div>
+                <div id="minimizeBtn" (click)="minimize()">
                     <a *ngIf="enabledElectron" class="nav-link" ngbTooltip="Minimize" placement="left"
                         [openDelay]="300">
-                        <em id="min-btn" class="bi bi-dash-lg"></em>
+                        <em class="bi bi-dash-lg"></em>
                     </a>
                 </div>
 
                 <!-- MAXIMIZE -->
-                <div>
+                <div id="maximizeBtn" (click)="maximize()">
                     <a *ngIf="enabledElectron" class="nav-link" ngbTooltip="Maximize" placement="left" [openDelay]="300">
-                        <em id="max-btn" class="bi bi-app"></em>
+                        <em class="bi bi-app"></em>
                     </a>
                 </div>
                 
                 <!-- CLOSE -->
-                <div>
+                <div id="closeBtn" (click)="close()">
                     <a *ngIf="enabledElectron" class="nav-link" ngbTooltip="Close" placement="left" [openDelay]="300">
-                        <em id="close-btn" class="bi bi-x-lg"></em>
+                        <em class="bi bi-x-lg"></em>
                     </a>
                 </div>
                 

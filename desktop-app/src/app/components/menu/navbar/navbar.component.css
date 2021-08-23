@@ -1,6 +1,7 @@
 #title {
     font-size: 1.5rem;
     font-weight: 500;
+    -webkit-app-region: drag;
 }
 
 #title:hover {
@@ -10,10 +11,9 @@
 .navbar {
     height: var(--navbar-size) !important;
     width: 100vw;
-    -webkit-app-region: drag;
 }
 
-#close-btn:hover {
+.bi-x-lg:hover {
     color: rgb(255, 79, 79) !important;
 }
 
