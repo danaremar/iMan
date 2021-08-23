@@ -10,8 +10,13 @@
 .navbar {
     height: var(--navbar-size) !important;
     width: 100vw;
+    -webkit-app-region: drag;
+}
+
+#close-btn:hover {
+    color: rgb(255, 79, 79) !important;
 }
 
 .bi {
-    font-size: 20px !important;
+    font-size: 15px !important;
 }

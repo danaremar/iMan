@@ -20,14 +20,39 @@
             </ul> -->
 
             <!-- LEFT -->
-            <ul class="navbar-nav ms-auto mb-lg-0">
-                <li class="nav-item">
+            <div class="ms-auto d-flex">
+
+                <!-- INFORMATION ABOUT IMAN -->
+                <div>
                     <a class="nav-link" ngbTooltip="About app" placement="left" [openDelay]="300" data-bs-toggle="modal"
                         data-bs-target="#aboutIman">
                         <em class="bi bi-info-circle"></em>
                     </a>
-                </li>
-            </ul>
+                </div>
+
+                <!-- MINIMIZE -->
+                <div>
+                    <a *ngIf="enabledElectron" class="nav-link" ngbTooltip="Minimize" placement="left"
+                        [openDelay]="300">
+                        <em id="min-btn" class="bi bi-dash-lg"></em>
+                    </a>
+                </div>
+
+                <!-- MAXIMIZE -->
+                <div>
+                    <a *ngIf="enabledElectron" class="nav-link" ngbTooltip="Maximize" placement="left" [openDelay]="300">
+                        <em id="max-btn" class="bi bi-app"></em>
+                    </a>
+                </div>
+                
+                <!-- CLOSE -->
+                <div>
+                    <a *ngIf="enabledElectron" class="nav-link" ngbTooltip="Close" placement="left" [openDelay]="300">
+                        <em id="close-btn" class="bi bi-x-lg"></em>
+                    </a>
+                </div>
+                
+            </div>
         </div>
     </div>
 </nav>
@@ -74,13 +99,13 @@
                             <a href="https://github.com/danaremar/iMan" target="_blank">github.com/danaremar/iMan</a>
                         </div>
                     </div>
-                    
+
 
                     <div class="my-2 fs-6">Project: iMan ©</div>
                     <div class="my-2 fs-6">License: GPLv3.0</div>
                     <div class="my-2 fs-6">Version: v1.1</div>
                     <div class="my-2 fs-6">Author: Daniel Arellano Martínez</div>
-                    
+
 
                 </div>
             </div>
