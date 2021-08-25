@@ -1,6 +1,7 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark bg-dark-5">
-    <div class="container-fluid">
-        <a id="title" class="navbar-brand dark-text" href="/app">iMan</a>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark bg-dark-5"
+    style="padding-top: 0px !important; padding-bottom: 0px !important;">
+    <div class="container-fluid d-flex">
+        <a id="title" class="navbar-brand dark-text flex-grow-1" href="/app">iMan</a>
 
         <!-- HIDE BUTTON -->
         <!-- 
@@ -19,13 +20,95 @@
             </ul> -->
 
             <!-- LEFT -->
-            <ul class="navbar-nav ms-auto mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link">
+            <div class="ms-auto d-flex">
+
+                <!-- INFORMATION ABOUT IMAN -->
+                <div>
+                    <a class="nav-link" ngbTooltip="About app" placement="left" [openDelay]="300" data-bs-toggle="modal"
+                        data-bs-target="#aboutIman">
                         <em class="bi bi-info-circle"></em>
                     </a>
-                </li>
-            </ul>
+                </div>
+
+                <!-- MINIMIZE -->
+                <div id="minimizeBtn" (click)="minimize()">
+                    <a *ngIf="enabledElectron" class="nav-link" ngbTooltip="Minimize" placement="left"
+                        [openDelay]="300">
+                        <em class="bi bi-dash-lg"></em>
+                    </a>
+                </div>
+
+                <!-- MAXIMIZE -->
+                <div id="maximizeBtn" (click)="maximize()">
+                    <a *ngIf="enabledElectron" class="nav-link" ngbTooltip="Maximize" placement="left" [openDelay]="300">
+                        <em class="bi bi-app"></em>
+                    </a>
+                </div>
+                
+                <!-- CLOSE -->
+                <div id="closeBtn" (click)="close()">
+                    <a *ngIf="enabledElectron" class="nav-link" ngbTooltip="Close" placement="left" [openDelay]="300">
+                        <em class="bi bi-x-lg"></em>
+                    </a>
+                </div>
+                
+            </div>
         </div>
     </div>
 </nav>
+
+
+<div class="modal fade" id="aboutIman" tabindex="-1" aria-labelledby="aboutImanLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content bg-dark-5">
+            <div class="modal-header">
+                <div class="m-auto fs-2" id="aboutImanLabel">iMan</div>
+                <div class="close-card-button" data-bs-dismiss="modal">
+                    <em class="bi bi-x" style="font-size: 35px !important;"></em>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="overflow-auto mx-2">
+
+                    <div class="mb-4 fs-6">
+                        <div class="my-2">
+                            Project focused on product software management. It's free copyleft software, you can use
+                            whatever you want to, but please do NOT distribute this project or sell it. If you want to
+                            collaborate, please send me an e-mail.
+                        </div>
+                        <div class="my-2">
+                            This project was made in september 2021, but it's growing and I'm adding new submodules
+                            like: chat, config, requirements, team, company... If you want to develop some submodule
+                            please contact me and contribute the community, we all mates!
+                        </div>
+                        <div class="my-2">
+                            Thanks to my friend Andrew for doing the logo!
+                        </div>
+                        <div class="my-2">
+                            Technology between this project: Angular, Sprint Boot & Bootstrap (including Icons)
+                        </div>
+                    </div>
+
+                    <!-- INFO URLs -->
+                    <div class="my-4">
+                        <div class="my-3 fs-6">
+                            <em class="bi bi-envelope bi-medium me-3"></em>danielarellano99@gmail.com
+                        </div>
+                        <div class="my-3 fs-6">
+                            <em class="bi bi-github bi-medium me-3"></em>
+                            <a href="https://github.com/danaremar/iMan" target="_blank">github.com/danaremar/iMan</a>
+                        </div>
+                    </div>
+
+
+                    <div class="my-2 fs-6">Project: iMan ©</div>
+                    <div class="my-2 fs-6">License: GPLv3.0</div>
+                    <div class="my-2 fs-6">Version: v1.1</div>
+                    <div class="my-2 fs-6">Author: Daniel Arellano Martínez</div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,13 @@
+.effort-report-card-list{
+    background-color: var(--dark-pallete-2) !important;
+    border-radius: 8px !important;
+}
+
+.card-list-field {
+    width: 75px;
+}
+
+.pie-label {
+    font-size: 32px !important;
+    fill: var(--dark-contrast-text) !important;
+}

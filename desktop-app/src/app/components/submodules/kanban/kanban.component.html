@@ -1,29 +1,33 @@
 <!-- OPERATIONS -->
-<div class="d-flex mb-3 mr-3" style="height: 45px;">
-    <div class="flex-grow-1 center d-flex">
-        <div *ngIf="myProjects && myProjects.length!=0">
-            <select (change)="loadSprintsByProjectIdEvent($event.target)">
+<div class="d-flex mb-3 mr-3 flex-wrap">
+    <div class="flex-grow-1 center d-flex flex-wrap">
+        <div class="d-flex mx-3" *ngIf="myProjects && myProjects.length!=0">
+            <em class="bi bi-medium bi-folder2 me-2" ngbTooltip="Project" placement="bottom" [openDelay]="300"></em>
+            <select class="m-auto" (change)="loadSprintsByProjectIdEvent($event.target)">
                 <option class="dark-text" *ngFor="let p of myProjects"
                     [attr.selected]="p.id==projectSelectedId?true:null" [ngValue]="p" value="{{p.id}}">
                     {{p.name}}</option>
             </select>
         </div>
-        <div *ngIf="mySprints && mySprints.length!=0">
-            <select class="ms-3" (change)="loadKanbanBySprintIdEvent($event.target)">
-                <option class="dark-text" *ngFor="let s of mySprints" [attr.selected]="s.id==sprintSelectedId?true:null"
+        <div class="d-flex mx-3" *ngIf="mySprints && mySprints.length!=0">
+            <em class="bi bi-medium bi-arrow-repeat me-2" ngbTooltip="Sprint" placement="bottom" [openDelay]="300"></em>
+            <select class="m-auto" (change)="loadKanbanBySprintIdEvent($event.target)">
+                <option class="dark-text" *ngFor="let s of mySprints; let i=index" [attr.selected]="s.id==sprintSelectedId?true:null"
                     [ngValue]="s" value="{{s.id}}">
-                    {{s.title}}</option>
+                    #{{mySprints.length-i}}: {{s.title}}</option>
             </select>
         </div>
     </div>
 
-    <div>
+    <div class="mx-3">
         <a ngbTooltip="Add column" placement="left" [openDelay]="300" *ngIf="adminAccess" data-bs-toggle="modal"
             data-bs-target="#createColumnModal">
             <em class="bi bi-plus-lg"></em>
         </a>
     </div>
 </div>
+
+<hr style="height: 2px">
 
 <div *ngIf="containError" class="alert alert-danger mt-3 mb-3">{{messageError}}</div>
 <div class="scrollable-x">
@@ -62,35 +66,62 @@
                 (cdkDropListDropped)="dropTask($event)">
                 <div class="card task-card mb-3 mx-3" *ngFor="let task of column.tasks" cdkDrag [cdkDragData]="task">
                     <div class="m-3">
-                        <div class="d-flex" *ngIf="memberAccess">
-                            <div class="m-text flex-grow-1">#{{task.number}}: {{task.title}}</div>
+                        <div class="d-flex">
+                            <div class="m-text flex-grow-1 text-break">#{{task.number}}: {{task.title}}</div>
+                            <div class="d-flex my-auto">
+                                <ng-container
+                                    *ngIf="activeEffort==null || (activeEffort.description!=null && activeEffort.description.length!=0) || (activeEffort!=null && activeEffort.kanbanTask!=null && task.id!=activeEffort.kanbanTask.id); else startedTask">
+                                    <!-- START TASK -->
+                                    <a (click)="startEffort(task.id)" ngbTooltip="Start effort" placement="left"
+                                        [openDelay]="300" data-bs-toggle="modal">
+                                        <em class="bi bi-reduced bi-play-circle-fill me-2"></em>
+                                    </a>
+                                </ng-container>
+                                <ng-template #startedTask>
+                                    <!-- END TASK -->
+                                    <a (click)="endEffort()" ngbTooltip="Stop effort" placement="left" [openDelay]="300"
+                                        data-bs-toggle="modal">
+                                        <em class="bi bi-reduced bi-square-fill me-2"></em>
+                                    </a>
+                                </ng-template>
 
-                            <!-- UPDATE TASK -->
-                            <a (click)="fillTaskUpdateForm(task)" ngbTooltip="Edit" placement="left" [openDelay]="300"
-                                data-bs-toggle="modal" data-bs-target="#updateTaskModal">
-                                <em class="bi bi-reduced bi-pencil-fill me-2"></em>
-                            </a>
+                                <!-- UPDATE TASK -->
+                                <a *ngIf="memberAccess" (click)="fillTaskUpdateForm(task)" ngbTooltip="Edit" placement="left"
+                                    [openDelay]="300" data-bs-toggle="modal" data-bs-target="#updateTaskModal">
+                                    <em class="bi bi-reduced bi-pencil-fill me-2"></em>
+                                </a>
 
-                            <!-- DELETE TASK -->
-                            <a (click)="disableTask(task)" ngbTooltip="Archieve" placement="left" [openDelay]="300">
-                                <em class="bi bi-reduced bi-trash-fill me-2"></em>
-                            </a>
-
+                                <!-- DELETE TASK -->
+                                <a *ngIf="memberAccess" (click)="disableTask(task)" ngbTooltip="Archieve" placement="left" [openDelay]="300">
+                                    <em class="bi bi-reduced bi-trash-fill me-2"></em>
+                                </a>
+                            </div>
                         </div>
 
                         <div class="s-text">{{task.description}}</div>
-                        
-                        <div *ngIf="task.computedTime!=0 && task.estimatedTime" class="progress my-3">
+
+                        <div *ngIf="task.computedTime!=0 && task.estimatedTime">
                             <ng-container *ngIf="task.computedTime<=task.estimatedTime; else overloadTime">
-                                <div class="progress-bar progress-bar-striped bg-info " role="progressbar" [style]="'width: ' + (100 - (task.computedTime/task.estimatedTime)*100) + '%'" aria-valuemin="0" aria-valuemax="100"></div>
-                                <div class="progress-bar bg-success" role="progressbar" [style]="'width: ' + (task.computedTime/task.estimatedTime)*100 + '%'" aria-valuemin="0" aria-valuemax="100"></div>
+                                <div class="progress bg-success my-3">
+                                    <div class="progress-bar bg-info"
+                                        [class]="(activeEffort==null || (activeEffort.description!=null && activeEffort.description.length!=0) || (activeEffort!=null && activeEffort.kanbanTask!=null && task.id!=activeEffort.kanbanTask.id))?'':'progress-bar-striped progress-bar-animated'"
+                                        role="progressbar"
+                                        [style]="'width: ' + (task.computedTime/task.estimatedTime)*100 + '%'"
+                                        aria-valuemin="0" aria-valuemax="100">
+                                    </div>
+                                </div>
                             </ng-container>
                             <ng-template #overloadTime>
-                                <div class="progress-bar progress-bar-striped bg-info " role="progressbar" [style]="'width: ' + (100 - (task.estimatedTime/task.computedTime)*100) + '%'" aria-valuemin="0" aria-valuemax="100"></div>
-                                <div class="progress-bar bg-danger" role="progressbar" [style]="'width: ' + (task.estimatedTime/task.computedTime)*100 + '%'" aria-valuemin="0" aria-valuemax="100"></div>
+                                <div class="progress bg-danger my-3">
+                                    <div class="progress-bar bg-info"
+                                        [class]="(activeEffort==null || (activeEffort.description!=null && activeEffort.description.length!=0) || (activeEffort!=null && activeEffort.kanbanTask!=null && task.id!=activeEffort.kanbanTask.id))?'':'progress-bar-striped progress-bar-animated'"
+                                        role="progressbar"
+                                        [style]="'width: ' + (task.estimatedTime/task.computedTime)*100 + '%'"
+                                        aria-valuemin="0" aria-valuemax="100">
+                                    </div>
+                                </div>
                             </ng-template>
                         </div>
-                        
                     </div>
                 </div>
             </div>

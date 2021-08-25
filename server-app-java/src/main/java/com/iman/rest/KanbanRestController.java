@@ -22,6 +22,7 @@ import com.iman.model.kanban.KanbanColumn;
 import com.iman.model.kanban.KanbanColumnCreateDto;
 import com.iman.model.kanban.KanbanColumnShowDto;
 import com.iman.model.kanban.KanbanColumnUpdateDto;
+import com.iman.model.kanban.KanbanTask;
 import com.iman.model.kanban.KanbanTaskCreateDto;
 import com.iman.model.kanban.KanbanTaskMoveDto;
 import com.iman.model.kanban.KanbanTaskUpdateDto;
@@ -101,6 +102,16 @@ public class KanbanRestController {
 	 * TASKS
 	 * 
 	 */
+	
+	@GetMapping(value = "/task/sprint/{sprintId}")
+	public ResponseEntity<Object> getKanbanTasksBySprintId(@PathVariable Long sprintId) {
+		try {
+			List<KanbanTask> kanbanTasks = kanbanService.findKanbanTasksBySprintId(sprintId);
+			return new ResponseEntity<>(kanbanTasks, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(new Message(e.getMessage()), HttpStatus.CONFLICT);
+		}
+	}
 	
 	@PostMapping(value = "/task")
 	public ResponseEntity<Object> createKanbanTask(@RequestBody @Valid KanbanTaskCreateDto kanbanTaskCreateDto) {

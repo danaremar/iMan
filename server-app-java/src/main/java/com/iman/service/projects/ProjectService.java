@@ -10,6 +10,7 @@ import org.springframework.data.domain.Example;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import com.iman.config.ImanMessages;
 import com.iman.model.projects.Project;
@@ -31,27 +32,29 @@ public class ProjectService {
 
 	@Autowired
 	private UserService userService;
-
-	public void verifyOwner(Project project) {
-		if (project==null || project.getProjectRoles().stream()
-				.noneMatch(x -> (x.getRole() == 0) && (x.getUser().getUsername().equals(userService.getCurrentUsername())))) {
+	
+	private void verify(Project project, List<Integer> roles) {
+		String username = userService.getCurrentUsername();
+		if (project==null || StringUtils.isEmpty(username) || !project.getActive() || project.getProjectRoles().stream()
+				.noneMatch(x -> (roles.contains(x.getRole())) && (x.getUser().getUsername().equals(username)))) {
 			throw new AccessDeniedException(ImanMessages.USER_NOT_ALLOWED);
 		}
+	}
+
+	public void verifyOwner(Project project) {
+		verify(project, List.of(0));
 	}
 	
 	public void verifyOwnerOrAdmin(Project project) {
-		String username = userService.getCurrentUsername();
-		if (project==null || !project.getActive() || project.getProjectRoles().stream()
-				.noneMatch(x -> (List.of(0,1).contains(x.getRole())) && (x.getUser().getUsername().equals(username)))) {
-			throw new AccessDeniedException(ImanMessages.USER_NOT_ALLOWED);
-		}
+		verify(project, List.of(0,1));
+	}
+	
+	public void verifyMember(Project project) {
+		verify(project, List.of(0,1,2));
 	}
 	
 	public void verifyUserRelatedWithProject(Project project) {
-		if (project==null || !project.getActive() || project.getProjectRoles().stream()
-				.noneMatch(x -> x.getUser().getUsername().equals(userService.getCurrentUsername()) )) {
-			throw new AccessDeniedException(ImanMessages.USER_NOT_ALLOWED);
-		}
+		verify(project, List.of(0,1,2,3));
 	}
 
 	@Transactional

@@ -23,6 +23,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { SprintComponent } from './components/submodules/sprints/sprint.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { EffortComponent } from './components/submodules/effort/effort.component';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 @NgModule({
   declarations: [
@@ -53,6 +54,7 @@ import { EffortComponent } from './components/submodules/effort/effort.component
       preventDuplicates: true
     }),
     NgbModule,
+    NgxChartsModule
   ],
   providers: [{ provide: HTTP_INTERCEPTORS, useClass: InterceptorService, multi: true }],
   bootstrap: [AppComponent]

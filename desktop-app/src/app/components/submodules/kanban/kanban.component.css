@@ -2,12 +2,12 @@
     background-color: var(--dark-pallete-3) !important;
     min-width: 400px;
     width: 400px;
-    height: calc(100vh - var(--navbar-size) - 135px);
+    height: calc(100vh - var(--navbar-size) - 150px);
 }
 
 .task-card {
     background-color: var(--dark-pallete-2) !important;
-    border-radius: 10px;
+    border-radius: 5px;
 }
 
 .overflow-x{
@@ -16,5 +16,5 @@
 
 .scrollable-x{
     overflow-x: auto;
-    width: calc(100vw - 100px - var(--sidebar-size)) !important;
+    width: calc(100vw - 50px - var(--sidebar-size)) !important;
 }

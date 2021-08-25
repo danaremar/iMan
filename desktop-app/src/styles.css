@@ -17,10 +17,14 @@ body {
     --dark-pallete-3: #2d2d30;
     --dark-pallete-4: #252526;
     --dark-pallete-5: #1e1e1e;
-    --dark-pallete-text: #6f7a85;
+    --dark-pallete-text: #8d949b;
     --dark-contrast-text: rgb(206, 206, 206);
     --navbar-size: 50px;
     --sidebar-size: 65px;
+}
+
+a{
+    color: inherit !important;
 }
 
 .bg-dark-0 {
@@ -102,9 +106,10 @@ body {
     color: var(--dark-contrast-text) !important;
 }
 
-.progress {
+.progress, .progress-bar {
     border-radius: 5rem !important;
 }
+
 
 /* CARD */
 
@@ -167,9 +172,13 @@ input::-webkit-input-placeholder {
 select {
     border-radius: 0.3rem;
     height: 30px;
-    width: 150px;
+    width: 200px;
     background-color: var(--dark-pallete-4) !important;
     color: var(--dark-pallete-text) !important;
+}
+
+.sm-select {
+    width: 100px !important;
 }
 
 .center {
@@ -182,7 +191,7 @@ select {
 }
 
 .scrollable-content {
-    height: calc(100vh - 100px - var(--navbar-size)) !important;
+    height: calc(100vh - 120px - var(--navbar-size)) !important;
 }
 
 .red-btn {

@@ -1,21 +1,22 @@
-import { CdkDragDrop, moveItemInArray, transferArrayItem } from "@angular/cdk/drag-drop";
+import { CdkDragDrop } from "@angular/cdk/drag-drop";
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { EffortStart } from "src/app/models/effort/effort";
 import { KanbanColumnCreate, KanbanColumnShow, KanbanColumnUpdate } from "src/app/models/kanban/kanbanColumn";
 import { KanbanTask, KanbanTaskCreate, KanbanTaskMove, KanbanTaskUpdate } from "src/app/models/kanban/kanbanTask";
-import { Project } from "src/app/models/project/project";
-import { ProjectRole } from "src/app/models/project/roles";
 import { TokenService } from "src/app/services/authentication/token.service";
+import { EffortService } from "src/app/services/effort/effort.service";
 import { KanbanService } from "src/app/services/kanban/kanban.service";
 import { ProjectService } from "src/app/services/projects/project.service";
 import { SprintService } from "src/app/services/sprints/sprint.service";
+import { ImanSubmodule } from "../submodule.component";
 
 @Component({
     selector: 'iMan-kanban',
     templateUrl: './kanban.component.html',
     styleUrls: ['./kanban.component.css']
 })
-export class KanbanComponent implements OnInit {
+export class KanbanComponent extends ImanSubmodule implements OnInit {
 
     @ViewChild('closebuttonCreateColumn') closebuttonCreateColumn: any;
     @ViewChild('closebuttonUpdateColumn') closebuttonUpdateColumn: any;
@@ -26,18 +27,8 @@ export class KanbanComponent implements OnInit {
             GENERAL
     ***************************/
 
-    myProjects: any
-    mySprints: any
-    adminAccess: boolean = false
-    memberAccess: boolean = false
-    projectSelectedId: number | null | undefined
-    sprintSelectedId: number | null | undefined
     kanbanColumnSelected: any
     kanbanTaskSelected: any
-    kanban: any
-
-    containError: boolean = false
-    messageError: string | undefined
 
 
     /***************************
@@ -74,8 +65,10 @@ export class KanbanComponent implements OnInit {
             CONSTRUCTOR
     ***************************/
 
-    constructor(private kanbanService: KanbanService, private sprintService: SprintService, private projectService: ProjectService, private formBuilder: FormBuilder, private tokenService: TokenService) {
+    constructor(effortService: EffortService, kanbanService: KanbanService, sprintService: SprintService, projectService: ProjectService, formBuilder: FormBuilder, tokenService: TokenService) {
 
+
+        super(effortService,kanbanService,sprintService,projectService,formBuilder,tokenService)
         // COLUMNS
         this.formNewColumn = formBuilder.group({
             title: ['', [Validators.required]]
@@ -107,36 +100,18 @@ export class KanbanComponent implements OnInit {
         this.loadMyProjects()
     }
 
-    inputClass(form: FormGroup, property: string) {
-        if (form?.get(property)?.touched && form?.get(property)?.valid) {
-            return "is-valid"
-        } else if (form?.get(property)?.touched && form?.get(property)?.invalid) {
-            return "is-invalid"
-        } else {
-            return ""
-        }
-    }
-
-    returnPrincipalError(err: any) {
-        var r = err.error.text
-        if (r == undefined) {
-            r = 'Error produced'
-        }
-        this.messageError = r;
-        this.containError = true
-    }
 
 
     /***************************
-        METHODS -> PROJECTS
+        METHODS -> EFFORT
     ***************************/
 
-    loadMyProjects(): any {
-        this.projectService.myProjects().subscribe(
+    startEffort(kanbanTaskId: number) {
+        let newEffort: EffortStart = new EffortStart("", kanbanTaskId)
+        this.effortService.startEffort(newEffort).subscribe(
             data => {
-                this.myProjects = data
-                this.projectSelectedId = this.projectService.getStoredProjectId()
-                this.loadFirstProject()
+                this.containError = false
+                this.loadKanbanBySelectedSprint()
             },
             err => {
                 this.returnPrincipalError(err)
@@ -144,94 +119,18 @@ export class KanbanComponent implements OnInit {
         )
     }
 
-    loadFirstProject() {
-        if (this.myProjects.length !== 0) {
-            let projectId = this.projectService.getStoredProjectId()
-            if (projectId == null || projectId == 0) {
-                this.projectService.setStoredProjectId(this.myProjects[0].id)
+    endEffort() {
+        this.effortService.endEffort(this.activeEffort.id).subscribe(
+            data => {
+                this.containError = false
+                this.loadKanbanBySelectedSprint()
+            },
+            err => {
+                this.returnPrincipalError(err)
             }
-            this.loadSprintsBySelectedProject()
-        }
-    }
-
-    loadSprintsByProjectIdEvent(projectIdEvent: any) {
-        let projectIdStr = projectIdEvent.value
-        this.projectService.setStoredProjectId(Number(projectIdStr))
-        this.loadSprintsBySelectedProject()
-    }
-
-
-
-    editIsAllowed(projectId: number) {
-        let projects: Project[] = this.myProjects
-        let selectedProject = projects.find(
-            (a) => a.id === projectId
         )
-        if (selectedProject != undefined) {
-
-            let projectRoles: any = selectedProject.projectRoles
-
-            this.adminAccess = projectRoles.some(
-                (a: ProjectRole) => a.user.username == this.tokenService.getUsername() && [0, 1].includes(a.role)
-            )
-
-            this.memberAccess = projectRoles.some(
-                (a: ProjectRole) => a.user.username == this.tokenService.getUsername() && [0, 1, 2].includes(a.role)
-            )
-        }
     }
 
-
-    /***************************
-        METHODS -> SPRINTS
-    ***************************/
-
-    loadSprintsBySelectedProject() {
-        let projectId = this.projectService.getStoredProjectId()
-        if (projectId != null && projectId != 0) {
-            this.editIsAllowed(projectId)
-            this.sprintService.sprintFromProject(projectId).subscribe(
-                data => {
-                    this.mySprints = data
-                    this.sprintSelectedId = this.sprintService.getStoredSprintId()
-                    this.loadFirstSprint()
-                },
-                err => {
-                    this.returnPrincipalError(err)
-                }
-            )
-        }
-    }
-
-    loadFirstSprint() {
-        if (this.mySprints.length !== 0) {
-            let sprintId = this.sprintService.getStoredSprintId()
-            if (sprintId == null || sprintId == 0) {
-                this.sprintService.setStoredSprintId(this.mySprints[0].id)
-            }
-            this.loadKanbanBySelectedSprint()
-        }
-    }
-
-    loadKanbanBySprintIdEvent(sprintIdEvent: any) {
-        let sprintIdStr = sprintIdEvent.value
-        this.sprintService.setStoredSprintId(Number(sprintIdStr))
-        this.loadKanbanBySelectedSprint()
-    }
-
-    loadKanbanBySelectedSprint() {
-        let sprintId = this.sprintService.getStoredSprintId()
-        if (sprintId != null && sprintId != 0) {
-            this.kanbanService.getAllKanbanBySprintId(sprintId).subscribe(
-                data => {
-                    this.kanban = data
-                },
-                err => {
-                    this.returnPrincipalError(err)
-                }
-            )
-        }
-    }
 
 
     /***************************
@@ -289,14 +188,17 @@ export class KanbanComponent implements OnInit {
     }
 
     disableColumn(kanbanColumn: any) {
-        this.kanbanService.disableKanbanColumn(kanbanColumn.id).subscribe(
-            res => {
-                this.loadKanbanBySelectedSprint()
-            },
-            err => {
-                this.returnPrincipalError(err)
-            }
-        )
+        if (confirm("Are you sure to disable " + kanbanColumn.title + '?')) {
+            this.kanbanService.disableKanbanColumn(kanbanColumn.id).subscribe(
+                res => {
+                    this.containError = false
+                    this.loadKanbanBySelectedSprint()
+                },
+                err => {
+                    this.returnPrincipalError(err)
+                }
+            )
+        }
     }
 
     /***************************
@@ -352,32 +254,10 @@ export class KanbanComponent implements OnInit {
     }
 
     disableTask(kanbanTask: any) {
-        this.kanbanService.disableKanbanTask(kanbanTask.id).subscribe(
-            res => {
-                this.loadKanbanBySelectedSprint()
-            },
-            err => {
-                this.returnPrincipalError(err)
-            }
-        )
-    }
-
-
-    /***************************
-       METHODS -> DRAG & DROP
-    ***************************/
-
-    dropColumn(event: CdkDragDrop<any>) {
-        if (event.container && event.previousContainer) {
-            let kanbanColumnUpdate: KanbanColumnUpdate = new KanbanColumnUpdate(event.item.data.id, event.item.data.title, event.currentIndex)
-
-            this.kanbanService.updateKanbanColumn(kanbanColumnUpdate).subscribe(
-                data => {
-                    transferArrayItem(event.previousContainer.data,
-                        event.container.data,
-                        event.previousIndex,
-                        event.currentIndex);
-
+        if (confirm("Are you sure to disable #" + kanbanTask.number + ' ' + kanbanTask.title + '?')) {
+            this.kanbanService.disableKanbanTask(kanbanTask.id).subscribe(
+                res => {
+                    this.containError = false
                     this.loadKanbanBySelectedSprint()
                 },
                 err => {
@@ -387,6 +267,11 @@ export class KanbanComponent implements OnInit {
         }
     }
 
+
+    /***************************
+       METHODS -> DRAG & DROP
+    ***************************/
+
     dropTask(event: CdkDragDrop<any>) {
         if (event.container && event.previousContainer) {
             let newPosition = event.currentIndex
@@ -394,6 +279,7 @@ export class KanbanComponent implements OnInit {
 
             this.kanbanService.moveKanbanTask(kanbanTaskMove).subscribe(
                 data => {
+                    this.containError = false
                     this.loadKanbanBySelectedSprint()
                 },
                 err => {

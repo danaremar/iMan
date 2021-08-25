@@ -1,19 +1,20 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { Project } from "src/app/models/project/project";
-import { ProjectRole } from "src/app/models/project/roles";
 import { SprintCreate, SprintShow, SprintUpdate } from "src/app/models/sprint/sprint";
 import { TokenService } from "src/app/services/authentication/token.service";
+import { EffortService } from "src/app/services/effort/effort.service";
+import { KanbanService } from "src/app/services/kanban/kanban.service";
 import { ProjectService } from "src/app/services/projects/project.service";
+import { EffortReportService } from "src/app/services/reports/effortReport.service";
 import { SprintService } from "src/app/services/sprints/sprint.service";
+import { ImanSubmodule } from "../submodule.component";
 
 @Component({
     selector: 'iMan-sprint',
     templateUrl: './sprint.component.html',
     styleUrls: ['./sprint.component.css']
 })
-export class SprintComponent implements OnInit {
-
+export class SprintComponent extends ImanSubmodule implements OnInit {
 
     @ViewChild('closebuttonCreate') closebuttonCreate: any;
     @ViewChild('closebuttonUpdate') closebuttonUpdate: any;
@@ -36,7 +37,15 @@ export class SprintComponent implements OnInit {
     updateSprintMessageError: string | undefined
     sprintSelectedId: any
 
-    constructor(private sprintService: SprintService, private projectService: ProjectService, private formBuilder: FormBuilder, private tokenService: TokenService) {
+    effortReport: any
+    sprintSelected: any
+    pieChartEffortsByTask = [] as any
+    pieChartEffortsByUser = [] as any
+
+    constructor(private effortReportService: EffortReportService, effortService: EffortService, kanbanService: KanbanService, sprintService: SprintService, projectService: ProjectService, formBuilder: FormBuilder, tokenService: TokenService) {
+        
+        super(effortService,kanbanService,sprintService,projectService,formBuilder,tokenService)
+
         this.formNewSprint = formBuilder.group({
             title: ['', [Validators.required]],
             description: ['', []],
@@ -57,82 +66,13 @@ export class SprintComponent implements OnInit {
         this.loadActualDate()
     }
 
-    loadMyProjects(): any {
-        this.projectService.myProjects().subscribe(
-            data => {
-                this.myProjects = data
-                this.projectSelectedId = this.projectService.getStoredProjectId()
-                this.loadFirstProject()
-            },
-            err => {
-                this.returnPrincipalError(err)
-            }
-        )
-    }
-
-    loadActualDate() {
-        let dtToday = new Date()
-
-        let month: string = String(dtToday.getMonth() + 1)
-        let day: string = String(dtToday.getDate())
-        let year: string = String(dtToday.getFullYear())
-
-        if (Number(month) < 10)
-            month = '0' + month.toString();
-        if (Number(day) < 10)
-            day = '0' + day.toString();
-
-        this.actualDate = year + '-' + month + '-' + day;
-    }
-
-    returnPrincipalError(err: any) {
-        var r = err.error.text
-        if (r == undefined) {
-            r = 'Error produced'
-        }
-        this.messageError = r;
-        this.containError = true
-    }
-
-    loadFirstProject() {
-        if (this.myProjects.length !== 0) {
-            let projectId = this.projectService.getStoredProjectId()
-            if (projectId == null || projectId == 0) {
-                this.projectService.setStoredProjectId(this.myProjects[0].id)
-            }
-            this.loadSprintsBySelectedProject()
-        }
-    }
-
-    loadSprintsByProjectIdEvent(projectIdEvent: any) {
-        let projectIdStr = projectIdEvent.value
-        this.projectService.setStoredProjectId(Number(projectIdStr))
-        this.loadSprintsBySelectedProject()
-    }
-
-    editIsAllowed(projectId: number) {
-        this.accessToEdit = false
-
-        let projects: Project[] = this.myProjects
-        let selectedProject = projects.find(
-            (a) => a.id === projectId
-        )
-        if (selectedProject != undefined) {
-
-            let projectRoles: any = selectedProject.projectRoles
-
-            this.accessToEdit = projectRoles.some(
-                (a: ProjectRole) => a.user.username == this.tokenService.getUsername() && [0, 1].includes(a.role)
-            )
-        }
-    }
-
     loadSprintsBySelectedProject() {
         let projectId = this.projectService.getStoredProjectId()
         if (projectId != null && projectId != 0) {
             this.editIsAllowed(projectId)
             this.sprintService.sprintFromProject(projectId).subscribe(
                 data => {
+                    this.containError = false
                     this.mySprints = data
                 },
                 err => {
@@ -214,47 +154,88 @@ export class SprintComponent implements OnInit {
         )
     }
 
-    disableSprint(sprintId: number) {
-        this.sprintService.disableSprint(sprintId).subscribe(
-            res => {
-                this.loadSprintsBySelectedProject()
-            },
-            err => {
-                this.returnPrincipalError(err)
-            }
-        )
-    }
-
-    startSprint(sprintId: number) {
-        this.sprintService.startSprint(sprintId).subscribe(
-            res => {
-                this.loadSprintsBySelectedProject()
-            },
-            err => {
-                this.returnPrincipalError(err)
-            }
-        )
-    }
-
-    closeSprint(sprintId: number) {
-        this.sprintService.closeSprint(sprintId).subscribe(
-            res => {
-                this.loadSprintsBySelectedProject()
-            },
-            err => {
-                this.returnPrincipalError(err)
-            }
-        )
-    }
-
-    inputClass(form: FormGroup, property: string) {
-        if (form?.get(property)?.touched && form?.get(property)?.valid) {
-            return "is-valid"
-        } else if (form?.get(property)?.touched && form?.get(property)?.invalid) {
-            return "is-invalid"
-        } else {
-            return ""
+    disableSprint(sprint: SprintShow, number: number) {
+        if (confirm("Are you sure to disable sprint #" + number + " " + sprint.title + "?")) {
+            this.sprintService.disableSprint(sprint.id).subscribe(
+                res => {
+                    this.containError = false
+                    this.loadSprintsBySelectedProject()
+                },
+                err => {
+                    this.returnPrincipalError(err)
+                }
+            )
         }
     }
 
+    startSprint(sprint: SprintShow, number: number) {
+        if (confirm("Are you sure to start sprint #" + number + " " + sprint.title + "?")) {
+            this.sprintService.startSprint(sprint.id).subscribe(
+                res => {
+                    this.containError = false
+                    this.loadSprintsBySelectedProject()
+                },
+                err => {
+                    this.returnPrincipalError(err)
+                }
+            )
+        }
+    }
+
+    closeSprint(sprint: SprintShow, number: number) {
+        if (confirm("Are you sure to close sprint #" + number + " " + sprint.title + "?")) {
+            this.sprintService.closeSprint(sprint.id).subscribe(
+                res => {
+                    this.containError = false
+                    this.loadSprintsBySelectedProject()
+                },
+                err => {
+                    this.returnPrincipalError(err)
+                }
+            )
+        }
+    }
+
+
+    loadEffortReport(sprint: SprintShow, number: number) {
+        this.sprintSelected = sprint
+        this.sprintSelected.number = number
+        this.effortReportService.getEffortReportBySprintId(sprint.id).subscribe(
+            data => {
+                this.effortReport = data
+                this.containError = false
+                this.loadPieChartEffortsByTask()
+                this.loadPieChartEffortsByUser()
+            },
+            err => {
+                this.returnPrincipalError(err)
+            }
+        )
+    }
+
+    timeToDoubleString(number: number): string {
+        if (number == null) number = 0
+        return (number % 1 ? number.toFixed(3) : number) + ''
+    }
+
+    loadPieChartEffortsByTask() {
+        this.pieChartEffortsByTask=[]
+        for (let e of this.effortReport.effortsByTask) {
+            this.pieChartEffortsByTask.push({
+                name: '#' + e.kanbanTask.number + ': ' + e.kanbanTask.title,
+                value: e.percentageEffort
+            })
+        }
+    }
+
+    loadPieChartEffortsByUser() {
+        this.pieChartEffortsByUser=[]
+        for (let e of this.effortReport.effortsByUser) {
+            this.pieChartEffortsByUser.push({
+                name: '@' + e.user.username,
+                value: e.percentageEffort
+            })
+        }
+    }
+    
 }

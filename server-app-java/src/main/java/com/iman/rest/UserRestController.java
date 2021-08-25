@@ -6,7 +6,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,17 +16,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.iman.config.ImanMessages;
 import com.iman.exceptions.users.DuplicatedEmail;
+import com.iman.exceptions.users.DuplicatedUsername;
+import com.iman.exceptions.users.IncorrectPassword;
 import com.iman.exceptions.users.UserNotFound;
 import com.iman.model.users.User;
-import com.iman.model.users.UserCreateDto;
 import com.iman.model.users.UserMyProfileDto;
 import com.iman.model.users.UserShowDto;
+import com.iman.model.users.UserUpdateDto;
+import com.iman.model.util.Message;
 import com.iman.service.users.UserService;
 
 import io.swagger.annotations.Api;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/profile")
 @Api(tags = "Users")
 @CrossOrigin
 public class UserRestController {
@@ -44,7 +46,7 @@ public class UserRestController {
 	}
 
 	private ResponseEntity<Object> userNotFoundResponse() {
-		return new ResponseEntity<>(ImanMessages.USER_NOT_FOUND_MESSAGE, HttpStatus.NOT_FOUND);
+		return new ResponseEntity<>(new Message(ImanMessages.USER_NOT_FOUND_MESSAGE), HttpStatus.NOT_FOUND);
 	}
 
 	@GetMapping(value = "/{user_username}")
@@ -73,35 +75,36 @@ public class UserRestController {
 	}
 
 	@PutMapping
-	public ResponseEntity<Object> updateUser(@RequestBody @Valid UserCreateDto userModifyDto) {
-		User user = modelMapper.map(userModifyDto, User.class);
+	public ResponseEntity<Object> updateUser(@RequestBody @Valid UserUpdateDto userUpdateDto) {
 		try {
-			userService.updateUser(user);
+			userService.updateUser(userUpdateDto);
 			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (UserNotFound e) {
 			return userNotFoundResponse();
 		} catch (DuplicatedEmail e) {
-			return new ResponseEntity<>(ImanMessages.USER_DUPLICATED_EMAIL_MESSAGE, HttpStatus.CONFLICT);
-		} catch (AuthenticationException e) {
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User or password is invalid");
+			return new ResponseEntity<>(new Message(ImanMessages.USER_DUPLICATED_EMAIL_MESSAGE), HttpStatus.CONFLICT);
+		} catch (DuplicatedUsername e) {
+			return new ResponseEntity<>(new Message(ImanMessages.USER_USERNAME_DUPLICATED_MESSAGE), HttpStatus.CONFLICT);
+		} catch (IncorrectPassword e) {
+			return new ResponseEntity<>(new Message(ImanMessages.USER_OLD_PASSWORD_INCORRECT), HttpStatus.CONFLICT);
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
-	@DeleteMapping(value = "/{user_id}")
-	public ResponseEntity<Object> deleteUserById(@PathVariable(name = "user_id") Long id) {
+	@DeleteMapping
+	public ResponseEntity<Object> deleteUserById() {
 		try {
-			userService.deleteUserById(id);
-			return new ResponseEntity<>(ImanMessages.USER_DISABLED_MESSAGE, HttpStatus.OK);
+			userService.deleteUserById();
+			return new ResponseEntity<>(new Message(ImanMessages.USER_DISABLED_MESSAGE), HttpStatus.OK);
 		} catch (UserNotFound e) {
-			return new ResponseEntity<>(ImanMessages.USER_NOT_FOUND_MESSAGE, HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(new Message(ImanMessages.USER_NOT_FOUND_MESSAGE), HttpStatus.NOT_FOUND);
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 	
-	@GetMapping(value = "/my-profile")
+	@GetMapping
 	public ResponseEntity<Object> getMyProfile() {
 		User user = userService.findUserByUsername(userService.getCurrentUsername());
 		if(user!=null) {

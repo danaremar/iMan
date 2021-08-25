@@ -1,4 +1,5 @@
 export const environment = {
   production: true,
-  backendEndpoint: "localhost"
+  backendEndpoint: "http://localhost:8080",
+  enableElectron: true
 };
