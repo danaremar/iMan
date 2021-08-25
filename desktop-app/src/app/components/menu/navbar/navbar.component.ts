@@ -1,6 +1,5 @@
 import { Component, OnInit } from "@angular/core";
 import { IpcRenderer } from "electron";
-// import * as electron from "electron";
 import { environment } from "src/environments/environment";
 
 @Component({

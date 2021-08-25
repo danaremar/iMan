@@ -6,6 +6,7 @@ import { NewUser } from "src/app/models/user/new-user";
 import { AuthenticationService } from "src/app/services/authentication/authentication.service";
 import { TokenService } from "src/app/services/authentication/token.service";
 import { CountryService } from "src/app/services/util/country-service";
+import { environment } from "src/environments/environment";
 
 
 @Component({
@@ -29,6 +30,8 @@ export class AuthComponent implements OnInit {
     countriesDictionary: any = this.countryService.getAllCountriesByISO3166()
     countries: any = Object.values(this.countriesDictionary)
 
+    enabledElectron: boolean = false
+
     constructor(private tokenService: TokenService, private authenticationService: AuthenticationService, private formBuilder: FormBuilder, private router: Router, private countryService: CountryService) {
         this.formLogin = formBuilder.group({
             username: ['', [Validators.required, Validators.maxLength(50), Validators.minLength(3)]],
@@ -50,6 +53,7 @@ export class AuthComponent implements OnInit {
             this.isLogged = true
             this.router.navigateByUrl("/")
         }
+        this.enabledElectron = environment.enableElectron
     }
 
     onLogin() {

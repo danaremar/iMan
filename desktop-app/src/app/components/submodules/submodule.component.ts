@@ -205,7 +205,7 @@ export class ImanSubmodule {
     loadFirstTask() {
         if (this.myTasks.length !== 0) {
             let taskId = this.kanbanService.getStoredKanbanTaskId()
-            if (taskId == undefined && taskId == 0) {
+            if (taskId == undefined || taskId == 0) {
                 this.kanbanService.setStoredKanbanTaskId(this.myTasks[0].id)
             }
         }

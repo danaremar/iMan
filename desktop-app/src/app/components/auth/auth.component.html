@@ -1,4 +1,7 @@
-<div class="dark-background overflow-auto">
+
+<iMan-navbar *ngIf="enabledElectron" ></iMan-navbar>
+
+<div class="dark-background" style="{{enabledElectron?'height: calc(100vh - var(--navbar-size) ) !important':''}}">
 
     <div id="loginCard" class="card bg-dark-5" style="width: 320px;">
 

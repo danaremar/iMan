@@ -149,7 +149,7 @@ export class ProjectComponent extends ImanSubmodule implements OnInit {
     }
 
     enableDisableProject(project: Project) {
-        if (confirm("Are you sure to start sprint " + project.name + '?')) {
+        if (confirm("Are you sure to disable project " + project.name + '?')) {
             this.projectService.enableDisableProject(project.id).subscribe(
                 res => {
                     this.containError = false

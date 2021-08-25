@@ -12,7 +12,6 @@ createWindow = () => {
         height: 600,
         title: "iMan",
         resizable: true,
-        isMaximized: true,
         frame: false,
         icon: "src/favicon.ico",
         webPreferences: {
@@ -22,8 +21,8 @@ createWindow = () => {
         }
     });
 
+    appWin.maximize()
     appWin.loadURL(`file://${__dirname}/dist/index.html`);
-
     appWin.setMenu(null);
 
     appWin.webContents.openDevTools();
