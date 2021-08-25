@@ -168,8 +168,8 @@ export class SprintComponent extends ImanSubmodule implements OnInit {
         }
     }
 
-    startSprint(sprint: SprintShow) {
-        if (confirm("Are you sure to start sprint " + sprint.title + '?')) {
+    startSprint(sprint: SprintShow, number: number) {
+        if (confirm("Are you sure to start sprint #" + number + " " + sprint.title + "?")) {
             this.sprintService.startSprint(sprint.id).subscribe(
                 res => {
                     this.containError = false
@@ -182,8 +182,8 @@ export class SprintComponent extends ImanSubmodule implements OnInit {
         }
     }
 
-    closeSprint(sprint: SprintShow) {
-        if (confirm("Are you sure to close sprint " + sprint.title + '?')) {
+    closeSprint(sprint: SprintShow, number: number) {
+        if (confirm("Are you sure to close sprint #" + number + " " + sprint.title + "?")) {
             this.sprintService.closeSprint(sprint.id).subscribe(
                 res => {
                     this.containError = false

@@ -33,14 +33,14 @@
                     <div *ngIf="adminAccess">
 
                         <!-- START -->
-                        <a *ngIf="determineSprintTimeStatus(s)=='future'" ngbTooltip="Start" (click)="startSprint(s.id)"
+                        <a *ngIf="determineSprintTimeStatus(s)=='future'" ngbTooltip="Start" (click)="startSprint(s, mySprints.length-i)"
                             placement="left" [openDelay]="300">
                             <em class="bi bi-play-circle-fill me-3"></em>
                         </a>
 
                         <!-- CLOSE -->
                         <a *ngIf="determineSprintTimeStatus(s)=='present'" ngbTooltip="Close"
-                            (click)="closeSprint(s.id)" placement="left" [openDelay]="300">
+                            (click)="closeSprint(s, mySprints.length-i)" placement="left" [openDelay]="300">
                             <em class="bi bi-square-fill me-3"></em>
                         </a>
 

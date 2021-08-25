@@ -24,9 +24,7 @@ public class SprintUpdateDto {
 	@Length(max = 255)
 	private String description;
 	
-	@FutureOrPresent
 	private LocalDate startDate;
 
-	@FutureOrPresent
 	private LocalDate estimatedDate;
 }
