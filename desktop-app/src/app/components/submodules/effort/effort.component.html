@@ -16,9 +16,9 @@
         <div class="d-flex mx-3" *ngIf="mySprints && mySprints.length!=0  && !changedToDescription">
             <em class="bi bi-medium bi-arrow-repeat me-2" ngbTooltip="Sprint" placement="bottom" [openDelay]="300"></em>
             <select class="m-auto" (change)="loadKanbanBySprintIdEvent($event.target)">
-                <option class="dark-text" *ngFor="let s of mySprints" [attr.selected]="s.id==sprintSelectedId?true:null"
+                <option class="dark-text" *ngFor="let s of mySprints; let i=index" [attr.selected]="s.id==sprintSelectedId?true:null"
                     [ngValue]="s" value="{{s.id}}">
-                    #{{s.number}}: {{s.title}}</option>
+                    #{{mySprints.length-i}}: {{s.title}}</option>
             </select>
         </div>
 
