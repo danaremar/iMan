@@ -1,7 +1,6 @@
 package com.iman.model.sprints;
 
 import java.time.LocalDate;
-import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
