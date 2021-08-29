@@ -28,25 +28,25 @@
         <div class="card card-list">
             <div class="inside-card">
                 <div class="d-flex flex-wrap">
-                    <div class="flex-grow-1 center b-text align-middle">#{{mySprints.length-i}}: {{s.title}}</div>
+                    <div class="flex-grow-1 center b-text align-middle">#{{s.number}}: {{s.title}}</div>
 
                     <div *ngIf="adminAccess">
 
                         <!-- START -->
-                        <a *ngIf="determineSprintTimeStatus(s)=='future'" ngbTooltip="Start" (click)="startSprint(s, mySprints.length-i)"
+                        <a *ngIf="determineSprintTimeStatus(s)=='future'" ngbTooltip="Start" (click)="startSprint(s)"
                             placement="left" [openDelay]="300">
                             <em class="bi bi-play-circle-fill me-3"></em>
                         </a>
 
                         <!-- CLOSE -->
                         <a *ngIf="determineSprintTimeStatus(s)=='present'" ngbTooltip="Close"
-                            (click)="closeSprint(s, mySprints.length-i)" placement="left" [openDelay]="300">
+                            (click)="closeSprint(s)" placement="left" [openDelay]="300">
                             <em class="bi bi-square-fill me-3"></em>
                         </a>
 
                         <!-- EFFORT REPORT -->
                         <a ngbTooltip="Effort report" data-bs-toggle="modal" data-bs-target="#effortReportModal"
-                            (click)="loadEffortReport(s,mySprints.length-i)" placement="left" [openDelay]="300">
+                            (click)="loadEffortReport(s)" placement="left" [openDelay]="300">
                             <em class="bi bi-clock-history me-3"></em>
                         </a>
 
@@ -57,7 +57,7 @@
                         </a>
 
                         <!-- DISABLE -->
-                        <a ngbTooltip="Disable" (click)="disableSprint(s, mySprints.length-i)" placement="left"
+                        <a ngbTooltip="Disable" (click)="disableSprint(s)" placement="left"
                             [openDelay]="300">
                             <em class="bi bi-trash-fill me-3"></em>
                         </a>

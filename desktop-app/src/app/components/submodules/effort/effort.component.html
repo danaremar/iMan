@@ -18,7 +18,7 @@
             <select class="m-auto" (change)="loadKanbanBySprintIdEvent($event.target)">
                 <option class="dark-text" *ngFor="let s of mySprints; let i=index" [attr.selected]="s.id==sprintSelectedId?true:null"
                     [ngValue]="s" value="{{s.id}}">
-                    #{{mySprints.length-i}}: {{s.title}}</option>
+                    #{{s.number}}: {{s.title}}</option>
             </select>
         </div>
 

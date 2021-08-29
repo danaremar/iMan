@@ -154,8 +154,8 @@ export class SprintComponent extends ImanSubmodule implements OnInit {
         )
     }
 
-    disableSprint(sprint: SprintShow, number: number) {
-        if (confirm("Are you sure to disable sprint #" + number + " " + sprint.title + "?")) {
+    disableSprint(sprint: SprintShow) {
+        if (confirm("Are you sure to disable sprint #" + sprint.number + " " + sprint.title + "?")) {
             this.sprintService.disableSprint(sprint.id).subscribe(
                 res => {
                     this.containError = false
@@ -168,8 +168,8 @@ export class SprintComponent extends ImanSubmodule implements OnInit {
         }
     }
 
-    startSprint(sprint: SprintShow, number: number) {
-        if (confirm("Are you sure to start sprint #" + number + " " + sprint.title + "?")) {
+    startSprint(sprint: SprintShow) {
+        if (confirm("Are you sure to start sprint #" + sprint.number + " " + sprint.title + "?")) {
             this.sprintService.startSprint(sprint.id).subscribe(
                 res => {
                     this.containError = false
@@ -182,8 +182,8 @@ export class SprintComponent extends ImanSubmodule implements OnInit {
         }
     }
 
-    closeSprint(sprint: SprintShow, number: number) {
-        if (confirm("Are you sure to close sprint #" + number + " " + sprint.title + "?")) {
+    closeSprint(sprint: SprintShow) {
+        if (confirm("Are you sure to close sprint #" + sprint.number + " " + sprint.title + "?")) {
             this.sprintService.closeSprint(sprint.id).subscribe(
                 res => {
                     this.containError = false
@@ -197,9 +197,8 @@ export class SprintComponent extends ImanSubmodule implements OnInit {
     }
 
 
-    loadEffortReport(sprint: SprintShow, number: number) {
+    loadEffortReport(sprint: SprintShow) {
         this.sprintSelected = sprint
-        this.sprintSelected.number = number
         this.effortReportService.getEffortReportBySprintId(sprint.id).subscribe(
             data => {
                 this.effortReport = data
