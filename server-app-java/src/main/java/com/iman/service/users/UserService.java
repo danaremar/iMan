@@ -1,9 +1,14 @@
 package com.iman.service.users;
 
+import java.util.Collections;
 import java.util.Date;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,7 +21,9 @@ import com.iman.exceptions.users.IncorrectPassword;
 import com.iman.exceptions.users.UserNotFound;
 import com.iman.model.users.User;
 import com.iman.model.users.UserUpdateDto;
+import com.iman.model.util.Message;
 import com.iman.repository.users.UserRepository;
+import com.iman.security.exception.UnverifiedUserException;
 import com.iman.security.user.PrincipalUser;
 
 @Service
@@ -26,6 +33,9 @@ public class UserService {
 	
 	@Autowired
 	PasswordEncoder passwordEncoder;
+	
+	@Autowired
+	AuthenticationManager authenticationManager;
 
 	@Autowired
 	public UserService(UserRepository userRepository) {
@@ -70,7 +80,6 @@ public class UserService {
 	public void updateUser(UserUpdateDto user) throws UserNotFound, DuplicatedEmail, DuplicatedUsername, AuthenticationException, IncorrectPassword {
 		String username = getCurrentUsername();
 		User userBefore = findUserByUsername(username);
-		String oldCypheredPassword = this.passwordEncoder.encode(user.getOldPassword());
 		
 		if (userBefore == null) {
 			throw new UserNotFound();
@@ -81,8 +90,15 @@ public class UserService {
 		if (!user.getEmail().equals(userBefore.getEmail()) && findUserByEmail(user.getEmail()) != null) {
 			throw new DuplicatedEmail();
 		}
-		if(!userBefore.getPassword().equals(oldCypheredPassword)) {
+		
+		// verify password
+		try {
+			Authentication authentication = this.authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+					username, user.getOldPassword(), Collections.emptyList()));
+		} catch (AuthenticationException e) {
 			throw new IncorrectPassword();
+		} catch (UnverifiedUserException e) {
+			throw new UserNotFound();
 		}
 		
 		
