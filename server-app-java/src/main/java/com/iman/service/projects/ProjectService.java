@@ -172,6 +172,7 @@ public class ProjectService {
 		if (existsOtherRole(projectRole)) {
 			throw new DuplicateKeyException("This role already exists");
 		}
+		projectRole.setAccepted(false);
 		projectRoleRepository.save(projectRole);
 	}
 
