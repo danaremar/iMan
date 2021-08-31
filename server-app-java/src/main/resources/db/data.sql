@@ -28,6 +28,8 @@ INSERT INTO project2role(id, accepted, `role`, project_id, user_id) VALUES(9, 1,
 INSERT INTO project2role(id, accepted, `role`, project_id, user_id) VALUES(10, 1, 1, 3, 4);
 INSERT INTO project2role(id, accepted, `role`, project_id, user_id) VALUES(11, 1, 0, 4, 3);
 INSERT INTO project2role(id, accepted, `role`, project_id, user_id) VALUES(12, 0, 2, 4, 2);
+INSERT INTO project2role (id, accepted, `role`, project_id, user_id) VALUES(13, 0, 2, 4, 1);
+
 
 
 -- SPRINTS

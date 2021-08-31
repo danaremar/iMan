@@ -83,8 +83,7 @@ export class SprintComponent extends ImanSubmodule implements OnInit {
     }
 
     determineSprintTimeStatus(sprint: SprintShow): string {
-        let isfuture = (new Date(sprint.startDate)) > (new Date())
-        if (sprint.startDate == null || isfuture) {
+        if (sprint.startDate == null) {
             return 'future'
         } else if (sprint.closeDate != null) {
             return 'past'
