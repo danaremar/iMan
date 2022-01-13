@@ -62,7 +62,7 @@
 
 
             <!-- TASKS -->
-            <div class="overflow-auto scrollable-content" cdkDropList [cdkDropListData]="column"
+            <div id="dropList_{{column}}" class="overflow-auto scrollable-content" cdkDropList [cdkDropListData]="column"
                 (cdkDropListDropped)="dropTask($event)">
                 <div class="card task-card mb-3 mx-3" *ngFor="let task of column.tasks" cdkDrag [cdkDragData]="task">
                     <div class="m-3">

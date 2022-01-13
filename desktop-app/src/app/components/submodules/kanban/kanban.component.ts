@@ -68,7 +68,7 @@ export class KanbanComponent extends ImanSubmodule implements OnInit {
     constructor(effortService: EffortService, kanbanService: KanbanService, sprintService: SprintService, projectService: ProjectService, formBuilder: FormBuilder, tokenService: TokenService) {
 
 
-        super(effortService,kanbanService,sprintService,projectService,formBuilder,tokenService)
+        super(effortService, kanbanService, sprintService, projectService, formBuilder, tokenService)
         // COLUMNS
         this.formNewColumn = formBuilder.group({
             title: ['', [Validators.required]]
@@ -267,26 +267,41 @@ export class KanbanComponent extends ImanSubmodule implements OnInit {
         }
     }
 
+    
+
 
     /***************************
        METHODS -> DRAG & DROP
     ***************************/
 
-    dropTask(event: CdkDragDrop<any>) {
-        if (event.container && event.previousContainer) {
-            let newPosition = event.currentIndex
-            let kanbanTaskMove: KanbanTaskMove = new KanbanTaskMove(event.item.data.id, event.container.data.id, newPosition)
+    updateTemporallyDragDrop(event: CdkDragDrop<any>) {
+        // saved task
+        var task = this.kanban[event.previousContainer.data.id-1].tasks[event.previousIndex]
 
-            this.kanbanService.moveKanbanTask(kanbanTaskMove).subscribe(
-                data => {
-                    this.containError = false
-                    this.loadKanbanBySelectedSprint()
-                },
-                err => {
-                    this.returnPrincipalError(err)
-                }
-            )
-        }
+        // delete previous
+        this.kanban[event.previousContainer.data.id-1].tasks.splice(event.previousIndex,1)
+        
+        // add new
+        this.kanban[event.container.data.id-1].tasks.splice(event.currentIndex,0,task)
+    }
+
+    dropTask(event: CdkDragDrop<any>) {
+
+        // Update view (backend takes some time and task return to previous position)
+        // Cannot be done by moveItemInArray() or transferArrayItem()
+        this.updateTemporallyDragDrop(event)
+
+        // BACKEND
+        let kanbanTaskMove: KanbanTaskMove = new KanbanTaskMove(event.item.data.id, event.container.data.id, event.currentIndex)
+        this.kanbanService.moveKanbanTask(kanbanTaskMove).subscribe(
+            data => {
+                this.containError = false
+                this.loadKanbanBySelectedSprint()
+            },
+            err => {
+                this.returnPrincipalError(err)
+            }
+        )
     }
 
 }
