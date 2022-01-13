@@ -31,7 +31,6 @@ INSERT INTO project2role(id, accepted, `role`, project_id, user_id) VALUES(12, 0
 INSERT INTO project2role (id, accepted, `role`, project_id, user_id) VALUES(13, 0, 2, 4, 1);
 
 
-
 -- SPRINTS
 INSERT INTO sprint (id, active, close_date, creation_date, description, estimated_date, `number`, start_date, title, project_id) VALUES(1, 1, '2021-07-21 12:35:00.335000000', '2021-07-01 12:35:00.335000000', 'Create architecture & framework', NULL, 1, '2021-07-01 12:35:00.335000000', 'Start project', 1);
 INSERT INTO sprint (id, active, close_date, creation_date, description, estimated_date, `number`, start_date, title, project_id) VALUES(2, 1, NULL, '2021-07-05 12:35:00.335000000', 'Analize client''s product', NULL, 2, '2021-07-01 12:35:00.335000000', 'Analysis', 1);
@@ -64,4 +63,3 @@ INSERT INTO effort (id, description, end_date, start_date, kanban_task_id, user_
 INSERT INTO effort (id, description, end_date, start_date, kanban_task_id, user_id) VALUES(5, NULL, '2021-08-15 10:23:13.557000000', '2021-08-15 08:52:01.793000000', 1, 1);
 INSERT INTO effort (id, description, end_date, start_date, kanban_task_id, user_id) VALUES(6, NULL, '2021-08-15 10:23:13.557000000', '2021-08-15 08:52:01.793000000', 5, 1);
 INSERT INTO effort (id, description, end_date, start_date, kanban_task_id, user_id) VALUES(7, 'Effort without assigned task', '2021-08-15 10:23:13.557000000', '2021-08-15 08:52:01.793000000', NULL, 1);
-INSERT INTO effort (id, description, end_date, start_date, kanban_task_id, user_id) VALUES(8, NULL, NULL, '2021-08-15 17:31:33.652000000', 3, 1);
