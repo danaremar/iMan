@@ -1,2 +1,2 @@
 cd ..
-npm s --o
+ng s --o

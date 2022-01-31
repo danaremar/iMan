@@ -15,9 +15,9 @@ createWindow = () => {
         frame: false,
         icon: "src/favicon.ico",
         webPreferences: {
-            nodeIntegration: true,
-            contextIsolation: false,
-            devTools: true
+            nodeIntegration: false,
+            contextIsolation: true,
+            devTools: false
         }
     });
 
