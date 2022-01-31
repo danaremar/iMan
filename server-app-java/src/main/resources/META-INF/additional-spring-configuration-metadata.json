@@ -1,0 +1,27 @@
+{"properties": [
+  {
+    "name": "rest.resource.images",
+    "type": "java.lang.String",
+    "description": "Resource path to images"
+  },
+  {
+    "name": "rest.resource.files",
+    "type": "java.lang.String",
+    "description": "Resource path to files"
+  },
+  {
+    "name": "iman.security.protection.csrf",
+    "type": "java.lang.Boolean",
+    "description": "Enable CSRF protection. Must be enabled in production."
+  },
+  {
+    "name": "iman.security.protection.xss",
+    "type": "java.lang.Boolean",
+    "description": "Avoid Cross Site Scripting, very usefull. Please DO NOT disable."
+  },
+  {
+    "name": "iman.security.hashEncoder",
+    "type": "java.lang.String",
+    "description": "Hash algorithm to use in password encode"
+  }
+]}

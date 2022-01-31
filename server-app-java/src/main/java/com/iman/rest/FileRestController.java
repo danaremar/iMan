@@ -19,10 +19,10 @@ import com.iman.service.users.UserService;
 import io.swagger.annotations.Api;
 
 @RestController
-@RequestMapping("/image")
-@Api(tags = "Image")
+@RequestMapping("/file")
+@Api(tags = "File")
 @CrossOrigin
-public class ImageRestController {
+public class FileRestController {
 	
 	@Autowired
 	FileService fileService;
@@ -30,24 +30,24 @@ public class ImageRestController {
 	@Autowired
 	UserService userService;
 
-	public ImageRestController(FileService fileService, UserService userService) {
+	public FileRestController(FileService fileService, UserService userService) {
 		this.fileService = fileService;
 		this.userService = userService;
 	}
 	
 	@PostMapping
-	public ResponseEntity<Object> uploadImage(@RequestParam("image") MultipartFile image) {
+	public ResponseEntity<Object> uploadFile(@RequestParam("file") MultipartFile file) {
 		try {
-			fileService.saveImage(image);
+			fileService.saveFile(file);
 			return new ResponseEntity<>(HttpStatus.CREATED);
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 	
-	@GetMapping(value = "/{imageId}")
-	public Resource downloadImage(@PathVariable Long imageId) {
-	    return fileService.getImage(imageId);
+	@GetMapping(value = "/{fileId}")
+	public Resource loadFile(@PathVariable Long fileId) {
+	    return fileService.getFile(fileId);
 	}
 
 }

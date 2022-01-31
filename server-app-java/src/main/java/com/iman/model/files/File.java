@@ -13,7 +13,7 @@ import lombok.Data;
 
 @Entity
 @Data
-@Table(name = "file", indexes = { @Index(columnList = "name") })
+@Table(name = "file_db", indexes = { @Index(columnList = "name") })
 public class File {
 	
 	@Id

@@ -1,12 +1,11 @@
 package com.iman.service.users;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.Date;
 
-
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -15,16 +14,19 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.iman.exceptions.users.DuplicatedEmail;
 import com.iman.exceptions.users.DuplicatedUsername;
 import com.iman.exceptions.users.IncorrectPassword;
 import com.iman.exceptions.users.UserNotFound;
 import com.iman.model.users.User;
 import com.iman.model.users.UserUpdateDto;
-import com.iman.model.util.Message;
+import com.iman.model.util.FileUtils;
 import com.iman.repository.users.UserRepository;
 import com.iman.security.exception.UnverifiedUserException;
 import com.iman.security.user.PrincipalUser;
+
 
 @Service
 public class UserService {
@@ -93,7 +95,7 @@ public class UserService {
 		
 		// verify password
 		try {
-			Authentication authentication = this.authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+			this.authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
 					username, user.getOldPassword(), Collections.emptyList()));
 		} catch (AuthenticationException e) {
 			throw new IncorrectPassword();
@@ -142,5 +144,41 @@ public class UserService {
 	@Transactional
 	public User getCurrentUser() {
 		return findUserById(getCurrentUserId());
+	}
+	
+	@Transactional
+	public void uploadImage(MultipartFile image) {
+		User user = getCurrentUser();
+		String path = FileUtils.imagesPath;
+		
+		// delete from path previous image
+		if(StringUtils.isNotBlank(user.getImageUid())) {
+			deleteImage(path, user);
+		}
+		
+		// create new image & update
+		String newImageUid = FileUtils.getFileNameUID(image);
+		try {
+			FileUtils.uploadToPath(image, path, newImageUid);
+			user.setImageUid(newImageUid);
+			userRepository.save(user);
+		} catch (IOException e) {
+			throw new RuntimeException();
+		}		
+	}
+	
+	@Transactional
+	public void deleteImage() {
+		String path = FileUtils.imagesPath;
+		deleteImage(path, getCurrentUser());
+	}
+	
+	@Transactional
+	public void deleteImage(String path, User user) {
+		try {
+			FileUtils.deleteFromPath(path, user.getImageUid());
+		} catch (IOException e) {
+			throw new RuntimeException();
+		}
 	}
 }

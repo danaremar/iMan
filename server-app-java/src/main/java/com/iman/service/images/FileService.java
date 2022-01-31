@@ -17,25 +17,25 @@ import com.iman.repository.files.FileRepository;
 public class FileService {
 	
 	@Autowired
-	private FileRepository imageRepository;
+	private FileRepository fileRepository;
 
-	public FileService(FileRepository imageRepository) {
-		this.imageRepository = imageRepository;
+	public FileService(FileRepository fileRepository) {
+		this.fileRepository = fileRepository;
 	}
 	
-	/** @return id of the image */
-	public Long saveImage(MultipartFile multipartImage) throws IOException {
-		File dbImage = new File();
-        dbImage.setName(multipartImage.getName());
-        dbImage.setContent(multipartImage.getBytes());
-        return imageRepository.save(dbImage).getId();
+	/** @return id of the file */
+	public Long saveFile(MultipartFile multipartFile) throws IOException {
+		File dbFile = new File();
+		dbFile.setName(multipartFile.getName());
+		dbFile.setContent(multipartFile.getBytes());
+        return fileRepository.save(dbFile).getId();
 	}
 	
-	public Resource getImage(Long imageId) {
-	    byte[] image = imageRepository.findById(imageId)
+	public Resource getFile(Long fileId) {
+	    byte[] file = fileRepository.findById(fileId)
 	      .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND))
 	      .getContent();
 
-	    return new ByteArrayResource(image);
+	    return new ByteArrayResource(file);
 	}
 }
