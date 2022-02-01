@@ -20,7 +20,8 @@ public class ImanApiApplication {
 			@Override
 			public void addResourceHandlers(ResourceHandlerRegistry registry) {
 				registry.addResourceHandler("/images/**")
-	        		.addResourceLocations("classpath:/images/");
+					.addResourceLocations("file:src/main/resources/images/");
+	        		//.addResourceLocations("file:///D:/images/");
 			}
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
