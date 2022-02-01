@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.google.common.io.Files;
+
 @Service
 public class FileUtils {
 
@@ -19,14 +21,6 @@ public class FileUtils {
 
 	@Value("rest.resource.files")
 	public static String filesPath = "src/main/resources/files/";
-	
-	public static String getExtension(String filename) {
-		if(StringUtils.isNotBlank(filename) && filename.contains(".")) {
-			return filename.substring(filename.indexOf('.'));
-		} else {
-			return null;
-		}
-	}
 
 	public static String getFileName(MultipartFile file) {
 		return file.getResource().getFilename();
@@ -37,7 +31,7 @@ public class FileUtils {
 	}
 
 	public static String getFileNameUID(String fileName) {
-		return UUID.randomUUID().toString() + getExtension(fileName);
+		return UUID.randomUUID().toString() + "." + Files.getFileExtension(fileName);
 	}
 
 	public static void uploadToPath(MultipartFile file, String path) throws IllegalStateException, IOException {

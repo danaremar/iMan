@@ -6,6 +6,7 @@ import java.util.Date;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -33,9 +34,11 @@ public class UserService {
 
 	private UserRepository userRepository;
 	
+	@Lazy
 	@Autowired
 	PasswordEncoder passwordEncoder;
 	
+	@Lazy
 	@Autowired
 	AuthenticationManager authenticationManager;
 
