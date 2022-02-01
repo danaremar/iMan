@@ -18,7 +18,7 @@ body {
     --dark-pallete-4: #252526;
     --dark-pallete-5: #1e1e1e;
     --dark-pallete-text: #8d949b;
-    --dark-contrast-text: rgb(206, 206, 206);
+    --dark-contrast-text: #cecece;
     --navbar-size: 50px;
     --sidebar-size: 65px;
 }
@@ -94,7 +94,7 @@ a{
     cursor: pointer !important;
 }
 
-.bi-medium {
+.bi-md {
     font-size: 25px !important;
 }
 

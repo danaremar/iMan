@@ -20,5 +20,7 @@ public class UserMyProfileDto {
 	private String country;
 
 	private String sector;
+	
+	private String imageUid;
 
 }

@@ -5,15 +5,20 @@ import javax.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.iman.config.ImanMessages;
 import com.iman.exceptions.users.DuplicatedEmail;
 import com.iman.exceptions.users.DuplicatedUsername;
@@ -45,7 +50,7 @@ public class UserRestController {
 		this.userService = userService;
 	}
 
-	private ResponseEntity<Object> userNotFoundResponse() {
+	private ResponseEntity<Object> UserNotFoundResponse() {
 		return new ResponseEntity<>(new Message(ImanMessages.USER_NOT_FOUND_MESSAGE), HttpStatus.NOT_FOUND);
 	}
 
@@ -57,7 +62,7 @@ public class UserRestController {
 			if (user != null) {
 				return new ResponseEntity<>(userShowDto, HttpStatus.OK);
 			} else {
-				return userNotFoundResponse();
+				return UserNotFoundResponse();
 			}
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -80,7 +85,7 @@ public class UserRestController {
 			userService.updateUser(userUpdateDto);
 			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (UserNotFound e) {
-			return userNotFoundResponse();
+			return UserNotFoundResponse();
 		} catch (DuplicatedEmail e) {
 			return new ResponseEntity<>(new Message(ImanMessages.USER_DUPLICATED_EMAIL_MESSAGE), HttpStatus.CONFLICT);
 		} catch (DuplicatedUsername e) {
@@ -111,7 +116,28 @@ public class UserRestController {
 			UserMyProfileDto userMyProfileDto = modelMapper.map(user, UserMyProfileDto.class);
 			return new ResponseEntity<>(userMyProfileDto, HttpStatus.OK);
 		} else {
-			return userNotFoundResponse();
+			return UserNotFoundResponse();
 		}
 	}
+	
+	@PostMapping(value = "/image")
+	public ResponseEntity<Object> uploadImage(@RequestParam("image") MultipartFile image) {
+		try {
+			userService.uploadImage(image);
+			return new ResponseEntity<>(null, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<Object>(new Message("Image cannot be updated"), HttpStatus.CONFLICT);
+		}
+	}
+	
+	@DeleteMapping(value = "/image")
+	public ResponseEntity<Object> deleteImage() {
+		try {
+			userService.deleteImage();
+			return new ResponseEntity<>(null, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<Object>(new Message("Image cannot be deleted"), HttpStatus.CONFLICT);
+		}
+	}
+	
 }

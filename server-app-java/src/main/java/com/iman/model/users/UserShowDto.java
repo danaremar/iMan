@@ -16,4 +16,6 @@ public class UserShowDto {
 	private String lastName;
 
 	private String email;
+	
+	private String imageUid;
 }

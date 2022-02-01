@@ -4,7 +4,7 @@
 
         <!-- my projects -->
         <div class="d-flex mx-3" *ngIf="myProjects && myProjects.length!=0 && !changedToDescription">
-            <em class="bi bi-medium bi-folder2 me-2" ngbTooltip="Project" placement="bottom" [openDelay]="300"></em>
+            <em class="bi bi-md bi-folder2 me-2" ngbTooltip="Project" placement="bottom" [openDelay]="300"></em>
             <select class="m-auto" (change)="loadSprintsByProjectIdEvent($event.target)">
                 <option class="dark-text" *ngFor="let p of myProjects"
                     [attr.selected]="p.id==projectSelectedId?true:null" [ngValue]="p" value="{{p.id}}">
@@ -14,7 +14,7 @@
 
         <!-- my sprints -->
         <div class="d-flex mx-3" *ngIf="mySprints && mySprints.length!=0  && !changedToDescription">
-            <em class="bi bi-medium bi-arrow-repeat me-2" ngbTooltip="Sprint" placement="bottom" [openDelay]="300"></em>
+            <em class="bi bi-md bi-arrow-repeat me-2" ngbTooltip="Sprint" placement="bottom" [openDelay]="300"></em>
             <select class="m-auto" (change)="loadKanbanBySprintIdEvent($event.target)">
                 <option class="dark-text" *ngFor="let s of mySprints; let i=index" [attr.selected]="s.id==sprintSelectedId?true:null"
                     [ngValue]="s" value="{{s.id}}">
@@ -24,7 +24,7 @@
 
         <!-- my tasks -->
         <div class="d-flex mx-3" *ngIf="myTasks && myTasks.length!=0 && !changedToDescription">
-            <em class="bi bi-medium bi-check2-square me-2" ngbTooltip="Task" placement="bottom" [openDelay]="300"></em>
+            <em class="bi bi-md bi-check2-square me-2" ngbTooltip="Task" placement="bottom" [openDelay]="300"></em>
             <select class="m-auto" (change)="loadTasksBySprintIdEvent($event.target)">
                 <option class="dark-text" *ngFor="let t of myTasks"
                     [attr.selected]="t.id==kanbanTaskSelectedId?true:null" [ngValue]="t.id" value="{{t.id}}">
@@ -35,9 +35,9 @@
         <!-- change assigned/without assigned -->
         <div class="d-flex mx-3 {{changedToDescription?'w-100':''}}">
             <a (click)="changeViewDescription()">
-                <em *ngIf="changedToDescription" class="bi bi-medium bi-check2-square me-2" ngbTooltip="Asigned task"
+                <em *ngIf="changedToDescription" class="bi bi-md bi-check2-square me-2" ngbTooltip="Asigned task"
                     placement="left" [openDelay]="300"></em>
-                <em *ngIf="!changedToDescription" class="bi bi-medium bi-chat-left-text-fill me-2"
+                <em *ngIf="!changedToDescription" class="bi bi-md bi-chat-left-text-fill me-2"
                     ngbTooltip="Unnasigned task" placement="left" [openDelay]="300"></em>
             </a>
 
@@ -95,21 +95,21 @@
 
                             <!-- project name -->
                             <div *ngIf="effort.project!=null" class="d-flex mx-3">
-                                <em class="bi bi-medium bi-folder2 me-2" ngbTooltip="Project" placement="bottom"
+                                <em class="bi bi-md bi-folder2 me-2" ngbTooltip="Project" placement="bottom"
                                     [openDelay]="300"></em>
                                 <div class="m-auto">{{effort.project.name}}</div>
                             </div>
 
                             <!-- sprint -->
                             <div *ngIf="effort.sprint!=null" class="d-flex mx-3">
-                                <em class="bi bi-medium bi-arrow-repeat me-2" ngbTooltip="Sprint" placement="bottom"
+                                <em class="bi bi-md bi-arrow-repeat me-2" ngbTooltip="Sprint" placement="bottom"
                                     [openDelay]="300"></em>
                                 <div class="m-auto">#{{effort.sprint.number}}: {{effort.sprint.title}}</div>
                             </div>
 
                             <!-- task -->
                             <div class="d-flex mx-3">
-                                <em class="bi bi-medium bi-check2-square me-2" ngbTooltip="Task" placement="bottom"
+                                <em class="bi bi-md bi-check2-square me-2" ngbTooltip="Task" placement="bottom"
                                     [openDelay]="300"></em>
                                 <div class="m-auto">#{{effort.kanbanTask.number}}: {{effort.kanbanTask.title}}</div>
                             </div>
@@ -118,7 +118,7 @@
                         <!-- SHOW EFFORT WITH DESCRIPTION -->
                         <ng-template #descriptionEffort>
                             <div class="d-flex mx-3">
-                                <em class="bi bi-medium bi-card-text"></em>
+                                <em class="bi bi-md bi-card-text"></em>
                                 <div class="m-auto mx-3 text-break">{{effort.description}}</div>
                             </div>
                         </ng-template>
@@ -155,12 +155,12 @@
                     <!-- EDIT EFFORT -->
                     <a (click)="fillUpdateForm(effort)" ngbTooltip="Edit effort" placement="left" [openDelay]="300"
                         data-bs-toggle="modal" data-bs-target="#updateEffortModal">
-                        <em class="bi bi-medium bi-pencil-fill me-2 m-auto"></em>
+                        <em class="bi bi-md bi-pencil-fill me-2 m-auto"></em>
                     </a>
 
                     <!-- DELETE EFFORT -->
                     <a (click)="deleteEffort(effort.id)" ngbTooltip="Delete effort" placement="left" [openDelay]="300">
-                        <em class="bi bi-medium bi-trash-fill me-2 m-auto"></em>
+                        <em class="bi bi-md bi-trash-fill me-2 m-auto"></em>
                     </a>
 
                 </div>

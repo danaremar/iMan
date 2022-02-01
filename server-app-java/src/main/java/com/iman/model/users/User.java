@@ -66,6 +66,8 @@ public class User {
 	@NotBlank
 	@Length(max = 20)
 	private String sector;
+	
+	private String imageUid;
 
 	@JsonIgnore
 	@PastOrPresent

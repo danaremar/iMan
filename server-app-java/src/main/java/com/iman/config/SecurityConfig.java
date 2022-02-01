@@ -1,7 +1,10 @@
 package com.iman.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -21,6 +24,7 @@ import com.iman.security.user.UserDetailsServiceImpl;
 @Component
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
+@ConfigurationProperties("iman")
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
@@ -28,6 +32,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	JwtEntryPoint jwtEntryPoint;
+	
+	@Value("${iman.security.protection.xss}")
+	public Boolean enableXssProtection = Boolean.TRUE;
+	
+	@Value("${iman.security.protection.csrf}")
+	public Boolean enableCsrfProtection = Boolean.FALSE;
+	
+	@Value("${iman.security.hashEncoder}")
+	public String hashEncoder = "SHA3-256";
 
 	@Bean
 	public JwtTokenFilter jwtTokenFilter() {
@@ -36,7 +49,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Bean
 	public PasswordEncoder passwordEncoder() {
-		return new MessageDigestPasswordEncoder("SHA3-256");
+		// TODO: implement new password encoder
+		return new MessageDigestPasswordEncoder(hashEncoder);
 	}
 
 	@Override
@@ -52,13 +66,26 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.csrf().disable().authorizeRequests()
+		
+		// XSS protection
+		if(enableXssProtection) {
+			http.headers().xssProtection().and().contentSecurityPolicy("script-src 'self'");
+		}
+		
+		// CSRF protection
+		if(!enableCsrfProtection) {
+			http.csrf().disable();
+		}
+		
+		// Requests
+		http.authorizeRequests()
 				.antMatchers("/login", "/register", "/v2/api-docs", "/configuration/ui", "/swagger-resources/**",
-						"/configuration/security", "/swagger-ui.html", "/webjars/**")
+						"/configuration/security", "/swagger-ui.html", "/webjars/**", "/resources/**")
 				.permitAll()
-				//.anyRequest().authenticated()
+				// .anyRequest().authenticated()
 				// .anyRequest().permitAll()
-				.and().exceptionHandling().authenticationEntryPoint(jwtEntryPoint).and().sessionManagement()
+				.and().exceptionHandling()
+				.authenticationEntryPoint(jwtEntryPoint).and().sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
 		http.addFilterBefore(jwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
