@@ -23,9 +23,9 @@ export class AppComponent {
   ngOnInit() {
     const token = this.tokenService.getToken()
 
-    if(token==null){
+    if (token == null) {
       this.router.navigate(["/login"])
-    } else if(token && this.isExpiredToken(token)) {
+    } else if (token && this.isExpiredToken(token)) {
       this.tokenService.logOut();
       this.toastr.error("Expired session")
       this.router.navigate(["/"]).then(() => { this.reload() })
