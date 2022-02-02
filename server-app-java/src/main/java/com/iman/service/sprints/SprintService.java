@@ -111,7 +111,7 @@ public class SprintService {
 	public void enableSprint(Long sprintId) {
 		Sprint sprintOld = findById(sprintId);
 		projectService.verifyOwnerOrAdmin(sprintOld.getProject());
-		if(!sprintOld.getActive()) {
+		if(Boolean.FALSE.equals(sprintOld.getActive())) {
 			sprintOld.setActive(true);
 			sprintRepository.save(sprintOld);
 		}
@@ -121,7 +121,7 @@ public class SprintService {
 	public void disableSprint(Long sprintId) {
 		Sprint sprintOld = findById(sprintId);
 		projectService.verifyOwnerOrAdmin(sprintOld.getProject());
-		if(sprintOld.getActive()) {
+		if(Boolean.TRUE.equals(sprintOld.getActive())) {
 			sprintOld.setActive(false);
 			sprintRepository.save(sprintOld);
 		}

@@ -49,7 +49,7 @@ public class UserRestController {
 		this.userService = userService;
 	}
 
-	private ResponseEntity<Object> UserNotFoundResponse() {
+	private ResponseEntity<Object> userNotFoundResponse() {
 		return new ResponseEntity<>(new Message(ImanMessages.USER_NOT_FOUND_MESSAGE), HttpStatus.NOT_FOUND);
 	}
 
@@ -61,7 +61,7 @@ public class UserRestController {
 			if (user != null) {
 				return new ResponseEntity<>(userShowDto, HttpStatus.OK);
 			} else {
-				return UserNotFoundResponse();
+				return userNotFoundResponse();
 			}
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -84,7 +84,7 @@ public class UserRestController {
 			userService.updateUser(userUpdateDto);
 			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (UserNotFound e) {
-			return UserNotFoundResponse();
+			return userNotFoundResponse();
 		} catch (DuplicatedEmail e) {
 			return new ResponseEntity<>(new Message(ImanMessages.USER_DUPLICATED_EMAIL_MESSAGE), HttpStatus.CONFLICT);
 		} catch (DuplicatedUsername e) {
@@ -115,7 +115,7 @@ public class UserRestController {
 			UserMyProfileDto userMyProfileDto = modelMapper.map(user, UserMyProfileDto.class);
 			return new ResponseEntity<>(userMyProfileDto, HttpStatus.OK);
 		} else {
-			return UserNotFoundResponse();
+			return userNotFoundResponse();
 		}
 	}
 	
@@ -123,9 +123,9 @@ public class UserRestController {
 	public ResponseEntity<Object> uploadImage(@RequestParam("image") MultipartFile image) {
 		try {
 			userService.uploadImage(image);
-			return new ResponseEntity<>(null, HttpStatus.OK);
+			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (Exception e) {
-			return new ResponseEntity<Object>(new Message("Image cannot be updated"), HttpStatus.CONFLICT);
+			return new ResponseEntity<>(new Message("Image cannot be updated"), HttpStatus.CONFLICT);
 		}
 	}
 	
@@ -133,9 +133,9 @@ public class UserRestController {
 	public ResponseEntity<Object> deleteImage() {
 		try {
 			userService.deleteImage();
-			return new ResponseEntity<>(null, HttpStatus.OK);
+			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (Exception e) {
-			return new ResponseEntity<Object>(new Message("Image cannot be deleted"), HttpStatus.CONFLICT);
+			return new ResponseEntity<>(new Message("Image cannot be deleted"), HttpStatus.CONFLICT);
 		}
 	}
 	

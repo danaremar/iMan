@@ -152,7 +152,7 @@ public class UserService {
 	@Transactional
 	public void uploadImage(MultipartFile image) {
 		User user = getCurrentUser();
-		String path = FileUtils.imagesPath;
+		String path = FileUtils.IMAGES_PATH;
 		
 		// delete from path previous image
 		if(StringUtils.isNotBlank(user.getImageUid())) {
@@ -172,7 +172,7 @@ public class UserService {
 	
 	@Transactional
 	public void deleteImage() {
-		String path = FileUtils.imagesPath;
+		String path = FileUtils.IMAGES_PATH;
 		deleteImage(path, getCurrentUser());
 	}
 	

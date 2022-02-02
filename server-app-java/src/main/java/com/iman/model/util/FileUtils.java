@@ -16,7 +16,9 @@ import com.google.common.io.Files;
 public class FileUtils {
 	
 	@Value("${iman.resource.images}")
-	public static String imagesPath = "src/main/resources/images/";
+	public static final String IMAGES_PATH = "src/main/resources/images/";
+	
+	private FileUtils() {}
 
 	public static String getFileName(MultipartFile file) {
 		return file.getResource().getFilename();
