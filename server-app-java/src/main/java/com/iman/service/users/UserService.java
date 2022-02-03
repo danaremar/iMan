@@ -152,11 +152,15 @@ public class UserService {
 	@Transactional
 	public void uploadImage(MultipartFile image) {
 		User user = getCurrentUser();
-		String path = FileUtils.imagesPath;
+		String path = FileUtils.IMAGES_PATH;
 		
 		// delete from path previous image
 		if(StringUtils.isNotBlank(user.getImageUid())) {
-			deleteImage(path, user);
+			try {
+				deleteImage(path, user);
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
 		}
 		
 		// create new image & update
@@ -172,14 +176,18 @@ public class UserService {
 	
 	@Transactional
 	public void deleteImage() {
-		String path = FileUtils.imagesPath;
+		String path = FileUtils.IMAGES_PATH;
 		deleteImage(path, getCurrentUser());
 	}
 	
 	@Transactional
 	public void deleteImage(String path, User user) {
 		try {
-			FileUtils.deleteFromPath(path, user.getImageUid());
+			if(!user.getImageUid().contains("cute") && !user.getImageUid().contains("meme") && !user.getImageUid().contains("chibi")) {
+				FileUtils.deleteFromPath(path, user.getImageUid());
+			}
+			user.setImageUid(null);
+			userRepository.save(user);
 		} catch (IOException e) {
 			throw new RuntimeException();
 		}

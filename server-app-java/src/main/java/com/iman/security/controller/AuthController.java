@@ -41,16 +41,16 @@ public class AuthController {
 
 	@Autowired
 	UserService userService;
-	
-	@Autowired(required=true)
+
+	@Autowired(required = true)
 	protected ModelMapper modelMapper;
-	
+
 	@Autowired
 	AuthenticationManager authenticationManager;
-	
+
 	@Autowired
 	PasswordEncoder passwordEncoder;
-	
+
 	@Autowired
 	private JwtProvider jwtProvider;
 
@@ -61,27 +61,25 @@ public class AuthController {
 
 	@PostMapping(value = "/login")
 	public ResponseEntity<Object> login(@RequestBody @Valid UserLoginDto userDto) {
-		
+
 		Authentication authentication;
-		
+
 		try {
 			authentication = this.authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
 					userDto.getUsername(), userDto.getPassword(), Collections.emptyList()));
 		} catch (AuthenticationException e) {
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-					.body(new Message("User or password is invalid"));
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message("User or password is invalid"));
 		} catch (UnverifiedUserException e) {
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-					.body(new Message("No verified"));
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message("No verified"));
 		}
-		
+
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		String jwt = this.jwtProvider.generateToken(authentication);
 
 		UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 
 		JwtDto jwtDto = new JwtDto(jwt, userDetails.getUsername(), userDetails.getAuthorities());
-		return new ResponseEntity<>(jwtDto, HttpStatus.CREATED);
+		return new ResponseEntity<>(jwtDto, HttpStatus.ACCEPTED);
 	}
 
 	@PostMapping(value = "/register")

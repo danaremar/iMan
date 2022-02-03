@@ -6,7 +6,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.UUID;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,12 +14,11 @@ import com.google.common.io.Files;
 
 @Service
 public class FileUtils {
-
-	@Value("rest.resource.images")
-	public static String imagesPath = "src/main/resources/images/";
-
-	@Value("rest.resource.files")
-	public static String filesPath = "src/main/resources/files/";
+	
+	@Value("${iman.resource.images}")
+	public static final String IMAGES_PATH = "src/main/resources/images/";
+	
+	private FileUtils() {}
 
 	public static String getFileName(MultipartFile file) {
 		return file.getResource().getFilename();
@@ -47,8 +45,8 @@ public class FileUtils {
 		if (!dest.getParentFile().exists()) {
 			dest.getParentFile().mkdir();
 		}
-
-		file.transferTo(dest);
+		
+		Files.write(file.getBytes(), dest);
 	}
 
 	public static void deleteFromPath(String path, String fileName) throws IOException {

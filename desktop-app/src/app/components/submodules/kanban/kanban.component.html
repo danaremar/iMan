@@ -74,26 +74,26 @@
                                     <!-- START TASK -->
                                     <a (click)="startEffort(task.id)" ngbTooltip="Start effort" placement="left"
                                         [openDelay]="300" data-bs-toggle="modal">
-                                        <em class="bi bi-reduced bi-play-circle-fill me-2"></em>
+                                        <em class="bi bi-sm bi-play-circle-fill me-2"></em>
                                     </a>
                                 </ng-container>
                                 <ng-template #startedTask>
                                     <!-- END TASK -->
                                     <a (click)="endEffort()" ngbTooltip="Stop effort" placement="left" [openDelay]="300"
                                         data-bs-toggle="modal">
-                                        <em class="bi bi-reduced bi-square-fill me-2"></em>
+                                        <em class="bi bi-sm bi-square-fill me-2"></em>
                                     </a>
                                 </ng-template>
 
                                 <!-- UPDATE TASK -->
                                 <a *ngIf="memberAccess" (click)="fillTaskUpdateForm(task)" ngbTooltip="Edit" placement="left"
                                     [openDelay]="300" data-bs-toggle="modal" data-bs-target="#updateTaskModal">
-                                    <em class="bi bi-reduced bi-pencil-fill me-2"></em>
+                                    <em class="bi bi-sm bi-pencil-fill me-2"></em>
                                 </a>
 
                                 <!-- DELETE TASK -->
                                 <a *ngIf="memberAccess" (click)="disableTask(task)" ngbTooltip="Archieve" placement="left" [openDelay]="300">
-                                    <em class="bi bi-reduced bi-trash-fill me-2"></em>
+                                    <em class="bi bi-sm bi-trash-fill me-2"></em>
                                 </a>
                             </div>
                         </div>

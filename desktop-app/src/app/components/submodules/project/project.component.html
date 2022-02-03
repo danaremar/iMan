@@ -37,7 +37,7 @@
 
                     <div class="mt-3">
 
-                        <div *ngIf="notAcceptedProjects.length==0">
+                        <div *ngIf="notAcceptedProjects?.length==0">
                             There are no pending invitations
                         </div>
 
@@ -181,7 +181,7 @@
 
                     <div class="d-flex">
                         <div class="flex-grow-1 card-title mt-2 text-break">Edit:
-                            {{myProjects[selectedProject].name}}</div>
+                            {{myProjects?myProjects[selectedProject]?.name:''}}</div>
                         <div class="close-card-button" data-bs-dismiss="modal">
                             <em class="bi bi-x"></em>
                         </div>
@@ -256,7 +256,7 @@
 
                     <div class="d-flex">
                         <div class="flex-grow-1 card-title mt-2 text-break">Users:
-                            {{myProjects[selectedProject].name}}</div>
+                            {{myProjects?myProjects[selectedProject]?.name:''}}</div>
                         <div #closebuttonUsers class="close-card-button" data-bs-dismiss="modal">
                             <em class="bi bi-x"></em>
                         </div>

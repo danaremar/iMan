@@ -49,7 +49,13 @@
                 <hr style="height: 2px; margin: 0.3rem;">
                 <li [routerLinkActive]="['active']" class="nav-item">
                     <a class="nav-link" [routerLink]="['/app/user']" style="color: inherit;" ngbTooltip="User settings" placement="right" [openDelay]="300">
-                        <em class="bi bi-person-circle" style="font-size: 30px;"></em>
+                        <ng-container *ngIf="profileImageUrl!=null && profileImageUrl!=''; else showIconProfile">
+                            <img class="profile-image my-2" src="{{profileImageUrl}}" alt="Profile image">
+                        </ng-container>
+                        <ng-template #showIconProfile>
+                            <em class="bi bi-person-circle" style="font-size: 30px;"></em>
+                        </ng-template>
+                        
                     </a>
                 </li>
                 <li [routerLinkActive]="['active']" class="nav-item" hidden>

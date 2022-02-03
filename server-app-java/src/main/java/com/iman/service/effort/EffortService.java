@@ -69,7 +69,7 @@ public class EffortService {
 
 	private List<EffortShowDto> generateEffortShowDtoList(Example<Effort> example) {
 		List<Effort> efforts = effortRepository.findAll(example, Sort.by(Sort.Direction.DESC, "startDate"));
-		return efforts.stream().map(x -> getEffortShowDto(x)).collect(Collectors.toList());
+		return efforts.stream().map(this::getEffortShowDto).collect(Collectors.toList());
 	}
 
 	public EffortShowDto getEffortShowDto(Effort effort) {
