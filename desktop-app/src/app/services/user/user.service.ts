@@ -2,7 +2,6 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { MyUser } from "src/app/models/user/my-user";
-import { UpdateProfileImage } from "src/app/models/user/profile-image-user";
 import { UserUpdate } from "src/app/models/user/update-user";
 import { environment } from "src/environments/environment";
 
@@ -87,14 +86,16 @@ export class UserService {
     }
 
     // UPLOAD REMOTE
-    public uploadUserImageProfile(profileImage: UpdateProfileImage): Observable<any> {
-        var url = this.hostUrl + 'image/'
-        return this.httpClient.put<UpdateProfileImage>(url, profileImage)
+    public uploadUserImageProfile(profileImage: File): Observable<any> {
+        var url = this.hostUrl + 'image'
+        const formData: FormData = new FormData()
+        formData.append('image', profileImage)
+        return this.httpClient.post<any>(url, formData)
     }
 
     // DELETE REMOTE
     public deleteUserImageProfile(): Observable<any> {
-        var url = this.hostUrl + 'image/'
+        var url = this.hostUrl + 'image'
         return this.httpClient.delete<any>(url)
     }
 

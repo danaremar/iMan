@@ -13,3 +13,27 @@
 select {
     height: 40px !important;
 }
+
+.size-xl {
+    cursor: pointer !important;
+}
+
+em.size-xl {
+    font-size: 200px !important;
+}
+
+img.size-xl {
+    height: 200px !important;
+    width: 200px !important;
+}
+
+.delete-image {
+    position: relative;
+    font-size: 35px !important;
+    right: -166px;
+    top: -66px;
+}
+
+#image-block {
+    max-width: 200px;
+}

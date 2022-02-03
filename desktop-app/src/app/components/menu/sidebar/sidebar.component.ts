@@ -9,7 +9,7 @@ import { UserService } from "src/app/services/user/user.service";
 })
 export class SidebarComponent implements OnInit {
 
-    profileImageUrl: string | null | undefined
+    profileImageUrl: any
 
     constructor(private tokenService: TokenService, private userService: UserService) {
     }
