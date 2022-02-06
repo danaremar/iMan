@@ -4,8 +4,6 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import org.hibernate.validator.constraints.Length;
 
-import com.iman.model.users.User;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -35,7 +33,7 @@ public class IncidentUpdateCreateDto {
 	private String status;
 
 	@Length(max = 15)
-	private User assignedUsername;
+	private String assignedUsername;
 	
 
 }

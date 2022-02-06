@@ -1,10 +1,10 @@
 package com.iman.service.incident;
 
 import java.util.Date;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.PropertyMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
@@ -21,7 +21,9 @@ import com.iman.model.incident.IncidentShowDto;
 import com.iman.model.incident.IncidentUpdate;
 import com.iman.model.incident.IncidentUpdateCreateDto;
 import com.iman.model.incident.IncidentUpdateDto;
+import com.iman.model.incident.IncidentUpdateShowDto;
 import com.iman.model.projects.Project;
+import com.iman.model.users.User;
 import com.iman.repository.incidents.IncidentRepository;
 import com.iman.repository.incidents.IncidentUpdateRepository;
 import com.iman.service.projects.ProjectService;
@@ -44,41 +46,48 @@ public class IncidentService {
 
 	@Autowired(required = true)
 	protected ModelMapper modelMapper;
-	
+
 	// No contains IncidentUpdates
 	public IncidentListDto mapIncidentToList(Incident incident) {
 		IncidentListDto incidentListDto = modelMapper.map(incident, IncidentListDto.class);
 		incidentListDto.setUsername(incident.getUser().getUsername());
-		
-		//may be null
-		if(incident.getAssignedUser()!=null && StringUtils.isNotBlank(incident.getAssignedUser().getUsername())) {
+
+		if (incident.getAssignedUser() != null && StringUtils.isNotBlank(incident.getAssignedUser().getUsername())) {
 			incidentListDto.setAssignedUsername(incident.getUser().getUsername());
 		}
-		
 		return incidentListDto;
 	}
-	
+
 	public Page<IncidentListDto> mapPageToPageDto(Page<Incident> incidentPage) {
 		return incidentPage.map(this::mapIncidentToList);
 	}
-	
+
 	// Contains IncidentUpdates
 	public IncidentShowDto mapIncidentToShow(Incident incident) {
 		IncidentShowDto incidentShowDto = modelMapper.map(incident, IncidentShowDto.class);
 		incidentShowDto.setUsername(incident.getUser().getUsername());
-		
-		//may be null
-		if(incident.getAssignedUser()!=null && StringUtils.isNotBlank(incident.getAssignedUser().getUsername())) {
+		if (incident.getAssignedUser() != null && StringUtils.isNotBlank(incident.getAssignedUser().getUsername())) {
 			incidentShowDto.setAssignedUsername(incident.getAssignedUser().getUsername());
 		}
-		
+		incidentShowDto.setUpdates(incident.getUpdates().stream()
+				.map(this::mapIncidentUpdateToShow)
+				.collect(Collectors.toList()));
+		return incidentShowDto;
+	}
+	
+	public IncidentUpdateShowDto mapIncidentUpdateToShow(IncidentUpdate incidentUpdate) {
+		IncidentUpdateShowDto incidentShowDto = modelMapper.map(incidentUpdate, IncidentUpdateShowDto.class);
+		incidentShowDto.setUsername(incidentUpdate.getUser().getUsername());
+		if (incidentUpdate.getAssignedUser() != null && StringUtils.isNotBlank(incidentUpdate.getAssignedUser().getUsername())) {
+			incidentShowDto.setAssignedUsername(incidentUpdate.getAssignedUser().getUsername());
+		}
 		return incidentShowDto;
 	}
 
 	public Incident findIncidentById(Long id) {
 		return incidentRepository.findById(id).orElseThrow();
 	}
-	
+
 	public Incident findIncidentVerifiedById(Long id) {
 		Incident incident = findIncidentById(id);
 		projectService.verifyUserRelatedWithProject(incident.getProject());
@@ -123,12 +132,12 @@ public class IncidentService {
 
 		incidentRepository.save(incident);
 	}
-	
+
 	@Transactional
 	public void disableIncident(Long incidentId) {
 		Incident incident = findIncidentById(incidentId);
 		projectService.verifyMember(incident.getProject());
-		
+
 		incident.setActive(false);
 		incidentRepository.save(incident);
 	}
@@ -153,25 +162,47 @@ public class IncidentService {
 		Incident incident = findIncidentById(incidentId);
 		projectService.verifyMember(incident.getProject());
 
+		// assignedUser -> Incident & IncidentUpdate
+		User assignedUser = null;
+		if (StringUtils.isNotBlank(incidentUpdateCreateDto.getAssignedUsername())) {
+			assignedUser = userService.findUserByUsername(incidentUpdateCreateDto.getAssignedUsername());
+		}
+
+		updateIncident(incidentUpdateCreateDto, incident, assignedUser);
+
 		// SAVE -> IncidentUpdate
 		IncidentUpdate incidentUpdate = modelMapper.map(incidentUpdateCreateDto, IncidentUpdate.class);
+		incidentUpdate.setIncident(incident);
 		incidentUpdate.setUser(userService.getCurrentUser());
 		incidentUpdate.setDate(new Date());
+		incidentUpdate.setAssignedUser(assignedUser);
 		incidentUpdateRepository.save(incidentUpdate);
 
-		// UPDATE -> Incident
-		// Configure skip properties to not update Incident
-		modelMapper.addMappings(new PropertyMap<IncidentUpdateCreateDto, Incident>() {
-			@Override
-			protected void configure() {
-				skip().setDescription(null);
-			}
-		});
-		Incident incidentUpdateToIncident = modelMapper.map(incidentUpdateCreateDto, Incident.class);
-		modelMapper.map(incidentUpdateToIncident, incident);
+	}
+
+	private void updateIncident(IncidentUpdateCreateDto incidentUpdateCreateDto, Incident incident,
+			User assignedUser) {
+		Double estimatedTime = incidentUpdateCreateDto.getEstimatedTime();
+		if (estimatedTime != null) {
+			incident.setEstimatedTime(estimatedTime);
+		}
+		String affects = incidentUpdateCreateDto.getAffects();
+		if (StringUtils.isNotBlank(affects)) {
+			incident.setAffects(affects);
+		}
+		Integer priority = incidentUpdateCreateDto.getPriority();
+		if (priority != null) {
+			incident.setPriority(priority);
+		}
+		String status = incidentUpdateCreateDto.getStatus();
+		if (StringUtils.isNotBlank(status)) {
+			incident.setStatus(status);
+		}
+		if (assignedUser != null) {
+			incident.setAssignedUser(assignedUser);
+		}
 		incident.setLastModification(new Date());
 		incidentRepository.save(incident);
-
 	}
 
 }
