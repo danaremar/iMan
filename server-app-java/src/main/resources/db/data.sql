@@ -54,7 +54,6 @@ INSERT INTO kanban_task (id, active, creation_date, description, estimated_time,
 INSERT INTO kanban_task (id, active, creation_date, description, estimated_time, `number`, order_in_column, title, kanban_column_id) VALUES(6, 1, '2021-08-07 11:06:55.721000000', 'This is an example task F', 1.0, 5, 1, 'Task F', 1);
 
 
-
 -- EFFORT
 INSERT INTO effort (id, description, end_date, start_date, kanban_task_id, user_id) VALUES(1, NULL, '2021-08-15 10:23:13.557000000', '2021-08-15 08:52:01.793000000', 3, 1);
 INSERT INTO effort (id, description, end_date, start_date, kanban_task_id, user_id) VALUES(2, NULL, '2021-08-15 10:23:13.557000000', '2021-08-15 08:52:01.793000000', 3, 1);
@@ -63,3 +62,10 @@ INSERT INTO effort (id, description, end_date, start_date, kanban_task_id, user_
 INSERT INTO effort (id, description, end_date, start_date, kanban_task_id, user_id) VALUES(5, NULL, '2021-08-15 10:23:13.557000000', '2021-08-15 08:52:01.793000000', 1, 1);
 INSERT INTO effort (id, description, end_date, start_date, kanban_task_id, user_id) VALUES(6, NULL, '2021-08-15 10:23:13.557000000', '2021-08-15 08:52:01.793000000', 5, 1);
 INSERT INTO effort (id, description, end_date, start_date, kanban_task_id, user_id) VALUES(7, 'Effort without assigned task', '2021-08-15 10:23:13.557000000', '2021-08-15 08:52:01.793000000', NULL, 1);
+
+
+-- INCIDENT
+INSERT INTO iman_db.incident (id, affects, `date`, description, estimated_time, priority, status, active, code, last_modification, reported, title, assigned_user_id, user_id, project_id) VALUES(1, NULL, '2022-02-06 17:44:19.336', 'Profile image cannot updated correctly when it''s updated.', NULL, NULL, NULL, 1, 0, '2022-02-06 17:44:19.336', 'Excellent client', 'Profile image problems', NULL, 1, 1);
+
+
+-- INCIDENT UPDATE

@@ -46,7 +46,6 @@ public class User {
 
 	@NotBlank
 	@Length(max = 50)
-	@Column(name = "last_name")
 	private String lastName;
 
 	@Column(unique = true, nullable = false)
@@ -67,6 +66,7 @@ public class User {
 	@Length(max = 20)
 	private String sector;
 	
+	@Length(max = 64)
 	private String imageUid;
 
 	@JsonIgnore
