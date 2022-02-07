@@ -65,7 +65,7 @@ INSERT INTO effort (id, description, end_date, start_date, kanban_task_id, user_
 
 
 -- INCIDENT
-INSERT INTO incident (id, affects, `date`, description, estimated_time, priority, status, active, code, last_modification, reported, title, assigned_user_id, user_id, project_id) VALUES(1, NULL, '2022-02-06 17:44:19.336', 'Profile image cannot updated correctly when it''s updated.', NULL, NULL, NULL, 1, 0, '2022-02-06 17:44:19.336', 'Excellent client', 'Profile image problems', NULL, 1, 1);
+INSERT INTO incident (id, affects, `date`, description, estimated_time, priority, status, active, code, last_modification, reported, title, assigned_user_id, user_id, project_id) VALUES(1, 'Scope & €', '2022-02-06 17:44:19.336', 'Profile image cannot updated correctly when it''s updated.', 12.0, 1, 'In progress', 1, 0, '2022-02-06 20:13:54.625', 'Excellent client', 'Profile image problems', 3, 1, 1);
 
 
 -- INCIDENT UPDATE
