@@ -1,10 +1,9 @@
-const { calcPossibleSecurityContexts } = require("@angular/compiler/src/template_parser/binding_parser");
-const { app, BrowserWindow, ipcMain, ipcRenderer } = require("electron");
+const { app, BrowserWindow, ipcMain } = require("electron");
 const ipc = ipcMain
 
 let appWin;
 
-createWindow = () => {
+function createWindow() {
     appWin = new BrowserWindow({
         minWidth: 600,
         minHeight: 400,
@@ -15,14 +14,14 @@ createWindow = () => {
         frame: false,
         icon: "src/favicon.ico",
         webPreferences: {
-            nodeIntegration: false,
-            contextIsolation: true,
+            nodeIntegration: true,
+            contextIsolation: false,
             devTools: false
         }
     });
 
     appWin.maximize()
-    appWin.loadURL(`file://${__dirname}/dist/index.html`);
+    appWin.loadURL(`file://${__dirname}/dist/index-electron.html`);
     appWin.setMenu(null);
 
     appWin.webContents.openDevTools();
