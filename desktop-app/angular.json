@@ -72,6 +72,19 @@
               "namedChunks": true
             },
             "electronjs-prod":{
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "2kb",
+                  "maximumError": "4kb"
+                }
+              ],
+              "outputHashing": "all",
               "index": "src/index-electron.html",
               "fileReplacements": [
                 {
