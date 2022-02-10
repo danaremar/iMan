@@ -32,7 +32,7 @@
 <div *ngIf="containError" class="alert alert-danger mt-3 mb-3">{{messageError}}</div>
 <div class="scrollable-x">
     <div class="d-flex" cdkDropListGroup>
-        <div class="card column-card m-3" *ngFor="let column of kanban">
+        <div class="card column-card m-3 user-select-none" *ngFor="let column of kanban">
 
             <!-- COLUMN -->
             <div class="d-flex">
