@@ -199,6 +199,7 @@ public class KanbanService {
 		kanbanTask.setNumber(countKanbanTaskBySprint(kanbanColumn.getSprint()) + 1);
 		kanbanTask.setOrderInColumn(countKanbanTaskByColumn(kanbanColumn)); // set last orderInColumn
 		kanbanTask.setActive(true);
+		kanbanTask.setCreator(userService.getCurrentUser());
 		kanbanTaskRepository.save(kanbanTask);
 	}
 
