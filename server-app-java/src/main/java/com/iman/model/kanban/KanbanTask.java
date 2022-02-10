@@ -95,6 +95,7 @@ public class KanbanTask {
 	
 	@ManyToMany
 	@JoinTable(name = "kanban_task_assignation")
+	@JsonIncludeProperties({"username", "imageUid"})
 	private List<User> assignedUsers;
 	
 	@ManyToMany

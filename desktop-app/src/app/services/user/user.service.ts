@@ -51,13 +51,24 @@ export class UserService {
     * 
     */
 
+    public getUrlFromProfile(image: string | null): string | null {
+        // not exists
+        if(image==null || image==''){
+            return null
+
+        // URL from external site
+        } else if(image.includes('/')) {
+            return image
+
+        // URL from backend
+        } else {
+            return environment.backendEndpoint + '/images/' + image
+        }
+    }
+
     // SET LOCAL
     public setImage(image: string | null): void {
-        if(image==null || image==''){
-            this.imageUrl = null
-        } else {
-            this.imageUrl = environment.backendEndpoint + '/images/' + image
-        }
+        this.imageUrl = this.getUrlFromProfile(image)
     }
 
     // RELOAD
