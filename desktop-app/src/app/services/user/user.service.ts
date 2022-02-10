@@ -15,6 +15,9 @@ export class UserService {
     // URL
     hostUrl = environment.backendEndpoint + '/profile/'
 
+    // Profile image Url
+    imageUrl: string | null | undefined
+
     // CONSTRUCTOR
     constructor(private httpClient: HttpClient) { }
 
@@ -48,38 +51,24 @@ export class UserService {
     * 
     */
 
-    // GET LOCAL
-    public getImage(): string | null {
-        return localStorage.getItem(PROFILE_IMAGE_KEY)
-    }
-    public getMyImageUrl(): string | null {
-        return this.getImageUrl(this.getImage())
-    }
-
-    public getImageUrl(imageUid: string | null): string | null {
-        if (imageUid && imageUid != '') {
-            return environment.backendEndpoint + '/images/' + imageUid
+    // SET LOCAL
+    public setImage(image: string | null): void {
+        if(image==null || image==''){
+            this.imageUrl = null
         } else {
-            return null
+            this.imageUrl = environment.backendEndpoint + '/images/' + image
         }
     }
 
-    // SET LOCAL
-    public setImage(image: string): void {
-        localStorage.removeItem(PROFILE_IMAGE_KEY)
-        localStorage.setItem(PROFILE_IMAGE_KEY, image)
-    }
-
-    // RELOAD LOCAL
+    // RELOAD
     public reloadProfileImage(): void {
-        var profileImageUid: string | null = null
         this.getMyProfile().subscribe(
             data => {
-                profileImageUid = data.imageUid
-                this.setImage(profileImageUid ? profileImageUid : '')
+                var profileImageUid = data.imageUid
+                this.setImage(profileImageUid ? profileImageUid : null)
             },
             res => {
-                this.setImage('')
+                this.setImage(null)
             }
         )
 

@@ -23,7 +23,6 @@ export class UserComponent extends ImanSubmodule implements OnInit {
     ***************************/
 
     myProfile: any
-    profileImageUrl: any
 
     formUpdateProfile: FormGroup
     containError: boolean = false
@@ -58,7 +57,6 @@ export class UserComponent extends ImanSubmodule implements OnInit {
 
     ngOnInit(): void {
         this.loadMyProfile()
-        this.profileImageUrl = this.userService.getMyImageUrl()
     }
 
     loadMyProfile() {
@@ -99,6 +97,9 @@ export class UserComponent extends ImanSubmodule implements OnInit {
         }
     }
 
+    public getProfileImageUrl(): any {
+        return this.userService.imageUrl
+    }
 
     uploadProfileImage(images: any) {
         var file: File = images.files[0]
@@ -110,7 +111,6 @@ export class UserComponent extends ImanSubmodule implements OnInit {
             this.userService.uploadUserImageProfile(file).subscribe(
                 data => {
                     this.userService.reloadProfileImage()
-                    this.profileImageUrl = this.userService.getMyImageUrl()
                 },
                 err => {
                     this.returnPrincipalError(err)
@@ -125,7 +125,6 @@ export class UserComponent extends ImanSubmodule implements OnInit {
             this.userService.deleteUserImageProfile().subscribe(
                 data => {
                     this.userService.reloadProfileImage()
-                    this.profileImageUrl = this.userService.getMyImageUrl()
                 },
                 err => {
                     this.returnPrincipalError(err)
