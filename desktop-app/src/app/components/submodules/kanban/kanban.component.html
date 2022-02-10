@@ -99,10 +99,12 @@
                         </div>
 
                         <div class="s-text">{{task.description}}</div>
+                        <div>
 
+                        
                         <div *ngIf="task.computedTime!=0 && task.estimatedTime">
                             <ng-container *ngIf="task.computedTime<=task.estimatedTime; else overloadTime">
-                                <div class="progress bg-success my-3">
+                                <div class="progress bg-success mt-3 mb-2">
                                     <div class="progress-bar bg-info"
                                         [class]="(activeEffort==null || (activeEffort.description!=null && activeEffort.description.length!=0) || (activeEffort!=null && activeEffort.kanbanTask!=null && task.id!=activeEffort.kanbanTask.id))?'':'progress-bar-striped progress-bar-animated'"
                                         role="progressbar"
@@ -112,7 +114,7 @@
                                 </div>
                             </ng-container>
                             <ng-template #overloadTime>
-                                <div class="progress bg-danger my-3">
+                                <div class="progress bg-danger mt-3 mb-2">
                                     <div class="progress-bar bg-info"
                                         [class]="(activeEffort==null || (activeEffort.description!=null && activeEffort.description.length!=0) || (activeEffort!=null && activeEffort.kanbanTask!=null && task.id!=activeEffort.kanbanTask.id))?'':'progress-bar-striped progress-bar-animated'"
                                         role="progressbar"
@@ -122,6 +124,18 @@
                                 </div>
                             </ng-template>
                         </div>
+
+                        <div class="d-flex" *ngIf="task.assignedUsers && task.assignedUsers.length!=0">
+                            <div class="mx-1" *ngFor="let u of task.assignedUsers" ngbTooltip="@{{u.username}}" placement="right" [openDelay]="300">
+                                <ng-container *ngIf="getProfileImageUrlFromUser(u)!=null && getProfileImageUrlFromUser(u)!=''; else showIconProfile">
+                                    <img *ngIf="getProfileImageUrlFromUser(u)!=null && getProfileImageUrlFromUser(u)!=''" class="profile-image my-2" src="{{getProfileImageUrlFromUser(u)}}" alt="@{{u.username}} profile image">
+                                </ng-container>
+                                <ng-template #showIconProfile>
+                                    <em class="bi bi-person-circle" style="font-size: 30px;"></em>
+                                </ng-template>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>

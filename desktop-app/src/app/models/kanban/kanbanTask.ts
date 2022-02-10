@@ -1,3 +1,5 @@
+import { Effort } from "../effort/effort"
+import { ShowUser } from "../user/show-user"
 import { KanbanColumn } from "./kanbanColumn"
 
 export class KanbanTaskCreate {
@@ -65,7 +67,13 @@ export class KanbanTask {
         orderInColumn: number,
         active: boolean,
         kanbanColumn: KanbanColumn,
-        computedTime: number
+        computedTime: number,
+        creator: ShowUser,
+        importance: string,
+        dueStartDate: Date,
+        dueEndDate: Date,
+        assignedUsers: Array<ShowUser>,
+        children: Array<KanbanTask>
     ) {
         this.id = id
         this.title = title
@@ -77,8 +85,13 @@ export class KanbanTask {
         this.active = active
         this.kanbanColumn = kanbanColumn
         this.computedTime = computedTime
+        this.creator = creator
+        this.importance = importance
+        this.dueStartDate = dueStartDate
+        this.dueEndDate = dueEndDate
+        this.assignedUsers = assignedUsers
+        this.children = children
     }
-
 
     id: number
     title: string
@@ -90,4 +103,10 @@ export class KanbanTask {
     active: boolean
     kanbanColumn: KanbanColumn
     computedTime: number
+    creator: ShowUser
+    importance: string
+    dueStartDate: Date
+    dueEndDate: Date
+    assignedUsers: Array<ShowUser>
+    children: Array<KanbanTask>
 }

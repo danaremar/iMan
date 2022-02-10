@@ -4,11 +4,13 @@ import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { EffortStart } from "src/app/models/effort/effort";
 import { KanbanColumnCreate, KanbanColumnShow, KanbanColumnUpdate } from "src/app/models/kanban/kanbanColumn";
 import { KanbanTask, KanbanTaskCreate, KanbanTaskMove, KanbanTaskUpdate } from "src/app/models/kanban/kanbanTask";
+import { ShowUser } from "src/app/models/user/show-user";
 import { TokenService } from "src/app/services/authentication/token.service";
 import { EffortService } from "src/app/services/effort/effort.service";
 import { KanbanService } from "src/app/services/kanban/kanban.service";
 import { ProjectService } from "src/app/services/projects/project.service";
 import { SprintService } from "src/app/services/sprints/sprint.service";
+import { UserService } from "src/app/services/user/user.service";
 import { ImanSubmodule } from "../submodule.component";
 
 @Component({
@@ -65,7 +67,7 @@ export class KanbanComponent extends ImanSubmodule implements OnInit {
             CONSTRUCTOR
     ***************************/
 
-    constructor(effortService: EffortService, kanbanService: KanbanService, sprintService: SprintService, projectService: ProjectService, formBuilder: FormBuilder, tokenService: TokenService) {
+    constructor(effortService: EffortService, kanbanService: KanbanService, sprintService: SprintService, projectService: ProjectService, formBuilder: FormBuilder, tokenService: TokenService, private userService: UserService) {
 
 
         super(effortService, kanbanService, sprintService, projectService, formBuilder, tokenService)
@@ -302,6 +304,15 @@ export class KanbanComponent extends ImanSubmodule implements OnInit {
                 this.returnPrincipalError(err)
             }
         )
+    }
+
+
+    /***************************
+       METHODS -> IMAGE
+    ***************************/
+
+    public getProfileImageUrlFromUser(user: ShowUser): any {
+        return this.userService.getUrlFromProfile(user.imageUid)
     }
 
 }
