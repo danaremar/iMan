@@ -27,7 +27,7 @@ export class UpdateProject {
 
 export class Project {
 
-    constructor(id: number, name: string, description: string, creationDate: Date, closeDate: Date, active: boolean, projectRoles: ProjectRole) {
+    constructor(id: number, name: string, description: string, creationDate: Date, closeDate: Date, active: boolean, projectRoles: Array<ProjectRole>) {
         this.id=id
         this.name=name
         this.description=description
@@ -43,6 +43,6 @@ export class Project {
     creationDate: Date
     closeDate: Date
     active: boolean
-    projectRoles: ProjectRole
+    projectRoles: Array<ProjectRole>
 }
 

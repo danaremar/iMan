@@ -3,7 +3,8 @@ import { Component, OnInit, ViewChild } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { EffortStart } from "src/app/models/effort/effort";
 import { KanbanColumnCreate, KanbanColumnShow, KanbanColumnUpdate } from "src/app/models/kanban/kanbanColumn";
-import { KanbanTask, KanbanTaskCreate, KanbanTaskMove, KanbanTaskUpdate } from "src/app/models/kanban/kanbanTask";
+import { KanbanTask, KanbanTaskChildrens, KanbanTaskCreate, KanbanTaskMove, KanbanTaskUpdate } from "src/app/models/kanban/kanbanTask";
+import { Project } from "src/app/models/project/project";
 import { ShowUser } from "src/app/models/user/show-user";
 import { TokenService } from "src/app/services/authentication/token.service";
 import { EffortService } from "src/app/services/effort/effort.service";
@@ -62,6 +63,13 @@ export class KanbanComponent extends ImanSubmodule implements OnInit {
     updateTaskContainError: boolean = false
     updateTaskMessageError: string | undefined
 
+    // ASSIGNATIONS
+    usersInProject: Array<ShowUser> = []
+    assignedUsers: Array<ShowUser> = []
+
+    // CHILDRENS
+    selectedChildrens: Array<KanbanTaskChildrens> = []
+
 
     /***************************
             CONSTRUCTOR
@@ -85,11 +93,17 @@ export class KanbanComponent extends ImanSubmodule implements OnInit {
             title: ['', [Validators.required]],
             description: ['', []],
             estimatedTime: ['', []],
+            importance: ['', []],
+            dueStartDate: ['', []],
+            dueEndDate: ['', []]
         })
         this.formUpdateTask = formBuilder.group({
             title: ['', [Validators.required]],
             description: ['', []],
             estimatedTime: ['', []],
+            importance: ['', []],
+            dueStartDate: ['', []],
+            dueEndDate: ['', []]
         })
     }
 
@@ -100,6 +114,7 @@ export class KanbanComponent extends ImanSubmodule implements OnInit {
 
     ngOnInit(): void {
         this.loadMyProjects()
+        this.getAllUsersFromSelectedProject()
     }
 
 
@@ -207,8 +222,45 @@ export class KanbanComponent extends ImanSubmodule implements OnInit {
         METHODS -> TASKS
     ***************************/
 
+    reloadTaskAttributes() {
+        this.assignedUsers = []
+        this.selectedChildrens = []
+    }
+
+    //USERS
+
+    getAllUsersFromSelectedProject() {
+        if (this.projectSelectedId) {
+            let project: Project = this.myProjects[this.projectSelectedId]
+            this.usersInProject = project.projectRoles.map(x => x.user)
+        }
+    }
+
+    addAssignedUsername(username: string) {
+        var u = this.usersInProject.find(x => x.username == username)
+        if (u !== undefined) {
+            this.assignedUsers.push(u)
+        }
+    }
+
+    removeAssignedUsername(i: number) {
+        this.assignedUsers.splice(i, 1)
+    }
+
+    getUsernamesInArray(lsUsers: Array<ShowUser>): Array<string> {
+        return lsUsers.map(x => { return x.username })
+    }
+
+    // CHILDRENS
+
+    getChildrenIdsInArray(lsChildren: Array<KanbanTaskChildrens>): Array<number> {
+        return lsChildren.map(x => { return x.id })
+    }
+
+    // NEW TASK
+
     newTask() {
-        let createTask: KanbanTaskCreate = new KanbanTaskCreate(this.formNewTask.value.title, this.formNewTask.value.description, this.formNewTask.value.estimatedTime, this.kanbanColumnSelected.id)
+        let createTask: KanbanTaskCreate = new KanbanTaskCreate(this.formNewTask.value.title, this.formNewTask.value.description, this.formNewTask.value.estimatedTime, this.kanbanColumnSelected.id, this.formNewTask.value.importance, this.formNewTask.value.dueStartDate, this.formNewTask.value.dueEndDate,this.getUsernamesInArray(this.assignedUsers),[])
         this.kanbanService.createKanbanTask(createTask).subscribe(
             res => {
                 this.formNewTask.reset()
@@ -224,10 +276,12 @@ export class KanbanComponent extends ImanSubmodule implements OnInit {
                 this.newTaskContainError = true
             }
         )
+        this.reloadTaskAttributes()
     }
 
     fillTaskUpdateForm(kanbanTask: KanbanTask) {
         this.kanbanTaskSelected = kanbanTask
+        this.assignedUsers = kanbanTask.assignedUsers
 
         this.formUpdateTask = this.formBuilder.group({
             title: [kanbanTask.title, [Validators.required]],
@@ -237,7 +291,8 @@ export class KanbanComponent extends ImanSubmodule implements OnInit {
     }
 
     editTask() {
-        let updateTask: KanbanTaskUpdate = new KanbanTaskUpdate(this.kanbanTaskSelected.id, this.formUpdateTask.value.title, this.formUpdateTask.value.description, this.formUpdateTask.value.estimatedTime)
+        
+        let updateTask: KanbanTaskUpdate = new KanbanTaskUpdate(this.kanbanTaskSelected.id, this.formUpdateTask.value.title, this.formUpdateTask.value.description, this.formUpdateTask.value.estimatedTime, this.formUpdateTask.value.importance, this.formUpdateTask.value.dueStartDate, this.formUpdateTask.value.dueEndDate, [], [])
         this.kanbanService.updateKanbanTask(updateTask).subscribe(
             res => {
                 this.formUpdateTask.reset()
@@ -253,6 +308,7 @@ export class KanbanComponent extends ImanSubmodule implements OnInit {
                 this.updateTaskContainError = true
             }
         )
+        this.reloadTaskAttributes()
     }
 
     disableTask(kanbanTask: any) {
@@ -269,7 +325,7 @@ export class KanbanComponent extends ImanSubmodule implements OnInit {
         }
     }
 
-    
+
 
 
     /***************************
@@ -278,13 +334,13 @@ export class KanbanComponent extends ImanSubmodule implements OnInit {
 
     updateTemporallyDragDrop(event: CdkDragDrop<any>) {
         // saved task
-        var task = this.kanban[event.previousContainer.data.id-1].tasks[event.previousIndex]
+        var task = this.kanban[event.previousContainer.data.id - 1].tasks[event.previousIndex]
 
         // delete previous
-        this.kanban[event.previousContainer.data.id-1].tasks.splice(event.previousIndex,1)
-        
+        this.kanban[event.previousContainer.data.id - 1].tasks.splice(event.previousIndex, 1)
+
         // add new
-        this.kanban[event.container.data.id-1].tasks.splice(event.currentIndex,0,task)
+        this.kanban[event.container.data.id - 1].tasks.splice(event.currentIndex, 0, task)
     }
 
     dropTask(event: CdkDragDrop<any>) {

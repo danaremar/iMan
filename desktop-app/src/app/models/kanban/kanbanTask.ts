@@ -1,6 +1,18 @@
-import { Effort } from "../effort/effort"
 import { ShowUser } from "../user/show-user"
 import { KanbanColumn } from "./kanbanColumn"
+
+export class KanbanTaskChildrens {
+
+    constructor(id: number, number: number, title: string) {
+        this.id = id
+        this.number = number
+        this.title = title
+    }
+
+    id: number
+    number: number
+    title: string
+}
 
 export class KanbanTaskCreate {
 
@@ -8,18 +20,33 @@ export class KanbanTaskCreate {
         title: string,
         description: string,
         estimatedTime: number,
-        kanbanColumnId: number
+        kanbanColumnId: number,
+        importance: string,
+        dueStartDate: Date,
+        dueEndDate: Date,
+        assignedUsernames: Array<string>,
+        childrenIds: Array<number>
     ) {
         this.title = title
         this.description = description
         this.estimatedTime = estimatedTime
         this.kanbanColumnId = kanbanColumnId
+        this.importance = importance
+        this.dueStartDate = dueStartDate
+        this.dueEndDate = dueEndDate
+        this.assignedUsernames = assignedUsernames
+        this.childrenIds = childrenIds
     }
 
     title: string
     description: string
     estimatedTime: number
     kanbanColumnId: number
+    importance: string
+    dueStartDate: Date
+    dueEndDate: Date
+    assignedUsernames: Array<string>
+    childrenIds: Array<number>
 }
 
 export class KanbanTaskUpdate {
@@ -28,18 +55,33 @@ export class KanbanTaskUpdate {
         id: number,
         title: string,
         description: string,
-        estimatedTime: number
+        estimatedTime: number,
+        importance: string,
+        dueStartDate: Date,
+        dueEndDate: Date,
+        assignedUsernames: Array<string>,
+        childrenIds: Array<number>
     ) {
         this.id = id
         this.title = title
         this.description = description
         this.estimatedTime = estimatedTime
+        this.importance = importance
+        this.dueStartDate = dueStartDate
+        this.dueEndDate = dueEndDate
+        this.assignedUsernames = assignedUsernames
+        this.childrenIds = childrenIds
     }
 
     id: number
     title: string
     description: string
     estimatedTime: number
+    importance: string
+    dueStartDate: Date
+    dueEndDate: Date
+    assignedUsernames: Array<string>
+    childrenIds: Array<number>
 }
 
 export class KanbanTaskMove {
