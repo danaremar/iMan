@@ -24,7 +24,9 @@ import com.iman.model.kanban.KanbanColumnUpdateDto;
 import com.iman.model.kanban.KanbanTask;
 import com.iman.model.kanban.KanbanTaskCreateDto;
 import com.iman.model.kanban.KanbanTaskUpdateDto;
+import com.iman.model.projects.Project;
 import com.iman.model.sprints.Sprint;
+import com.iman.model.users.User;
 import com.iman.repository.kanban.KanbanColumnRepository;
 import com.iman.repository.kanban.KanbanTaskRepository;
 import com.iman.service.sprints.SprintService;
@@ -50,8 +52,8 @@ public class KanbanService {
 
 	public void verifyAdminOrOwner(Sprint sprint) {
 		String username = userService.getCurrentUsername();
-		if (username == null || sprint == null || sprint.getProject() == null || !sprint.getProject().getActive()
-				|| sprint.getProject().getProjectRoles() == null
+		if (Boolean.TRUE.equals(username == null || sprint == null || sprint.getProject() == null
+				|| !sprint.getProject().getActive() || sprint.getProject().getProjectRoles() == null)
 				|| sprint.getProject().getProjectRoles().stream().noneMatch(
 						x -> (List.of(0, 1).contains(x.getRole())) && (x.getUser().getUsername().equals(username)))) {
 			throw new AccessDeniedException(ImanMessages.USER_NOT_ALLOWED);
@@ -60,8 +62,8 @@ public class KanbanService {
 
 	public void verifyMember(Sprint sprint) {
 		String username = userService.getCurrentUsername();
-		if (username == null || sprint == null || sprint.getProject() == null || !sprint.getProject().getActive()
-				|| sprint.getProject().getProjectRoles() == null
+		if (Boolean.TRUE.equals(username == null || sprint == null || sprint.getProject() == null
+				|| !sprint.getProject().getActive() || sprint.getProject().getProjectRoles() == null)
 				|| sprint.getProject().getProjectRoles().stream()
 						.noneMatch(x -> (List.of(0, 1, 2).contains(x.getRole()))
 								&& (x.getUser().getUsername().equals(username)))) {
@@ -71,8 +73,8 @@ public class KanbanService {
 
 	public void verifyVisitor(Sprint sprint) {
 		String username = userService.getCurrentUsername();
-		if (username == null || sprint == null || sprint.getProject() == null || !sprint.getProject().getActive()
-				|| sprint.getProject().getProjectRoles() == null
+		if (Boolean.TRUE.equals(username == null || sprint == null || sprint.getProject() == null
+				|| !sprint.getProject().getActive() || sprint.getProject().getProjectRoles() == null)
 				|| sprint.getProject().getProjectRoles().stream()
 						.noneMatch(x -> (List.of(0, 1, 2, 3).contains(x.getRole()))
 								&& (x.getUser().getUsername().equals(username)))) {
@@ -115,7 +117,7 @@ public class KanbanService {
 		Sprint sprint = sprintService.findById(sprintId);
 		verifyVisitor(sprint);
 		return kanbanTaskRepository.findAllKanbanTaskBySprintId(sprint.getId());
-		
+
 	}
 
 	private Long countKanbanColumns(Sprint sprint) {
@@ -188,6 +190,36 @@ public class KanbanService {
 		return sprint.getKanbanColums().stream().flatMap(x -> x.getTasks().stream()).count();
 	}
 
+	// TODO: Optimize with SQL
+	public List<String> getAllUsernamesByProject(Project project) {
+		return project.getProjectRoles().stream().map(x -> x.getUser().getUsername()).collect(Collectors.toList());
+	}
+
+	public List<User> getUsersFromUsernames(String usernames, Project project) {
+		List<String> lsUsernames = List.of(usernames.split(","));
+		// match users with project
+		if (!getAllUsernamesByProject(project).containsAll(lsUsernames)) {
+			throw new DataIntegrityViolationException(ImanMessages.KANBAN_TASK_USERS_NOT_RELATED_WITH_PROJECT);
+		}
+		// get all users
+		return lsUsernames.parallelStream().map(x -> userService.findUserByUsername(x)).collect(Collectors.toList());
+	}
+
+	// TODO: Optimize with SQL
+	public List<Long> getAllKanbanTaskBySprint(Sprint sprint) {
+		return sprint.getKanbanColums().parallelStream().flatMap(x -> x.getTasks().stream()).map(KanbanTask::getId)
+				.collect(Collectors.toList());
+	}
+
+	public List<KanbanTask> getKanbanTasksByLongList(List<Long> longLs, Sprint sprint) {
+		// match kanbanTasks with Sprint
+		if (!getAllKanbanTaskBySprint(sprint).containsAll(longLs)) {
+			throw new DataIntegrityViolationException(ImanMessages.KANBAN_TASK_IS_NOT_CONTAINED_IN_SPRINT);
+		}
+		// get all tasks
+		return longLs.stream().map(this::findTaskById).collect(Collectors.toList());
+	}
+
 	@Transactional
 	public void createKanbanTask(KanbanTaskCreateDto kanbanTaskCreateDto) {
 		KanbanColumn kanbanColumn = findColumnById(kanbanTaskCreateDto.getKanbanColumnId());
@@ -200,6 +232,10 @@ public class KanbanService {
 		kanbanTask.setOrderInColumn(countKanbanTaskByColumn(kanbanColumn)); // set last orderInColumn
 		kanbanTask.setActive(true);
 		kanbanTask.setCreator(userService.getCurrentUser());
+		kanbanTask.setAssignedUsers(getUsersFromUsernames(kanbanTaskCreateDto.getAssignedUsernames(),
+				kanbanColumn.getSprint().getProject()));
+		kanbanTask
+				.setChildren(getKanbanTasksByLongList(kanbanTaskCreateDto.getChildrenIds(), kanbanColumn.getSprint()));
 		kanbanTaskRepository.save(kanbanTask);
 	}
 
@@ -210,6 +246,10 @@ public class KanbanService {
 		kanbanTask.setTitle(kanbanTaskUpdateDto.getTitle());
 		kanbanTask.setDescription(kanbanTaskUpdateDto.getDescription());
 		kanbanTask.setEstimatedTime(kanbanTaskUpdateDto.getEstimatedTime());
+		kanbanTask.setAssignedUsers(getUsersFromUsernames(kanbanTaskUpdateDto.getAssignedUsernames(),
+				kanbanTask.getKanbanColumn().getSprint().getProject()));
+		kanbanTask.setChildren(getKanbanTasksByLongList(kanbanTaskUpdateDto.getChildrenIds(),
+				kanbanTask.getKanbanColumn().getSprint()));
 		kanbanTaskRepository.save(kanbanTask);
 	}
 
