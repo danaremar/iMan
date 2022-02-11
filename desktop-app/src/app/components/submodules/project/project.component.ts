@@ -1,12 +1,13 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { NewProject, Project, UpdateProject } from "src/app/models/project/project";
-import { CreateProjectRole, UpdateProjectRole } from "src/app/models/project/roles";
+import { CreateProjectRole, ProjectRole, UpdateProjectRole } from "src/app/models/project/roles";
 import { TokenService } from "src/app/services/authentication/token.service";
 import { EffortService } from "src/app/services/effort/effort.service";
 import { KanbanService } from "src/app/services/kanban/kanban.service";
 import { ProjectService } from "src/app/services/projects/project.service";
 import { SprintService } from "src/app/services/sprints/sprint.service";
+import { UserService } from "src/app/services/user/user.service";
 import { ImanSubmodule } from "../submodule.component";
 
 @Component({
@@ -44,7 +45,7 @@ export class ProjectComponent extends ImanSubmodule implements OnInit {
     rolesDictionary: any = this.projectService.getAllRoles()
     roles: any = Object.values(this.rolesDictionary)
 
-    constructor(effortService: EffortService, kanbanService: KanbanService, sprintService: SprintService, projectService: ProjectService, formBuilder: FormBuilder, tokenService: TokenService) {
+    constructor(effortService: EffortService, kanbanService: KanbanService, sprintService: SprintService, projectService: ProjectService, formBuilder: FormBuilder, tokenService: TokenService, private userService: UserService) {
         super(effortService, kanbanService, sprintService, projectService, formBuilder, tokenService);
         this.formNewProject = formBuilder.group({
             name: ['', [Validators.required]],
@@ -241,5 +242,9 @@ export class ProjectComponent extends ImanSubmodule implements OnInit {
                 this.roleError(err, "Error declining invitation")
             }
         )
+    }
+
+    public getProfileImageUrlFromRole(role: ProjectRole): any {
+        return this.userService.getUrlFromProfile(role.user.imageUid)
     }
 }
