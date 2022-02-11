@@ -195,14 +195,13 @@ public class KanbanService {
 		return project.getProjectRoles().stream().map(x -> x.getUser().getUsername()).collect(Collectors.toList());
 	}
 
-	public List<User> getUsersFromUsernames(String usernames, Project project) {
-		List<String> lsUsernames = List.of(usernames.split(","));
+	public List<User> getUsersFromUsernames(List<String> usernames, Project project) {
 		// match users with project
-		if (!getAllUsernamesByProject(project).containsAll(lsUsernames)) {
+		if (!getAllUsernamesByProject(project).containsAll(usernames)) {
 			throw new DataIntegrityViolationException(ImanMessages.KANBAN_TASK_USERS_NOT_RELATED_WITH_PROJECT);
 		}
 		// get all users
-		return lsUsernames.parallelStream().map(x -> userService.findUserByUsername(x)).collect(Collectors.toList());
+		return usernames.parallelStream().map(x -> userService.findUserByUsername(x)).collect(Collectors.toList());
 	}
 
 	// TODO: Optimize with SQL

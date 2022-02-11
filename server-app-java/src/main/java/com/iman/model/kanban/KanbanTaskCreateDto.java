@@ -37,7 +37,7 @@ public class KanbanTaskCreateDto {
 
 	private Date dueEndDate;
 	
-	private String assignedUsernames;
+	private List<String> assignedUsernames;
 	
 	private List<Long> childrenIds;
 }
