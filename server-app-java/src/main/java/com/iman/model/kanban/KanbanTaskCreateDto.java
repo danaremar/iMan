@@ -1,5 +1,8 @@
 package com.iman.model.kanban;
 
+import java.util.Date;
+import java.util.List;
+
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -26,4 +29,15 @@ public class KanbanTaskCreateDto {
 
 	@NotNull
 	private Long kanbanColumnId;
+	
+	@Length(max = 50)
+	private String importance;
+
+	private Date dueStartDate;
+
+	private Date dueEndDate;
+	
+	private List<String> assignedUsernames;
+	
+	private List<Long> childrenIds;
 }

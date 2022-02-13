@@ -8,7 +8,8 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "electron": "ng build && electron ."
+    "electron": "ng build --configuration=electronjs && electron .",
+    "electron-prod": "ng build --configuration=electronjs-prod && electron ."
   },
   "private": true,
   "dependencies": {
@@ -28,7 +29,6 @@
     "aos": "^2.3.4",
     "bootstrap": "^5.0.2",
     "bootstrap-icons": "^1.5.0",
-    "electron": "^16.0.8",
     "jasmine": "^4.0.2",
     "jquery": "^3.6.0",
     "ngx-toastr": "^14.0.0",
@@ -45,6 +45,9 @@
     "@types/d3-scale": "^4.0.2",
     "@types/d3-selection": "^3.0.2",
     "@types/node": "^14.14.33",
+    "electron": "^16.0.8",
+    "electron-builder": "^22.14.13",
+    "electron-packager": "^15.4.0",
     "karma": "~6.3.0",
     "karma-chrome-launcher": "~3.1.0",
     "karma-coverage": "~2.0.3",

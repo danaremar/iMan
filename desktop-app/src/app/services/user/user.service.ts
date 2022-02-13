@@ -15,6 +15,9 @@ export class UserService {
     // URL
     hostUrl = environment.backendEndpoint + '/profile/'
 
+    // Profile image Url
+    imageUrl: string | null | undefined
+
     // CONSTRUCTOR
     constructor(private httpClient: HttpClient) { }
 
@@ -48,38 +51,35 @@ export class UserService {
     * 
     */
 
-    // GET LOCAL
-    public getImage(): string | null {
-        return localStorage.getItem(PROFILE_IMAGE_KEY)
-    }
-    public getMyImageUrl(): string | null {
-        return this.getImageUrl(this.getImage())
-    }
-
-    public getImageUrl(imageUid: string | null): string | null {
-        if (imageUid && imageUid != '') {
-            return environment.backendEndpoint + '/images/' + imageUid
-        } else {
+    public getUrlFromProfile(image: string | null): string | null {
+        // not exists
+        if(image==null || image==''){
             return null
+
+        // URL from external site
+        } else if(image.includes('/')) {
+            return image
+
+        // URL from backend
+        } else {
+            return environment.backendEndpoint + '/images/' + image
         }
     }
 
     // SET LOCAL
-    public setImage(image: string): void {
-        localStorage.removeItem(PROFILE_IMAGE_KEY)
-        localStorage.setItem(PROFILE_IMAGE_KEY, image)
+    public setImage(image: string | null): void {
+        this.imageUrl = this.getUrlFromProfile(image)
     }
 
-    // RELOAD LOCAL
+    // RELOAD
     public reloadProfileImage(): void {
-        var profileImageUid: string | null = null
         this.getMyProfile().subscribe(
             data => {
-                profileImageUid = data.imageUid
-                this.setImage(profileImageUid ? profileImageUid : '')
+                var profileImageUid = data.imageUid
+                this.setImage(profileImageUid ? profileImageUid : null)
             },
             res => {
-                this.setImage('')
+                this.setImage(null)
             }
         )
 

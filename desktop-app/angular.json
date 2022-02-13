@@ -22,6 +22,9 @@
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
+            "allowedCommonJsDependencies": [
+              "clone-deep"
+            ],
             "assets": [
               "src/favicon.ico",
               "src/assets"
@@ -67,6 +70,43 @@
               "extractLicenses": false,
               "sourceMap": true,
               "namedChunks": true
+            },
+            "electronjs-prod":{
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "2kb",
+                  "maximumError": "4kb"
+                }
+              ],
+              "outputHashing": "all",
+              "index": "src/index-electron.html",
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.electronjs.prod.ts"
+                }
+              ]
+            },
+            "electronjs":{
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true,
+              "index": "src/index-electron.html",
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.electronjs.ts"
+                }                
+              ]
             }
           },
           "defaultConfiguration": "production"

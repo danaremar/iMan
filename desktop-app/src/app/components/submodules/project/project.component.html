@@ -317,9 +317,12 @@
                     <div *ngFor="let role of myProjects[selectedProject].projectRoles">
 
                         <div *ngIf="role.accepted" class="card m-3 flex-row">
-                            <div>
-                                <em class="bi bi-person-circle me-3"></em>
-                            </div>
+                            <ng-container *ngIf="getProfileImageUrlFromRole(role)!=null && getProfileImageUrlFromRole(role)!=''; else showIconProfile">
+                                <img class="profile-image me-3" src="{{getProfileImageUrlFromRole(role)}}" alt="Profile image">
+                            </ng-container>
+                            <ng-template #showIconProfile>
+                                <em class="bi bi-person-circle me-3" style="font-size: 35px !important;"></em>
+                            </ng-template>
                             <div class="flex-grow-1 center m-text">
                                 @{{role.user.username}}
                             </div>

@@ -23,5 +23,10 @@
     "name": "iman.security.hashEncoder",
     "type": "java.lang.String",
     "description": "Hash algorithm to use in password encode"
+  },
+  {
+    "name": "iman.resource.images",
+    "type": "java.lang.String",
+    "description": "A description for 'iman.resource.images'"
   }
 ]}

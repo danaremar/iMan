@@ -15,7 +15,6 @@ import com.google.common.io.Files;
 @Service
 public class FileUtils {
 	
-	@Value("${iman.resource.images}")
 	public static final String IMAGES_PATH = "src/main/resources/images/";
 	
 	private FileUtils() {}

@@ -3,12 +3,14 @@ import { Component, OnInit, ViewChild } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { EffortStart } from "src/app/models/effort/effort";
 import { KanbanColumnCreate, KanbanColumnShow, KanbanColumnUpdate } from "src/app/models/kanban/kanbanColumn";
-import { KanbanTask, KanbanTaskCreate, KanbanTaskMove, KanbanTaskUpdate } from "src/app/models/kanban/kanbanTask";
+import { KanbanTask, KanbanTaskChildrens, KanbanTaskCreate, KanbanTaskMove, KanbanTaskUpdate } from "src/app/models/kanban/kanbanTask";
+import { ShowUser } from "src/app/models/user/show-user";
 import { TokenService } from "src/app/services/authentication/token.service";
 import { EffortService } from "src/app/services/effort/effort.service";
 import { KanbanService } from "src/app/services/kanban/kanban.service";
 import { ProjectService } from "src/app/services/projects/project.service";
 import { SprintService } from "src/app/services/sprints/sprint.service";
+import { UserService } from "src/app/services/user/user.service";
 import { ImanSubmodule } from "../submodule.component";
 
 @Component({
@@ -45,6 +47,8 @@ export class KanbanComponent extends ImanSubmodule implements OnInit {
     updateColumnContainError: boolean = false
     updateColumnMessageError: string | undefined
 
+    formAddAssignedUser: FormGroup
+
 
     /***************************
             TASKS
@@ -60,12 +64,18 @@ export class KanbanComponent extends ImanSubmodule implements OnInit {
     updateTaskContainError: boolean = false
     updateTaskMessageError: string | undefined
 
+    // ASSIGNATIONS
+    assignedUsers: Array<ShowUser> = []
+
+    // CHILDRENS
+    selectedChildrens: Array<KanbanTaskChildrens> = []
+
 
     /***************************
             CONSTRUCTOR
     ***************************/
 
-    constructor(effortService: EffortService, kanbanService: KanbanService, sprintService: SprintService, projectService: ProjectService, formBuilder: FormBuilder, tokenService: TokenService) {
+    constructor(effortService: EffortService, kanbanService: KanbanService, sprintService: SprintService, projectService: ProjectService, formBuilder: FormBuilder, tokenService: TokenService, private userService: UserService) {
 
 
         super(effortService, kanbanService, sprintService, projectService, formBuilder, tokenService)
@@ -83,12 +93,24 @@ export class KanbanComponent extends ImanSubmodule implements OnInit {
             title: ['', [Validators.required]],
             description: ['', []],
             estimatedTime: ['', []],
+            importance: ['', []],
+            dueStartDate: ['', []],
+            dueEndDate: ['', []]
         })
         this.formUpdateTask = formBuilder.group({
             title: ['', [Validators.required]],
             description: ['', []],
             estimatedTime: ['', []],
+            importance: ['', []],
+            dueStartDate: ['', []],
+            dueEndDate: ['', []]
         })
+
+        // ADD ASSIGNED USER
+        this.formAddAssignedUser = formBuilder.group({
+            username: ['', []]
+        })
+
     }
 
 
@@ -205,8 +227,40 @@ export class KanbanComponent extends ImanSubmodule implements OnInit {
         METHODS -> TASKS
     ***************************/
 
+    reloadTaskAttributes() {
+        this.assignedUsers = []
+        this.selectedChildrens = []
+    }
+
+    //USERS
+
+    addAssignedUsername() {
+        var username = this.formAddAssignedUser.value.username
+        var u = this.usersInProject.find(x => x.username == username)
+        if (u !== undefined && this.assignedUsers.indexOf(u)==-1) {
+            this.assignedUsers.push(u)
+            this.formAddAssignedUser.reset()
+        }
+    }
+
+    removeAssignedUsername(i: number) {
+        this.assignedUsers.splice(i, 1)
+    }
+
+    getUsernamesInArray(lsUsers: Array<ShowUser>): Array<string> {
+        return lsUsers.map(x => { return x.username })
+    }
+
+    // CHILDRENS
+
+    getChildrenIdsInArray(lsChildren: Array<KanbanTaskChildrens>): Array<number> {
+        return lsChildren.map(x => { return x.id })
+    }
+
+    // NEW TASK
+
     newTask() {
-        let createTask: KanbanTaskCreate = new KanbanTaskCreate(this.formNewTask.value.title, this.formNewTask.value.description, this.formNewTask.value.estimatedTime, this.kanbanColumnSelected.id)
+        let createTask: KanbanTaskCreate = new KanbanTaskCreate(this.formNewTask.value.title, this.formNewTask.value.description, this.formNewTask.value.estimatedTime, this.kanbanColumnSelected.id, this.formNewTask.value.importance, this.formNewTask.value.dueStartDate, this.formNewTask.value.dueEndDate,this.getUsernamesInArray(this.assignedUsers),[])
         this.kanbanService.createKanbanTask(createTask).subscribe(
             res => {
                 this.formNewTask.reset()
@@ -222,11 +276,14 @@ export class KanbanComponent extends ImanSubmodule implements OnInit {
                 this.newTaskContainError = true
             }
         )
+        this.reloadTaskAttributes()
     }
+
+    // UPDATE TASK
 
     fillTaskUpdateForm(kanbanTask: KanbanTask) {
         this.kanbanTaskSelected = kanbanTask
-
+        this.assignedUsers = kanbanTask.assignedUsers
         this.formUpdateTask = this.formBuilder.group({
             title: [kanbanTask.title, [Validators.required]],
             description: [kanbanTask.description, []],
@@ -235,7 +292,7 @@ export class KanbanComponent extends ImanSubmodule implements OnInit {
     }
 
     editTask() {
-        let updateTask: KanbanTaskUpdate = new KanbanTaskUpdate(this.kanbanTaskSelected.id, this.formUpdateTask.value.title, this.formUpdateTask.value.description, this.formUpdateTask.value.estimatedTime)
+        let updateTask: KanbanTaskUpdate = new KanbanTaskUpdate(this.kanbanTaskSelected.id, this.formUpdateTask.value.title, this.formUpdateTask.value.description, this.formUpdateTask.value.estimatedTime, this.formUpdateTask.value.importance, this.formUpdateTask.value.dueStartDate, this.formUpdateTask.value.dueEndDate, this.getUsernamesInArray(this.assignedUsers), [])
         this.kanbanService.updateKanbanTask(updateTask).subscribe(
             res => {
                 this.formUpdateTask.reset()
@@ -251,6 +308,7 @@ export class KanbanComponent extends ImanSubmodule implements OnInit {
                 this.updateTaskContainError = true
             }
         )
+        this.reloadTaskAttributes()
     }
 
     disableTask(kanbanTask: any) {
@@ -267,7 +325,7 @@ export class KanbanComponent extends ImanSubmodule implements OnInit {
         }
     }
 
-    
+
 
 
     /***************************
@@ -276,13 +334,13 @@ export class KanbanComponent extends ImanSubmodule implements OnInit {
 
     updateTemporallyDragDrop(event: CdkDragDrop<any>) {
         // saved task
-        var task = this.kanban[event.previousContainer.data.id-1].tasks[event.previousIndex]
+        var task = this.kanban[event.previousContainer.data.id - 1].tasks[event.previousIndex]
 
         // delete previous
-        this.kanban[event.previousContainer.data.id-1].tasks.splice(event.previousIndex,1)
-        
+        this.kanban[event.previousContainer.data.id - 1].tasks.splice(event.previousIndex, 1)
+
         // add new
-        this.kanban[event.container.data.id-1].tasks.splice(event.currentIndex,0,task)
+        this.kanban[event.container.data.id - 1].tasks.splice(event.currentIndex, 0, task)
     }
 
     dropTask(event: CdkDragDrop<any>) {
@@ -302,6 +360,15 @@ export class KanbanComponent extends ImanSubmodule implements OnInit {
                 this.returnPrincipalError(err)
             }
         )
+    }
+
+
+    /***************************
+       METHODS -> IMAGE
+    ***************************/
+
+    public getProfileImageUrlFromUser(user: ShowUser): any {
+        return this.userService.getUrlFromProfile(user.imageUid)
     }
 
 }

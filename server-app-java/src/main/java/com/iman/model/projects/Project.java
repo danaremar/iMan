@@ -17,6 +17,8 @@ import javax.validation.constraints.PastOrPresent;
 
 import org.hibernate.validator.constraints.Length;
 
+import com.iman.model.incident.Incident;
+
 import lombok.Data;
 
 @Entity
@@ -47,5 +49,8 @@ public class Project {
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "project")
 	private List<ProjectRole> projectRoles;
+	
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "project")
+	private List<Incident> incidents;
 
 }

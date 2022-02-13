@@ -3,6 +3,8 @@ import { Injectable } from "@angular/core"
 import { FormBuilder, FormGroup } from "@angular/forms"
 import { Project } from "src/app/models/project/project"
 import { ProjectRole } from "src/app/models/project/roles"
+import { Sprint } from "src/app/models/sprint/sprint"
+import { ShowUser } from "src/app/models/user/show-user"
 import { TokenService } from "src/app/services/authentication/token.service"
 import { EffortService } from "src/app/services/effort/effort.service"
 import { KanbanService } from "src/app/services/kanban/kanban.service"
@@ -12,11 +14,13 @@ import { SprintService } from "src/app/services/sprints/sprint.service"
 @Injectable()
 export class ImanSubmodule {
 
-    myProjects: any
-    mySprints: any
+    myProjects: Array<Project> = []
+    mySprints: Array<Sprint> = []
     myTasks: any
     kanban: any
     efforts: any
+
+    usersInProject: Array<ShowUser> = []
 
     actualDate: any
 
@@ -86,6 +90,7 @@ export class ImanSubmodule {
                 this.projectService.setStoredProjectId(this.myProjects[0].id)
             }
             this.loadSprintsBySelectedProject()
+            this.getAllUsersFromSelectedProject()
         }
     }
 
@@ -307,6 +312,20 @@ export class ImanSubmodule {
             case 1: return 'Admin'
             case 2: return 'Member'
             default: return 'Visitor'
+        }
+    }
+
+
+    /***************************
+        AUXILIAR: USERS IN PROJECT
+    ***************************/
+
+    getAllUsersFromSelectedProject() {
+        if (this.projectSelectedId) {
+            let project: Project | undefined = this.myProjects.find(x => x.id==this.projectSelectedId)
+            if(project != undefined) {
+                this.usersInProject = project.projectRoles.map(x => x.user)
+            }   
         }
     }
 }

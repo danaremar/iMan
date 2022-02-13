@@ -1,11 +1,8 @@
-package com.iman.model.kanban;
+package com.iman.model.incident;
 
-import java.util.Date;
-import java.util.List;
-
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+
 import org.hibernate.validator.constraints.Length;
 
 import lombok.AllArgsConstructor;
@@ -15,29 +12,19 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class KanbanTaskUpdateDto {
+public class IncidentCreateDto {
 	
 	@NotNull
-	private Long id;
-
+	private Long projectId;
+	
 	@NotBlank
 	@Length(max = 50)
 	private String title;
-
+	
 	@Length(max = 255)
 	private String description;
-
-	@Min(value = 0)
-	private Double estimatedTime;
 	
 	@Length(max = 50)
-	private String importance;
+	private String reported;
 
-	private Date dueStartDate;
-
-	private Date dueEndDate;
-	
-	private List<String> assignedUsernames;
-	
-	private List<Long> childrenIds;
 }

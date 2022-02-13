@@ -12,7 +12,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import com.iman.model.users.User;
 
 import lombok.Data;
@@ -29,7 +29,7 @@ public class ProjectRole {
 	@NotNull
 	@ManyToOne
 	@JoinColumn(name = "user_id")
-	@JsonIgnoreProperties({ "id", "projectRoles" })
+	@JsonIncludeProperties({"username", "imageUid"})
 	private User user;
 
 	@NotNull

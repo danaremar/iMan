@@ -9,15 +9,11 @@ import { UserService } from "src/app/services/user/user.service";
 })
 export class SidebarComponent implements OnInit {
 
-    profileImageUrl: any
-
     constructor(private tokenService: TokenService, private userService: UserService) {
     }
 
     ngOnInit(): void {
         this.userService.reloadProfileImage()
-        this.profileImageUrl = this.userService.getMyImageUrl()
-        console.log('Loaded profile image: ' + this.profileImageUrl)
     }
 
     onLogout(): void {
@@ -27,5 +23,9 @@ export class SidebarComponent implements OnInit {
 
     reloadWindow() {
         window.location.reload()
+    }
+
+    public getProfileImageUrl(): any {
+        return this.userService.imageUrl
     }
 }

@@ -7,9 +7,9 @@
 
             <div class="col-lg-3 align-self-top mb-4 me-auto">
                 <div id="image-block" class="mx-auto">
-                    <img *ngIf="profileImageUrl!=null && profileImageUrl!=''" class="profile-image my-2 size-xl mx-auto d-block" src="{{profileImageUrl}}" alt="Profile image" onclick="$('#userPhotoInput').trigger('click');">
-                    <em *ngIf="profileImageUrl==null || profileImageUrl==''" class="bi bi-person-circle size-xl mx-auto d-block" style="font-size: 30px;" onclick="$('#userPhotoInput').trigger('click');"></em>
-                    <em *ngIf="profileImageUrl!=null && profileImageUrl!=''" class="bi bi-trash-fill delete-image red-btn" (click)="deleteProfileImage()"></em>
+                    <img *ngIf="getProfileImageUrl()!=null && getProfileImageUrl()!=''" class="profile-image my-2 size-xl mx-auto d-block" src="{{getProfileImageUrl()}}" alt="Profile image" onclick="$('#userPhotoInput').trigger('click');">
+                    <em *ngIf="getProfileImageUrl()==null || getProfileImageUrl()==''" class="bi bi-person-circle size-xl mx-auto d-block" style="font-size: 30px;" onclick="$('#userPhotoInput').trigger('click');"></em>
+                    <em *ngIf="getProfileImageUrl()!=null && getProfileImageUrl()!=''" class="bi bi-trash-fill delete-image red-btn" (click)="deleteProfileImage()"></em>
                     <input hidden type="file" #imageInput accept="image/*" id="userPhotoInput" accept=".jpg, .jpeg, .png, .gif" (change)="uploadProfileImage(imageInput)">
                 </div>
             </div>

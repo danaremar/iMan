@@ -35,3 +35,7 @@ build/
 
 # Other
 .dccache
+*.jpg
+*.jpeg
+*.gif
+*.png
