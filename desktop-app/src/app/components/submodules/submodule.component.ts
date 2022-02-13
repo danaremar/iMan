@@ -1,6 +1,7 @@
 import { DatePipe } from "@angular/common"
 import { Injectable } from "@angular/core"
 import { FormBuilder, FormGroup } from "@angular/forms"
+import { KanbanTask } from "src/app/models/kanban/kanbanTask"
 import { Project } from "src/app/models/project/project"
 import { ProjectRole } from "src/app/models/project/roles"
 import { Sprint } from "src/app/models/sprint/sprint"
@@ -16,7 +17,7 @@ export class ImanSubmodule {
 
     myProjects: Array<Project> = []
     mySprints: Array<Sprint> = []
-    myTasks: any
+    myTasks: Array<KanbanTask> = []
     kanban: any
     efforts: any
 
@@ -134,7 +135,7 @@ export class ImanSubmodule {
                     this.mySprints = data
                     if(this.mySprints!=undefined && this.mySprints.length==0){
                         this.sprintService.setStoredSprintId(0)
-                        this.myTasks = null
+                        this.myTasks = []
                         this.kanban = null
                     }
                     this.sprintSelectedId = this.sprintService.getStoredSprintId()
@@ -187,8 +188,7 @@ export class ImanSubmodule {
     loadTasksBySprintIdEvent(taskIdEvent: any) {
         let taskIdStr = taskIdEvent.value
         this.kanbanService.setStoredKanbanTaskId(Number(taskIdStr))
-        this.myTasks = null
-        this.kanbanService.setStoredKanbanTaskId(0)
+        this.myTasks = []
         this.loadTasksBySelectedSprint()
     }
 
