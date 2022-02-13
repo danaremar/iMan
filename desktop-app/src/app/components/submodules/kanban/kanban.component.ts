@@ -4,7 +4,6 @@ import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { EffortStart } from "src/app/models/effort/effort";
 import { KanbanColumnCreate, KanbanColumnShow, KanbanColumnUpdate } from "src/app/models/kanban/kanbanColumn";
 import { KanbanTask, KanbanTaskChildrens, KanbanTaskCreate, KanbanTaskMove, KanbanTaskUpdate } from "src/app/models/kanban/kanbanTask";
-import { Project } from "src/app/models/project/project";
 import { ShowUser } from "src/app/models/user/show-user";
 import { TokenService } from "src/app/services/authentication/token.service";
 import { EffortService } from "src/app/services/effort/effort.service";
@@ -48,6 +47,8 @@ export class KanbanComponent extends ImanSubmodule implements OnInit {
     updateColumnContainError: boolean = false
     updateColumnMessageError: string | undefined
 
+    formAddAssignedUser: FormGroup
+
 
     /***************************
             TASKS
@@ -64,7 +65,6 @@ export class KanbanComponent extends ImanSubmodule implements OnInit {
     updateTaskMessageError: string | undefined
 
     // ASSIGNATIONS
-    usersInProject: Array<ShowUser> = []
     assignedUsers: Array<ShowUser> = []
 
     // CHILDRENS
@@ -105,6 +105,12 @@ export class KanbanComponent extends ImanSubmodule implements OnInit {
             dueStartDate: ['', []],
             dueEndDate: ['', []]
         })
+
+        // ADD ASSIGNED USER
+        this.formAddAssignedUser = formBuilder.group({
+            username: ['', []]
+        })
+
     }
 
 
@@ -114,7 +120,6 @@ export class KanbanComponent extends ImanSubmodule implements OnInit {
 
     ngOnInit(): void {
         this.loadMyProjects()
-        this.getAllUsersFromSelectedProject()
     }
 
 
@@ -229,17 +234,12 @@ export class KanbanComponent extends ImanSubmodule implements OnInit {
 
     //USERS
 
-    getAllUsersFromSelectedProject() {
-        if (this.projectSelectedId) {
-            let project: Project = this.myProjects[this.projectSelectedId]
-            this.usersInProject = project.projectRoles.map(x => x.user)
-        }
-    }
-
-    addAssignedUsername(username: string) {
+    addAssignedUsername() {
+        var username = this.formAddAssignedUser.value.username
         var u = this.usersInProject.find(x => x.username == username)
-        if (u !== undefined) {
+        if (u !== undefined && this.assignedUsers.indexOf(u)==-1) {
             this.assignedUsers.push(u)
+            this.formAddAssignedUser.reset()
         }
     }
 
@@ -279,10 +279,11 @@ export class KanbanComponent extends ImanSubmodule implements OnInit {
         this.reloadTaskAttributes()
     }
 
+    // UPDATE TASK
+
     fillTaskUpdateForm(kanbanTask: KanbanTask) {
         this.kanbanTaskSelected = kanbanTask
         this.assignedUsers = kanbanTask.assignedUsers
-
         this.formUpdateTask = this.formBuilder.group({
             title: [kanbanTask.title, [Validators.required]],
             description: [kanbanTask.description, []],
@@ -291,8 +292,7 @@ export class KanbanComponent extends ImanSubmodule implements OnInit {
     }
 
     editTask() {
-        
-        let updateTask: KanbanTaskUpdate = new KanbanTaskUpdate(this.kanbanTaskSelected.id, this.formUpdateTask.value.title, this.formUpdateTask.value.description, this.formUpdateTask.value.estimatedTime, this.formUpdateTask.value.importance, this.formUpdateTask.value.dueStartDate, this.formUpdateTask.value.dueEndDate, [], [])
+        let updateTask: KanbanTaskUpdate = new KanbanTaskUpdate(this.kanbanTaskSelected.id, this.formUpdateTask.value.title, this.formUpdateTask.value.description, this.formUpdateTask.value.estimatedTime, this.formUpdateTask.value.importance, this.formUpdateTask.value.dueStartDate, this.formUpdateTask.value.dueEndDate, this.getUsernamesInArray(this.assignedUsers), [])
         this.kanbanService.updateKanbanTask(updateTask).subscribe(
             res => {
                 this.formUpdateTask.reset()

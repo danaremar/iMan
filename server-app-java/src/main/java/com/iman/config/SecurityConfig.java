@@ -37,9 +37,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Value("${iman.security.protection.csrf}")
 	public Boolean enableCsrfProtection = Boolean.FALSE;
-	
-	@Value("${iman.security.hashEncoder}")
-	public String hashEncoder = "SHA3-256";
 
 	@Bean
 	public JwtTokenFilter jwtTokenFilter() {
