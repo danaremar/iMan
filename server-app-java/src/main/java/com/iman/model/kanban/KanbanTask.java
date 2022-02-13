@@ -100,7 +100,7 @@ public class KanbanTask {
 	
 	@ManyToMany
 	@JoinTable(name = "kanban_task_children")
-	@JsonIncludeProperties({"id", "title"})
+	@JsonIncludeProperties({"id", "title", "number"})
 	private List<KanbanTask> children;
 
 }

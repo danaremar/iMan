@@ -55,7 +55,7 @@ INSERT INTO kanban_task (id, active, creation_date, description, due_end_date, d
 
 
 -- KANBAN TASK CHILDREN (hierarchy)
-INSERT INTO kanban_task_children (kanban_task_id, children_id) VALUES(1, 2);
+INSERT INTO kanban_task_children (kanban_task_id, children_id) VALUES(1, 4);
 INSERT INTO kanban_task_children (kanban_task_id, children_id) VALUES(1, 3);
 INSERT INTO kanban_task_children (kanban_task_id, children_id) VALUES(3, 4);
 INSERT INTO kanban_task_children (kanban_task_id, children_id) VALUES(3, 5);

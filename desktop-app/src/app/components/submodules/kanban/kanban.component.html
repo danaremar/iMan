@@ -102,8 +102,6 @@
 
                         <div class="s-text">{{task.description}}</div>
                         <div>
-
-
                             <div *ngIf="task.computedTime!=0 && task.estimatedTime">
                                 <ng-container *ngIf="task.computedTime<=task.estimatedTime; else overloadTime">
                                     <div class="progress bg-success mt-3 mb-2">
@@ -558,6 +556,43 @@
                                     </div>
                                 </div>
 
+                            </div>
+
+                            <!-- childrens -->
+                            <div class="form-group mb-4 mt-3">
+                                <p class="mb-0">Childrens</p>
+
+                                <!-- input new children task -->
+                                <form class="mb-3" [formGroup]="formAddChildrenTask" (ngSubmit)="addChildrenTask()">
+                                    <div class="d-flex">
+                                        <!-- input new assigned user -->
+                                        <div class="flex-grow-1 form-group me-3">
+                                            <select class="form-control {{inputClass(formAddChildrenTask, 'children')}}"
+                                            formControlName="children">
+                                                <option *ngFor="let c of myTasks" value="{{c.id}}">#{{c.number}}: {{c.title}}</option>
+                                            </select>
+                                        </div>
+
+                                        <!-- add assigned user -->
+                                        <div>
+                                            <button class="btn btn-success my-auto"
+                                                [disabled]="!formAddChildrenTask.valid">
+                                                Add
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+
+                                <!-- selected childrens -->
+                                <div class="d-flex mx-2" *ngFor="let c of selectedChildrens, let j=index">
+                                    <div class="flex-grow-1 my-auto">#{{c.number}}: {{c.title}}</div>
+                                    <div>
+                                        <a class="nav-link" (click)="removeChildrenTask(j)"
+                                            ngbTooltip="Delete #{{c.number}}" placement="right" [openDelay]="300">
+                                            <em class="bi bi-sm bi-trash-fill"></em>
+                                        </a>
+                                    </div>
+                                </div>
                             </div>
 
                             <!-- buttons -->
