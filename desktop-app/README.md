@@ -44,6 +44,8 @@ Technology between this project: Angular, Sprint Boot & Bootstrap (including Ico
 -- ***styles.css***: general customized bootstrap styles (applies for all CSS elements in application)
 -- ***environment***: configure settings to run (electron & production)
 -- ***app***: contains all customized modules
+--- ***app.module.ts***: import all modules
+--- ***app-routing.module.ts***: shows routes to modules
 - ***main.js***: loads electron view
 - ***angular.json***: angular configuration (to start, select environment...)
 - ***package.json***: configure dependencies

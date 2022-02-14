@@ -15,15 +15,12 @@ import { NavbarComponent } from './components/menu/navbar/navbar.component';
 import { ProjectComponent } from './components/submodules/project/project.component';
 import { UserComponent } from './components/submodules/user/user.component';
 import { KanbanComponent } from './components/submodules/kanban/kanban.component';
-import { TeamComponent } from './components/submodules/team/team.component';
-import { ConfigComponent } from './components/submodules/config/config.component';
-import { ChatComponent } from './components/submodules/chat/chat.component';
-import { RequirementsComponent } from './components/submodules/requirements/requirements.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { SprintComponent } from './components/submodules/sprints/sprint.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { EffortComponent } from './components/submodules/effort/effort.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { GanttComponent } from './components/submodules/gantt/gantt.component';
 
 @NgModule({
   declarations: [
@@ -36,11 +33,8 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
     UserComponent,
     EffortComponent,
     KanbanComponent,
-    TeamComponent,
-    ConfigComponent,
-    ChatComponent,
-    RequirementsComponent,
-    SprintComponent
+    SprintComponent,
+    GanttComponent
   ],
   imports: [
     DragDropModule,
