@@ -1,5 +1,6 @@
 package com.iman.service.kanban;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -211,12 +212,16 @@ public class KanbanService {
 	}
 
 	public List<KanbanTask> getKanbanTasksByLongList(List<Long> longLs, Sprint sprint) {
-		// match kanbanTasks with Sprint
-		if (!getAllKanbanTaskBySprint(sprint).containsAll(longLs)) {
-			throw new DataIntegrityViolationException(ImanMessages.KANBAN_TASK_IS_NOT_CONTAINED_IN_SPRINT);
+		if(!longLs.isEmpty()) {
+			// match kanbanTasks with Sprint
+			if (!getAllKanbanTaskBySprint(sprint).containsAll(longLs)) {
+				throw new DataIntegrityViolationException(ImanMessages.KANBAN_TASK_IS_NOT_CONTAINED_IN_SPRINT);
+			}
+			// get all tasks
+			return longLs.stream().map(this::findTaskById).collect(Collectors.toList());
+		} else {
+			return new ArrayList<>();
 		}
-		// get all tasks
-		return longLs.stream().map(this::findTaskById).collect(Collectors.toList());
 	}
 
 	@Transactional
@@ -251,12 +256,26 @@ public class KanbanService {
 				kanbanTask.getKanbanColumn().getSprint()));
 		kanbanTaskRepository.save(kanbanTask);
 	}
+	
+	public void removeChildren(KanbanTask parent, KanbanTask child) {
+		List<KanbanTask> lsChildren = parent.getChildren();
+		lsChildren.remove(child);
+		parent.setChildren(lsChildren);
+		this.kanbanTaskRepository.save(parent);
+	}
+	
+	public void removeParentAssociationFromChildren(KanbanTask kanbanTask) {
+		List<KanbanTask> parentTask = this.kanbanTaskRepository.findAll();
+		parentTask.stream().forEach(x->removeChildren(x, kanbanTask));
+	}
 
 	@Transactional
 	public void disableKanbanTask(Long kanbanTaskId) {
 		KanbanTask kanbanTask = findTaskById(kanbanTaskId);
 		verifyMember(kanbanTask.getKanbanColumn().getSprint());
+		removeParentAssociationFromChildren(kanbanTask);
 		kanbanTask.setActive(false);
+		kanbanTask.setChildren(null);
 		kanbanTaskRepository.save(kanbanTask);
 		reorderNumberAndSaveKanbanTasks(kanbanTask.getKanbanColumn().getSprint());
 	}

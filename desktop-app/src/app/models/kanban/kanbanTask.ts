@@ -3,15 +3,17 @@ import { KanbanColumn } from "./kanbanColumn"
 
 export class KanbanTaskChildrens {
 
-    constructor(id: number, number: number, title: string) {
+    constructor(id: number, number: number, title: string, active: boolean) {
         this.id = id
         this.number = number
         this.title = title
+        this.active = active
     }
 
     id: number
     number: number
     title: string
+    active: boolean
 }
 
 export class KanbanTaskCreate {

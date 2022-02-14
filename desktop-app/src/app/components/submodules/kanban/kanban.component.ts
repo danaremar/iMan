@@ -281,12 +281,13 @@ export class KanbanComponent extends ImanSubmodule implements OnInit {
     // NEW TASK
 
     newTask() {
-        let createTask: KanbanTaskCreate = new KanbanTaskCreate(this.formNewTask.value.title, this.formNewTask.value.description, this.formNewTask.value.estimatedTime, this.kanbanColumnSelected.id, this.formNewTask.value.importance, this.formNewTask.value.dueStartDate, this.formNewTask.value.dueEndDate,this.getUsernamesInArray(this.assignedUsers),[])
+        let createTask: KanbanTaskCreate = new KanbanTaskCreate(this.formNewTask.value.title, this.formNewTask.value.description, this.formNewTask.value.estimatedTime, this.kanbanColumnSelected.id, this.formNewTask.value.importance, this.formNewTask.value.dueStartDate, this.formNewTask.value.dueEndDate,this.getUsernamesInArray(this.assignedUsers), this.getChildrenIdsInArray(this.selectedChildrens))
         this.kanbanService.createKanbanTask(createTask).subscribe(
             res => {
                 this.formNewTask.reset()
                 this.closebuttonCreateTask.nativeElement.click()
                 this.loadKanbanBySelectedSprint()
+                this.reloadTaskAttributes()
             },
             err => {
                 var r = err.error.text
@@ -297,7 +298,6 @@ export class KanbanComponent extends ImanSubmodule implements OnInit {
                 this.newTaskContainError = true
             }
         )
-        this.reloadTaskAttributes()
     }
 
     // UPDATE TASK
@@ -320,6 +320,7 @@ export class KanbanComponent extends ImanSubmodule implements OnInit {
                 this.formUpdateTask.reset()
                 this.closebuttonUpdateTask.nativeElement.click()
                 this.loadKanbanBySelectedSprint()
+                this.reloadTaskAttributes()
             },
             err => {
                 var r = err.error.text
@@ -330,7 +331,6 @@ export class KanbanComponent extends ImanSubmodule implements OnInit {
                 this.updateTaskContainError = true
             }
         )
-        this.reloadTaskAttributes()
     }
 
     disableTask(kanbanTask: any) {
