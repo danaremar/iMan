@@ -129,7 +129,7 @@
                             <div class="mx-1" *ngFor="let tag of task.tags.split(',')">
 
                                 <div class="chip">
-                                    #{{tag}}
+                                    #{{tag.trim()}}
                                 </div>
                             </div>
                         </div>
@@ -235,8 +235,7 @@
                                     *ngIf="formUpdateColumn.get('title')?.touched && formUpdateColumn.get('title')?.invalid">
                                     <div *ngIf="formUpdateColumn.get('title')?.errors?.required">Cannot be empty</div>
                                     <div *ngIf="formUpdateColumn.get('title')?.errors?.minlength">Must containt at least
-                                        2
-                                        characters</div>
+                                        2 characters</div>
                                     <div *ngIf="formUpdateColumn.get('title')?.errors?.maxlength">Only 50 characters are
                                         allowed</div>
                                 </div>
