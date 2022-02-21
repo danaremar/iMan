@@ -9,7 +9,7 @@
                         <em class="bi bi-stopwatch" style="font-size: 30px;"></em>
                     </a>
                 </li>
-                <li [routerLinkActive]="['active']" class="nav-item">
+                <li [routerLinkActive]="['active']" class="nav-item" hidden>
                     <a class="nav-link" [routerLink]="['/app/gantt']" style="color: inherit;" ngbTooltip="Gantt" placement="right" [openDelay]="300">
                         <em class="bi bi-bar-chart-steps" style="font-size: 30px;"></em>
                     </a>
@@ -17,6 +17,11 @@
                 <li [routerLinkActive]="['active']" class="nav-item">
                     <a class="nav-link" [routerLink]="['/app/kanban']" style="color: inherit;" ngbTooltip="Kanban" placement="right" [openDelay]="300">
                         <em class="bi bi-kanban" style="font-size: 30px;"></em>
+                    </a>
+                </li>
+                <li [routerLinkActive]="['active']" class="nav-item">
+                    <a class="nav-link" [routerLink]="['/app/incidents']" style="color: inherit;" ngbTooltip="Incidents" placement="right" [openDelay]="300">
+                        <em class="bi bi-exclamation-circle" style="font-size: 30px;"></em>
                     </a>
                 </li>
                 <li [routerLinkActive]="['active']" class="nav-item" hidden>

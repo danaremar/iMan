@@ -9,6 +9,7 @@ import { SprintComponent } from './components/submodules/sprints/sprint.componen
 import { EffortComponent } from './components/submodules/effort/effort.component';
 import { UserComponent } from './components/submodules/user/user.component';
 import { GanttComponent } from './components/submodules/gantt/gantt.component';
+import { IncidentComponent } from './components/submodules/incident/incident.component';
 
 const routes: Routes = [
   { path: '', component: AppComponent },
@@ -21,7 +22,8 @@ const routes: Routes = [
       { path: 'kanban', component: KanbanComponent },
       { path: 'user', component: UserComponent },
       { path: 'sprint', component: SprintComponent },
-      { path: 'gantt', component: GanttComponent}
+      { path: 'gantt', component: GanttComponent },
+      { path: 'incidents', component: IncidentComponent}
     ],
   },
 

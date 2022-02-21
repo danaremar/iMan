@@ -21,6 +21,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { EffortComponent } from './components/submodules/effort/effort.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { GanttComponent } from './components/submodules/gantt/gantt.component';
+import { IncidentComponent } from './components/submodules/incident/incident.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import { GanttComponent } from './components/submodules/gantt/gantt.component';
     EffortComponent,
     KanbanComponent,
     SprintComponent,
-    GanttComponent
+    GanttComponent,
+    IncidentComponent
   ],
   imports: [
     DragDropModule,
