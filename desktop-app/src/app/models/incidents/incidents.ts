@@ -18,6 +18,26 @@ export class IncidentCreateDto {
     reported: string
 }
 
+export class IncidentUpdateDto {
+
+    constructor(
+        id: number,
+        title: string,
+        description: string,
+        reported: string
+    ) {
+        this.id = id
+        this.title = title
+        this.description = description
+        this.reported = reported
+    }
+
+    id: number
+    title: string
+    description: string
+    reported: string
+}
+
 export class IncidentListDto {
 
     constructor(
