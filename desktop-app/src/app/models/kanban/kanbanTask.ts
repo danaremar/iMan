@@ -23,6 +23,7 @@ export class KanbanTaskCreate {
         description: string,
         estimatedTime: number,
         kanbanColumnId: number,
+        tags: string,
         importance: string,
         dueStartDate: Date,
         dueEndDate: Date,
@@ -33,6 +34,7 @@ export class KanbanTaskCreate {
         this.description = description
         this.estimatedTime = estimatedTime
         this.kanbanColumnId = kanbanColumnId
+        this.tags = tags
         this.importance = importance
         this.dueStartDate = dueStartDate
         this.dueEndDate = dueEndDate
@@ -44,6 +46,7 @@ export class KanbanTaskCreate {
     description: string
     estimatedTime: number
     kanbanColumnId: number
+    tags: string
     importance: string
     dueStartDate: Date
     dueEndDate: Date
@@ -58,6 +61,7 @@ export class KanbanTaskUpdate {
         title: string,
         description: string,
         estimatedTime: number,
+        tags: string,
         importance: string,
         dueStartDate: Date,
         dueEndDate: Date,
@@ -68,6 +72,7 @@ export class KanbanTaskUpdate {
         this.title = title
         this.description = description
         this.estimatedTime = estimatedTime
+        this.tags = tags
         this.importance = importance
         this.dueStartDate = dueStartDate
         this.dueEndDate = dueEndDate
@@ -79,6 +84,7 @@ export class KanbanTaskUpdate {
     title: string
     description: string
     estimatedTime: number
+    tags: string
     importance: string
     dueStartDate: Date
     dueEndDate: Date
@@ -113,6 +119,7 @@ export class KanbanTask {
         kanbanColumn: KanbanColumn,
         computedTime: number,
         creator: ShowUser,
+        tags: string,
         importance: string,
         dueStartDate: Date,
         dueEndDate: Date,
@@ -130,6 +137,7 @@ export class KanbanTask {
         this.kanbanColumn = kanbanColumn
         this.computedTime = computedTime
         this.creator = creator
+        this.tags = tags
         this.importance = importance
         this.dueStartDate = dueStartDate
         this.dueEndDate = dueEndDate
@@ -148,6 +156,7 @@ export class KanbanTask {
     kanbanColumn: KanbanColumn
     computedTime: number
     creator: ShowUser
+    tags: string
     importance: string
     dueStartDate: Date
     dueEndDate: Date

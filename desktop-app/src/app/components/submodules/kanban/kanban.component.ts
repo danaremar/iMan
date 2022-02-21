@@ -94,6 +94,7 @@ export class KanbanComponent extends ImanSubmodule implements OnInit {
             title: ['', [Validators.required]],
             description: ['', []],
             estimatedTime: ['', []],
+            tags: ['', []],
             importance: ['', []],
             dueStartDate: ['', []],
             dueEndDate: ['', []]
@@ -102,6 +103,7 @@ export class KanbanComponent extends ImanSubmodule implements OnInit {
             title: ['', [Validators.required]],
             description: ['', []],
             estimatedTime: ['', []],
+            tags: ['', []],
             importance: ['', []],
             dueStartDate: ['', []],
             dueEndDate: ['', []]
@@ -281,7 +283,7 @@ export class KanbanComponent extends ImanSubmodule implements OnInit {
     // NEW TASK
 
     newTask() {
-        let createTask: KanbanTaskCreate = new KanbanTaskCreate(this.formNewTask.value.title, this.formNewTask.value.description, this.formNewTask.value.estimatedTime, this.kanbanColumnSelected.id, this.formNewTask.value.importance, this.formNewTask.value.dueStartDate, this.formNewTask.value.dueEndDate,this.getUsernamesInArray(this.assignedUsers), this.getChildrenIdsInArray(this.selectedChildrens))
+        let createTask: KanbanTaskCreate = new KanbanTaskCreate(this.formNewTask.value.title, this.formNewTask.value.description, this.formNewTask.value.estimatedTime, this.kanbanColumnSelected.id, this.formNewTask.value.tags, this.formNewTask.value.importance, this.formNewTask.value.dueStartDate, this.formNewTask.value.dueEndDate,this.getUsernamesInArray(this.assignedUsers), this.getChildrenIdsInArray(this.selectedChildrens))
         this.kanbanService.createKanbanTask(createTask).subscribe(
             res => {
                 this.formNewTask.reset()
@@ -310,11 +312,15 @@ export class KanbanComponent extends ImanSubmodule implements OnInit {
             title: [kanbanTask.title, [Validators.required]],
             description: [kanbanTask.description, []],
             estimatedTime: [kanbanTask.estimatedTime, []],
+            importance: [kanbanTask.importance,[]],
+            tags: [kanbanTask.tags,[]],
+            dueStartDate: [kanbanTask.dueStartDate,[]],
+            dueEndDate: [kanbanTask.dueEndDate,[]]
         })
     }
 
     editTask() {
-        let updateTask: KanbanTaskUpdate = new KanbanTaskUpdate(this.kanbanTaskSelected.id, this.formUpdateTask.value.title, this.formUpdateTask.value.description, this.formUpdateTask.value.estimatedTime, this.formUpdateTask.value.importance, this.formUpdateTask.value.dueStartDate, this.formUpdateTask.value.dueEndDate, this.getUsernamesInArray(this.assignedUsers), this.getChildrenIdsInArray(this.selectedChildrens))
+        let updateTask: KanbanTaskUpdate = new KanbanTaskUpdate(this.kanbanTaskSelected.id, this.formUpdateTask.value.title, this.formUpdateTask.value.description, this.formUpdateTask.value.estimatedTime, this.formUpdateTask.value.tags, this.formUpdateTask.value.importance, this.formUpdateTask.value.dueStartDate, this.formUpdateTask.value.dueEndDate, this.getUsernamesInArray(this.assignedUsers), this.getChildrenIdsInArray(this.selectedChildrens))
         this.kanbanService.updateKanbanTask(updateTask).subscribe(
             res => {
                 this.formUpdateTask.reset()

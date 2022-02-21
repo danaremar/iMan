@@ -250,6 +250,9 @@ public class KanbanService {
 		kanbanTask.setTitle(kanbanTaskUpdateDto.getTitle());
 		kanbanTask.setDescription(kanbanTaskUpdateDto.getDescription());
 		kanbanTask.setEstimatedTime(kanbanTaskUpdateDto.getEstimatedTime());
+		kanbanTask.setTags(kanbanTaskUpdateDto.getTags());
+		kanbanTask.setDueStartDate(kanbanTaskUpdateDto.getDueStartDate());
+		kanbanTask.setDueEndDate(kanbanTaskUpdateDto.getDueEndDate());
 		kanbanTask.setAssignedUsers(getUsersFromUsernames(kanbanTaskUpdateDto.getAssignedUsernames(),
 				kanbanTask.getKanbanColumn().getSprint().getProject()));
 		kanbanTask.setChildren(getKanbanTasksByLongList(kanbanTaskUpdateDto.getChildrenIds(),
@@ -297,6 +300,7 @@ public class KanbanService {
 		kanbanTaskRepository.save(kanbanTask);
 	}
 
+	// TODO: Optimize with SQL
 	private void reorderNumberAndSaveKanbanTasks(Sprint sprint) {
 		List<KanbanTask> ls = sprint.getKanbanColums().stream().flatMap(x -> x.getTasks().stream())
 				.filter(KanbanTask::getActive).sorted(Comparator.comparing(KanbanTask::getNumber))
@@ -307,6 +311,7 @@ public class KanbanService {
 				.forEach(x -> saveKanbanTaskNumber(ls.get(x), (long) x + 1));
 	}
 
+	// TODO: Optimize with SQL
 	private void reorderOrderInColumnAndSaveKanbanTasks(List<KanbanTask> ls, KanbanColumn kanbanColumn) {
 		IntStream.range(0, ls.size())
 				.filter(x -> !ls.get(x).getKanbanColumn().getId().equals(kanbanColumn.getId())
@@ -323,6 +328,7 @@ public class KanbanService {
 		}
 	}
 
+	// TODO: Optimize with SQL
 	@Transactional // if fails -> rollback
 	public void moveKanbanTask(Long kanbanTaskId, Long newKanbanColumnId, Long newPosition) {
 		KanbanTask kanbanTask = findTaskById(kanbanTaskId);

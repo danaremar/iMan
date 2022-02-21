@@ -73,6 +73,9 @@ public class KanbanTask {
 	@OneToOne
 	@JsonIncludeProperties({"id","username","imageUid"})
 	private User creator;
+	
+	@Length(max = 255)
+	private String tags;
 
 	// EFFORTS
 

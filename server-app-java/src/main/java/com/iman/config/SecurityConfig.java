@@ -36,7 +36,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	public Boolean enableXssProtection = Boolean.TRUE;
 	
 	@Value("${iman.security.protection.csrf}")
-	public Boolean enableCsrfProtection = Boolean.FALSE;
+	public Boolean enableCsrfProtection = Boolean.TRUE;
 
 	@Bean
 	public JwtTokenFilter jwtTokenFilter() {
