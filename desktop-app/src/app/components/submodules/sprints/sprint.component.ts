@@ -19,15 +19,6 @@ export class SprintComponent extends ImanSubmodule implements OnInit {
     @ViewChild('closebuttonCreate') closebuttonCreate: any;
     @ViewChild('closebuttonUpdate') closebuttonUpdate: any;
 
-    myProjects: any
-    mySprints: any
-    projectSelectedId: number | null | undefined
-    accessToEdit: boolean = false
-    actualDate: any
-
-    containError: boolean = false
-    messageError: string | undefined
-
     formNewSprint: FormGroup
     newSprintContainError: boolean = false
     newSprintMessageError: string | undefined
