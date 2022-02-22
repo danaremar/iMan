@@ -22,17 +22,40 @@ export class IncidentService {
     */
 
     // FIND INCIDENT (TO LIST)
-    public findIncidentsByProject(projectId: number, pageNumber: number, pageSize: number): Observable<any> {
+    // public findIncidentsByProject(projectId: number, pageNumber: number, pageSize: number): Observable<any> {
+    //     var url = this.hostUrl + 'project/' + projectId
+    //     const params = new HttpParams()
+    //         .set("page", (pageNumber-1).toString())
+    //         .set("size", pageSize.toString())
+    //     return this.httpClient.get<any>(url, {params})
+    // }
+
+    public findIncidentsByProject(projectId: number, pageNumber: number, pageSize: number, order: Array<any>, filter: any, incCol: any): Observable<any> {
         var url = this.hostUrl + 'project/' + projectId
-        const params = new HttpParams()
-            .set("page", (pageNumber-1).toString())
+        let params = new HttpParams()
+            .set("page", (pageNumber - 1).toString())
             .set("size", pageSize.toString())
-        return this.httpClient.get<any>(url, {params})
+
+        for (let i = 0; i < order.length; i++) {
+            var a = order[i]
+            params = params.append("sort", a.colId + ',' + a.sort)
+        }
+
+        if (filter) {
+            var b = this.getAllColumns(incCol)
+            for (let column of b) {
+                var searchFilter = filter[column]
+                if (searchFilter) {
+                    params = params.append(column, searchFilter.filter)
+                }
+            }
+        }
+
+        return this.httpClient.get<any>(url, { params })
     }
 
-    public findIncidentsByProjectParams(projectId: number, params: any): Observable<any> {
-        var url = this.hostUrl + 'project/' + projectId
-        return this.httpClient.get<any>(url, {params})
+    public getAllColumns(incCol: any): Array<string> {
+        return incCol.map((x: { field: any; }) => x.field)
     }
 
     // GET INCIDENT FROM ID

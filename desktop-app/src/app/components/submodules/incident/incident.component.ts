@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { FormBuilder } from "@angular/forms";
-import { IGetRowsParams } from "ag-grid-community/dist/lib/interfaces/iDatasource";
+import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import { IDatasource, IGetRowsParams, Module } from "ag-grid-community";
 import { IncidentListDto } from "src/app/models/incidents/incidents";
 import { TokenService } from "src/app/services/authentication/token.service";
 import { EffortService } from "src/app/services/effort/effort.service";
@@ -24,7 +25,9 @@ export class IncidentComponent extends ImanSubmodule implements OnInit {
             field: "code",
             sortable: true,
             filter: true,
-            maxWidth: 100
+            maxWidth: 120,
+            unSortIcon: true,
+            pinned: 'left'
         },
         {
             headerName: "Title",
@@ -85,7 +88,6 @@ export class IncidentComponent extends ImanSubmodule implements OnInit {
         {
             headerName: "Creator",
             field: "username",
-            sortable: true,
             filter: true,
             resizable: true
         },
@@ -98,15 +100,15 @@ export class IncidentComponent extends ImanSubmodule implements OnInit {
         }
     ]
 
-    gridApi: any
-    gridColumnApi: any
+    private gridApi: any
+    private gridColumnApi: any
 
-    pageSize: number = 250000000
+    pageSize: number = 5
     pageNumber: number = 1
     totalElements: number = 0
     searchTerm: string = ""
 
-    constructor(public effortService: EffortService, public kanbanService: KanbanService, public sprintService: SprintService, public projectService: ProjectService, public formBuilder: FormBuilder, public tokenService: TokenService, public incidentService: IncidentService) {
+    constructor(public effortService: EffortService, public kanbanService: KanbanService, public sprintService: SprintService, public projectService: ProjectService, public formBuilder: FormBuilder, public tokenService: TokenService, public incidentService: IncidentService, private modalService: NgbModal) {
         super(effortService, kanbanService, sprintService, projectService, formBuilder, tokenService)
     }
 
@@ -120,23 +122,23 @@ export class IncidentComponent extends ImanSubmodule implements OnInit {
             if (projectId == null || projectId == 0) {
                 this.projectService.setStoredProjectId(this.myProjects[0].id)
             }
-            //this.loadIncidentsFromProjectId()
+            this.loadIncidentsFromProjectId()
         }
     }
 
     loadSprintsByProjectIdEvent(projectIdEvent: any) {
         let projectIdStr = projectIdEvent.value
         this.projectService.setStoredProjectId(Number(projectIdStr))
-        // this.loadIncidentsFromProjectId()
+        this.loadIncidentsFromProjectId()
     }
-
+    /*
     loadIncidentsFromProjectId() {
         if (this.projectSelectedId) {
             this.incidentService.findIncidentsByProject(this.projectSelectedId, this.pageNumber, this.pageSize).subscribe(
                 data => {
                     this.containError = false
                     this.incidents = data.content
-                    this.pageNumber = data.pageable.pageNumber
+                    this.pageNumber = data.pageable.pageNumber + 1
                     this.pageSize = data.pageable.pageSize
                     this.totalElements = data.totalElements
 
@@ -147,24 +149,69 @@ export class IncidentComponent extends ImanSubmodule implements OnInit {
             )
         }
     }
+    */
 
-    onPaginationChanged(event: any) {
-        
+    loadIncidentsFromProjectId() {
+        // TODO
     }
 
-    getRows(params: any) {
+    loadSelectedRow(event: any) {
+        alert('xd')
+    }
+
+    /* AG DATAGRID */
+
+    dataSource: IDatasource = {
+        getRows: (params: IGetRowsParams) => {
+            this.getRows(params)
+        }
+    }
+
+    getRows(params: IGetRowsParams) {
         if (this.projectSelectedId) {
-            this.incidentService.findIncidentsByProjectParams(this.projectSelectedId, params).subscribe(
+            this.pageSize = this.gridApi.paginationGetPageSize()
+            this.pageNumber = this.gridApi.paginationGetCurrentPage() + 1
+            this.incidentService.findIncidentsByProject(this.projectSelectedId, this.pageNumber, this.pageSize, params.sortModel, params.filterModel, this.incCol).subscribe(
                 data => {
                     this.containError = false
                     this.incidents = data.content
+                    this.totalElements = data.totalElements
                     params.successCallback(this.incidents, this.totalElements)
                 },
                 err => {
                     this.returnPrincipalError(err)
+                    params.failCallback()
                 }
             )
         }
     }
 
+    onGridReady(params: any) {
+        this.gridApi = params.api;
+        this.gridColumnApi = params.columnApi;
+        this.gridApi.setDatasource(this.dataSource);
+        // this.getRows(params)
+    }
+
+    onPageSizeChanged(event: any) {
+        this.pageSize = Number(event.target.value)
+        this.gridApi.paginationSetPageSize(this.pageSize);
+    }
+
+    /* ANGULAR BOOTSTRAP*/
+    // @ViewChildren(IncidentSortable) headers: QueryList<IncidentSortable>
+
+    // onSort({ column, direction }: SortEvent) {
+    //     // resetting other headers
+    //     this.headers.forEach(header => {
+    //         if (header.sortable !== column) {
+    //             header.direction = ''
+    //         }
+    //     });
+
+    //     // this.service.sortColumn = column
+    //     // this.service.sortDirection = direction
+    // }
+
 }
+
