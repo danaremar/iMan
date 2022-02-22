@@ -16,3 +16,69 @@
 
 <div *ngIf="containError" class="alert alert-danger mt-3 mb-3">{{messageError}}</div>
 
+<form>
+    <div class="mb-3 row">
+      <label for="table-complete-search" class="col-xs-3 col-sm-auto col-form-label">Search:</label>
+      <div class="col-xs-3 col-sm-auto">
+        <input id="table-complete-search" type="text" class="form-control" name="searchTerm" [(ngModel)]="searchTerm">
+      </div>
+    </div>
+  
+    <table class="table">
+        <thead>
+            <th scope="col" sortable="code" (sort)="onSort($event)">Code</th>
+            <th scope="col" sortable="title" (sort)="onSort($event)">Title</th>
+            <th scope="col" sortable="description" (sort)="onSort($event)">Description</th>
+            <th scope="col" sortable="reported" (sort)="onSort($event)">Reported</th>
+            <th scope="col" sortable="estimatedTime" (sort)="onSort($event)">Estimated time</th>
+            <th scope="col" sortable="date" (sort)="onSort($event)">Date</th>
+            <th scope="col" sortable="lastModification" (sort)="onSort($event)">Last modification</th>
+            <th scope="col" sortable="priority" (sort)="onSort($event)">Priority</th>
+            <th scope="col" sortable="affects" (sort)="onSort($event)">Affects</th>
+            <th scope="col" sortable="username" (sort)="onSort($event)">Creator</th>
+            <th scope="col" sortable="assignatedUsername" (sort)="onSort($event)">Assigned</th>
+            <th scope="col">Actions</th>
+        </thead>
+        <tbody>
+            <tr *ngFor="let incident of incidents, let j=index">
+                <td><ngb-highlight [result]="incident.code.toString()"></ngb-highlight></td>
+                <td><ngb-highlight [result]="incident.title"></ngb-highlight></td>
+                <td><ngb-highlight [result]="incident.description"></ngb-highlight></td>
+                <td><ngb-highlight [result]="incident.reported"></ngb-highlight></td>
+                <td><ngb-highlight [result]="incident.estimatedTime.toString()"></ngb-highlight></td>
+                <td><ngb-highlight [result]="formatDate(incident.date)"></ngb-highlight></td>
+                <td><ngb-highlight [result]="formatDate(incident.lastModification)"></ngb-highlight></td>
+                <td><ngb-highlight [result]="incident.priority.toString()"></ngb-highlight></td>
+                <td><ngb-highlight [result]="incident.affects"></ngb-highlight></td>
+                <td><ngb-highlight [result]="incident.username"></ngb-highlight></td>
+                <td><ngb-highlight [result]="incident.assignatedUsername"></ngb-highlight></td>
+                <td>
+                    <div class="d-flex">
+                        <div>
+                            Edit
+                        </div>
+                        <div>
+                            Delete
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+  
+    <div class="d-flex justify-content-between p-2">
+      <ngb-pagination
+        [(page)]="pageNumber" [pageSize]="pageSize">
+      </ngb-pagination>
+  
+      <select class="form-select" style="width: auto" name="pageSize" [(ngModel)]="pageSize">
+        <option [ngValue]="5">5 items per page</option>
+        <option [ngValue]="10">10 items per page</option>
+        <option [ngValue]="25">25 items per page</option>
+        <option [ngValue]="50">50 items per page</option>
+        <option [ngValue]="100">100 items per page</option>
+      </select>
+    </div>
+  
+  </form>
+
