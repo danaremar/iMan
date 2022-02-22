@@ -7,7 +7,6 @@ import { IncidentService } from "src/app/services/incidents/incidents.service";
 import { KanbanService } from "src/app/services/kanban/kanban.service";
 import { ProjectService } from "src/app/services/projects/project.service";
 import { SprintService } from "src/app/services/sprints/sprint.service";
-import { NgbdSortableHeader, SortEvent } from "src/app/services/util/sortable.service";
 import { ImanSubmodule } from "../submodule.component";
 
 @Component({
@@ -62,36 +61,6 @@ export class IncidentComponent extends ImanSubmodule implements OnInit {
                 }
             )
         }
-
-    }
-
-    @ViewChildren(NgbdSortableHeader) headers: QueryList<NgbdSortableHeader> | undefined
-
-    onSort({ column, direction }: SortEvent) {
-
-        const compare = (v1: string | number, v2: string | number) => v1 < v2 ? -1 : v1 > v2 ? 1 : 0;
-
-        if (this.headers) {
-
-            // resetting other headers
-            this.headers.forEach(header => {
-                if (header.sortable !== column) {
-                    header.direction = '';
-                }
-            });
-
-            // sorting countries
-            if (direction === '' || column === '') {
-                this.incidents;
-            } else {
-                [...this.incidents].sort((a, b) => {
-                    const res = compare(a[column].toString(), b[column].toString());
-                    return direction === 'asc' ? res : -res;
-                });
-            }
-
-        }
-
     }
 
 }
