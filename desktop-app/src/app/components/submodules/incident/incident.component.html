@@ -16,3 +16,9 @@
 
 <div *ngIf="containError" class="alert alert-danger mt-3 mb-3">{{messageError}}</div>
 
+<div class="overflow-auto scrollable-content">
+    <ag-grid-angular style="width: 100%; height: 100%;" class="ag-theme-alpine-dark" [rowData]="incidents"
+        [columnDefs]="incCol" [pagination]="true">
+
+    </ag-grid-angular>
+</div>

@@ -98,7 +98,6 @@ export class ImanSubmodule {
     loadSprintsByProjectIdEvent(projectIdEvent: any) {
         let projectIdStr = projectIdEvent.value
         this.projectService.setStoredProjectId(Number(projectIdStr))
-        this.sprintService.setStoredSprintId(0)
         this.loadSprintsBySelectedProject()
     }
 
