@@ -18,7 +18,11 @@
 
 <div class="overflow-auto scrollable-content">
     <ag-grid-angular style="width: 100%; height: 100%;" class="ag-theme-alpine-dark" [rowData]="incidents"
-        [columnDefs]="incCol" [pagination]="true">
+        [columnDefs]="incCol" 
+        [pagination]="true" [paginationPageSize]="5"
+        [suppressScrollOnNewData]="true"
+        (gridReady)="getRows($event)"
+        >
 
     </ag-grid-angular>
 </div>

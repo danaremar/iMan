@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { HttpClient, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { IncidentCreateDto, IncidentShowDto, IncidentUpdateCreateDto, IncidentUpdateDto } from "src/app/models/incidents/incidents";
@@ -24,10 +24,15 @@ export class IncidentService {
     // FIND INCIDENT (TO LIST)
     public findIncidentsByProject(projectId: number, pageNumber: number, pageSize: number): Observable<any> {
         var url = this.hostUrl + 'project/' + projectId
-        var headers: HttpHeaders = new HttpHeaders()
-        headers.append("pageNumber", pageNumber.toString())
-        headers.append("pageSize", pageSize.toString())
-        return this.httpClient.get<any>(url, { 'headers': headers })
+        const params = new HttpParams()
+            .set("page", (pageNumber-1).toString())
+            .set("size", pageSize.toString())
+        return this.httpClient.get<any>(url, {params})
+    }
+
+    public findIncidentsByProjectParams(projectId: number, params: any): Observable<any> {
+        var url = this.hostUrl + 'project/' + projectId
+        return this.httpClient.get<any>(url, {params})
     }
 
     // GET INCIDENT FROM ID

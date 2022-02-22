@@ -1,6 +1,6 @@
-import { formatDate } from "@angular/common";
-import { Component, OnInit, QueryList, ViewChildren } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { FormBuilder } from "@angular/forms";
+import { IGetRowsParams } from "ag-grid-community/dist/lib/interfaces/iDatasource";
 import { IncidentListDto } from "src/app/models/incidents/incidents";
 import { TokenService } from "src/app/services/authentication/token.service";
 import { EffortService } from "src/app/services/effort/effort.service";
@@ -98,7 +98,10 @@ export class IncidentComponent extends ImanSubmodule implements OnInit {
         }
     ]
 
-    pageSize: number = 5
+    gridApi: any
+    gridColumnApi: any
+
+    pageSize: number = 250000000
     pageNumber: number = 1
     totalElements: number = 0
     searchTerm: string = ""
@@ -117,14 +120,14 @@ export class IncidentComponent extends ImanSubmodule implements OnInit {
             if (projectId == null || projectId == 0) {
                 this.projectService.setStoredProjectId(this.myProjects[0].id)
             }
-            this.loadIncidentsFromProjectId()
+            //this.loadIncidentsFromProjectId()
         }
     }
 
     loadSprintsByProjectIdEvent(projectIdEvent: any) {
         let projectIdStr = projectIdEvent.value
         this.projectService.setStoredProjectId(Number(projectIdStr))
-        this.loadIncidentsFromProjectId()
+        // this.loadIncidentsFromProjectId()
     }
 
     loadIncidentsFromProjectId() {
@@ -136,6 +139,26 @@ export class IncidentComponent extends ImanSubmodule implements OnInit {
                     this.pageNumber = data.pageable.pageNumber
                     this.pageSize = data.pageable.pageSize
                     this.totalElements = data.totalElements
+
+                },
+                err => {
+                    this.returnPrincipalError(err)
+                }
+            )
+        }
+    }
+
+    onPaginationChanged(event: any) {
+        
+    }
+
+    getRows(params: any) {
+        if (this.projectSelectedId) {
+            this.incidentService.findIncidentsByProjectParams(this.projectSelectedId, params).subscribe(
+                data => {
+                    this.containError = false
+                    this.incidents = data.content
+                    params.successCallback(this.incidents, this.totalElements)
                 },
                 err => {
                     this.returnPrincipalError(err)
