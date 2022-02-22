@@ -155,8 +155,11 @@ export class IncidentComponent extends ImanSubmodule implements OnInit {
         // TODO
     }
 
-    loadSelectedRow(event: any) {
-        alert('xd')
+    loadSelectedRow(event:any, content: any) {
+        
+        // LOAD VIEW / EDIT / REMOVE DATA
+
+        this.modalService.open(content)
     }
 
     /* AG DATAGRID */
