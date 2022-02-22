@@ -1,4 +1,9 @@
-/* You can add global styles to this file, and also import other style files */
+
+/* IMPORTS */
+@import "~bootstrap/dist/css/bootstrap.min.css";
+@import "~bootstrap-icons/font/bootstrap-icons.css";
+@import "~ag-grid-community/dist/styles/ag-grid.min.css";
+@import "~ag-grid-community/dist/styles/ag-theme-alpine-dark.min.css";
 
 html, body {
     height: 100%;
@@ -9,7 +14,7 @@ body {
     font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
-@import "~bootstrap-icons/font/bootstrap-icons.css";
+
 :root {
     --dark-pallete-0: #69696d;
     --dark-pallete-1: #4b4b4e;
@@ -230,6 +235,12 @@ select {
 
 .green-btn:hover {
     color: rgb(0, 97, 0) !important;
+}
+
+/* AG */
+
+div.ag-root-wrapper {
+    border-radius: 7px;
 }
 
 /* VERTICAL SCROLLBAR */

@@ -1,3 +1,4 @@
+import { formatDate } from "@angular/common";
 import { Component, OnInit, QueryList, ViewChildren } from "@angular/core";
 import { FormBuilder } from "@angular/forms";
 import { IncidentListDto } from "src/app/models/incidents/incidents";
@@ -17,6 +18,86 @@ import { ImanSubmodule } from "../submodule.component";
 export class IncidentComponent extends ImanSubmodule implements OnInit {
 
     incidents: Array<IncidentListDto> = []
+    incCol = [
+        {
+            headerName: "Code",
+            field: "code",
+            sortable: true,
+            filter: true,
+            maxWidth: 100
+        },
+        {
+            headerName: "Title",
+            field: "title",
+            sortable: true,
+            filter: true,
+            resizable: true
+        },
+        {
+            headerName: "Description",
+            field: "description",
+            sortable: true,
+            filter: true,
+            resizable: true
+        },
+        {
+            headerName: "Reported",
+            field: "reported",
+            sortable: true,
+            filter: true,
+            resizable: true
+        },
+        {
+            headerName: "Estimated time",
+            field: "estimatedTime",
+            sortable: true,
+            filter: true,
+            resizable: true
+        },
+        {
+            headerName: "Creation",
+            field: "date",
+            sortable: true,
+            filter: true,
+            resizable: true
+        },
+        {
+            headerName: "Last modification",
+            field: "lastModification",
+            sortable: true,
+            filter: true,
+            resizable: true
+        },
+        {
+            headerName: "Priority",
+            field: "priority",
+            sortable: true,
+            filter: true,
+            resizable: true
+        },
+        {
+            headerName: "Affects",
+            field: "affects",
+            sortable: true,
+            filter: true,
+            resizable: true
+        },
+        {
+            headerName: "Creator",
+            field: "username",
+            sortable: true,
+            filter: true,
+            resizable: true
+        },
+        {
+            headerName: "Assigned",
+            field: "assignatedUsername",
+            sortable: true,
+            filter: true,
+            resizable: true
+        }
+    ]
+
     pageSize: number = 5
     pageNumber: number = 1
     totalElements: number = 0

@@ -22,6 +22,7 @@ import { EffortComponent } from './components/submodules/effort/effort.component
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { GanttComponent } from './components/submodules/gantt/gantt.component';
 import { IncidentComponent } from './components/submodules/incident/incident.component';
+import { AgGridModule } from 'ag-grid-angular';
 
 @NgModule({
   declarations: [
@@ -50,7 +51,8 @@ import { IncidentComponent } from './components/submodules/incident/incident.com
       preventDuplicates: true
     }),
     NgbModule,
-    NgxChartsModule
+    NgxChartsModule,
+    AgGridModule
   ],
   providers: [{ provide: HTTP_INTERCEPTORS, useClass: InterceptorService, multi: true }],
   bootstrap: [AppComponent]
