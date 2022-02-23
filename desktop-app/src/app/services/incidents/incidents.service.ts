@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
-import { IncidentCreateDto, IncidentShowDto, IncidentUpdateCreateDto, IncidentUpdateDto } from "src/app/models/incidents/incidents";
+import { IncidentCreateDto, IncidentShowDto, IncidentUpdateCreateDto, IncidentUpdateDto, IncidentUpdateShowDto } from "src/app/models/incidents/incidents";
 import { environment } from "src/environments/environment";
 
 @Injectable({
@@ -62,6 +62,12 @@ export class IncidentService {
     public getIncidentById(incidentId: number): Observable<any> {
         var url = this.hostUrl + incidentId
         return this.httpClient.get<IncidentShowDto>(url)
+    }
+
+    // GET INCIDENT UPDATED FROM INCIDENT ID
+    public getIncidentUpdatesByIncidentId(incidentId: number): Observable<any> {
+        var url = this.hostUrl + incidentId + '/updates'
+        return this.httpClient.get<Array<IncidentUpdateShowDto>>(url)
     }
 
     // CREATE

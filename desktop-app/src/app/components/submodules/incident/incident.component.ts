@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { FormBuilder } from "@angular/forms";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
-import { IDatasource, IGetRowsParams, Module } from "ag-grid-community";
+import { IDatasource, IGetRowsParams } from "ag-grid-community";
 import { IncidentListDto } from "src/app/models/incidents/incidents";
 import { TokenService } from "src/app/services/authentication/token.service";
 import { EffortService } from "src/app/services/effort/effort.service";
@@ -9,6 +9,7 @@ import { IncidentService } from "src/app/services/incidents/incidents.service";
 import { KanbanService } from "src/app/services/kanban/kanban.service";
 import { ProjectService } from "src/app/services/projects/project.service";
 import { SprintService } from "src/app/services/sprints/sprint.service";
+import { environment } from "src/environments/environment";
 import { ImanSubmodule } from "../submodule.component";
 
 @Component({
@@ -94,7 +95,6 @@ export class IncidentComponent extends ImanSubmodule implements OnInit {
         {
             headerName: "Assigned",
             field: "assignatedUsername",
-            sortable: true,
             filter: true,
             resizable: true
         }
@@ -103,10 +103,9 @@ export class IncidentComponent extends ImanSubmodule implements OnInit {
     private gridApi: any
     private gridColumnApi: any
 
-    pageSize: number = 5
+    pageSize: number = environment.defaultPageSize
     pageNumber: number = 1
     totalElements: number = 0
-    searchTerm: string = ""
 
     constructor(public effortService: EffortService, public kanbanService: KanbanService, public sprintService: SprintService, public projectService: ProjectService, public formBuilder: FormBuilder, public tokenService: TokenService, public incidentService: IncidentService, private modalService: NgbModal) {
         super(effortService, kanbanService, sprintService, projectService, formBuilder, tokenService)
@@ -131,28 +130,12 @@ export class IncidentComponent extends ImanSubmodule implements OnInit {
         this.projectService.setStoredProjectId(Number(projectIdStr))
         this.loadIncidentsFromProjectId()
     }
-    /*
-    loadIncidentsFromProjectId() {
-        if (this.projectSelectedId) {
-            this.incidentService.findIncidentsByProject(this.projectSelectedId, this.pageNumber, this.pageSize).subscribe(
-                data => {
-                    this.containError = false
-                    this.incidents = data.content
-                    this.pageNumber = data.pageable.pageNumber + 1
-                    this.pageSize = data.pageable.pageSize
-                    this.totalElements = data.totalElements
-
-                },
-                err => {
-                    this.returnPrincipalError(err)
-                }
-            )
-        }
-    }
-    */
 
     loadIncidentsFromProjectId() {
         // TODO
+        var ps = this.pageSize
+        this.gridApi.paginationSetPageSize(ps+1)
+        this.gridApi.paginationSetPageSize(ps)
     }
 
     loadSelectedRow(event:any, content: any) {
@@ -178,6 +161,8 @@ export class IncidentComponent extends ImanSubmodule implements OnInit {
                 data => {
                     this.containError = false
                     this.incidents = data.content
+                    this.pageNumber = data.pageable.pageNumber + 1
+                    this.pageSize = data.pageable.pageSize
                     this.totalElements = data.totalElements
                     params.successCallback(this.incidents, this.totalElements)
                 },
@@ -193,27 +178,11 @@ export class IncidentComponent extends ImanSubmodule implements OnInit {
         this.gridApi = params.api;
         this.gridColumnApi = params.columnApi;
         this.gridApi.setDatasource(this.dataSource);
-        // this.getRows(params)
     }
 
-    onPageSizeChanged(event: any) {
-        this.pageSize = Number(event.target.value)
-        this.gridApi.paginationSetPageSize(this.pageSize);
-    }
-
-    /* ANGULAR BOOTSTRAP*/
-    // @ViewChildren(IncidentSortable) headers: QueryList<IncidentSortable>
-
-    // onSort({ column, direction }: SortEvent) {
-    //     // resetting other headers
-    //     this.headers.forEach(header => {
-    //         if (header.sortable !== column) {
-    //             header.direction = ''
-    //         }
-    //     });
-
-    //     // this.service.sortColumn = column
-    //     // this.service.sortDirection = direction
+    // onPageSizeChanged(event: any) {
+    //     this.pageSize = Number(event.target.value)
+    //     this.gridApi.paginationSetPageSize(this.pageSize);
     // }
 
 }

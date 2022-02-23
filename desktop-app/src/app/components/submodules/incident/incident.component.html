@@ -9,25 +9,22 @@
                     {{p.name}}</option>
             </select>
         </div>
+        <!-- <div class="mx-3 my-auto">
+            Page Size:
+            <select (change)="onPageSizeChanged($event)">
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+            </select>
+        </div> -->
     </div>
 </div>
 
 <hr style="height: 2px">
 
 <div *ngIf="containError" class="alert alert-danger mt-3 mb-3">{{messageError}}</div>
-
-<!-- 
-<div class="mb-3">
-    Page Size:
-    <select (change)="onPageSizeChanged($event)">
-        <option value="5">5</option>
-        <option value="10">10</option>
-        <option value="25">25</option>
-        <option value="50">50</option>
-        <option value="100">100</option>
-    </select>
-</div> -->
-
 
 <div class="overflow-auto scrollable-content">
     <ag-grid-angular style="width: 100%; height: 100%" class="ag-theme-alpine-dark" [rowData]="incidents"
@@ -43,7 +40,7 @@
         <div class="modal-content bg-dark-5">
             <div class="modal-body">
                 <div class="card overflow-auto">
-                    hellow
+                    This is to edit
                 </div>
             </div>
         </div>

@@ -5,7 +5,8 @@
 export const environment = {
   production: false,
   backendEndpoint: "http://localhost:8080",
-  enableElectron: false
+  enableElectron: false,
+  defaultPageSize: 5
 };
 
 /*
