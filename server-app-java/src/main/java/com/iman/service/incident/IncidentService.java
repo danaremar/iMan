@@ -1,6 +1,7 @@
 package com.iman.service.incident;
 
 import java.util.Date;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
@@ -69,9 +70,7 @@ public class IncidentService {
 		if (incident.getAssignedUser() != null && StringUtils.isNotBlank(incident.getAssignedUser().getUsername())) {
 			incidentShowDto.setAssignedUsername(incident.getAssignedUser().getUsername());
 		}
-		incidentShowDto.setUpdates(incident.getUpdates().stream()
-				.map(this::mapIncidentUpdateToShow)
-				.collect(Collectors.toList()));
+		incidentShowDto.setUpdates(findIncidentUpdates(incident));
 		return incidentShowDto;
 	}
 	
@@ -92,6 +91,12 @@ public class IncidentService {
 		Incident incident = findIncidentById(id);
 		projectService.verifyUserRelatedWithProject(incident.getProject());
 		return incident;
+	}
+
+	public List<IncidentUpdateShowDto> findIncidentUpdates(Incident incident) {
+		return incident.getUpdates().stream()
+			.map(this::mapIncidentUpdateToShow)
+			.collect(Collectors.toList());
 	}
 
 	public IncidentUpdate findIncidentUpdateById(Long id) {
@@ -149,6 +154,7 @@ public class IncidentService {
 		Incident incident = modelMapper.map(incidentSearch, Incident.class);
 		incident.setUser(userService.findUserByUsername(incidentSearch.getUsername()));
 		incident.setAssignedUser(userService.findUserByUsername(incidentSearch.getAssignedUsername()));
+		incident.setProject(project);
 
 		ExampleMatcher matcher = ExampleMatcher.matching().withIgnoreCase()
 				.withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
