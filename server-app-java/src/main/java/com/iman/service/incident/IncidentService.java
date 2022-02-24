@@ -54,7 +54,7 @@ public class IncidentService {
 		incidentListDto.setUsername(incident.getUser().getUsername());
 
 		if (incident.getAssignedUser() != null && StringUtils.isNotBlank(incident.getAssignedUser().getUsername())) {
-			incidentListDto.setAssignedUsername(incident.getUser().getUsername());
+			incidentListDto.setAssignedUsername(incident.getAssignedUser().getUsername());
 		}
 		return incidentListDto;
 	}
@@ -147,19 +147,30 @@ public class IncidentService {
 		incidentRepository.save(incident);
 	}
 
+	
+	/* FIND BY FILTER, SORTING & PAGING*/
 	public Page<Incident> findIncidents(IncidentSearch incidentSearch, Long projectId, Pageable pageable) {
+		
+		/* PERMISSIONS */
 		Project project = projectService.findProjectById(projectId);
 		projectService.verifyUserRelatedWithProject(project);
 
+		/* NON-RELATIVE TO FIND */
+		User user = new User();
+		user.setUsername(incidentSearch.getUsername());
+		User assignedUser = new User();
+		assignedUser.setUsername(incidentSearch.getAssignedUsername());
+		
+		/* MATCHER & EXAMPLE */
 		Incident incident = modelMapper.map(incidentSearch, Incident.class);
-		incident.setUser(userService.findUserByUsername(incidentSearch.getUsername()));
-		incident.setAssignedUser(userService.findUserByUsername(incidentSearch.getAssignedUsername()));
+		incident.setUser(user);
+		incident.setAssignedUser(assignedUser);
 		incident.setProject(project);
-
 		ExampleMatcher matcher = ExampleMatcher.matching().withIgnoreCase()
 				.withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
 		Example<Incident> example = Example.of(incident, matcher);
 
+		/* FIND */
 		return incidentRepository.findAll(example, pageable);
 	}
 

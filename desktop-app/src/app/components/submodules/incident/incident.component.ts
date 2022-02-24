@@ -94,7 +94,7 @@ export class IncidentComponent extends ImanSubmodule implements OnInit {
         },
         {
             headerName: "Assigned",
-            field: "assignatedUsername",
+            field: "assignedUsername",
             filter: true,
             resizable: true
         }
