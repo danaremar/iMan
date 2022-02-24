@@ -242,7 +242,9 @@ select {
 
 /* AG */
 
-
+div.ag-filter-select.ag-labeled.ag-label-align-left.ag-select, div.ag-filter-condition, div.ag-filter-body:last-child {
+    display: none !important;
+}
 
 div.ag-root-wrapper {
     border-radius: 7px;
