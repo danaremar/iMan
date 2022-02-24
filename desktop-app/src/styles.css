@@ -26,6 +26,9 @@ body {
     --dark-contrast-text: #cecece;
     --navbar-size: 50px;
     --sidebar-size: 65px;
+    --ag-background-color: var(--dark-pallete-4) !important;
+    --ag-odd-row-background-color: var(--dark-pallete-3) !important;
+    --ag-header-background-color: var(--dark-pallete-5) !important;
 }
 
 
@@ -238,6 +241,8 @@ select {
 }
 
 /* AG */
+
+
 
 div.ag-root-wrapper {
     border-radius: 7px;
