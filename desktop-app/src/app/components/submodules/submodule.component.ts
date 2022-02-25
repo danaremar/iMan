@@ -103,9 +103,10 @@ export class ImanSubmodule {
         }
     }
 
-    loadSprintsByProjectIdEvent(projectIdEvent: any) {
+    loadProjectByIdEvent(projectIdEvent: any) {
         this.projectSelectedId = Number(projectIdEvent.value)
         this.projectService.setStoredProjectId(this.projectSelectedId)
+        this.sprintService.setStoredSprintId(0)
         this.loadAfterProject()
     }
 
@@ -186,7 +187,7 @@ export class ImanSubmodule {
         METHODS -> KANBAN
     ***************************/
 
-    loadKanbanBySprintIdEvent(sprintIdEvent: any) {
+    loadSprintByIdEvent(sprintIdEvent: any) {
         this.sprintSelectedId = Number(sprintIdEvent.value)
         this.sprintService.setStoredSprintId(this.sprintSelectedId)
         this.loadAfterSprint()
@@ -212,7 +213,7 @@ export class ImanSubmodule {
         METHODS -> TASKS
     ***************************/
 
-    loadTasksBySprintIdEvent(taskIdEvent: any) {
+    loadTasksByIdEvent(taskIdEvent: any) {
         this.kanbanTaskSelectedId = Number(taskIdEvent.value)
         this.kanbanService.setStoredKanbanTaskId(this.kanbanTaskSelectedId)
     }

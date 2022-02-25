@@ -3,7 +3,7 @@
     <div class="flex-grow-1 center d-flex flex-wrap">
         <div class="d-flex mx-3" *ngIf="myProjects && myProjects.length!=0">
             <em class="bi bi-md bi-folder2 me-2" ngbTooltip="Project" placement="bottom" [openDelay]="300"></em>
-            <select class="m-auto" (change)="loadSprintsByProjectIdEvent($event.target)">
+            <select class="m-auto" (change)="loadProjectByIdEvent($event.target)">
                 <option class="dark-text" *ngFor="let p of myProjects"
                     [attr.selected]="p.id==projectSelectedId?true:null" [ngValue]="p" value="{{p.id}}">
                     {{p.name}}</option>

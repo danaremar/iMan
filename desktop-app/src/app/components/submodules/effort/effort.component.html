@@ -5,7 +5,7 @@
         <!-- my projects -->
         <div class="d-flex mx-3" *ngIf="myProjects && myProjects.length!=0 && !changedToDescription">
             <em class="bi bi-md bi-folder2 me-2" ngbTooltip="Project" placement="bottom" [openDelay]="300"></em>
-            <select class="m-auto" (change)="loadSprintsByProjectIdEvent($event.target)">
+            <select class="m-auto" (change)="loadProjectByIdEvent($event.target)">
                 <option class="dark-text" *ngFor="let p of myProjects"
                     [attr.selected]="p.id==projectSelectedId?true:null" [ngValue]="p" value="{{p.id}}">
                     {{p.name}}</option>
@@ -15,7 +15,7 @@
         <!-- my sprints -->
         <div class="d-flex mx-3" *ngIf="mySprints && mySprints.length!=0  && !changedToDescription">
             <em class="bi bi-md bi-arrow-repeat me-2" ngbTooltip="Sprint" placement="bottom" [openDelay]="300"></em>
-            <select class="m-auto" (change)="loadKanbanBySprintIdEvent($event.target)">
+            <select class="m-auto" (change)="loadSprintByIdEvent($event.target)">
                 <option class="dark-text" *ngFor="let s of mySprints; let i=index" [attr.selected]="s.id==sprintSelectedId?true:null"
                     [ngValue]="s" value="{{s.id}}">
                     #{{s.number}}: {{s.title}}</option>
@@ -25,7 +25,7 @@
         <!-- my tasks -->
         <div class="d-flex mx-3" *ngIf="myTasks && myTasks.length!=0 && !changedToDescription">
             <em class="bi bi-md bi-check2-square me-2" ngbTooltip="Task" placement="bottom" [openDelay]="300"></em>
-            <select class="m-auto" (change)="loadTasksBySprintIdEvent($event.target)">
+            <select class="m-auto" (change)="loadTasksByIdEvent($event.target)">
                 <option class="dark-text" *ngFor="let t of myTasks"
                     [attr.selected]="t.id==kanbanTaskSelectedId?true:null" [ngValue]="t.id" value="{{t.id}}">
                     #{{t.number}}: {{t.title}}</option>
