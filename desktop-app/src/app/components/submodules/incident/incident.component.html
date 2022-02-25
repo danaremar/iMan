@@ -26,23 +26,36 @@
 
 <div *ngIf="containError" class="alert alert-danger mt-3 mb-3">{{messageError}}</div>
 
+<!-- TABLE -->
 <div class="overflow-auto scrollable-content">
     <ag-grid-angular style="width: 100%; height: 100%" class="ag-theme-alpine-dark" [rowData]="incidents"
         [columnDefs]="incCol" [cacheBlockSize]="pageSize" [pagination]="true" [paginationPageSize]="pageSize"
         [enableRangeSelection]="true" (gridReady)="onGridReady($event)" [rowModelType]="'infinite'"
-        (rowDoubleClicked)="loadSelectedRow($event,viewModal)">
+        (rowDoubleClicked)="loadSelectedRow($event)">
 
     </ag-grid-angular>
 </div>
 
-<ng-template #viewModal let-modal>
+<!-- hidden button that opens modal -->
+<button hidden type="button" #openViewModal class="btn btn-danger" data-bs-target="#viewModal" data-bs-toggle="modal"></button>
+
+<!-- VIEW MODAL -->
+<div class="modal fade" id="viewModal" tabindex="-1" aria-labelledby="viewModalLabel" aria-hidden="false">
     <div class="modal-dialog">
         <div class="modal-content bg-dark-5">
             <div class="modal-body">
                 <div class="card overflow-auto">
-                    This is to edit
+
+                    <div class="d-flex">
+                        <div class="flex-grow-1 card-title mt-2">View incident</div>
+                        <div class="close-card-button" data-bs-dismiss="modal">
+                            <em class="bi bi-x"></em>
+                        </div>
+                    </div>
+
+                    
                 </div>
             </div>
         </div>
     </div>
-</ng-template>
+</div>

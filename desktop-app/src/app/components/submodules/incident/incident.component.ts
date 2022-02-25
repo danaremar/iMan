@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ViewChild } from "@angular/core";
 import { FormBuilder } from "@angular/forms";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { IDatasource, IGetRowsParams } from "ag-grid-community";
@@ -100,6 +100,8 @@ export class IncidentComponent extends ImanSubmodule implements OnInit {
         }
     ]
 
+    @ViewChild('openViewModal') openViewModal: any;
+
     private gridApi: any
     private gridColumnApi: any
 
@@ -133,16 +135,17 @@ export class IncidentComponent extends ImanSubmodule implements OnInit {
 
     loadIncidentsFromProjectId() {
         // TODO
-        var ps = this.pageSize
-        this.gridApi.paginationSetPageSize(ps+1)
-        this.gridApi.paginationSetPageSize(ps)
+        // var ps = this.pageSize
+        // this.gridApi.paginationSetPageSize(ps+1)
+        // this.gridApi.paginationSetPageSize(ps)
     }
 
-    loadSelectedRow(event:any, content: any) {
+    loadSelectedRow(event:any) {
         
         // LOAD VIEW / EDIT / REMOVE DATA
 
-        this.modalService.open(content)
+        // OPEN MODAL
+        this.openViewModal.nativeElement.click()
     }
 
     /* AG DATAGRID */
