@@ -104,8 +104,8 @@ export class ImanSubmodule {
     }
 
     loadSprintsByProjectIdEvent(projectIdEvent: any) {
-        let projectIdStr = projectIdEvent.value
-        this.projectService.setStoredProjectId(Number(projectIdStr))
+        this.projectSelectedId = Number(projectIdEvent.value)
+        this.projectService.setStoredProjectId(this.projectSelectedId)
         this.loadAfterProject()
     }
 
@@ -187,8 +187,8 @@ export class ImanSubmodule {
     ***************************/
 
     loadKanbanBySprintIdEvent(sprintIdEvent: any) {
-        let sprintIdStr = sprintIdEvent.value
-        this.sprintService.setStoredSprintId(Number(sprintIdStr))
+        this.sprintSelectedId = Number(sprintIdEvent.value)
+        this.sprintService.setStoredSprintId(this.sprintSelectedId)
         this.loadAfterSprint()
     }
 
