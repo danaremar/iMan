@@ -28,7 +28,7 @@ export class AppComponent {
     } else if (token && this.isExpiredToken(token)) {
       this.tokenService.logOut();
       this.toastr.error("Expired session")
-      this.router.navigate(["/"]).then(() => { this.reload() })
+      this.reload()
     } else {
       this.router.navigate(["/app/effort"])
     }

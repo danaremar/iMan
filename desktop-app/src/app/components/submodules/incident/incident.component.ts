@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { FormBuilder } from "@angular/forms";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
-import { IDatasource, IGetRowsParams } from "ag-grid-community";
+import { GridApi, IDatasource, IGetRowsParams, RefreshCellsParams } from "ag-grid-community";
 import { IncidentListDto } from "src/app/models/incidents/incidents";
 import { TokenService } from "src/app/services/authentication/token.service";
 import { EffortService } from "src/app/services/effort/effort.service";
@@ -123,21 +123,18 @@ export class IncidentComponent extends ImanSubmodule implements OnInit {
             if (projectId == null || projectId == 0) {
                 this.projectService.setStoredProjectId(this.myProjects[0].id)
             }
-            this.loadIncidentsFromProjectId()
         }
     }
 
     loadSprintsByProjectIdEvent(projectIdEvent: any) {
         let projectIdStr = projectIdEvent.value
-        this.projectService.setStoredProjectId(Number(projectIdStr))
-        this.loadIncidentsFromProjectId()
+        this.projectSelectedId = Number(projectIdStr)
+        this.projectService.setStoredProjectId(this.projectSelectedId)
+        this.reloadGridTable()
     }
 
-    loadIncidentsFromProjectId() {
-        // TODO
-        // var ps = this.pageSize
-        // this.gridApi.paginationSetPageSize(ps+1)
-        // this.gridApi.paginationSetPageSize(ps)
+    reloadGridTable() {
+        this.gridApi.setDatasource(this.dataSource);
     }
 
     loadSelectedRow(event:any) {
@@ -182,11 +179,6 @@ export class IncidentComponent extends ImanSubmodule implements OnInit {
         this.gridColumnApi = params.columnApi;
         this.gridApi.setDatasource(this.dataSource);
     }
-
-    // onPageSizeChanged(event: any) {
-    //     this.pageSize = Number(event.target.value)
-    //     this.gridApi.paginationSetPageSize(this.pageSize);
-    // }
 
 }
 
