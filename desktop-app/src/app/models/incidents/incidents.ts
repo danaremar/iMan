@@ -1,3 +1,5 @@
+import { ShowUser } from "../user/show-user"
+
 export class IncidentCreateDto {
 
     constructor(
@@ -116,32 +118,29 @@ export class IncidentUpdateShowDto {
         description: string,
         estimatedTime: number,
         date: Date,
-        lastModification: Date,
         priority: number,
         affects: string,
-        username: string,
-        assignatedUsername: string
+        user: ShowUser,
+        assignedUser: ShowUser
     ) {
         this.id = id
         this.description = description
         this.estimatedTime = estimatedTime
         this.date = date
-        this.lastModification = lastModification
         this.priority = priority
         this.affects = affects
-        this.username = username
-        this.assignatedUsername = assignatedUsername
+        this.user = user
+        this.assignedUser = assignedUser
     }
 
     id: number
     description: string
     estimatedTime: number
     date: Date
-    lastModification: Date
     priority: number
     affects: string
-    username: string
-    assignatedUsername: string
+    user: ShowUser
+    assignedUser: ShowUser
 }
 
 export class IncidentUpdateCreateDto {

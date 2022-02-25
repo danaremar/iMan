@@ -25,6 +25,7 @@ import com.iman.model.incident.IncidentUpdateDto;
 import com.iman.model.incident.IncidentUpdateShowDto;
 import com.iman.model.projects.Project;
 import com.iman.model.users.User;
+import com.iman.model.users.UserShowDto;
 import com.iman.repository.incidents.IncidentRepository;
 import com.iman.repository.incidents.IncidentUpdateRepository;
 import com.iman.service.projects.ProjectService;
@@ -76,9 +77,9 @@ public class IncidentService {
 	
 	public IncidentUpdateShowDto mapIncidentUpdateToShow(IncidentUpdate incidentUpdate) {
 		IncidentUpdateShowDto incidentShowDto = modelMapper.map(incidentUpdate, IncidentUpdateShowDto.class);
-		incidentShowDto.setUsername(incidentUpdate.getUser().getUsername());
+		incidentShowDto.setUser(modelMapper.map(incidentUpdate.getUser(), UserShowDto.class));
 		if (incidentUpdate.getAssignedUser() != null && StringUtils.isNotBlank(incidentUpdate.getAssignedUser().getUsername())) {
-			incidentShowDto.setAssignedUsername(incidentUpdate.getAssignedUser().getUsername());
+			incidentShowDto.setAssignedUser(modelMapper.map(incidentUpdate.getAssignedUser(), UserShowDto.class));
 		}
 		return incidentShowDto;
 	}

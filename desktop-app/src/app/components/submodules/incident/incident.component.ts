@@ -1,14 +1,16 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
-import { FormBuilder } from "@angular/forms";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { IDatasource, IGetRowsParams } from "ag-grid-community";
-import { IncidentListDto } from "src/app/models/incidents/incidents";
+import { IncidentCreateDto, IncidentListDto, IncidentShowDto, IncidentUpdateDto } from "src/app/models/incidents/incidents";
+import { ShowUser } from "src/app/models/user/show-user";
 import { TokenService } from "src/app/services/authentication/token.service";
 import { EffortService } from "src/app/services/effort/effort.service";
 import { IncidentService } from "src/app/services/incidents/incidents.service";
 import { KanbanService } from "src/app/services/kanban/kanban.service";
 import { ProjectService } from "src/app/services/projects/project.service";
 import { SprintService } from "src/app/services/sprints/sprint.service";
+import { UserService } from "src/app/services/user/user.service";
 import { environment } from "src/environments/environment";
 import { ImanSubmodule } from "../submodule.component";
 
@@ -19,7 +21,10 @@ import { ImanSubmodule } from "../submodule.component";
 })
 export class IncidentComponent extends ImanSubmodule implements OnInit {
 
-    incidents: Array<IncidentListDto> = []
+    /***************************
+            AG GRID
+    ***************************/
+
     incCol = [
         {
             headerName: "Code",
@@ -100,18 +105,71 @@ export class IncidentComponent extends ImanSubmodule implements OnInit {
         }
     ]
 
-    @ViewChild('openViewModal') openViewModal: any;
-
     private gridApi: any
     private gridColumnApi: any
+
+
+
+    /***************************
+            PAGINATION
+    ***************************/
 
     pageSize: number = environment.defaultPageSize
     pageNumber: number = 1
     totalElements: number = 0
 
-    constructor(public effortService: EffortService, public kanbanService: KanbanService, public sprintService: SprintService, public projectService: ProjectService, public formBuilder: FormBuilder, public tokenService: TokenService, public incidentService: IncidentService, private modalService: NgbModal) {
+
+
+    /***************************
+            GENERAL
+    ***************************/
+
+    // open modal view
+    @ViewChild('openViewModal') openViewModal: any;
+
+    // list of incident (paginated, ordered & filtered)
+    incidents: Array<IncidentListDto> = []
+
+    // selected incident to show
+    selectedIncident: IncidentShowDto | undefined
+
+    // incident form in modal view
+    formIncident: FormGroup
+    formIncidentUpdate: FormGroup
+    incidentContainError: boolean = false
+    incidentMessageError: string | undefined
+
+
+
+    /***************************
+            CONSTRUCTOR
+    ***************************/
+
+    constructor(public effortService: EffortService, public kanbanService: KanbanService, public sprintService: SprintService, public projectService: ProjectService, public formBuilder: FormBuilder, public tokenService: TokenService, public incidentService: IncidentService, private userService: UserService) {
         super(effortService, kanbanService, sprintService, projectService, formBuilder, tokenService)
+
+        this.formIncident = formBuilder.group({
+            title: ['', [Validators.required]],
+            description: ['', []],
+            reported: ['', []]
+        })
+
+        this.formIncidentUpdate = formBuilder.group({
+            description: ['', [Validators.required]],
+            estimatedTime: ['', []],
+            affects: ['', []],
+            priority: ['', []],
+            status: ['', []],
+            assignatedUsername: ['', []]
+        })
+
     }
+
+
+
+    /***************************
+        METHODS -> GENERAL
+    ***************************/
 
     ngOnInit(): void {
         this.loadProject = true
@@ -131,19 +189,98 @@ export class IncidentComponent extends ImanSubmodule implements OnInit {
         this.reloadGridTable()
     }
 
+    loadSelectedData(obj: any) {
+        this.incidentService.getIncidentById(obj.id).subscribe(
+            data => {
+                this.containError = false
+                this.selectedIncident = data
+                this.buildIncidentForm()
+            },
+            err => {
+                this.returnPrincipalError(err)
+            }
+        )
+    }
+
+    buildIncidentForm() {
+        this.formIncident.reset()
+        this.formIncident = this.formBuilder.group({
+            title: [this.selectedIncident?.title, [Validators.required]],
+            description: [this.selectedIncident?.description, []],
+            reported: [this.selectedIncident?.reported, []]
+        })
+    }
+
+
+
+    /***************************
+        METHODS -> UPLOADS
+    ***************************/
+
+    // add or edit
+    uploadIncident() {
+
+        // CREATE
+        if (!this.selectedIncident) {
+            if (this.projectSelectedId != undefined) {
+                let newIncident: IncidentCreateDto = new IncidentCreateDto(this.projectSelectedId, this.formIncident.value.title, this.formIncident.value.description, this.formIncident.value.reported)
+                this.incidentService.createIncident(newIncident).subscribe(
+                    res => {
+                        this.loadSelectedData(this.selectedIncident)
+                        this.reloadGridTable()
+                    },
+                    err => {
+                        var r = err.error.text
+                        if (r == undefined) {
+                            r = 'Error produced'
+                        }
+                        this.incidentMessageError = r;
+                        this.incidentContainError = true
+                    }
+                )
+            }
+
+        //UPDATE
+        } else {
+            let updateIncident: IncidentUpdateDto = new IncidentUpdateDto(this.selectedIncident.id, this.formIncident.value.title, this.formIncident.value.description, this.formIncident.value.reported)
+            this.incidentService.updateIncident(updateIncident).subscribe(
+                res => {
+                    this.loadSelectedData(this.selectedIncident)
+                    this.reloadGridTable()
+                },
+                err => {
+                    var r = err.error.text
+                    if (r == undefined) {
+                        r = 'Error produced'
+                    }
+                    this.incidentMessageError = r;
+                    this.incidentContainError = true
+                }
+            )
+    
+        }
+    }
+
+    createNewIncidentUpdate() {
+        this.formIncidentUpdate
+    }
+
+
+    /***************************
+        METHODS -> AG GRID 
+    ***************************/
+
     reloadGridTable() {
         this.gridApi.setDatasource(this.dataSource);
     }
 
-    loadSelectedRow(event:any) {
-        
-        // LOAD VIEW / EDIT / REMOVE DATA
-
-        // OPEN MODAL
+    loadSelectedRow(event: any) {
+        // load view/edit data
+        this.loadSelectedData(event.data)
+        // open modal
         this.openViewModal.nativeElement.click()
     }
 
-    /* AG DATAGRID */
 
     dataSource: IDatasource = {
         getRows: (params: IGetRowsParams) => {
@@ -176,6 +313,16 @@ export class IncidentComponent extends ImanSubmodule implements OnInit {
         this.gridApi = params.api;
         this.gridColumnApi = params.columnApi;
         this.gridApi.setDatasource(this.dataSource);
+    }
+
+
+
+    /***************************
+       METHODS -> IMAGE
+    ***************************/
+
+    public getProfileImageUrlFromUser(user: ShowUser): any {
+        return this.userService.getUrlFromProfile(user.imageUid)
     }
 
 }
