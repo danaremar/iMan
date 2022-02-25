@@ -20,6 +20,7 @@ export class GanttComponent extends ImanSubmodule implements OnInit {
     }
 
     ngOnInit(): void {
+        this.loadSprint = true
         this.loadMyProjects()
     }
 

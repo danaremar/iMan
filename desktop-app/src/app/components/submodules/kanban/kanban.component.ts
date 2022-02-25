@@ -127,6 +127,7 @@ export class KanbanComponent extends ImanSubmodule implements OnInit {
     ***************************/
 
     ngOnInit(): void {
+        this.loadKanban = true
         this.loadMyProjects()
     }
 

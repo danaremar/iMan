@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { FormBuilder } from "@angular/forms";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
-import { GridApi, IDatasource, IGetRowsParams, RefreshCellsParams } from "ag-grid-community";
+import { IDatasource, IGetRowsParams } from "ag-grid-community";
 import { IncidentListDto } from "src/app/models/incidents/incidents";
 import { TokenService } from "src/app/services/authentication/token.service";
 import { EffortService } from "src/app/services/effort/effort.service";
@@ -114,6 +114,7 @@ export class IncidentComponent extends ImanSubmodule implements OnInit {
     }
 
     ngOnInit(): void {
+        this.loadProject = true
         this.loadMyProjects()
     }
 
@@ -126,10 +127,7 @@ export class IncidentComponent extends ImanSubmodule implements OnInit {
         }
     }
 
-    loadSprintsByProjectIdEvent(projectIdEvent: any) {
-        let projectIdStr = projectIdEvent.value
-        this.projectSelectedId = Number(projectIdStr)
-        this.projectService.setStoredProjectId(this.projectSelectedId)
+    loadAfterProject() {
         this.reloadGridTable()
     }
 
