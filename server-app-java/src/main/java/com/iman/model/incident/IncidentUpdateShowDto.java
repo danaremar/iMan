@@ -24,6 +24,8 @@ public class IncidentUpdateShowDto {
 	private Date date;
 
 	private Integer priority;
+	
+	private String status;
 
 	private String affects;
 

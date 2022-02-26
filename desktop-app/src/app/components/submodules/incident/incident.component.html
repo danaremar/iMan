@@ -157,6 +157,30 @@
 
                                     <!-- ONLY VIEW PROPERTIES -->
 
+                                    <!-- creation date -->
+                                    <div class="w-100 d-flex p-2" *ngIf="selectedIncident!=undefined">
+                                        <em class="bi bi-person-check my-auto" style="font-size: 20px !important;"></em>
+                                        <div class="my-auto mx-2">Creation date: {{getFormatedDate(selectedIncident.date,'HH:mm:ss dd/MM/yyyy')}}</div>
+                                    </div>
+
+                                    <!-- last update -->
+                                    <div class="w-100 d-flex p-2" *ngIf="selectedIncident!=undefined">
+                                        <em class="bi bi-person-check my-auto" style="font-size: 20px !important;"></em>
+                                        <div class="my-auto mx-2">Last update: {{getFormatedDate(selectedIncident.lastModification,'HH:mm:ss dd/MM/yyyy')}}</div>
+                                    </div>
+
+                                    <!-- assigned -->
+                                    <div class="w-50 d-flex p-2" *ngIf="selectedIncident!=undefined">
+                                        <em class="bi bi-person-check my-auto" style="font-size: 20px !important;"></em>
+                                        <div class="my-auto mx-2">Assigned: @{{selectedIncident.assignedUsername}}</div>
+                                    </div>
+
+                                    <!-- creator -->
+                                    <div class="w-50 d-flex p-2" *ngIf="selectedIncident!=undefined">
+                                        <em class="bi bi-person-plus my-auto" style="font-size: 20px !important;"></em>
+                                        <div class="my-auto mx-2">Creator: @{{selectedIncident.username}}</div>
+                                    </div>
+
                                     <!-- estimated time -->
                                     <div class="w-50 d-flex p-2" *ngIf="selectedIncident!=undefined">
                                         <em class="bi bi-hourglass-top my-auto"
@@ -178,10 +202,11 @@
                                         <div class="my-auto mx-2">Affects: {{selectedIncident.affects}}</div>
                                     </div>
 
-                                    <!-- assigned -->
+                                    <!-- status -->
                                     <div class="w-50 d-flex p-2" *ngIf="selectedIncident!=undefined">
-                                        <em class="bi bi-person-check my-auto" style="font-size: 20px !important;"></em>
-                                        <div class="my-auto mx-2">Assigned: @{{selectedIncident.assignedUsername}}</div>
+                                        <em class="bi bi-activity my-auto"
+                                            style="font-size: 20px !important;"></em>
+                                        <div class="my-auto mx-2">Status: {{selectedIncident.status}}</div>
                                     </div>
 
                                     <!-- edit button -->
@@ -275,7 +300,7 @@
 
                                                 <!-- affects -->
                                                 <div class="w-50 d-flex p-2">
-                                                    <em class="bi bi-shield-exclamation my-auto"
+                                                    <em class="bi bi-activity my-auto"
                                                         style="font-size: 20px !important;"></em>
                                                     <div class="my-auto mx-2">Affects: </div>
                                                     <input
@@ -296,6 +321,30 @@
                                                     </datalist>
                                                 </div>
 
+                                                <!-- status -->
+                                                <div class="w-50 d-flex p-2">
+                                                    <em class="bi bi-shield-exclamation my-auto"
+                                                        style="font-size: 20px !important;"></em>
+                                                    <div class="my-auto mx-2">Status: </div>
+                                                    <input
+                                                        class="form-control {{inputClass(formIncidentUpdate, 'status')}}"
+                                                        type="text" formControlName="status" list="lsStatus"
+                                                        maxlength="50" />
+                                                    <div class="invalid-feedback"
+                                                        *ngIf="formIncidentUpdate.get('status')?.touched && formIncidentUpdate.get('status')?.invalid">
+                                                        <div
+                                                            *ngIf="formIncidentUpdate.get('status')?.errors?.maxlength">
+                                                            Only 50 characters are allowed
+                                                        </div>
+                                                    </div>
+                                                    <datalist id="lsStatus">
+                                                        <option>To do</option>
+                                                        <option>In progress</option>
+                                                        <option>Done</option>
+                                                        <option>Re-open</option>
+                                                    </datalist>
+                                                </div>
+
 
                                                 <!-- assigned -->
                                                 <div class="w-50 d-flex p-2">
@@ -304,7 +353,7 @@
                                                     <div class="my-auto mx-2">Assigned: </div>
                                                     <input
                                                         class="form-control {{inputClass(formIncidentUpdate, 'assignedUsername')}}"
-                                                        type="text" formControlName="assignedUsername" maxlength="30"
+                                                        type="text" formControlName="assignedUsername" maxlength="30" list="usersInProject"
                                                         minlength="2" />
                                                     <div class="invalid-feedback"
                                                         *ngIf="formIncidentUpdate.get('assignedUsername')?.touched && formIncidentUpdate.get('assignedUsername')?.invalid">
@@ -325,9 +374,9 @@
                                                 </div>
 
                                                 <!-- buttons -->
-                                                <div class="form-group modal-footer ms-auto">
-                                                    <button type="submit" class="btn btn-success"
-                                                        [disabled]="!formIncident.valid">Upload</button>
+                                                <div class="w-100 form-group ms-auto">
+                                                    <button type="submit" class="m-2 btn btn-success"
+                                                        [disabled]="!formIncident.valid" style="margin-left: auto !important;">Upload</button>
                                                 </div>
 
                                             </form>

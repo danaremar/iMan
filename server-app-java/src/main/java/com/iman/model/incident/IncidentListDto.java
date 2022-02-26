@@ -30,6 +30,8 @@ public class IncidentListDto {
 	
 	private Integer priority;
 	
+	private String status;
+	
 	private String affects;
 	
 	private String username;

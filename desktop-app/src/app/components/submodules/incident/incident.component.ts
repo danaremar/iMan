@@ -91,6 +91,13 @@ export class IncidentComponent extends ImanSubmodule implements OnInit {
             resizable: true
         },
         {
+            headerName: "Status",
+            field: "status",
+            sortable: true,
+            filter: true,
+            resizable: true
+        },
+        {
             headerName: "Creator",
             field: "username",
             filter: true,
@@ -156,7 +163,7 @@ export class IncidentComponent extends ImanSubmodule implements OnInit {
         })
 
         this.formIncidentUpdate = formBuilder.group({
-            description: ['', [Validators.required]],
+            description: ['', []],
             estimatedTime: ['', []],
             affects: ['', []],
             priority: ['', []],

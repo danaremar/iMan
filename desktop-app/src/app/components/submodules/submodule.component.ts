@@ -345,6 +345,15 @@ export class ImanSubmodule {
         }
     }
 
+    getPriority(priority: number) {
+        switch (priority) {
+            case 0: return 'Critical'
+            case 1: return 'High'
+            case 2: return 'Medium'
+            default: return 'Low'
+        }
+    }
+
 
     /***************************
         AUXILIAR: USERS IN PROJECT
@@ -358,5 +367,5 @@ export class ImanSubmodule {
             }   
         }
     }
-    
+
 }

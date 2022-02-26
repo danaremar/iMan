@@ -54,6 +54,7 @@ export class IncidentListDto {
         lastModification: Date,
         priority: number,
         affects: string,
+        status: string,
         username: string,
         assignedUsername: string
     ) {
@@ -68,6 +69,7 @@ export class IncidentListDto {
         this.lastModification = lastModification
         this.priority = priority
         this.affects = affects
+        this.status = status
         this.username = username
         this.assignedUsername = assignedUsername
     }
@@ -83,6 +85,7 @@ export class IncidentListDto {
     lastModification: Date
     priority: number
     affects: string
+    status: string
     username: string
     assignedUsername: string
 }
@@ -100,11 +103,12 @@ export class IncidentShowDto extends IncidentListDto {
         lastModification: Date,
         priority: number,
         affects: string,
+        status: string,
         username: string,
         assignedUsername: string,
         updates: Array<IncidentUpdateShowDto>
     ) {
-        super(id, code, title, description, reported, active, estimatedTime, date, lastModification, priority, affects, username, assignedUsername)
+        super(id, code, title, description, reported, active, estimatedTime, date, lastModification, priority, affects, status, username, assignedUsername)
         this.updates = updates
     }
 
@@ -120,6 +124,7 @@ export class IncidentUpdateShowDto {
         date: Date,
         priority: number,
         affects: string,
+        status: string,
         user: ShowUser,
         assignedUser: ShowUser
     ) {
@@ -129,6 +134,7 @@ export class IncidentUpdateShowDto {
         this.date = date
         this.priority = priority
         this.affects = affects
+        this.status = status
         this.user = user
         this.assignedUser = assignedUser
     }
@@ -139,6 +145,7 @@ export class IncidentUpdateShowDto {
     date: Date
     priority: number
     affects: string
+    status: string
     user: ShowUser
     assignedUser: ShowUser
 }
