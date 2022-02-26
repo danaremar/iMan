@@ -12,8 +12,7 @@
     </div>
 
     <div class="mx-3">
-        <a ngbTooltip="Add incident" placement="left" [openDelay]="300" *ngIf="adminAccess"
-            (click)="newIncident()">
+        <a ngbTooltip="Add incident" placement="left" [openDelay]="300" *ngIf="adminAccess" (click)="newIncident()">
             <em class="bi bi-plus-lg"></em>
         </a>
     </div>
@@ -120,7 +119,7 @@
                                             </div>
 
                                             <!-- buttons -->
-                                            <div class="form-group modal-footer">
+                                            <div class="form-group">
                                                 <button type="button" class="btn btn-danger"
                                                     (click)="editable()">Close</button>
                                                 <button type="submit" class="btn btn-success"
@@ -131,7 +130,8 @@
                                     </div>
 
                                     <!-- IF NOT EDITABLE -->
-                                    <div class="w-100" *ngIf="!(isEditable && adminAccess) && selectedIncident!=undefined">
+                                    <div class="w-100"
+                                        *ngIf="!(isEditable && adminAccess) && selectedIncident!=undefined">
 
                                         <!-- title -->
                                         <!-- <div class="my-auto mx-2 my-2 fs-4">{{selectedIncident.title}}</div> -->
@@ -158,31 +158,34 @@
                                     <!-- ONLY VIEW PROPERTIES -->
 
                                     <!-- creation date -->
-                                    <div class="w-100 d-flex p-2" *ngIf="selectedIncident!=undefined">
+                                    <div class="w-100 d-flex p-2" *ngIf="selectedIncident!=undefined && selectedIncident.date!=null">
                                         <em class="bi bi-person-check my-auto" style="font-size: 20px !important;"></em>
-                                        <div class="my-auto mx-2">Creation date: {{getFormatedDate(selectedIncident.date,'HH:mm:ss dd/MM/yyyy')}}</div>
+                                        <div class="my-auto mx-2">Creation date:
+                                            {{getFormatedDate(selectedIncident.date,'HH:mm:ss dd/MM/yyyy')}}</div>
                                     </div>
 
                                     <!-- last update -->
-                                    <div class="w-100 d-flex p-2" *ngIf="selectedIncident!=undefined">
+                                    <div class="w-100 d-flex p-2" *ngIf="selectedIncident!=undefined && selectedIncident.lastModification!=null">
                                         <em class="bi bi-person-check my-auto" style="font-size: 20px !important;"></em>
-                                        <div class="my-auto mx-2">Last update: {{getFormatedDate(selectedIncident.lastModification,'HH:mm:ss dd/MM/yyyy')}}</div>
+                                        <div class="my-auto mx-2">Last update:
+                                            {{getFormatedDate(selectedIncident.lastModification,'HH:mm:ss dd/MM/yyyy')}}
+                                        </div>
                                     </div>
 
                                     <!-- assigned -->
-                                    <div class="w-50 d-flex p-2" *ngIf="selectedIncident!=undefined">
+                                    <div class="w-50 d-flex p-2" *ngIf="selectedIncident!=undefined && selectedIncident.assignedUsername!=null">
                                         <em class="bi bi-person-check my-auto" style="font-size: 20px !important;"></em>
                                         <div class="my-auto mx-2">Assigned: @{{selectedIncident.assignedUsername}}</div>
                                     </div>
 
                                     <!-- creator -->
-                                    <div class="w-50 d-flex p-2" *ngIf="selectedIncident!=undefined">
+                                    <div class="w-50 d-flex p-2" *ngIf="selectedIncident!=undefined && selectedIncident.username!=null">
                                         <em class="bi bi-person-plus my-auto" style="font-size: 20px !important;"></em>
                                         <div class="my-auto mx-2">Creator: @{{selectedIncident.username}}</div>
                                     </div>
 
                                     <!-- estimated time -->
-                                    <div class="w-50 d-flex p-2" *ngIf="selectedIncident!=undefined">
+                                    <div class="w-50 d-flex p-2" *ngIf="selectedIncident!=undefined &&selectedIncident.estimatedTime!=null">
                                         <em class="bi bi-hourglass-top my-auto"
                                             style="font-size: 20px !important;"></em>
                                         <div class="my-auto mx-2">Estimated time: {{selectedIncident.estimatedTime}}
@@ -190,27 +193,28 @@
                                     </div>
 
                                     <!-- priority -->
-                                    <div class="w-50 d-flex p-2" *ngIf="selectedIncident!=undefined">
+                                    <div class="w-50 d-flex p-2" *ngIf="selectedIncident!=undefined && selectedIncident.priority!=null">
                                         <em class="bi bi-stoplights my-auto" style="font-size: 20px !important;"></em>
-                                        <div class="my-auto mx-2">Priority: {{selectedIncident.priority}}</div>
+                                        <div class="my-auto mx-2">Priority: {{getPriority(selectedIncident.priority)}}
+                                        </div>
                                     </div>
 
                                     <!-- affects -->
-                                    <div class="w-50 d-flex p-2" *ngIf="selectedIncident!=undefined">
+                                    <div class="w-50 d-flex p-2" *ngIf="selectedIncident!=undefined && selectedIncident.affects!=null">
                                         <em class="bi bi-shield-exclamation my-auto"
                                             style="font-size: 20px !important;"></em>
                                         <div class="my-auto mx-2">Affects: {{selectedIncident.affects}}</div>
                                     </div>
 
                                     <!-- status -->
-                                    <div class="w-50 d-flex p-2" *ngIf="selectedIncident!=undefined">
-                                        <em class="bi bi-activity my-auto"
-                                            style="font-size: 20px !important;"></em>
+                                    <div class="w-50 d-flex p-2" *ngIf="selectedIncident!=undefined && selectedIncident.status!=null">
+                                        <em class="bi bi-activity my-auto" style="font-size: 20px !important;"></em>
                                         <div class="my-auto mx-2">Status: {{selectedIncident.status}}</div>
                                     </div>
 
                                     <!-- edit button -->
-                                    <div *ngIf="!(isEditable && adminAccess) && selectedIncident!=undefined" class="w-100 d-flex p-2 mt-2">
+                                    <div *ngIf="!(isEditable && adminAccess) && selectedIncident!=undefined"
+                                        class="w-100 d-flex p-2 mt-2">
                                         <button type="button" class="btn btn-secondary ms-auto d-flex"
                                             (click)="editable()">
                                             <em class="bi bi-sm bi-pencil-fill ms-auto me-2"></em>
@@ -286,16 +290,14 @@
                                                     <em class="bi bi-stoplights my-auto"
                                                         style="font-size: 20px !important;"></em>
                                                     <div class="my-auto mx-2">Priority: </div>
-                                                    <input
-                                                        class="form-control {{inputClass(formIncidentUpdate, 'priority')}}"
-                                                        type="text" formControlName="priority" maxlength="50" />
-                                                    <div class="invalid-feedback"
-                                                        *ngIf="formIncidentUpdate.get('priority')?.touched && formIncidentUpdate.get('priority')?.invalid">
-                                                        <div
-                                                            *ngIf="formIncidentUpdate.get('priority')?.errors?.maxlength">
-                                                            Only 50 characters are allowed
-                                                        </div>
-                                                    </div>
+                                                    <select
+                                                        class="form-select my-auto {{inputClass(formIncidentUpdate, 'priority')}}"
+                                                        formControlName="priority">
+                                                        <option value="0">Critical</option>
+                                                        <option value="1">High</option>
+                                                        <option value="2">Medium</option>
+                                                        <option selected value="3">Low</option>
+                                                    </select>
                                                 </div>
 
                                                 <!-- affects -->
@@ -353,8 +355,8 @@
                                                     <div class="my-auto mx-2">Assigned: </div>
                                                     <input
                                                         class="form-control {{inputClass(formIncidentUpdate, 'assignedUsername')}}"
-                                                        type="text" formControlName="assignedUsername" maxlength="30" list="usersInProject"
-                                                        minlength="2" />
+                                                        type="text" formControlName="assignedUsername" maxlength="30"
+                                                        list="usersInProject" minlength="2" />
                                                     <div class="invalid-feedback"
                                                         *ngIf="formIncidentUpdate.get('assignedUsername')?.touched && formIncidentUpdate.get('assignedUsername')?.invalid">
                                                         <div
@@ -376,7 +378,8 @@
                                                 <!-- buttons -->
                                                 <div class="w-100 form-group ms-auto">
                                                     <button type="submit" class="m-2 btn btn-success"
-                                                        [disabled]="!formIncident.valid" style="margin-left: auto !important;">Upload</button>
+                                                        [disabled]="!formIncident.valid"
+                                                        style="margin-left: auto !important;">Upload</button>
                                                 </div>
 
                                             </form>
@@ -440,10 +443,10 @@
                                             </div>
 
                                             <!-- priority -->
-                                            <div class="d-flex me-3 my-1" *ngIf="u.priority">
+                                            <div class="d-flex me-3 my-1" *ngIf="u.priority!=null">
                                                 <em class="bi bi-stoplights my-auto"
                                                     style="font-size: 20px !important;"></em>
-                                                <div class="my-auto mx-2">Priority: {{u.priority}}</div>
+                                                <div class="my-auto mx-2">Priority: {{getPriority(u.priority)}}</div>
                                             </div>
 
                                             <!-- affects -->

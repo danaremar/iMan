@@ -32,7 +32,8 @@ export class IncidentComponent extends ImanSubmodule implements OnInit {
             filter: true,
             maxWidth: 120,
             unSortIcon: true,
-            pinned: 'left'
+            pinned: 'left',
+            valueFormatter: (params: { data: IncidentShowDto }) => params.data!=undefined&&params.data.code!=undefined?'#'+params.data.code:''
         },
         {
             headerName: "Title",
@@ -67,21 +68,24 @@ export class IncidentComponent extends ImanSubmodule implements OnInit {
             field: "date",
             sortable: true,
             filter: true,
-            resizable: true
+            resizable: true,
+            valueFormatter: (params: { data: IncidentShowDto }) => this.formatCreationDate(params.data)
         },
         {
             headerName: "Last modification",
             field: "lastModification",
             sortable: true,
             filter: true,
-            resizable: true
+            resizable: true,
+            valueFormatter: (params: { data: IncidentShowDto }) => this.formatLastModification(params.data)
         },
         {
             headerName: "Priority",
             field: "priority",
             sortable: true,
             filter: true,
-            resizable: true
+            resizable: true,
+            valueFormatter: (params: { data: IncidentShowDto }) => this.formatPriority(params.data)
         },
         {
             headerName: "Affects",
@@ -101,13 +105,15 @@ export class IncidentComponent extends ImanSubmodule implements OnInit {
             headerName: "Creator",
             field: "username",
             filter: true,
-            resizable: true
+            resizable: true,
+            valueFormatter: (params: { data: IncidentShowDto }) => params.data!=undefined?this.formatUsername(params.data.username):''
         },
         {
             headerName: "Assigned",
             field: "assignedUsername",
             filter: true,
-            resizable: true
+            resizable: true,
+            valueFormatter: (params: { data: IncidentShowDto }) => params.data!=undefined?this.formatUsername(params.data.assignedUsername):''
         }
     ]
 
@@ -197,6 +203,7 @@ export class IncidentComponent extends ImanSubmodule implements OnInit {
             data => {
                 this.containError = false
                 this.selectedIncident = data
+                this.isEditable = false
                 this.buildIncidentForm()
             },
             err => {
@@ -207,6 +214,7 @@ export class IncidentComponent extends ImanSubmodule implements OnInit {
 
     buildIncidentForm() {
         this.formIncident.reset()
+        this.formIncidentUpdate.reset()
         if (this.selectedIncident != undefined) {
             this.formIncident = this.formBuilder.group({
                 title: [this.selectedIncident.title, [Validators.required]],
@@ -223,6 +231,46 @@ export class IncidentComponent extends ImanSubmodule implements OnInit {
         this.incidentContainError = false
         this.buildIncidentForm()
         this.openViewModal.nativeElement.click()
+    }
+
+
+
+    /***************************
+        METHODS -> FORMAT
+    ***************************/
+
+    formatPriority(incidentShowDto: IncidentShowDto): string {
+        if (incidentShowDto != undefined && incidentShowDto.priority != undefined) {
+            return this.getPriority(incidentShowDto.priority)
+        } else {
+            return ''
+        }
+    }
+
+    formatCreationDate(incidentShowDto: IncidentShowDto): string {
+        if (incidentShowDto != undefined && incidentShowDto.date != undefined) {
+            var date = this.getFormatedDate(incidentShowDto.date, 'HH:mm:ss dd/MM/yyyy')
+            return date ? date : ''
+        } else {
+            return ''
+        }
+    }
+
+    formatLastModification(incidentShowDto: IncidentShowDto): string {
+        if (incidentShowDto != undefined && incidentShowDto.lastModification != undefined) {
+            var date = this.getFormatedDate(incidentShowDto.lastModification, 'HH:mm:ss dd/MM/yyyy')
+            return date ? date : ''
+        } else {
+            return ''
+        }
+    }
+
+    formatUsername(username: string): string {
+        if (username != undefined) {
+            return '@' + username
+        } else {
+            return ''
+        }
     }
 
 
@@ -261,6 +309,7 @@ export class IncidentComponent extends ImanSubmodule implements OnInit {
                 res => {
                     this.loadSelectedData(this.selectedIncident)
                     this.reloadGridTable()
+                    this.isEditable = false
                 },
                 err => {
                     var r = err.error.text
