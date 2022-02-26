@@ -117,11 +117,13 @@ public class IncidentService {
 		projectService.verifyOwnerOrAdmin(project);
 
 		Incident incident = modelMapper.map(incidentCreateDto, Incident.class);
-		incident.setCode(countIncidentsInProject(project));
+		incident.setId(null);
+		incident.setCode(countIncidentsInProject(project) + 1);
 		incident.setActive(true);
 		incident.setLastModification(new Date());
 		incident.setDate(new Date());
 		incident.setUser(userService.getCurrentUser());
+		incident.setProject(project);
 
 		incidentRepository.save(incident);
 	}
@@ -156,16 +158,18 @@ public class IncidentService {
 		Project project = projectService.findProjectById(projectId);
 		projectService.verifyUserRelatedWithProject(project);
 
-		/* NON-RELATIVE TO FIND */
-		User user = new User();
-		user.setUsername(incidentSearch.getUsername());
-		User assignedUser = new User();
-		assignedUser.setUsername(incidentSearch.getAssignedUsername());
-		
 		/* MATCHER & EXAMPLE */
 		Incident incident = modelMapper.map(incidentSearch, Incident.class);
-		incident.setUser(user);
-		incident.setAssignedUser(assignedUser);
+		if(!StringUtils.isEmpty(incidentSearch.getUsername())) {
+			User user = new User();
+			user.setUsername(incidentSearch.getUsername());
+			incident.setUser(user);
+		}
+		if(!StringUtils.isEmpty(incidentSearch.getAssignedUsername())) {
+			User assignedUser = new User();
+			assignedUser.setUsername(incidentSearch.getAssignedUsername());
+			incident.setAssignedUser(assignedUser);
+		}
 		incident.setProject(project);
 		ExampleMatcher matcher = ExampleMatcher.matching().withIgnoreCase()
 				.withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);

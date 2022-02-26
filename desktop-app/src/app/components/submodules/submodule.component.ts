@@ -97,15 +97,20 @@ export class ImanSubmodule {
             if (projectId == null || projectId == 0) {
                 this.projectSelectedId = this.myProjects[0].id
                 this.projectService.setStoredProjectId(this.projectSelectedId)
+                
             }
-            this.loadAfterProject()
+            if(this.projectSelectedId) {
+                this.editIsAllowed(this.projectSelectedId)
+            }
             this.getAllUsersFromSelectedProject()
+            this.loadAfterProject()
         }
     }
 
     loadProjectByIdEvent(projectIdEvent: any) {
         this.projectSelectedId = Number(projectIdEvent.value)
         this.projectService.setStoredProjectId(this.projectSelectedId)
+        this.editIsAllowed(this.projectSelectedId)
         this.sprintService.setStoredSprintId(0)
         this.loadAfterProject()
     }
@@ -143,7 +148,6 @@ export class ImanSubmodule {
     loadSprintsBySelectedProject() {
         let projectId = this.projectService.getStoredProjectId()
         if (projectId != null && projectId != 0) {
-            this.editIsAllowed(projectId)
             this.sprintService.sprintFromProject(projectId).subscribe(
                 data => {
                     this.mySprints = data
@@ -354,4 +358,5 @@ export class ImanSubmodule {
             }   
         }
     }
+    
 }

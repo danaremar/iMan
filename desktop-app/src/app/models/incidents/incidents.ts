@@ -55,7 +55,7 @@ export class IncidentListDto {
         priority: number,
         affects: string,
         username: string,
-        assignatedUsername: string
+        assignedUsername: string
     ) {
         this.id = id
         this.code = code
@@ -69,7 +69,7 @@ export class IncidentListDto {
         this.priority = priority
         this.affects = affects
         this.username = username
-        this.assignatedUsername = assignatedUsername
+        this.assignedUsername = assignedUsername
     }
 
     id: number
@@ -84,7 +84,7 @@ export class IncidentListDto {
     priority: number
     affects: string
     username: string
-    assignatedUsername: string
+    assignedUsername: string
 }
 
 export class IncidentShowDto extends IncidentListDto {
@@ -101,10 +101,10 @@ export class IncidentShowDto extends IncidentListDto {
         priority: number,
         affects: string,
         username: string,
-        assignatedUsername: string,
+        assignedUsername: string,
         updates: Array<IncidentUpdateShowDto>
     ) {
-        super(id, code, title, description, reported, active, estimatedTime, date, lastModification, priority, affects, username, assignatedUsername)
+        super(id, code, title, description, reported, active, estimatedTime, date, lastModification, priority, affects, username, assignedUsername)
         this.updates = updates
     }
 
@@ -151,14 +151,14 @@ export class IncidentUpdateCreateDto {
         affects: string,
         priority: number,
         status: string,
-        assignatedUsername: string
+        assignedUsername: string
     ) {
         this.description = description
         this.estimatedTime = estimatedTime
         this.affects = affects
         this.priority = priority
         this.status = status
-        this.assignatedUsername = assignatedUsername
+        this.assignedUsername = assignedUsername
     }
 
     description: string
@@ -166,5 +166,5 @@ export class IncidentUpdateCreateDto {
     affects: string
     priority: number
     status: string
-    assignatedUsername: string
+    assignedUsername: string
 }

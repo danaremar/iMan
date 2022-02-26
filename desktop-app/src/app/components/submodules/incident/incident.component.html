@@ -10,6 +10,13 @@
             </select>
         </div>
     </div>
+
+    <div class="mx-3">
+        <a ngbTooltip="Add incident" placement="left" [openDelay]="300" *ngIf="adminAccess"
+            (click)="newIncident()">
+            <em class="bi bi-plus-lg"></em>
+        </a>
+    </div>
 </div>
 
 <hr style="height: 2px">
@@ -32,14 +39,21 @@
 
 <!-- VIEW MODAL -->
 <div class="modal fade" id="viewModal" tabindex="-1" aria-labelledby="viewModalLabel" aria-hidden="false">
-    <div class="modal-dialog modal-xl">
+    <div class="modal-dialog {{selectedIncident!=undefined?'modal-xl':''}}">
         <div class="modal-content bg-dark-5">
             <div class="modal-body">
                 <div class="card overflow-auto">
 
                     <div class="d-flex">
-                        <div class="flex-grow-1 card-title mt-2">View incident</div>
-                        <div class="close-card-button" data-bs-dismiss="modal">
+
+                        <!-- title -->
+                        <div *ngIf="selectedIncident==undefined" class="flex-grow-1 card-title mt-2 ms-3">New incident
+                        </div>
+                        <div *ngIf="selectedIncident!=undefined" class="flex-grow-1 card-title mt-2 ms-3">
+                            #{{selectedIncident.code}}: {{selectedIncident.title}}</div>
+
+                        <!-- close button -->
+                        <div class="close-card-button" #closebuttonModalView data-bs-dismiss="modal">
                             <em class="bi bi-x"></em>
                         </div>
                     </div>
@@ -53,67 +67,145 @@
 
                         <div class="row">
 
-                            <!-- INCIDENT CREATE / UPDATE -->
-                            <form class="col-lg-5" *ngIf="selectedIncident!=undefined" [formGroup]="formIncident"
-                                (ngSubmit)="uploadIncident()">
+                            <!-- INCIDENT VIEW -->
+                            <div class="{{selectedIncident!=undefined?'col-lg-5':'col-lg-12'}} mt-2">
 
-                                <!-- title -->
-                                <div class="form-group mb-4 mt-3">
-                                    <p class="mb-0">Title</p>
-                                    <input id="formIncidentTitle"
-                                        class="form-control {{inputClass(formIncident, 'title')}}" type="text"
-                                        formControlName="title" maxlength="50" minlength="2" />
-                                    <div class="invalid-feedback"
-                                        *ngIf="formIncident.get('title')?.touched && formIncident.get('title')?.invalid">
-                                        <div *ngIf="formIncident.get('title')?.errors?.maxlength">
-                                            Only 50 characters are allowed
+                                <div class="d-flex flex-wrap">
+
+                                    <!-- INCIDENT CREATE / UPDATE -->
+                                    <div class="w-100" *ngIf="isEditable && adminAccess">
+                                        <form class="w-100 mb-3" [formGroup]="formIncident"
+                                            (ngSubmit)="uploadIncident()">
+
+                                            <!-- title -->
+                                            <div class="form-group mb-4 mt-3">
+                                                <p class="mb-0">Title</p>
+                                                <input id="formIncidentTitle"
+                                                    class="form-control {{inputClass(formIncident, 'title')}}"
+                                                    type="text" formControlName="title" maxlength="50" minlength="2" />
+                                                <div class="invalid-feedback"
+                                                    *ngIf="formIncident.get('title')?.touched && formIncident.get('title')?.invalid">
+                                                    <div *ngIf="formIncident.get('title')?.errors?.maxlength">
+                                                        Only 50 characters are allowed
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- description -->
+                                            <div class="form-group mb-4 mt-3">
+                                                <p class="mb-0">Description</p>
+                                                <textarea
+                                                    class="form-control {{inputClass(formIncident, 'description')}}"
+                                                    formControlName="description" maxlength="255" rows="3">
+                                                </textarea>
+                                                <div class="invalid-feedback"
+                                                    *ngIf="formIncident.get('description')?.touched && formIncident.get('description')?.invalid">
+                                                    <div *ngIf="formIncident.get('description')?.errors?.maxlength">
+                                                        Only 255 characters are allowed
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- reported -->
+                                            <div class="form-group mb-4 mt-3">
+                                                <p class="mb-0">Reported by</p>
+                                                <input class="form-control {{inputClass(formIncident, 'reported')}}"
+                                                    type="text" formControlName="reported" maxlength="50" />
+                                                <div class="invalid-feedback"
+                                                    *ngIf="formIncident.get('reported')?.touched && formIncident.get('reported')?.invalid">
+                                                    <div *ngIf="formIncident.get('reported')?.errors?.maxlength">
+                                                        Only 30 characters are allowed
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- buttons -->
+                                            <div class="form-group modal-footer">
+                                                <button type="button" class="btn btn-danger"
+                                                    (click)="editable()">Close</button>
+                                                <button type="submit" class="btn btn-success"
+                                                    [disabled]="!formIncident.valid">{{selectedIncident==undefined?'Create':'Edit'}}</button>
+                                            </div>
+
+                                        </form>
+                                    </div>
+
+                                    <!-- IF NOT EDITABLE -->
+                                    <div class="w-100" *ngIf="!(isEditable && adminAccess) && selectedIncident!=undefined">
+
+                                        <!-- title -->
+                                        <!-- <div class="my-auto mx-2 my-2 fs-4">{{selectedIncident.title}}</div> -->
+
+                                        <!-- description -->
+                                        <div class="d-flex p-2">
+                                            <em class="bi bi-card-text my-auto"
+                                                style="font-size: 20px !important;"></em>
+                                            <div class="text-break my-auto mx-2">Description:</div>
+                                        </div>
+                                        <div class="text-break mb-3" style="margin-left: 2.4rem !important;">
+                                            {{selectedIncident.description}}</div>
+
+                                        <!-- reported -->
+                                        <div class="d-flex p-2">
+                                            <em class="bi bi-person-bounding-box my-auto"
+                                                style="font-size: 20px !important;"></em>
+                                            <div class="my-auto mx-2">Reported by: {{selectedIncident.reported}}
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <!-- ONLY VIEW PROPERTIES -->
+
+                                    <!-- estimated time -->
+                                    <div class="w-50 d-flex p-2" *ngIf="selectedIncident!=undefined">
+                                        <em class="bi bi-hourglass-top my-auto"
+                                            style="font-size: 20px !important;"></em>
+                                        <div class="my-auto mx-2">Estimated time: {{selectedIncident.estimatedTime}}
                                         </div>
                                     </div>
-                                </div>
 
-                                <!-- description -->
-                                <div class="form-group mb-4 mt-3">
-                                    <p class="mb-0">Description</p>
-                                    <textarea class="form-control {{inputClass(formIncident, 'description')}}"
-                                        formControlName="description" maxlength="255" rows="3">
-                                    </textarea>
-                                    <div class="invalid-feedback"
-                                        *ngIf="formIncident.get('description')?.touched && formIncident.get('description')?.invalid">
-                                        <div *ngIf="formIncident.get('description')?.errors?.maxlength">
-                                            Only 255 characters are allowed
-                                        </div>
+                                    <!-- priority -->
+                                    <div class="w-50 d-flex p-2" *ngIf="selectedIncident!=undefined">
+                                        <em class="bi bi-stoplights my-auto" style="font-size: 20px !important;"></em>
+                                        <div class="my-auto mx-2">Priority: {{selectedIncident.priority}}</div>
                                     </div>
-                                </div>
 
-                                <!-- reported -->
-                                <div class="form-group mb-4 mt-3">
-                                    <p class="mb-0">Reported by</p>
-                                    <input class="form-control {{inputClass(formIncident, 'reported')}}" type="text"
-                                        formControlName="reported" maxlength="50" />
-                                    <div class="invalid-feedback"
-                                        *ngIf="formIncident.get('reported')?.touched && formIncident.get('reported')?.invalid">
-                                        <div *ngIf="formIncident.get('reported')?.errors?.maxlength">
-                                            Only 30 characters are allowed
-                                        </div>
+                                    <!-- affects -->
+                                    <div class="w-50 d-flex p-2" *ngIf="selectedIncident!=undefined">
+                                        <em class="bi bi-shield-exclamation my-auto"
+                                            style="font-size: 20px !important;"></em>
+                                        <div class="my-auto mx-2">Affects: {{selectedIncident.affects}}</div>
                                     </div>
+
+                                    <!-- assigned -->
+                                    <div class="w-50 d-flex p-2" *ngIf="selectedIncident!=undefined">
+                                        <em class="bi bi-person-check my-auto" style="font-size: 20px !important;"></em>
+                                        <div class="my-auto mx-2">Assigned: @{{selectedIncident.assignedUsername}}</div>
+                                    </div>
+
+                                    <!-- edit button -->
+                                    <div *ngIf="!(isEditable && adminAccess) && selectedIncident!=undefined" class="w-100 d-flex p-2 mt-2">
+                                        <button type="button" class="btn btn-secondary ms-auto d-flex"
+                                            (click)="editable()">
+                                            <em class="bi bi-sm bi-pencil-fill ms-auto me-2"></em>
+                                            <div class="my-auto">Edit</div>
+                                        </button>
+                                    </div>
+
                                 </div>
 
-                                <!-- buttons -->
-                                <div class="form-group modal-footer">
-                                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal"
-                                        #closeButtonIncident>Close</button>
-                                    <button type="submit" class="btn btn-success"
-                                        [disabled]="!formIncident.valid">Update</button>
-                                </div>
+                                <div class="my-auto"></div>
 
-                            </form>
+                            </div>
 
 
                             <!-- INCIDENT UPDATES -->
-                            <div class="col-lg-7">
+                            <div class="col-lg-7" *ngIf="selectedIncident!=undefined">
 
                                 <!-- INCIDENT CREATE UPDATES -->
-                                <div class="accordion mt-1 mb-3" id="accordionIncidentUpdateCreate">
+                                <div *ngIf="memberAccess" class="accordion mt-1 mb-3"
+                                    id="accordionIncidentUpdateCreate">
 
                                     <div class="accordion-item">
                                         <h2 class="accordion-header" id="headingOne">
@@ -127,8 +219,8 @@
                                             aria-labelledby="headingOne"
                                             data-bs-parent="#accordionIncidentUpdateCreate">
 
-                                            <form class="d-flex flex-wrap p-2" *ngIf="selectedIncident!=undefined"
-                                                [formGroup]="formIncidentUpdate" (ngSubmit)="createNewIncidentUpdate()">
+                                            <form class="d-flex flex-wrap p-2" [formGroup]="formIncidentUpdate"
+                                                (ngSubmit)="createNewIncidentUpdate()">
 
                                                 <!-- description -->
                                                 <div class="w-100 form-group p-2 mt-2">
@@ -139,7 +231,8 @@
                                                         </textarea>
                                                     <div class="invalid-feedback"
                                                         *ngIf="formIncidentUpdate.get('description')?.touched && formIncidentUpdate.get('description')?.invalid">
-                                                        <div *ngIf="formIncidentUpdate.get('description')?.errors?.maxlength">
+                                                        <div
+                                                            *ngIf="formIncidentUpdate.get('description')?.errors?.maxlength">
                                                             Only 255 characters are allowed
                                                         </div>
                                                     </div>
@@ -168,11 +261,13 @@
                                                     <em class="bi bi-stoplights my-auto"
                                                         style="font-size: 20px !important;"></em>
                                                     <div class="my-auto mx-2">Priority: </div>
-                                                    <input class="form-control {{inputClass(formIncidentUpdate, 'priority')}}"
+                                                    <input
+                                                        class="form-control {{inputClass(formIncidentUpdate, 'priority')}}"
                                                         type="text" formControlName="priority" maxlength="50" />
                                                     <div class="invalid-feedback"
                                                         *ngIf="formIncidentUpdate.get('priority')?.touched && formIncidentUpdate.get('priority')?.invalid">
-                                                        <div *ngIf="formIncidentUpdate.get('priority')?.errors?.maxlength">
+                                                        <div
+                                                            *ngIf="formIncidentUpdate.get('priority')?.errors?.maxlength">
                                                             Only 50 characters are allowed
                                                         </div>
                                                     </div>
@@ -183,12 +278,14 @@
                                                     <em class="bi bi-shield-exclamation my-auto"
                                                         style="font-size: 20px !important;"></em>
                                                     <div class="my-auto mx-2">Affects: </div>
-                                                    <input class="form-control {{inputClass(formIncidentUpdate, 'affects')}}"
+                                                    <input
+                                                        class="form-control {{inputClass(formIncidentUpdate, 'affects')}}"
                                                         type="text" formControlName="affects" list="lsAffects"
                                                         maxlength="50" />
                                                     <div class="invalid-feedback"
                                                         *ngIf="formIncidentUpdate.get('affects')?.touched && formIncidentUpdate.get('affects')?.invalid">
-                                                        <div *ngIf="formIncidentUpdate.get('affects')?.errors?.maxlength">
+                                                        <div
+                                                            *ngIf="formIncidentUpdate.get('affects')?.errors?.maxlength">
                                                             Only 50 characters are allowed
                                                         </div>
                                                     </div>
@@ -206,17 +303,16 @@
                                                         style="font-size: 20px !important;"></em>
                                                     <div class="my-auto mx-2">Assigned: </div>
                                                     <input
-                                                        class="form-control {{inputClass(formIncidentUpdate, 'assignatedUsername')}}"
-                                                        type="text"
-                                                        formControlName="assignatedUsername" maxlength="30"
+                                                        class="form-control {{inputClass(formIncidentUpdate, 'assignedUsername')}}"
+                                                        type="text" formControlName="assignedUsername" maxlength="30"
                                                         minlength="2" />
                                                     <div class="invalid-feedback"
-                                                        *ngIf="formIncidentUpdate.get('assignatedUsername')?.touched && formIncidentUpdate.get('assignatedUsername')?.invalid">
+                                                        *ngIf="formIncidentUpdate.get('assignedUsername')?.touched && formIncidentUpdate.get('assignedUsername')?.invalid">
                                                         <div
-                                                            *ngIf="formIncidentUpdate.get('assignatedUsername')?.errors?.required">
+                                                            *ngIf="formIncidentUpdate.get('assignedUsername')?.errors?.required">
                                                             Cannot be empty</div>
                                                         <div
-                                                            *ngIf="formIncidentUpdate.get('assignatedUsername')?.errors?.minlength">
+                                                            *ngIf="formIncidentUpdate.get('assignedUsername')?.errors?.minlength">
                                                             Must containt at least 2 characters</div>
                                                     </div>
                                                     <div
@@ -226,7 +322,12 @@
                                                         <option *ngFor="let u of usersInProject">{{u.username}}
                                                         </option>
                                                     </datalist>
+                                                </div>
 
+                                                <!-- buttons -->
+                                                <div class="form-group modal-footer ms-auto">
+                                                    <button type="submit" class="btn btn-success"
+                                                        [disabled]="!formIncident.valid">Upload</button>
                                                 </div>
 
                                             </form>
@@ -236,7 +337,7 @@
                                 </div>
 
                                 <!-- INCIDENT UPDATE HISTORY -->
-                                <div class="overflow-auto scrollable-content" *ngIf="selectedIncident">
+                                <div class="overflow-auto" *ngIf="selectedIncident">
 
                                     <div class="card inc-upd-card p-3 mb-3"
                                         *ngFor="let u of selectedIncident.updates; let i = index">

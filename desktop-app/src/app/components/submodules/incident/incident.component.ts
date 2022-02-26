@@ -1,8 +1,7 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { IDatasource, IGetRowsParams } from "ag-grid-community";
-import { IncidentCreateDto, IncidentListDto, IncidentShowDto, IncidentUpdateDto } from "src/app/models/incidents/incidents";
+import { IncidentCreateDto, IncidentListDto, IncidentShowDto, IncidentUpdateCreateDto, IncidentUpdateDto } from "src/app/models/incidents/incidents";
 import { ShowUser } from "src/app/models/user/show-user";
 import { TokenService } from "src/app/services/authentication/token.service";
 import { EffortService } from "src/app/services/effort/effort.service";
@@ -125,7 +124,8 @@ export class IncidentComponent extends ImanSubmodule implements OnInit {
     ***************************/
 
     // open modal view
-    @ViewChild('openViewModal') openViewModal: any;
+    @ViewChild('openViewModal') openViewModal: any
+    @ViewChild('closebuttonModalView') closebuttonModalView: any
 
     // list of incident (paginated, ordered & filtered)
     incidents: Array<IncidentListDto> = []
@@ -134,6 +134,7 @@ export class IncidentComponent extends ImanSubmodule implements OnInit {
     selectedIncident: IncidentShowDto | undefined
 
     // incident form in modal view
+    isEditable: boolean = false
     formIncident: FormGroup
     formIncidentUpdate: FormGroup
     incidentContainError: boolean = false
@@ -160,7 +161,7 @@ export class IncidentComponent extends ImanSubmodule implements OnInit {
             affects: ['', []],
             priority: ['', []],
             status: ['', []],
-            assignatedUsername: ['', []]
+            assignedUsername: ['', []]
         })
 
     }
@@ -176,13 +177,8 @@ export class IncidentComponent extends ImanSubmodule implements OnInit {
         this.loadMyProjects()
     }
 
-    loadFirstProject() {
-        if (this.myProjects.length !== 0) {
-            let projectId = this.projectService.getStoredProjectId()
-            if (projectId == null || projectId == 0) {
-                this.projectService.setStoredProjectId(this.myProjects[0].id)
-            }
-        }
+    editable() {
+        this.isEditable = !this.isEditable
     }
 
     loadAfterProject() {
@@ -204,11 +200,22 @@ export class IncidentComponent extends ImanSubmodule implements OnInit {
 
     buildIncidentForm() {
         this.formIncident.reset()
-        this.formIncident = this.formBuilder.group({
-            title: [this.selectedIncident?.title, [Validators.required]],
-            description: [this.selectedIncident?.description, []],
-            reported: [this.selectedIncident?.reported, []]
-        })
+        if (this.selectedIncident != undefined) {
+            this.formIncident = this.formBuilder.group({
+                title: [this.selectedIncident.title, [Validators.required]],
+                description: [this.selectedIncident.description, []],
+                reported: [this.selectedIncident.reported, []]
+            })
+        }
+
+    }
+
+    newIncident() {
+        this.isEditable = true
+        this.selectedIncident = undefined
+        this.incidentContainError = false
+        this.buildIncidentForm()
+        this.openViewModal.nativeElement.click()
     }
 
 
@@ -223,11 +230,11 @@ export class IncidentComponent extends ImanSubmodule implements OnInit {
         // CREATE
         if (!this.selectedIncident) {
             if (this.projectSelectedId != undefined) {
-                let newIncident: IncidentCreateDto = new IncidentCreateDto(this.projectSelectedId, this.formIncident.value.title, this.formIncident.value.description, this.formIncident.value.reported)
+                let newIncident = new IncidentCreateDto(this.projectSelectedId, this.formIncident.value.title, this.formIncident.value.description, this.formIncident.value.reported)
                 this.incidentService.createIncident(newIncident).subscribe(
                     res => {
-                        this.loadSelectedData(this.selectedIncident)
                         this.reloadGridTable()
+                        this.closebuttonModalView.nativeElement.click()
                     },
                     err => {
                         var r = err.error.text
@@ -240,9 +247,9 @@ export class IncidentComponent extends ImanSubmodule implements OnInit {
                 )
             }
 
-        //UPDATE
+            //UPDATE
         } else {
-            let updateIncident: IncidentUpdateDto = new IncidentUpdateDto(this.selectedIncident.id, this.formIncident.value.title, this.formIncident.value.description, this.formIncident.value.reported)
+            let updateIncident = new IncidentUpdateDto(this.selectedIncident.id, this.formIncident.value.title, this.formIncident.value.description, this.formIncident.value.reported)
             this.incidentService.updateIncident(updateIncident).subscribe(
                 res => {
                     this.loadSelectedData(this.selectedIncident)
@@ -257,12 +264,29 @@ export class IncidentComponent extends ImanSubmodule implements OnInit {
                     this.incidentContainError = true
                 }
             )
-    
+
         }
     }
 
     createNewIncidentUpdate() {
-        this.formIncidentUpdate
+        if (this.selectedIncident != undefined) {
+            let createIncidentUpdate = new IncidentUpdateCreateDto(this.formIncidentUpdate.value.description, this.formIncidentUpdate.value.estimatedTime, this.formIncidentUpdate.value.affects, this.formIncidentUpdate.value.priority, this.formIncidentUpdate.value.status, this.formIncidentUpdate.value.assignedUsername)
+            this.incidentService.createIncidentUpdate(this.selectedIncident.id, createIncidentUpdate).subscribe(
+                res => {
+                    this.loadSelectedData(this.selectedIncident)
+                    this.formIncidentUpdate.reset()
+                    this.reloadGridTable()
+                },
+                err => {
+                    var r = err.error.text
+                    if (r == undefined) {
+                        r = 'Error produced'
+                    }
+                    this.incidentMessageError = r;
+                    this.incidentContainError = true
+                }
+            )
+        }
     }
 
 
