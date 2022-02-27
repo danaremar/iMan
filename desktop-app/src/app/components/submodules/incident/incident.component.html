@@ -119,10 +119,10 @@
                                             </div>
 
                                             <!-- buttons -->
-                                            <div class="form-group">
+                                            <div class="form-group d-flex flex-row-reverse">
                                                 <button type="button" class="btn btn-danger"
                                                     (click)="editable()">Close</button>
-                                                <button type="submit" class="btn btn-success"
+                                                <button type="submit" class="btn btn-success me-2"
                                                     [disabled]="!formIncident.valid">{{selectedIncident==undefined?'Create':'Edit'}}</button>
                                             </div>
 
@@ -376,7 +376,7 @@
                                                 </div>
 
                                                 <!-- buttons -->
-                                                <div class="w-100 form-group ms-auto">
+                                                <div class="w-100 form-group  d-flex flex-row-reverse">
                                                     <button type="submit" class="m-2 btn btn-success"
                                                         [disabled]="!formIncident.valid"
                                                         style="margin-left: auto !important;">Upload</button>
@@ -454,6 +454,13 @@
                                                 <em class="bi bi-shield-exclamation my-auto"
                                                     style="font-size: 20px !important;"></em>
                                                 <div class="my-auto mx-2">Affects: {{u.affects}}</div>
+                                            </div>
+
+                                            <!-- status -->
+                                            <div class="d-flex me-3 my-1" *ngIf="u.status">
+                                                <em class="bi bi-activity my-auto"
+                                                    style="font-size: 20px !important;"></em>
+                                                <div class="my-auto mx-2">Status: {{u.status}}</div>
                                             </div>
 
                                             <!-- assigned -->
