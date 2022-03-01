@@ -73,6 +73,9 @@ public class KanbanTask {
 	@OneToOne
 	@JsonIncludeProperties({"id","username","imageUid"})
 	private User creator;
+	
+	@Length(max = 255)
+	private String tags;
 
 	// EFFORTS
 
@@ -100,7 +103,7 @@ public class KanbanTask {
 	
 	@ManyToMany
 	@JoinTable(name = "kanban_task_children")
-	@JsonIncludeProperties({"id", "title"})
+	@JsonIncludeProperties({"id", "title", "number", "active"})
 	private List<KanbanTask> children;
 
 }

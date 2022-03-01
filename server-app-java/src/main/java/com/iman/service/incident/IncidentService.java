@@ -1,6 +1,7 @@
 package com.iman.service.incident;
 
 import java.util.Date;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
@@ -24,6 +25,7 @@ import com.iman.model.incident.IncidentUpdateDto;
 import com.iman.model.incident.IncidentUpdateShowDto;
 import com.iman.model.projects.Project;
 import com.iman.model.users.User;
+import com.iman.model.users.UserShowDto;
 import com.iman.repository.incidents.IncidentRepository;
 import com.iman.repository.incidents.IncidentUpdateRepository;
 import com.iman.service.projects.ProjectService;
@@ -53,7 +55,7 @@ public class IncidentService {
 		incidentListDto.setUsername(incident.getUser().getUsername());
 
 		if (incident.getAssignedUser() != null && StringUtils.isNotBlank(incident.getAssignedUser().getUsername())) {
-			incidentListDto.setAssignedUsername(incident.getUser().getUsername());
+			incidentListDto.setAssignedUsername(incident.getAssignedUser().getUsername());
 		}
 		return incidentListDto;
 	}
@@ -69,17 +71,15 @@ public class IncidentService {
 		if (incident.getAssignedUser() != null && StringUtils.isNotBlank(incident.getAssignedUser().getUsername())) {
 			incidentShowDto.setAssignedUsername(incident.getAssignedUser().getUsername());
 		}
-		incidentShowDto.setUpdates(incident.getUpdates().stream()
-				.map(this::mapIncidentUpdateToShow)
-				.collect(Collectors.toList()));
+		incidentShowDto.setUpdates(findIncidentUpdates(incident));
 		return incidentShowDto;
 	}
 	
 	public IncidentUpdateShowDto mapIncidentUpdateToShow(IncidentUpdate incidentUpdate) {
 		IncidentUpdateShowDto incidentShowDto = modelMapper.map(incidentUpdate, IncidentUpdateShowDto.class);
-		incidentShowDto.setUsername(incidentUpdate.getUser().getUsername());
+		incidentShowDto.setUser(modelMapper.map(incidentUpdate.getUser(), UserShowDto.class));
 		if (incidentUpdate.getAssignedUser() != null && StringUtils.isNotBlank(incidentUpdate.getAssignedUser().getUsername())) {
-			incidentShowDto.setAssignedUsername(incidentUpdate.getAssignedUser().getUsername());
+			incidentShowDto.setAssignedUser(modelMapper.map(incidentUpdate.getAssignedUser(), UserShowDto.class));
 		}
 		return incidentShowDto;
 	}
@@ -92,6 +92,12 @@ public class IncidentService {
 		Incident incident = findIncidentById(id);
 		projectService.verifyUserRelatedWithProject(incident.getProject());
 		return incident;
+	}
+
+	public List<IncidentUpdateShowDto> findIncidentUpdates(Incident incident) {
+		return incident.getUpdates().stream()
+			.map(this::mapIncidentUpdateToShow)
+			.collect(Collectors.toList());
 	}
 
 	public IncidentUpdate findIncidentUpdateById(Long id) {
@@ -111,11 +117,13 @@ public class IncidentService {
 		projectService.verifyOwnerOrAdmin(project);
 
 		Incident incident = modelMapper.map(incidentCreateDto, Incident.class);
-		incident.setCode(countIncidentsInProject(project));
+		incident.setId(null);
+		incident.setCode(countIncidentsInProject(project) + 1);
 		incident.setActive(true);
 		incident.setLastModification(new Date());
 		incident.setDate(new Date());
 		incident.setUser(userService.getCurrentUser());
+		incident.setProject(project);
 
 		incidentRepository.save(incident);
 	}
@@ -142,18 +150,32 @@ public class IncidentService {
 		incidentRepository.save(incident);
 	}
 
+	
+	/* FIND BY FILTER, SORTING & PAGING*/
 	public Page<Incident> findIncidents(IncidentSearch incidentSearch, Long projectId, Pageable pageable) {
+		
+		/* PERMISSIONS */
 		Project project = projectService.findProjectById(projectId);
 		projectService.verifyUserRelatedWithProject(project);
 
+		/* MATCHER & EXAMPLE */
 		Incident incident = modelMapper.map(incidentSearch, Incident.class);
-		incident.setUser(userService.findUserByUsername(incidentSearch.getUsername()));
-		incident.setAssignedUser(userService.findUserByUsername(incidentSearch.getAssignedUsername()));
-
+		if(!StringUtils.isEmpty(incidentSearch.getUsername())) {
+			User user = new User();
+			user.setUsername(incidentSearch.getUsername());
+			incident.setUser(user);
+		}
+		if(!StringUtils.isEmpty(incidentSearch.getAssignedUsername())) {
+			User assignedUser = new User();
+			assignedUser.setUsername(incidentSearch.getAssignedUsername());
+			incident.setAssignedUser(assignedUser);
+		}
+		incident.setProject(project);
 		ExampleMatcher matcher = ExampleMatcher.matching().withIgnoreCase()
 				.withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
 		Example<Incident> example = Example.of(incident, matcher);
 
+		/* FIND */
 		return incidentRepository.findAll(example, pageable);
 	}
 

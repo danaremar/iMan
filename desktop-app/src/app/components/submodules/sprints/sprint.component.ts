@@ -19,15 +19,6 @@ export class SprintComponent extends ImanSubmodule implements OnInit {
     @ViewChild('closebuttonCreate') closebuttonCreate: any;
     @ViewChild('closebuttonUpdate') closebuttonUpdate: any;
 
-    myProjects: any
-    mySprints: any
-    projectSelectedId: number | null | undefined
-    accessToEdit: boolean = false
-    actualDate: any
-
-    containError: boolean = false
-    messageError: string | undefined
-
     formNewSprint: FormGroup
     newSprintContainError: boolean = false
     newSprintMessageError: string | undefined
@@ -62,24 +53,9 @@ export class SprintComponent extends ImanSubmodule implements OnInit {
     }
 
     ngOnInit(): void {
+        this.loadSprint = true
         this.loadMyProjects()
         this.loadActualDate()
-    }
-
-    loadSprintsBySelectedProject() {
-        let projectId = this.projectService.getStoredProjectId()
-        if (projectId != null && projectId != 0) {
-            this.editIsAllowed(projectId)
-            this.sprintService.sprintFromProject(projectId).subscribe(
-                data => {
-                    this.containError = false
-                    this.mySprints = data
-                },
-                err => {
-                    this.returnPrincipalError(err)
-                }
-            )
-        }
     }
 
     determineSprintTimeStatus(sprint: SprintShow): string {

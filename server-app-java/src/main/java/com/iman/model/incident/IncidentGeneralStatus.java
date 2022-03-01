@@ -33,10 +33,10 @@ public class IncidentGeneralStatus {
 	private String affects;
 
 	/*
-	 * PRIORITY: 0 -> VERY HIGH, 1 -> HIGH, 2 -> MEDIUM, 3 -> LOW, 4 -> VERY LOW
+	 * PRIORITY: 0 -> CRITICAL, 1 -> HIGH, 2 -> MEDIUM, 3 -> LOW
 	 */
 	@Min(value = 0)
-	@Max(value = 4)
+	@Max(value = 3)
 	private Integer priority;
 
 	@Length(max = 50)

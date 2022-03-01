@@ -1,0 +1,510 @@
+<!-- OPERATIONS -->
+<div class="d-flex mb-3 mr-3 flex-wrap">
+    <div class="flex-grow-1 center d-flex flex-wrap">
+        <div class="d-flex mx-3" *ngIf="myProjects && myProjects.length!=0">
+            <em class="bi bi-md bi-folder2 me-2" ngbTooltip="Project" placement="bottom" [openDelay]="300"></em>
+            <select class="m-auto" (change)="loadProjectByIdEvent($event.target)">
+                <option class="dark-text" *ngFor="let p of myProjects"
+                    [attr.selected]="p.id==projectSelectedId?true:null" [ngValue]="p" value="{{p.id}}">
+                    {{p.name}}</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="mx-3">
+        <a ngbTooltip="Add incident" placement="left" [openDelay]="300" *ngIf="adminAccess" (click)="newIncident()">
+            <em class="bi bi-plus-lg"></em>
+        </a>
+    </div>
+</div>
+
+<hr style="height: 2px">
+
+<div *ngIf="containError" class="alert alert-danger mt-3 mb-3">{{messageError}}</div>
+
+<!-- TABLE -->
+<div class="overflow-auto scrollable-content">
+    <ag-grid-angular style="width: 100%; height: 100%" class="ag-theme-alpine-dark" [rowData]="incidents"
+        [columnDefs]="incCol" [cacheBlockSize]="pageSize" [pagination]="true" [paginationPageSize]="pageSize"
+        [enableRangeSelection]="true" (gridReady)="onGridReady($event)" [rowModelType]="'infinite'"
+        (rowDoubleClicked)="loadSelectedRow($event)">
+
+    </ag-grid-angular>
+</div>
+
+<!-- hidden button that opens modal -->
+<button hidden type="button" #openViewModal class="btn btn-danger" data-bs-target="#viewModal"
+    data-bs-toggle="modal"></button>
+
+<!-- VIEW MODAL -->
+<div class="modal fade" id="viewModal" tabindex="-1" aria-labelledby="viewModalLabel" aria-hidden="false">
+    <div class="modal-dialog {{selectedIncident!=undefined?'modal-xl':''}}">
+        <div class="modal-content bg-dark-5">
+            <div class="modal-body">
+                <div class="card overflow-auto">
+
+                    <div class="d-flex">
+
+                        <!-- title -->
+                        <div *ngIf="selectedIncident==undefined" class="flex-grow-1 card-title mt-2 ms-3">New incident
+                        </div>
+                        <div *ngIf="selectedIncident!=undefined" class="flex-grow-1 card-title mt-2 ms-3">
+                            #{{selectedIncident.code}}: {{selectedIncident.title}}</div>
+
+                        <!-- close button -->
+                        <div class="close-card-button" #closebuttonModalView data-bs-dismiss="modal">
+                            <em class="bi bi-x"></em>
+                        </div>
+                    </div>
+
+                    <!-- errors -->
+                    <div *ngIf="incidentContainError" class="alert alert-danger mt-5">
+                        {{incidentMessageError}}
+                    </div>
+
+                    <div class="container">
+
+                        <div class="row">
+
+                            <!-- INCIDENT VIEW -->
+                            <div class="{{selectedIncident!=undefined?'col-lg-5':'col-lg-12'}} mt-2">
+
+                                <div class="d-flex flex-wrap">
+
+                                    <!-- INCIDENT CREATE / UPDATE -->
+                                    <div class="w-100" *ngIf="isEditable && adminAccess">
+                                        <form class="w-100 mb-3" [formGroup]="formIncident"
+                                            (ngSubmit)="uploadIncident()">
+
+                                            <!-- title -->
+                                            <div class="form-group mb-4 mt-3">
+                                                <p class="mb-0">Title</p>
+                                                <input id="formIncidentTitle"
+                                                    class="form-control {{inputClass(formIncident, 'title')}}"
+                                                    type="text" formControlName="title" maxlength="50" minlength="2" />
+                                                <div class="invalid-feedback"
+                                                    *ngIf="formIncident.get('title')?.touched && formIncident.get('title')?.invalid">
+                                                    <div *ngIf="formIncident.get('title')?.errors?.maxlength">
+                                                        Only 50 characters are allowed
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- description -->
+                                            <div class="form-group mb-4 mt-3">
+                                                <p class="mb-0">Description</p>
+                                                <textarea
+                                                    class="form-control {{inputClass(formIncident, 'description')}}"
+                                                    formControlName="description" maxlength="255" rows="3">
+                                                </textarea>
+                                                <div class="invalid-feedback"
+                                                    *ngIf="formIncident.get('description')?.touched && formIncident.get('description')?.invalid">
+                                                    <div *ngIf="formIncident.get('description')?.errors?.maxlength">
+                                                        Only 255 characters are allowed
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- reported -->
+                                            <div class="form-group mb-4 mt-3">
+                                                <p class="mb-0">Reported by</p>
+                                                <input class="form-control {{inputClass(formIncident, 'reported')}}"
+                                                    type="text" formControlName="reported" maxlength="50" />
+                                                <div class="invalid-feedback"
+                                                    *ngIf="formIncident.get('reported')?.touched && formIncident.get('reported')?.invalid">
+                                                    <div *ngIf="formIncident.get('reported')?.errors?.maxlength">
+                                                        Only 30 characters are allowed
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- buttons -->
+                                            <div class="form-group d-flex flex-row-reverse">
+                                                <button type="button" class="btn btn-danger"
+                                                    (click)="editable()">Close</button>
+                                                <button type="submit" class="btn btn-success me-2"
+                                                    [disabled]="!formIncident.valid">{{selectedIncident==undefined?'Create':'Edit'}}</button>
+                                            </div>
+
+                                        </form>
+                                    </div>
+
+                                    <!-- IF NOT EDITABLE -->
+                                    <div class="w-100"
+                                        *ngIf="!(isEditable && adminAccess) && selectedIncident!=undefined">
+
+                                        <!-- title -->
+                                        <!-- <div class="my-auto mx-2 my-2 fs-4">{{selectedIncident.title}}</div> -->
+
+                                        <!-- description -->
+                                        <div class="d-flex p-2">
+                                            <em class="bi bi-card-text my-auto"
+                                                style="font-size: 20px !important;"></em>
+                                            <div class="text-break my-auto mx-2">Description:</div>
+                                        </div>
+                                        <div class="text-break mb-3" style="margin-left: 2.4rem !important;">
+                                            {{selectedIncident.description}}</div>
+
+                                        <!-- reported -->
+                                        <div class="d-flex p-2">
+                                            <em class="bi bi-person-bounding-box my-auto"
+                                                style="font-size: 20px !important;"></em>
+                                            <div class="my-auto mx-2">Reported by: {{selectedIncident.reported}}
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <!-- ONLY VIEW PROPERTIES -->
+
+                                    <!-- creation date -->
+                                    <div class="w-100 d-flex p-2" *ngIf="selectedIncident!=undefined && selectedIncident.date!=null">
+                                        <em class="bi bi-person-check my-auto" style="font-size: 20px !important;"></em>
+                                        <div class="my-auto mx-2">Creation date:
+                                            {{getFormatedDate(selectedIncident.date,'HH:mm:ss dd/MM/yyyy')}}</div>
+                                    </div>
+
+                                    <!-- last update -->
+                                    <div class="w-100 d-flex p-2" *ngIf="selectedIncident!=undefined && selectedIncident.lastModification!=null">
+                                        <em class="bi bi-person-check my-auto" style="font-size: 20px !important;"></em>
+                                        <div class="my-auto mx-2">Last update:
+                                            {{getFormatedDate(selectedIncident.lastModification,'HH:mm:ss dd/MM/yyyy')}}
+                                        </div>
+                                    </div>
+
+                                    <!-- assigned -->
+                                    <div class="w-50 d-flex p-2" *ngIf="selectedIncident!=undefined && selectedIncident.assignedUsername!=null">
+                                        <em class="bi bi-person-check my-auto" style="font-size: 20px !important;"></em>
+                                        <div class="my-auto mx-2">Assigned: @{{selectedIncident.assignedUsername}}</div>
+                                    </div>
+
+                                    <!-- creator -->
+                                    <div class="w-50 d-flex p-2" *ngIf="selectedIncident!=undefined && selectedIncident.username!=null">
+                                        <em class="bi bi-person-plus my-auto" style="font-size: 20px !important;"></em>
+                                        <div class="my-auto mx-2">Creator: @{{selectedIncident.username}}</div>
+                                    </div>
+
+                                    <!-- estimated time -->
+                                    <div class="w-50 d-flex p-2" *ngIf="selectedIncident!=undefined &&selectedIncident.estimatedTime!=null">
+                                        <em class="bi bi-hourglass-top my-auto"
+                                            style="font-size: 20px !important;"></em>
+                                        <div class="my-auto mx-2">Estimated time: {{selectedIncident.estimatedTime}}
+                                        </div>
+                                    </div>
+
+                                    <!-- priority -->
+                                    <div class="w-50 d-flex p-2" *ngIf="selectedIncident!=undefined && selectedIncident.priority!=null">
+                                        <em class="bi bi-stoplights my-auto" style="font-size: 20px !important;"></em>
+                                        <div class="my-auto mx-2">Priority: {{getPriority(selectedIncident.priority)}}
+                                        </div>
+                                    </div>
+
+                                    <!-- affects -->
+                                    <div class="w-50 d-flex p-2" *ngIf="selectedIncident!=undefined && selectedIncident.affects!=null">
+                                        <em class="bi bi-shield-exclamation my-auto"
+                                            style="font-size: 20px !important;"></em>
+                                        <div class="my-auto mx-2">Affects: {{selectedIncident.affects}}</div>
+                                    </div>
+
+                                    <!-- status -->
+                                    <div class="w-50 d-flex p-2" *ngIf="selectedIncident!=undefined && selectedIncident.status!=null">
+                                        <em class="bi bi-activity my-auto" style="font-size: 20px !important;"></em>
+                                        <div class="my-auto mx-2">Status: {{selectedIncident.status}}</div>
+                                    </div>
+
+                                    <!-- edit button -->
+                                    <div *ngIf="!(isEditable && adminAccess) && selectedIncident!=undefined"
+                                        class="w-100 d-flex p-2 mt-2">
+                                        <button type="button" class="btn btn-secondary ms-auto d-flex"
+                                            (click)="editable()">
+                                            <em class="bi bi-sm bi-pencil-fill ms-auto me-2"></em>
+                                            <div class="my-auto">Edit</div>
+                                        </button>
+                                    </div>
+
+                                </div>
+
+                                <div class="my-auto"></div>
+
+                            </div>
+
+
+                            <!-- INCIDENT UPDATES -->
+                            <div class="col-lg-7" *ngIf="selectedIncident!=undefined">
+
+                                <!-- INCIDENT CREATE UPDATES -->
+                                <div *ngIf="memberAccess" class="accordion mt-1 mb-3"
+                                    id="accordionIncidentUpdateCreate">
+
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header" id="headingOne">
+                                            <button class="accordion-button collapsed" type="button"
+                                                data-bs-toggle="collapse" data-bs-target="#collapseOne"
+                                                aria-expanded="false" aria-controls="collapseOne">
+                                                Create update
+                                            </button>
+                                        </h2>
+                                        <div id="collapseOne" class="accordion-collapse collapse"
+                                            aria-labelledby="headingOne"
+                                            data-bs-parent="#accordionIncidentUpdateCreate">
+
+                                            <form class="d-flex flex-wrap p-2" [formGroup]="formIncidentUpdate"
+                                                (ngSubmit)="createNewIncidentUpdate()">
+
+                                                <!-- description -->
+                                                <div class="w-100 form-group p-2 mt-2">
+                                                    <div class="my-auto">Description </div>
+                                                    <textarea
+                                                        class="form-control {{inputClass(formIncidentUpdate, 'description')}}"
+                                                        formControlName="description" maxlength="255" rows="3">
+                                                        </textarea>
+                                                    <div class="invalid-feedback"
+                                                        *ngIf="formIncidentUpdate.get('description')?.touched && formIncidentUpdate.get('description')?.invalid">
+                                                        <div
+                                                            *ngIf="formIncidentUpdate.get('description')?.errors?.maxlength">
+                                                            Only 255 characters are allowed
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- estimated time -->
+                                                <div class="w-50 d-flex p-2">
+                                                    <em class="bi bi-hourglass-top my-auto"
+                                                        style="font-size: 20px !important;"></em>
+                                                    <div class="my-auto mx-2">Estimated time: </div>
+                                                    <input
+                                                        class="form-control {{inputClass(formIncidentUpdate, 'estimatedTime')}}"
+                                                        type="number" step="0.5" formControlName="estimatedTime" min="0"
+                                                        value="0" />
+                                                    <div class="invalid-feedback"
+                                                        *ngIf="formIncidentUpdate.get('estimatedTime')?.touched && formIncidentUpdate.get('estimatedTime')?.invalid">
+                                                        <div
+                                                            *ngIf="formIncidentUpdate.get('estimatedTime')?.errors?.min">
+                                                            Cannot be negative time
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- priority -->
+                                                <div class="w-50 d-flex p-2">
+                                                    <em class="bi bi-stoplights my-auto"
+                                                        style="font-size: 20px !important;"></em>
+                                                    <div class="my-auto mx-2">Priority: </div>
+                                                    <select
+                                                        class="form-select my-auto {{inputClass(formIncidentUpdate, 'priority')}}"
+                                                        formControlName="priority">
+                                                        <option value="0">Critical</option>
+                                                        <option value="1">High</option>
+                                                        <option value="2">Medium</option>
+                                                        <option selected value="3">Low</option>
+                                                    </select>
+                                                </div>
+
+                                                <!-- affects -->
+                                                <div class="w-50 d-flex p-2">
+                                                    <em class="bi bi-activity my-auto"
+                                                        style="font-size: 20px !important;"></em>
+                                                    <div class="my-auto mx-2">Affects: </div>
+                                                    <input
+                                                        class="form-control {{inputClass(formIncidentUpdate, 'affects')}}"
+                                                        type="text" formControlName="affects" list="lsAffects"
+                                                        maxlength="50" />
+                                                    <div class="invalid-feedback"
+                                                        *ngIf="formIncidentUpdate.get('affects')?.touched && formIncidentUpdate.get('affects')?.invalid">
+                                                        <div
+                                                            *ngIf="formIncidentUpdate.get('affects')?.errors?.maxlength">
+                                                            Only 50 characters are allowed
+                                                        </div>
+                                                    </div>
+                                                    <datalist id="lsAffects">
+                                                        <option>Scope</option>
+                                                        <option>€</option>
+                                                        <option>Scope & €</option>
+                                                    </datalist>
+                                                </div>
+
+                                                <!-- status -->
+                                                <div class="w-50 d-flex p-2">
+                                                    <em class="bi bi-shield-exclamation my-auto"
+                                                        style="font-size: 20px !important;"></em>
+                                                    <div class="my-auto mx-2">Status: </div>
+                                                    <input
+                                                        class="form-control {{inputClass(formIncidentUpdate, 'status')}}"
+                                                        type="text" formControlName="status" list="lsStatus"
+                                                        maxlength="50" />
+                                                    <div class="invalid-feedback"
+                                                        *ngIf="formIncidentUpdate.get('status')?.touched && formIncidentUpdate.get('status')?.invalid">
+                                                        <div
+                                                            *ngIf="formIncidentUpdate.get('status')?.errors?.maxlength">
+                                                            Only 50 characters are allowed
+                                                        </div>
+                                                    </div>
+                                                    <datalist id="lsStatus">
+                                                        <option>To do</option>
+                                                        <option>In progress</option>
+                                                        <option>Done</option>
+                                                        <option>Re-open</option>
+                                                    </datalist>
+                                                </div>
+
+
+                                                <!-- assigned -->
+                                                <div class="w-50 d-flex p-2">
+                                                    <em class="bi bi-person-check my-auto"
+                                                        style="font-size: 20px !important;"></em>
+                                                    <div class="my-auto mx-2">Assigned: </div>
+                                                    <input
+                                                        class="form-control {{inputClass(formIncidentUpdate, 'assignedUsername')}}"
+                                                        type="text" formControlName="assignedUsername" maxlength="30"
+                                                        list="usersInProject" minlength="2" />
+                                                    <div class="invalid-feedback"
+                                                        *ngIf="formIncidentUpdate.get('assignedUsername')?.touched && formIncidentUpdate.get('assignedUsername')?.invalid">
+                                                        <div
+                                                            *ngIf="formIncidentUpdate.get('assignedUsername')?.errors?.required">
+                                                            Cannot be empty</div>
+                                                        <div
+                                                            *ngIf="formIncidentUpdate.get('assignedUsername')?.errors?.minlength">
+                                                            Must containt at least 2 characters</div>
+                                                    </div>
+                                                    <div
+                                                        *ngIf="formIncidentUpdate.get('assignedUsername')?.errors?.maxlength">
+                                                        Only 30 characters are allowed</div>
+                                                    <datalist id="usersInProject">
+                                                        <option *ngFor="let u of usersInProject">{{u.username}}
+                                                        </option>
+                                                    </datalist>
+                                                </div>
+
+                                                <!-- buttons -->
+                                                <div class="w-100 form-group  d-flex flex-row-reverse">
+                                                    <button type="submit" class="m-2 btn btn-success"
+                                                        [disabled]="!formIncident.valid"
+                                                        style="margin-left: auto !important;">Upload</button>
+                                                </div>
+
+                                            </form>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <!-- INCIDENT UPDATE HISTORY -->
+                                <div class="overflow-auto" *ngIf="selectedIncident">
+
+                                    <div class="card inc-upd-card p-3 mb-3"
+                                        *ngFor="let u of selectedIncident.updates; let i = index">
+
+                                        <!-- header -->
+                                        <div class="d-flex flex-wrap">
+
+                                            <!-- number -->
+                                            <div class="m-text me-3 my-auto">#{{selectedIncident.updates.length - i}}
+                                            </div>
+
+                                            <!-- creator -->
+                                            <div class="d-flex flex-grow-1">
+                                                <ng-container
+                                                    *ngIf="getProfileImageUrlFromUser(u.user)!=null && getProfileImageUrlFromUser(u.user)!=''; else showIconProfile">
+                                                    <img class="profile-image me-2 my-auto"
+                                                        src="{{getProfileImageUrlFromUser(u.user)}}" alt="Author"
+                                                        ngbTooltip="Author" placement="right" [openDelay]="300">
+                                                </ng-container>
+                                                <ng-template #showIconProfile>
+                                                    <em class="bi bi-person-circle me-2 my-auto"
+                                                        style="font-size: 25px !important;" ngbTooltip="Author"
+                                                        placement="right" [openDelay]="300"></em>
+                                                </ng-template>
+                                                <div class="my-auto" ngbTooltip="Author" placement="right"
+                                                    [openDelay]="300">@{{u.user.username}}</div>
+                                            </div>
+
+                                            <!-- date -->
+                                            <div class="d-flex">
+                                                <em class="bi bi-calendar-date me-3 my-auto"
+                                                    style="font-size: 20px !important;" ngbTooltip="Date"
+                                                    placement="right" [openDelay]="300"></em>
+                                                <div class="my-auto">{{getFormatedDate(u.date,'HH:mm:ss dd/MM/yyyy')}}
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                        <!-- description -->
+                                        <div class="text-break my-2">{{u.description}}</div>
+
+                                        <!-- updates -> "body - description" -->
+                                        <div class="d-flex flex-wrap">
+
+                                            <!-- estimated time -->
+                                            <div class="d-flex me-3 my-1" *ngIf="u.estimatedTime">
+                                                <em class="bi bi-hourglass-top my-auto"
+                                                    style="font-size: 20px !important;"></em>
+                                                <div class="my-auto mx-2">Estimated time: {{u.estimatedTime}}</div>
+                                            </div>
+
+                                            <!-- priority -->
+                                            <div class="d-flex me-3 my-1" *ngIf="u.priority!=null">
+                                                <em class="bi bi-stoplights my-auto"
+                                                    style="font-size: 20px !important;"></em>
+                                                <div class="my-auto mx-2">Priority: {{getPriority(u.priority)}}</div>
+                                            </div>
+
+                                            <!-- affects -->
+                                            <div class="d-flex me-3 my-1" *ngIf="u.affects">
+                                                <em class="bi bi-shield-exclamation my-auto"
+                                                    style="font-size: 20px !important;"></em>
+                                                <div class="my-auto mx-2">Affects: {{u.affects}}</div>
+                                            </div>
+
+                                            <!-- status -->
+                                            <div class="d-flex me-3 my-1" *ngIf="u.status">
+                                                <em class="bi bi-activity my-auto"
+                                                    style="font-size: 20px !important;"></em>
+                                                <div class="my-auto mx-2">Status: {{u.status}}</div>
+                                            </div>
+
+                                            <!-- assigned -->
+                                            <div *ngIf="u.assignedUser" class="d-flex flex-grow-1 me-3 my-1">
+                                                <em class="bi bi-person-check my-auto"
+                                                    style="font-size: 20px !important;"></em>
+                                                <div class="my-auto mx-2">Assigned: </div>
+                                                <ng-container
+                                                    *ngIf="getProfileImageUrlFromUser(u.assignedUser)!=null && getProfileImageUrlFromUser(u.assignedUser)!=''; else showIconProfile">
+                                                    <img class="profile-image me-2 my-auto"
+                                                        src="{{getProfileImageUrlFromUser(u.assignedUser)}}"
+                                                        alt="Assigned user" ngbTooltip="Author" placement="right"
+                                                        [openDelay]="300"
+                                                        style="height: 30px !important;width: 30px !important;">
+                                                </ng-container>
+                                                <ng-template #showIconProfile>
+                                                    <em class="bi bi-person-circle me-2 my-auto"
+                                                        style="font-size: 20px !important;" ngbTooltip="Assigned user"
+                                                        placement="right" [openDelay]="300"></em>
+                                                </ng-template>
+                                                <div class="my-auto" ngbTooltip="Assigned user" placement="right"
+                                                    [openDelay]="300">@{{u.assignedUser.username}}</div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                        </div>
+
+
+
+
+
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

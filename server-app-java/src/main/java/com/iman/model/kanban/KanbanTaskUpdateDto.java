@@ -30,6 +30,9 @@ public class KanbanTaskUpdateDto {
 	@Min(value = 0)
 	private Double estimatedTime;
 	
+	@Length(max = 255)
+	private String tags;
+	
 	@Length(max = 50)
 	private String importance;
 

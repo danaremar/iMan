@@ -51,7 +51,7 @@ public class Incident extends IncidentGeneralStatus {
 	private String reported;
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "incident")
-	@OrderBy("date ASC")
+	@OrderBy("date DESC")
 	private List<IncidentUpdate> updates;
 	
 	@NotNull

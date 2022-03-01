@@ -25,10 +25,6 @@ export class EffortComponent extends ImanSubmodule implements OnInit {
     ***************************/
 
     effortSelected: Effort | undefined
-    adminAccess: boolean = false
-    memberAccess: boolean = false
-    efforts: any
-
     changedToDescription: boolean = false
 
 
@@ -73,7 +69,8 @@ export class EffortComponent extends ImanSubmodule implements OnInit {
     ***************************/
 
     ngOnInit(): void {
-        this.loadFirstActiveEffort()
+        this.loadActiveEffort()
+        this.loadTasks = true
         this.loadMyProjects()
     }
 
@@ -83,17 +80,12 @@ export class EffortComponent extends ImanSubmodule implements OnInit {
     }
 
 
+
     /***************************
         METHODS -> EFFORT
     ***************************/
 
-    loadKanbanBySprintIdEvent(sprintIdEvent: any) {
-        let sprintIdStr = sprintIdEvent.value
-        this.sprintService.setStoredSprintId(Number(sprintIdStr))
-        this.loadTasksBySelectedSprint()
-    }
-
-    loadFirstActiveEffort() {
+    loadActiveEffort() {
         this.effortService.getActiveEffort().subscribe(
             data => {
                 this.containError = false
@@ -104,18 +96,6 @@ export class EffortComponent extends ImanSubmodule implements OnInit {
                     if (data.kanbanTask != null) this.kanbanService.setStoredKanbanTaskId(data.kanbanTask.id)
                 }
                 this.loadDescriptionOrTaskEffort()
-            },
-            err => {
-                this.returnPrincipalError(err)
-            }
-        )
-    }
-
-    loadActiveEffort() {
-        this.effortService.getActiveEffort().subscribe(
-            data => {
-                this.containError = false
-                this.activeEffort = data
             },
             err => {
                 this.returnPrincipalError(err)
@@ -187,7 +167,6 @@ export class EffortComponent extends ImanSubmodule implements OnInit {
         }
 
     }
-
 
     endEffort() {
         this.effortService.endEffort(this.activeEffort.id).subscribe(

@@ -30,6 +30,9 @@ public class KanbanTaskCreateDto {
 	@NotNull
 	private Long kanbanColumnId;
 	
+	@Length(max = 255)
+	private String tags;
+	
 	@Length(max = 50)
 	private String importance;
 

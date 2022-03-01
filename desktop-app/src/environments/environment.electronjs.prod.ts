@@ -1,5 +1,6 @@
 export const environment = {
     production: true,
     backendEndpoint: "http://localhost:8080",
-    enableElectron: true
+    enableElectron: true,
+    defaultPageSize: 25
 };

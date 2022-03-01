@@ -48,6 +48,7 @@ export class KanbanComponent extends ImanSubmodule implements OnInit {
     updateColumnMessageError: string | undefined
 
     formAddAssignedUser: FormGroup
+    formAddChildrenTask: FormGroup
 
 
     /***************************
@@ -93,6 +94,7 @@ export class KanbanComponent extends ImanSubmodule implements OnInit {
             title: ['', [Validators.required]],
             description: ['', []],
             estimatedTime: ['', []],
+            tags: ['', []],
             importance: ['', []],
             dueStartDate: ['', []],
             dueEndDate: ['', []]
@@ -101,6 +103,7 @@ export class KanbanComponent extends ImanSubmodule implements OnInit {
             title: ['', [Validators.required]],
             description: ['', []],
             estimatedTime: ['', []],
+            tags: ['', []],
             importance: ['', []],
             dueStartDate: ['', []],
             dueEndDate: ['', []]
@@ -111,6 +114,11 @@ export class KanbanComponent extends ImanSubmodule implements OnInit {
             username: ['', []]
         })
 
+        // ADD CHILDREN TASK
+        this.formAddChildrenTask = formBuilder.group({
+            children: ['', []]
+        })
+
     }
 
 
@@ -119,6 +127,7 @@ export class KanbanComponent extends ImanSubmodule implements OnInit {
     ***************************/
 
     ngOnInit(): void {
+        this.loadKanban = true
         this.loadMyProjects()
     }
 
@@ -230,6 +239,8 @@ export class KanbanComponent extends ImanSubmodule implements OnInit {
     reloadTaskAttributes() {
         this.assignedUsers = []
         this.selectedChildrens = []
+        this.formAddAssignedUser.reset()
+        this.formAddChildrenTask.reset()
     }
 
     //USERS
@@ -253,6 +264,19 @@ export class KanbanComponent extends ImanSubmodule implements OnInit {
 
     // CHILDRENS
 
+    addChildrenTask() {
+        var children: number = this.formAddChildrenTask.value.children
+        var c = this.myTasks.find((x: KanbanTask) => x.id == children)
+        if(c!==undefined && this.selectedChildrens.indexOf(c)==-1){
+            this.selectedChildrens.push(c)
+            this.formAddChildrenTask.reset()
+        }
+    }
+
+    removeChildrenTask(i: number) {
+        this.selectedChildrens.splice(i, 1)
+    }
+
     getChildrenIdsInArray(lsChildren: Array<KanbanTaskChildrens>): Array<number> {
         return lsChildren.map(x => { return x.id })
     }
@@ -260,12 +284,13 @@ export class KanbanComponent extends ImanSubmodule implements OnInit {
     // NEW TASK
 
     newTask() {
-        let createTask: KanbanTaskCreate = new KanbanTaskCreate(this.formNewTask.value.title, this.formNewTask.value.description, this.formNewTask.value.estimatedTime, this.kanbanColumnSelected.id, this.formNewTask.value.importance, this.formNewTask.value.dueStartDate, this.formNewTask.value.dueEndDate,this.getUsernamesInArray(this.assignedUsers),[])
+        let createTask: KanbanTaskCreate = new KanbanTaskCreate(this.formNewTask.value.title, this.formNewTask.value.description, this.formNewTask.value.estimatedTime, this.kanbanColumnSelected.id, this.formNewTask.value.tags, this.formNewTask.value.importance, this.formNewTask.value.dueStartDate, this.formNewTask.value.dueEndDate,this.getUsernamesInArray(this.assignedUsers), this.getChildrenIdsInArray(this.selectedChildrens))
         this.kanbanService.createKanbanTask(createTask).subscribe(
             res => {
                 this.formNewTask.reset()
                 this.closebuttonCreateTask.nativeElement.click()
                 this.loadKanbanBySelectedSprint()
+                this.reloadTaskAttributes()
             },
             err => {
                 var r = err.error.text
@@ -276,7 +301,6 @@ export class KanbanComponent extends ImanSubmodule implements OnInit {
                 this.newTaskContainError = true
             }
         )
-        this.reloadTaskAttributes()
     }
 
     // UPDATE TASK
@@ -284,20 +308,26 @@ export class KanbanComponent extends ImanSubmodule implements OnInit {
     fillTaskUpdateForm(kanbanTask: KanbanTask) {
         this.kanbanTaskSelected = kanbanTask
         this.assignedUsers = kanbanTask.assignedUsers
+        this.selectedChildrens = kanbanTask.children
         this.formUpdateTask = this.formBuilder.group({
             title: [kanbanTask.title, [Validators.required]],
             description: [kanbanTask.description, []],
             estimatedTime: [kanbanTask.estimatedTime, []],
+            importance: [kanbanTask.importance,[]],
+            tags: [kanbanTask.tags,[]],
+            dueStartDate: [kanbanTask.dueStartDate,[]],
+            dueEndDate: [kanbanTask.dueEndDate,[]]
         })
     }
 
     editTask() {
-        let updateTask: KanbanTaskUpdate = new KanbanTaskUpdate(this.kanbanTaskSelected.id, this.formUpdateTask.value.title, this.formUpdateTask.value.description, this.formUpdateTask.value.estimatedTime, this.formUpdateTask.value.importance, this.formUpdateTask.value.dueStartDate, this.formUpdateTask.value.dueEndDate, this.getUsernamesInArray(this.assignedUsers), [])
+        let updateTask: KanbanTaskUpdate = new KanbanTaskUpdate(this.kanbanTaskSelected.id, this.formUpdateTask.value.title, this.formUpdateTask.value.description, this.formUpdateTask.value.estimatedTime, this.formUpdateTask.value.tags, this.formUpdateTask.value.importance, this.formUpdateTask.value.dueStartDate, this.formUpdateTask.value.dueEndDate, this.getUsernamesInArray(this.assignedUsers), this.getChildrenIdsInArray(this.selectedChildrens))
         this.kanbanService.updateKanbanTask(updateTask).subscribe(
             res => {
                 this.formUpdateTask.reset()
                 this.closebuttonUpdateTask.nativeElement.click()
                 this.loadKanbanBySelectedSprint()
+                this.reloadTaskAttributes()
             },
             err => {
                 var r = err.error.text
@@ -308,7 +338,6 @@ export class KanbanComponent extends ImanSubmodule implements OnInit {
                 this.updateTaskContainError = true
             }
         )
-        this.reloadTaskAttributes()
     }
 
     disableTask(kanbanTask: any) {

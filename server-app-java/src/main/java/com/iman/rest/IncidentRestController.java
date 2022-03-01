@@ -1,5 +1,7 @@
 package com.iman.rest;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.modelmapper.ModelMapper;
@@ -25,6 +27,7 @@ import com.iman.model.incident.IncidentSearch;
 import com.iman.model.incident.IncidentShowDto;
 import com.iman.model.incident.IncidentUpdateCreateDto;
 import com.iman.model.incident.IncidentUpdateDto;
+import com.iman.model.incident.IncidentUpdateShowDto;
 import com.iman.model.util.Message;
 import com.iman.service.incident.IncidentService;
 
@@ -50,9 +53,20 @@ public class IncidentRestController {
 	@GetMapping(value = "/{incidentId}")
 	public ResponseEntity<Object> getIncidentById(@PathVariable Long incidentId) {
 		try {
-			Incident incident = incidentService.findIncidentById(incidentId);
+			Incident incident = incidentService.findIncidentVerifiedById(incidentId);
 			IncidentShowDto incidentShowDto = incidentService.mapIncidentToShow(incident);
 			return new ResponseEntity<>(incidentShowDto, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(new Message(e.getMessage()), HttpStatus.CONFLICT);
+		}
+	}
+	
+	@GetMapping(value = "/{incidentId}/updates")
+	public ResponseEntity<Object> getIncidentUpdatesByIncidentId(@PathVariable Long incidentId) {
+		try {
+			Incident incident = incidentService.findIncidentVerifiedById(incidentId);
+			List<IncidentUpdateShowDto> updates = incidentService.findIncidentUpdates(incident);
+			return new ResponseEntity<>(updates, HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(new Message(e.getMessage()), HttpStatus.CONFLICT);
 		}
@@ -69,7 +83,6 @@ public class IncidentRestController {
 			return new ResponseEntity<>(new Message(e.getMessage()), HttpStatus.CONFLICT);
 		}
 	}
-	
 
 	@PostMapping(value = "/")
 	public ResponseEntity<Object> createIncident(@RequestBody @Valid IncidentCreateDto incidentCreateDto) {

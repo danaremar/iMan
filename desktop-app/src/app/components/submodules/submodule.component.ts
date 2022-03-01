@@ -1,6 +1,7 @@
 import { DatePipe } from "@angular/common"
 import { Injectable } from "@angular/core"
 import { FormBuilder, FormGroup } from "@angular/forms"
+import { KanbanTask } from "src/app/models/kanban/kanbanTask"
 import { Project } from "src/app/models/project/project"
 import { ProjectRole } from "src/app/models/project/roles"
 import { Sprint } from "src/app/models/sprint/sprint"
@@ -16,7 +17,7 @@ export class ImanSubmodule {
 
     myProjects: Array<Project> = []
     mySprints: Array<Sprint> = []
-    myTasks: any
+    myTasks: Array<KanbanTask> = []
     kanban: any
     efforts: any
 
@@ -27,6 +28,11 @@ export class ImanSubmodule {
     projectSelectedId: number | null | undefined
     sprintSelectedId: number | null | undefined
     kanbanTaskSelectedId: number | null | undefined
+
+    loadProject: boolean = false
+    loadSprint: boolean = false
+    loadKanban: boolean = false
+    loadTasks: boolean = false
 
     activeEffort: any
 
@@ -74,8 +80,10 @@ export class ImanSubmodule {
         this.projectService.myProjects().subscribe(
             data => {
                 this.myProjects = data
-                this.projectSelectedId = this.projectService.getStoredProjectId()
-                this.loadFirstProject()
+                if(this.loadProject || this.loadSprint || this.loadKanban || this.loadTasks){
+                    this.projectSelectedId = this.projectService.getStoredProjectId()
+                    this.loadFirstProject()
+                }
             },
             err => {
                 this.returnPrincipalError(err)
@@ -87,18 +95,30 @@ export class ImanSubmodule {
         if (this.myProjects.length !== 0) {
             let projectId = this.projectService.getStoredProjectId()
             if (projectId == null || projectId == 0) {
-                this.projectService.setStoredProjectId(this.myProjects[0].id)
+                this.projectSelectedId = this.myProjects[0].id
+                this.projectService.setStoredProjectId(this.projectSelectedId)
+                
             }
-            this.loadSprintsBySelectedProject()
+            if(this.projectSelectedId) {
+                this.editIsAllowed(this.projectSelectedId)
+            }
             this.getAllUsersFromSelectedProject()
+            this.loadAfterProject()
         }
     }
 
-    loadSprintsByProjectIdEvent(projectIdEvent: any) {
-        let projectIdStr = projectIdEvent.value
-        this.projectService.setStoredProjectId(Number(projectIdStr))
+    loadProjectByIdEvent(projectIdEvent: any) {
+        this.projectSelectedId = Number(projectIdEvent.value)
+        this.projectService.setStoredProjectId(this.projectSelectedId)
+        this.editIsAllowed(this.projectSelectedId)
         this.sprintService.setStoredSprintId(0)
-        this.loadSprintsBySelectedProject()
+        this.loadAfterProject()
+    }
+
+    loadAfterProject() {
+        if(this.loadSprint || this.loadKanban || this.loadTasks) {
+            this.loadSprintsBySelectedProject()
+        }
     }
 
     editIsAllowed(projectId: number) {
@@ -128,13 +148,12 @@ export class ImanSubmodule {
     loadSprintsBySelectedProject() {
         let projectId = this.projectService.getStoredProjectId()
         if (projectId != null && projectId != 0) {
-            this.editIsAllowed(projectId)
             this.sprintService.sprintFromProject(projectId).subscribe(
                 data => {
                     this.mySprints = data
                     if(this.mySprints!=undefined && this.mySprints.length==0){
                         this.sprintService.setStoredSprintId(0)
-                        this.myTasks = null
+                        this.myTasks = []
                         this.kanban = null
                     }
                     this.sprintSelectedId = this.sprintService.getStoredSprintId()
@@ -151,17 +170,31 @@ export class ImanSubmodule {
         if (this.mySprints.length !== 0) {
             let sprintId = this.sprintService.getStoredSprintId()
             if (sprintId == null || sprintId == 0) {
-                this.sprintService.setStoredSprintId(this.mySprints[0].id)
+                this.sprintSelectedId = this.mySprints[0].id
+                this.sprintService.setStoredSprintId(this.sprintSelectedId)
             }
+            this.loadAfterSprint()
+        }
+    }
+
+    loadAfterSprint() {
+        if(this.loadKanban) {
             this.loadKanbanBySelectedSprint()
+        }
+
+        if(this.loadTasks){
             this.loadTasksBySelectedSprint()
         }
     }
 
-    loadKanbanBySprintIdEvent(sprintIdEvent: any) {
-        let sprintIdStr = sprintIdEvent.value
-        this.sprintService.setStoredSprintId(Number(sprintIdStr))
-        this.loadKanbanBySelectedSprint()
+    /***************************
+        METHODS -> KANBAN
+    ***************************/
+
+    loadSprintByIdEvent(sprintIdEvent: any) {
+        this.sprintSelectedId = Number(sprintIdEvent.value)
+        this.sprintService.setStoredSprintId(this.sprintSelectedId)
+        this.loadAfterSprint()
     }
 
     loadKanbanBySelectedSprint() {
@@ -184,12 +217,9 @@ export class ImanSubmodule {
         METHODS -> TASKS
     ***************************/
 
-    loadTasksBySprintIdEvent(taskIdEvent: any) {
-        let taskIdStr = taskIdEvent.value
-        this.kanbanService.setStoredKanbanTaskId(Number(taskIdStr))
-        this.myTasks = null
-        this.kanbanService.setStoredKanbanTaskId(0)
-        this.loadTasksBySelectedSprint()
+    loadTasksByIdEvent(taskIdEvent: any) {
+        this.kanbanTaskSelectedId = Number(taskIdEvent.value)
+        this.kanbanService.setStoredKanbanTaskId(this.kanbanTaskSelectedId)
     }
 
     loadTasksBySelectedSprint() {
@@ -315,6 +345,15 @@ export class ImanSubmodule {
         }
     }
 
+    getPriority(priority: number) {
+        switch (priority) {
+            case 0: return 'Critical'
+            case 1: return 'High'
+            case 2: return 'Medium'
+            default: return 'Low'
+        }
+    }
+
 
     /***************************
         AUXILIAR: USERS IN PROJECT
@@ -328,4 +367,5 @@ export class ImanSubmodule {
             }   
         }
     }
+
 }

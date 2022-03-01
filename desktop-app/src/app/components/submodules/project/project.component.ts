@@ -191,7 +191,6 @@ export class ProjectComponent extends ImanSubmodule implements OnInit {
     }
 
     updateProjectRole(role: any, roleTypeEvent: any) {
-        console.log('Me intento actualizar')
         let roleTypeStr = roleTypeEvent.value
         let roleType = Number(this.getKeyByValue(this.rolesDictionary, roleTypeStr))
         let updateProjectRole: UpdateProjectRole = new UpdateProjectRole(role.id, roleType)

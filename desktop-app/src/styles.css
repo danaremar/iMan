@@ -1,4 +1,9 @@
-/* You can add global styles to this file, and also import other style files */
+
+/* IMPORTS */
+@import "~bootstrap/dist/css/bootstrap.min.css";
+@import "~bootstrap-icons/font/bootstrap-icons.css";
+@import "~ag-grid-community/dist/styles/ag-grid.min.css";
+@import "~ag-grid-community/dist/styles/ag-theme-alpine-dark.min.css";
 
 html, body {
     height: 100%;
@@ -9,9 +14,9 @@ body {
     font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
-@import "~bootstrap-icons/font/bootstrap-icons.css";
+
 :root {
-    --dark-pallete-0: #007acc;
+    --dark-pallete-0: #69696d;
     --dark-pallete-1: #4b4b4e;
     --dark-pallete-2: #3d3d41;
     --dark-pallete-3: #2d2d30;
@@ -21,6 +26,9 @@ body {
     --dark-contrast-text: #cecece;
     --navbar-size: 50px;
     --sidebar-size: 65px;
+    --ag-background-color: var(--dark-pallete-4) !important;
+    --ag-odd-row-background-color: var(--dark-pallete-3) !important;
+    --ag-header-background-color: var(--dark-pallete-5) !important;
 }
 
 
@@ -131,6 +139,29 @@ a{
 }
 
 
+
+/* ACCORDION*/
+.accordion-header, .accordion-item, .accordion-button {
+    background-color: var(--dark-pallete-2) !important;
+    border-radius: 10px !important;
+    color: inherit !important;
+}
+
+.accordion-button::after {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='white'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e") !important;
+}
+
+.accordion-inverted::after {
+    transform: rotate(-180deg);
+}
+
+.accordion-inverted:not(.collapsed):after {
+    transform: rotate(0deg);
+}
+
+
+
+
 /* CARD */
 
 .card {
@@ -181,8 +212,23 @@ a{
     border-bottom: 2px solid var(--dark-pallete-1);
     border-radius: 0;
     color: inherit;
-    -webkit-box-shadow: 0 0 0 30px var(--dark-pallete-5) inset !important;
     -webkit-text-fill-color: var(--dark-pallete-text) !important;
+}
+
+.form-control:focus {
+    background-color: inherit !important;
+    box-shadow: none !important;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active{
+    transition: background-color 5000s ease-in-out 0s;
+}
+
+textarea {
+    background-color: inherit !important;
 }
 
 input::-webkit-input-placeholder {
@@ -191,7 +237,7 @@ input::-webkit-input-placeholder {
 
 select {
     border-radius: 0.3rem;
-    height: 30px;
+    height: 35px;
     width: 200px;
     background-color: var(--dark-pallete-4) !important;
     color: var(--dark-pallete-text) !important;
@@ -230,6 +276,16 @@ select {
 
 .green-btn:hover {
     color: rgb(0, 97, 0) !important;
+}
+
+/* AG */
+
+div.ag-filter-select.ag-labeled.ag-label-align-left.ag-select, div.ag-filter-condition, div.ag-filter-body:last-child {
+    display: none !important;
+}
+
+div.ag-root-wrapper {
+    border-radius: 7px;
 }
 
 /* VERTICAL SCROLLBAR */
