@@ -21,15 +21,7 @@ export class IncidentService {
     * 
     */
 
-    // FIND INCIDENT (TO LIST)
-    // public findIncidentsByProject(projectId: number, pageNumber: number, pageSize: number): Observable<any> {
-    //     var url = this.hostUrl + 'project/' + projectId
-    //     const params = new HttpParams()
-    //         .set("page", (pageNumber-1).toString())
-    //         .set("size", pageSize.toString())
-    //     return this.httpClient.get<any>(url, {params})
-    // }
-
+    // FIND
     public findIncidentsByProject(projectId: number, pageNumber: number, pageSize: number, order: Array<any>, filter: any, incCol: any): Observable<any> {
         var url = this.hostUrl + 'project/' + projectId
         let params = new HttpParams()

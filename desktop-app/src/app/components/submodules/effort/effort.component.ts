@@ -69,6 +69,7 @@ export class EffortComponent extends ImanSubmodule implements OnInit {
     ***************************/
 
     ngOnInit(): void {
+        this.loadEfforts = true
         this.loadActiveEffort()
         this.loadTasks = true
         this.loadMyProjects()
@@ -123,7 +124,7 @@ export class EffortComponent extends ImanSubmodule implements OnInit {
         this.effortService.startEffort(newEffort).subscribe(
             data => {
                 this.containError = false
-                this.loadEfforts()
+                this.getEfforts()
             },
             err => {
                 this.returnPrincipalError(err)
@@ -153,7 +154,7 @@ export class EffortComponent extends ImanSubmodule implements OnInit {
                     this.formUpdateEffort.reset()
                     this.closebuttonUpdateEffort.nativeElement.click()
                     this.updateEffortContainError = false
-                    this.loadEfforts()
+                    this.getEfforts()
                 },
                 err => {
                     var r = err.error.text
@@ -172,7 +173,7 @@ export class EffortComponent extends ImanSubmodule implements OnInit {
         this.effortService.endEffort(this.activeEffort.id).subscribe(
             data => {
                 this.containError = false
-                this.loadEfforts()
+                this.getEfforts()
             },
             err => {
                 this.returnPrincipalError(err)
@@ -185,7 +186,7 @@ export class EffortComponent extends ImanSubmodule implements OnInit {
             this.effortService.deleteEffort(effortId).subscribe(
                 data => {
                     this.containError = false
-                    this.loadEfforts()
+                    this.getEfforts()
                 },
                 err => {
                     this.returnPrincipalError(err)

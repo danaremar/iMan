@@ -8,6 +8,7 @@ import { SprintService } from "src/app/services/sprints/sprint.service";
 import { ImanSubmodule } from "../submodule.component";
 
 import { gantt } from "dhtmlx-gantt";
+import { GanttService } from "src/app/services/gantt/gantt.service";
 
 @Component({
     encapsulation: ViewEncapsulation.None,
@@ -19,14 +20,14 @@ export class GanttComponent extends ImanSubmodule implements OnInit, AfterViewIn
 
     @ViewChild("gantt_here") ganttContainer: any
 
-    constructor(effortService: EffortService, kanbanService: KanbanService, sprintService: SprintService, projectService: ProjectService, formBuilder: FormBuilder, tokenService: TokenService) {
+    constructor(effortService: EffortService, kanbanService: KanbanService, sprintService: SprintService, projectService: ProjectService, formBuilder: FormBuilder, tokenService: TokenService, private ganttService: GanttService) {
         super(effortService, kanbanService, sprintService, projectService, formBuilder, tokenService)
     }
 
     tasks = {
         "data": [
-            {id: 1, text: "Task #1", start_date: "01-03-2022", duration: 1, progress: 0.6},
-            {id: 2, text: "Task #2", start_date: "02-03-2022", duration: 1, progress: 0.4}
+            {id: 1, text: "Task #1", start_date: "01-03-2022", duration: 1, progress: 0.6, color:'blue'},
+            {id: 2, text: "Task #2", start_date: "02-03-2022", duration: 1, progress: 0.4, color:'green'}
         ],
         "links": [
             {id: 1, source: 1, target: 2, type: "0"}
@@ -34,13 +35,23 @@ export class GanttComponent extends ImanSubmodule implements OnInit, AfterViewIn
     }
 
     ngOnInit(): void {
-        this.loadSprint = true
+        this.loadTasks = true
         this.loadMyProjects()
     }
 
     ngAfterViewInit(): void {
+        this.loadTasks = true
+        this.loadMyProjects()
+        
+        // var ganttTask = this.ganttService.getGanttTasks(this.myTasks)
+
         gantt.init(this.ganttContainer.nativeElement)
-        gantt.parse(this.tasks);
+        // gantt.parse({"data":ganttTask});
+    }
+
+    loadAfterTask() {
+        var ganttTask = this.ganttService.getGanttTasks(this.myTasks)
+        gantt.parse({"data":ganttTask});
     }
 
 
