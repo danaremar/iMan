@@ -212,6 +212,7 @@ a{
     border-bottom: 2px solid var(--dark-pallete-1);
     border-radius: 0;
     color: inherit;
+    background-color: transparent !important;
     -webkit-text-fill-color: var(--dark-pallete-text) !important;
 }
 
