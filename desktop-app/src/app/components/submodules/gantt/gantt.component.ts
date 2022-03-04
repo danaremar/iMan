@@ -60,7 +60,7 @@ export class GanttComponent extends ImanSubmodule implements AfterViewInit {
         }, '');
 
         // LINK -> create
-        gantt.attachEvent("onAfterLinkAdd", (id, item: Link) => {
+        gantt.attachEvent("onAfterLinkAdd", (id, item) => {
             var selTask = this.getTaskById(item.source)
             if (selTask != undefined) {
                 var childrens = selTask.children.map(x => x.id)
