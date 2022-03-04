@@ -432,7 +432,7 @@
                                     <div class="d-flex">
                                         <!-- input new assigned user -->
                                         <div class="flex-grow-1 form-group me-3">
-                                            <select class="form-control {{inputClass(formAddChildrenTask, 'children')}}"
+                                            <select class="form-select {{inputClass(formAddChildrenTask, 'children')}}"
                                                 formControlName="children">
                                                 <option *ngFor="let c of myTasks" value="{{c.id}}">#{{c.number}}:
                                                     {{c.title}}</option>
@@ -644,7 +644,7 @@
                                     <div class="d-flex">
                                         <!-- input new assigned user -->
                                         <div class="flex-grow-1 form-group me-3">
-                                            <select class="form-control {{inputClass(formAddChildrenTask, 'children')}}"
+                                            <select class="form-select {{inputClass(formAddChildrenTask, 'children')}}"
                                                 formControlName="children">
                                                 <option *ngFor="let c of myTasks" value="{{c.id}}">#{{c.number}}:
                                                     {{c.title}}</option>

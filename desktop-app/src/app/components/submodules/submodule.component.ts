@@ -33,6 +33,7 @@ export class ImanSubmodule {
     loadSprint: boolean = false
     loadKanban: boolean = false
     loadTasks: boolean = false
+    loadEfforts: boolean = false
 
     activeEffort: any
 
@@ -80,7 +81,7 @@ export class ImanSubmodule {
         this.projectService.myProjects().subscribe(
             data => {
                 this.myProjects = data
-                if(this.loadProject || this.loadSprint || this.loadKanban || this.loadTasks){
+                if(this.loadProject || this.loadSprint || this.loadKanban || this.loadTasks || this.loadEfforts){
                     this.projectSelectedId = this.projectService.getStoredProjectId()
                     this.loadFirstProject()
                 }
@@ -116,7 +117,7 @@ export class ImanSubmodule {
     }
 
     loadAfterProject() {
-        if(this.loadSprint || this.loadKanban || this.loadTasks) {
+        if(this.loadSprint || this.loadKanban || this.loadTasks || this.loadEfforts) {
             this.loadSprintsBySelectedProject()
         }
     }
@@ -182,7 +183,7 @@ export class ImanSubmodule {
             this.loadKanbanBySelectedSprint()
         }
 
-        if(this.loadTasks){
+        if(this.loadTasks || this.loadEfforts){
             this.loadTasksBySelectedSprint()
         }
     }
@@ -231,7 +232,6 @@ export class ImanSubmodule {
                     this.containError = false
                     this.loadFirstTask()
                     this.kanbanTaskSelectedId = this.kanbanService.getStoredKanbanTaskId()
-                    this.loadEfforts()
                 },
                 err => {
                     this.returnPrincipalError(err)
@@ -246,6 +246,13 @@ export class ImanSubmodule {
             if (taskId == undefined || taskId == 0) {
                 this.kanbanService.setStoredKanbanTaskId(this.myTasks[0].id)
             }
+        }
+        this.loadAfterTask()
+    }
+
+    loadAfterTask() {
+        if(this.loadEfforts) {
+            this.getEfforts()
         }
     }
 
@@ -266,7 +273,7 @@ export class ImanSubmodule {
         )
     }
 
-    loadEfforts() {
+    getEfforts() {
         this.loadActiveEffort()
         this.effortService.getAllMyEfforts().subscribe(
             data => {
