@@ -46,19 +46,19 @@ INSERT INTO kanban_column (id, active, column_order, title, sprint_id) VALUES(3,
 
 
 -- KANBAN TASKS
-INSERT INTO kanban_task (id, active, creation_date, description, due_end_date, due_start_date, estimated_time, importance, `number`, order_in_column, tags, title, creator_id, kanban_column_id) VALUES(1, 1, '2021-08-07 11:03:42.561', 'This is an example task C', NULL, NULL, 12.0, NULL, 1, 0, 'develop,important', 'Task C', 1, 3);
+INSERT INTO kanban_task (id, active, creation_date, description, due_end_date, due_start_date, estimated_time, importance, `number`, order_in_column, tags, title, creator_id, kanban_column_id) VALUES(1, 1, '2021-08-07 11:03:42.561', 'This is an example task C', '2022-03-24 23:00:00.000', '2022-03-11 23:00:00.000', 12.0, NULL, 1, 0, 'develop,important', 'Task C', 1, 3);
 INSERT INTO kanban_task (id, active, creation_date, description, due_end_date, due_start_date, estimated_time, importance, `number`, order_in_column, tags, title, creator_id, kanban_column_id) VALUES(2, 0, '2021-08-07 11:03:56.523', 'This is an example task B', NULL, NULL, 4.0, NULL, 2, 1, NULL, 'Task B', 1, 1);
-INSERT INTO kanban_task (id, active, creation_date, description, due_end_date, due_start_date, estimated_time, importance, `number`, order_in_column, tags, title, creator_id, kanban_column_id) VALUES(3, 1, '2021-08-07 11:04:04.432', 'This is an example task A', NULL, NULL, 3.0, NULL, 2, 0, NULL, 'Task A', 2, 2);
-INSERT INTO kanban_task (id, active, creation_date, description, due_end_date, due_start_date, estimated_time, importance, `number`, order_in_column, tags, title, creator_id, kanban_column_id) VALUES(4, 1, '2021-08-07 11:05:26.597', 'This is an example task E', NULL, NULL, 2.0, NULL, 3, 0, NULL, 'Task E', 1, 1);
-INSERT INTO kanban_task (id, active, creation_date, description, due_end_date, due_start_date, estimated_time, importance, `number`, order_in_column, tags, title, creator_id, kanban_column_id) VALUES(5, 1, '2021-08-07 11:05:32.290', 'This is an example task D', NULL, NULL, 2.0, NULL, 4, 1, NULL, 'Task D', 1, 2);
-INSERT INTO kanban_task (id, active, creation_date, description, due_end_date, due_start_date, estimated_time, importance, `number`, order_in_column, tags, title, creator_id, kanban_column_id) VALUES(6, 1, '2021-08-07 11:06:55.721', 'This is an example task F', NULL, NULL, 1.0, NULL, 5, 1, NULL, 'Task F', 1, 1);
+INSERT INTO kanban_task (id, active, creation_date, description, due_end_date, due_start_date, estimated_time, importance, `number`, order_in_column, tags, title, creator_id, kanban_column_id) VALUES(3, 1, '2021-08-07 11:04:04.432', 'This is an example task A', '2022-03-13 23:00:00.000', '2022-03-11 23:00:00.000', 3.0, NULL, 2, 0, NULL, 'Task A', 2, 2);
+INSERT INTO kanban_task (id, active, creation_date, description, due_end_date, due_start_date, estimated_time, importance, `number`, order_in_column, tags, title, creator_id, kanban_column_id) VALUES(4, 1, '2021-08-07 11:05:26.597', 'This is an example task E', '2022-03-13 23:00:00.000', '2022-03-09 23:00:00.000', 2.0, NULL, 3, 0, NULL, 'Task E', 1, 1);
+INSERT INTO kanban_task (id, active, creation_date, description, due_end_date, due_start_date, estimated_time, importance, `number`, order_in_column, tags, title, creator_id, kanban_column_id) VALUES(5, 1, '2021-08-07 11:05:32.290', 'This is an example task D', '2022-03-12 23:00:00.000', '2022-03-07 23:00:00.000', 2.0, NULL, 4, 1, NULL, 'Task D', 1, 2);
+INSERT INTO kanban_task (id, active, creation_date, description, due_end_date, due_start_date, estimated_time, importance, `number`, order_in_column, tags, title, creator_id, kanban_column_id) VALUES(6, 1, '2021-08-07 11:06:55.721', 'This is an example task F', '2022-03-07 23:00:00.000', '2022-03-03 23:00:00.000', 1.0, NULL, 5, 1, NULL, 'Task F', 1, 1);
 
 
 -- KANBAN TASK CHILDREN (hierarchy)
-INSERT INTO kanban_task_children (kanban_task_id, children_id) VALUES(1, 4);
-INSERT INTO kanban_task_children (kanban_task_id, children_id) VALUES(1, 3);
-INSERT INTO kanban_task_children (kanban_task_id, children_id) VALUES(3, 4);
-INSERT INTO kanban_task_children (kanban_task_id, children_id) VALUES(3, 5);
+INSERT INTO kanban_task_children (kanban_task_id, children_id) VALUES(5, 4);
+INSERT INTO kanban_task_children (kanban_task_id, children_id) VALUES(6, 5);
+INSERT INTO kanban_task_children (kanban_task_id, children_id) VALUES(4, 1);
+INSERT INTO kanban_task_children (kanban_task_id, children_id) VALUES(4, 3);
 
 
 -- KANBAN TASK ASSIGNATION
