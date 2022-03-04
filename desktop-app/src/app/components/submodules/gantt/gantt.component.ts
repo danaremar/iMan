@@ -32,6 +32,16 @@ export class GanttComponent extends ImanSubmodule implements AfterViewInit {
 
         gantt.init(this.ganttContainer.nativeElement)
 
+        gantt.config.sort = true
+
+        gantt.config.columns = [
+            { name: "text", label: "Task name", width: "*", resize: true },
+            { name: "start_date", label: "Start", align: "center", resize: true },
+            { name: "end_date", label: "Finish", width: 80, align: "center", resize: true },
+            { name: "duration", label: "Days", align: "center", resize: true },
+            // { name: "add", label: "", width: 44 }
+        ]
+
         // TASK RESIZE
         gantt.attachEvent("onBeforeTaskUpdate", (id: any, updateTask: any) => {
             var selTask = this.getTaskById(id)
@@ -75,7 +85,7 @@ export class GanttComponent extends ImanSubmodule implements AfterViewInit {
             if (selTask != undefined) {
                 var childrens = selTask.children.map(x => x.id)
                 var indexToRemove = childrens.indexOf(item.target)
-                childrens.splice(indexToRemove,1)
+                childrens.splice(indexToRemove, 1)
                 var updTask = new KanbanTaskUpdate(selTask.id, selTask.title, selTask.description, selTask.estimatedTime, selTask.tags, selTask.importance,
                     selTask.dueStartDate, selTask.dueEndDate, selTask.assignedUsers.map(x => x.username), childrens)
                 this.kanbanService.updateKanbanTask(updTask).subscribe(
