@@ -1,5 +1,6 @@
 import { DatePipe } from "@angular/common";
 import { Injectable } from "@angular/core";
+import { Link } from "src/app/models/gantt/gantt-link";
 import { KanbanTask } from "src/app/models/kanban/kanbanTask";
 
 @Injectable({
@@ -26,10 +27,10 @@ export class GanttService {
         let datePipe = new DatePipe('en-US');
         if (date) {
             var strDate = datePipe.transform(date, 'dd-MM-yyyy')
-            return strDate?strDate:''
+            return strDate ? strDate : ''
         } else {
             var strTodayDate = datePipe.transform(new Date(), 'dd-MM-yyyy')
-            return strTodayDate?strTodayDate:''
+            return strTodayDate ? strTodayDate : ''
         }
     }
 
@@ -44,8 +45,9 @@ export class GanttService {
 
     // GET GANTT LINKS
     getGanttLinks(tasks: Array<KanbanTask>): any {
-
-        return []
+        var links: Array<Link> = []
+        tasks.forEach(task => task.children.forEach(x => links.push(new Link(links.length, task.id, x.id, '0'))))
+        return links
     }
 
 
