@@ -1,0 +1,206 @@
+<!-- CREATE TASK -->
+<div class="modal fade" id="createTaskModal" tabindex="-1" aria-labelledby="createTaskModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content bg-dark-5">
+            <div class="modal-body">
+                <div class="card overflow-auto">
+
+                    <div class="d-flex">
+                        <div class="flex-grow-1 card-title mt-2">{{selectedTask!=undefined?(isEditing?'Update task':'#'
+                            + selectedTask.number + ': ' + selectedTask.title):'New task'}}</div>
+                        <div class="close-card-button" data-bs-dismiss="modal">
+                            <em class="bi bi-x"></em>
+                        </div>
+                    </div>
+
+                    <form [formGroup]="formTask" (ngSubmit)="newTask()">
+
+                        <div *ngIf="containError" class="alert alert-danger mt-5"> {{messageError}}
+                        </div>
+
+                        <!-- title -->
+                        <div class="form-group mb-4 mt-3">
+                            <p class="mb-0">Title</p>
+                            <input class="form-control {{inputClass(formTask, 'title')}}" type="text" name="title"
+                                formControlName="title" maxlength="50" minlength="2" placeholder="" />
+                            <div class="invalid-feedback"
+                                *ngIf="formTask.get('title')?.touched && formTask.get('title')?.invalid">
+                                <div *ngIf="formTask.get('title')?.errors?.required">Cannot be empty</div>
+                                <div *ngIf="formTask.get('title')?.errors?.minlength">Must containt at least 2
+                                    characters</div>
+                                <div *ngIf="formTask.get('title')?.errors?.maxlength">Only 50 characters are
+                                    allowed</div>
+                            </div>
+                        </div>
+
+                        <!-- description -->
+                        <div class="form-group mb-4 mt-3">
+                            <p class="mb-0">Description</p>
+                            <input class="form-control {{inputClass(formTask, 'description')}}" type="text"
+                                name="description" formControlName="description" maxlength="255" placeholder="" />
+                            <div class="invalid-feedback"
+                                *ngIf="formTask.get('description')?.touched && formTask.get('description')?.invalid">
+                                <div *ngIf="formTask.get('description')?.errors?.maxlength">Only 255 characters
+                                    are
+                                    allowed</div>
+                            </div>
+                        </div>
+
+                        <!-- estimated time -->
+                        <div class="form-group mb-4 mt-3">
+                            <p class="mb-0">Estimated time</p>
+                            <input class="form-control {{inputClass(formTask, 'estimatedTime')}}" type="number"
+                                step="0.5" name="estimatedTime" formControlName="estimatedTime" min="0" value="0" />
+                            <div class="invalid-feedback"
+                                *ngIf="formTask.get('estimatedTime')?.touched && formTask.get('estimatedTime')?.invalid">
+                                <div *ngIf="formTask.get('estimatedTime')?.errors?.min">Cannot be negative time
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- importance -->
+                        <div class="form-group mb-4 mt-3">
+                            <p class="mb-0">Importance</p>
+                            <input class="form-control {{inputClass(formTask, 'importance')}}" type="text"
+                                name="importance" formControlName="importance" list="impDataLs" maxlength="50"
+                                placeholder="" />
+                            <div class="invalid-feedback"
+                                *ngIf="formTask.get('importance')?.touched && formTask.get('importance')?.invalid">
+                                <div *ngIf="formTask.get('importance')?.errors?.maxlength">Only 50 characters are
+                                    allowed</div>
+                            </div>
+                        </div>
+
+                        <!-- tags -->
+                        <div class="form-group mb-4 mt-3">
+                            <p class="mb-0">Tags</p>
+                            <input class="form-control {{inputClass(formTask, 'tags')}}" type="text" name="tags"
+                                formControlName="tags" maxlength="255" placeholder="" />
+                            <div class="invalid-feedback"
+                                *ngIf="formTask.get('tags')?.touched && formTask.get('tags')?.invalid">
+                                <div *ngIf="formTask.get('tags')?.errors?.maxlength">Only 255 characters are
+                                    allowed</div>
+                            </div>
+                        </div>
+
+                        <!-- start date -->
+                        <div class="form-group mb-4 mt-3">
+                            <p class="mb-0">Due start date</p>
+                            <input class="form-control {{inputClass(formTask, 'dueStartDate')}}" type="date"
+                                name="dueStartDate" formControlName="dueStartDate" placeholder="" />
+                        </div>
+
+                        <!-- end date -->
+                        <div class="form-group mb-4 mt-3">
+                            <p class="mb-0">Due end date</p>
+                            <input class="form-control {{inputClass(formTask, 'dueEndDate')}}" type="date"
+                                name="dueEndDate" formControlName="dueEndDate" placeholder="" min="" />
+                        </div>
+
+                        <!-- users -->
+                        <div class="form-group mb-4 mt-3">
+                            <p class="mb-0">Users</p>
+
+                            <form [formGroup]="formAddAssignedUser" (ngSubmit)="addAssignedUsername()">
+                                <div class="d-flex">
+                                    <!-- input new assigned user -->
+                                    <div class="flex-grow-1 form-group me-3">
+                                        <input class="form-control {{inputClass(formAddAssignedUser, 'username')}}"
+                                            type="text" name="username" list="usersInProject" formControlName="username"
+                                            maxlength="30" minlength="2" placeholder="User" />
+                                        <div class="invalid-feedback"
+                                            *ngIf="formAddAssignedUser.get('username')?.touched && formAddAssignedUser.get('username')?.invalid">
+                                            <div *ngIf="formAddAssignedUser.get('username')?.errors?.required">
+                                                Cannot be empty</div>
+                                            <div *ngIf="formAddAssignedUser.get('username')?.errors?.minlength">
+                                                Must containt at least 2 characters</div>
+                                            <div *ngIf="formAddAssignedUser.get('username')?.errors?.maxlength">
+                                                Only 30 characters are allowed</div>
+                                        </div>
+                                        <datalist id="usersInProject">
+                                            <option *ngFor="let u of usersInProject">{{u.username}}</option>
+                                        </datalist>
+                                    </div>
+
+                                    <!-- add assigned user -->
+                                    <div>
+                                        <button class="btn btn-success my-auto" [disabled]="!formAddAssignedUser.valid">
+                                            Add
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+
+                            <!-- list assigned users -->
+                            <div class="d-flex mx-2 my-3" *ngFor="let user of assignedUsers; let j=index">
+                                <ng-container
+                                    *ngIf="getProfileImageUrlFromUser(user)!=null && getProfileImageUrlFromUser(user)!=''; else showIconProfile">
+                                    <img class="profile-image me-3 my-auto" src="{{getProfileImageUrlFromUser(user)}}"
+                                        alt="Profile image">
+                                </ng-container>
+                                <ng-template #showIconProfile>
+                                    <em class="bi bi-person-circle me-3" style="font-size: 35px !important;"></em>
+                                </ng-template>
+                                <div class="flex-grow-1 center m-text">
+                                    @{{user.username}}
+                                </div>
+                                <div>
+                                    <a class="nav-link" (click)="removeAssignedUsername(j)"
+                                        ngbTooltip="Delete @{{user.username}}" placement="right" [openDelay]="300">
+                                        <em class="bi bi-sm bi-trash-fill"></em>
+                                    </a>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- childrens -->
+                        <div class="form-group mb-4 mt-3">
+                            <p class="mb-0">Childrens</p>
+
+                            <!-- input new children task -->
+                            <form class="mb-3" [formGroup]="formAddChildrenTask" (ngSubmit)="addChildrenTask()">
+                                <div class="d-flex">
+                                    <!-- input new assigned user -->
+                                    <div class="flex-grow-1 form-group me-3">
+                                        <select class="form-select {{inputClass(formAddChildrenTask, 'children')}}"
+                                            formControlName="children">
+                                            <option *ngFor="let c of myTasks" value="{{c.id}}">#{{c.number}}:
+                                                {{c.title}}</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- add assigned user -->
+                                    <div>
+                                        <button class="btn btn-success my-auto" [disabled]="!formAddChildrenTask.valid">
+                                            Add
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+
+                            <!-- selected childrens -->
+                            <div class="d-flex mx-2" *ngFor="let c of selectedChildrens, let j=index">
+                                <div class="flex-grow-1 my-auto">#{{c.number}}: {{c.title}}</div>
+                                <div>
+                                    <a class="nav-link" (click)="removeChildrenTask(j)"
+                                        ngbTooltip="Delete #{{c.number}}" placement="right" [openDelay]="300">
+                                        <em class="bi bi-sm bi-trash-fill"></em>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- buttons -->
+                        <div class="form-group modal-footer">
+                            <button type="button" #closebuttonCreateTask class="btn btn-danger"
+                                data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-success" [disabled]="!formTask.valid">Create</button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
