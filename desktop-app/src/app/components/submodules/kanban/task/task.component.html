@@ -13,7 +13,7 @@
                         </div>
                     </div>
 
-                    <form [formGroup]="formTask" (ngSubmit)="newTask()">
+                    <form [formGroup]="formTask" (ngSubmit)="uploadTask()">
 
                         <div *ngIf="containError" class="alert alert-danger mt-5"> {{messageError}}
                         </div>
@@ -199,6 +199,161 @@
                         </div>
 
                     </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<button hidden type="button" #openTaskModal class="btn btn-danger" data-bs-target="#taskModal" data-bs-toggle="modal">
+</button>
+
+<!-- CREATE TASK -->
+<div class="modal fade" id="taskModal" tabindex="-1" aria-labelledby="taskModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content bg-dark-5">
+            <div class="modal-body">
+                <div class="card overflow-auto">
+
+                    <!-- title -->
+                    <div class="d-flex">
+                        <div class="flex-grow-1 card-title mt-2">{{selectedTask!=undefined?(isEditing?'Update task':'#'
+                            + selectedTask.number + ': ' + selectedTask.title):'New task'}}</div>
+                        <div class="close-card-button" data-bs-dismiss="modal">
+                            <em class="bi bi-x"></em>
+                        </div>
+                    </div>
+
+                    <!-- errors -->
+                    <div *ngIf="containError" class="alert alert-danger mt-5">
+                        {{messageError}}
+                    </div>
+
+                    <!-- VIEW TASK -->
+                    <div *ngIf="selectedTask!=undefined && !isEditing" class="container">
+                        <div class="row">
+
+                            <div
+                                class="d-flex flex-wrap mt-2 {{((selectedTask.assignedUsers && selectedTask.assignedUsers.length!=0) || (selectedTask.children && selectedTask.children.length!=0))?'col-lg-7':'col-lg-12'}}">
+
+                                <!-- description -->
+                                <div class="w-100 d-flex p-2">
+                                    <em class="bi bi-card-text my-auto" style="font-size: 20px !important;"></em>
+                                    <div class="text-break my-auto mx-2">Description:</div>
+                                </div>
+                                <div class="w-100 text-break mb-3" style="margin-left: 2.4rem !important;">
+                                    {{selectedTask.description}}
+                                </div>
+
+                                <!-- estimated time -->
+                                <div class="w-50 d-flex p-2" *ngIf="selectedTask.estimatedTime!=null">
+                                    <em class="bi bi-hourglass-top my-auto" style="font-size: 20px !important;"></em>
+                                    <div class="my-auto mx-2">
+                                        Estimated time: {{timeToDoubleString(selectedTask.estimatedTime)}}h
+                                    </div>
+                                </div>
+
+                                <!-- estimated time -->
+                                <div class="w-50 d-flex p-2" *ngIf="selectedTask.computedTime!=null">
+                                    <em class="bi bi-hourglass-bottom my-auto" style="font-size: 20px !important;"></em>
+                                    <div class="my-auto mx-2">
+                                        Computed time: {{timeToDoubleString(selectedTask.computedTime)}}h
+                                    </div>
+                                </div>
+
+                                <!-- importance -->
+                                <div class="w-50 d-flex p-2" *ngIf="selectedTask.importance!=null">
+                                    <em class="bi bi-stoplights my-auto" style="font-size: 20px !important;"></em>
+                                    <div class="my-auto mx-2">
+                                        Importance: {{selectedTask.importance}}
+                                    </div>
+                                </div>
+
+                                <!-- tags -->
+                                <div class="w-50 d-flex flex-wrap p-2" *ngIf="selectedTask.tags!=null">
+                                    <em class="bi bi-tags my-auto" style="font-size: 20px !important;"></em>
+                                    <div class="my-auto mx-2">
+                                        Tags:
+                                    </div>
+                                    <div class="mx-1 my-auto chip" *ngFor="let tag of selectedTask.tags.split(',')">
+                                        #{{tag.trim()}}
+                                    </div>
+                                </div>
+
+                                <!-- start date -->
+                                <div class="w-50 d-flex p-2" *ngIf="selectedTask.dueStartDate!=null">
+                                    <em class="bi bi-caret-right my-auto" style="font-size: 20px !important;"></em>
+                                    <div class="my-auto mx-2">
+                                        Due start date: {{getFormatedDate(selectedTask.dueStartDate,'dd/MM/yyyy')}}
+                                    </div>
+                                </div>
+
+                                <!-- end date -->
+                                <div class="w-50 d-flex p-2" *ngIf="selectedTask.dueEndDate!=null">
+                                    <em class="bi bi-flag my-auto" style="font-size: 20px !important;"></em>
+                                    <div class="my-auto mx-2">
+                                        Due end date: {{getFormatedDate(selectedTask.dueEndDate,'dd/MM/yyyy')}}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div *ngIf="(selectedTask.assignedUsers && selectedTask.assignedUsers.length!=0) || (selectedTask.children && selectedTask.children.length!=0)"
+                                class="col-lg-5 mt-2">
+
+                                <!-- assigned -->
+                                <div class="w-100 p-2"
+                                    *ngIf="selectedTask.assignedUsers && selectedTask.assignedUsers.length!=0">
+                                    <div class="d-flex">
+                                        <em class="bi bi-stoplights my-auto" style="font-size: 20px !important;"></em>
+                                        <div class="my-auto mx-2">
+                                            Assigned:
+                                        </div>
+                                    </div>
+                                    <div class="d-flex mx-1" *ngFor="let u of selectedTask.assignedUsers"
+                                        ngbTooltip="@{{u.username}}" placement="right" [openDelay]="300">
+                                        <ng-container
+                                            *ngIf="getProfileImageUrlFromUser(u)!=null && getProfileImageUrlFromUser(u)!=''; else showIconProfile">
+                                            <img *ngIf="getProfileImageUrlFromUser(u)!=null && getProfileImageUrlFromUser(u)!=''"
+                                                class="profile-image my-2" src="{{getProfileImageUrlFromUser(u)}}"
+                                                alt="@{{u.username}} profile image">
+                                        </ng-container>
+                                        <ng-template #showIconProfile>
+                                            <em class="bi bi-person-circle" style="font-size: 35px !important;"></em>
+                                        </ng-template>
+                                        <div class="mx-1 my-auto">@{{u.username}}</div>
+                                    </div>
+                                </div>
+
+                                <!-- childrens -->
+                                <div class="w-100 p-2" *ngIf="selectedTask.children && selectedTask.children.length!=0">
+                                    <div class="d-flex">
+                                        <em class="bi bi-flag my-auto" style="font-size: 20px !important;"></em>
+                                        <div class="my-auto mx-2 flex-grow-1">
+                                            Childrens:
+                                        </div>
+                                    </div>
+                                    <div class="d-flex mx-2" *ngFor="let c of selectedTask.children, let j=index">
+                                        <div class="flex-grow-1 my-auto">#{{c.number}}: {{c.title}}</div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+
+                        </div>
+                    </div>
+
+                    <!-- CREATE/UPDATE -->
+                    <div *ngIf="isEditable && isEditing" class="container">
+                        <div class="row">
+
+
+
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>

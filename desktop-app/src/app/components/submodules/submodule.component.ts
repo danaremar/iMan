@@ -81,7 +81,7 @@ export class ImanSubmodule {
         this.projectService.myProjects().subscribe(
             data => {
                 this.myProjects = data
-                if(this.loadProject || this.loadSprint || this.loadKanban || this.loadTasks || this.loadEfforts){
+                if (this.loadProject || this.loadSprint || this.loadKanban || this.loadTasks || this.loadEfforts) {
                     this.projectSelectedId = this.projectService.getStoredProjectId()
                     this.loadFirstProject()
                 }
@@ -98,9 +98,9 @@ export class ImanSubmodule {
             if (projectId == null || projectId == 0) {
                 this.projectSelectedId = this.myProjects[0].id
                 this.projectService.setStoredProjectId(this.projectSelectedId)
-                
+
             }
-            if(this.projectSelectedId) {
+            if (this.projectSelectedId) {
                 this.editIsAllowed(this.projectSelectedId)
             }
             this.getAllUsersFromSelectedProject()
@@ -117,7 +117,7 @@ export class ImanSubmodule {
     }
 
     loadAfterProject() {
-        if(this.loadSprint || this.loadKanban || this.loadTasks || this.loadEfforts) {
+        if (this.loadSprint || this.loadKanban || this.loadTasks || this.loadEfforts) {
             this.loadSprintsBySelectedProject()
         }
     }
@@ -152,7 +152,7 @@ export class ImanSubmodule {
             this.sprintService.sprintFromProject(projectId).subscribe(
                 data => {
                     this.mySprints = data
-                    if(this.mySprints!=undefined && this.mySprints.length==0){
+                    if (this.mySprints != undefined && this.mySprints.length == 0) {
                         this.sprintService.setStoredSprintId(0)
                         this.myTasks = []
                         this.kanban = null
@@ -179,11 +179,11 @@ export class ImanSubmodule {
     }
 
     loadAfterSprint() {
-        if(this.loadKanban) {
+        if (this.loadKanban) {
             this.loadKanbanBySelectedSprint()
         }
 
-        if(this.loadTasks || this.loadEfforts){
+        if (this.loadTasks || this.loadEfforts) {
             this.loadTasksBySelectedSprint()
         }
     }
@@ -251,7 +251,7 @@ export class ImanSubmodule {
     }
 
     loadAfterTask() {
-        if(this.loadEfforts) {
+        if (this.loadEfforts) {
             this.getEfforts()
         }
     }
@@ -299,6 +299,11 @@ export class ImanSubmodule {
             minimumIntegerDigits: integers,
             minimumFractionDigits: fraction
         })
+    }
+
+    timeToDoubleString(number: number): string {
+        if (number == null) number = 0
+        return (number % 1 ? number.toFixed(3) : number) + ''
     }
 
     getDifferenceFormatted(d1: any, d2: any): string {
@@ -368,10 +373,10 @@ export class ImanSubmodule {
 
     getAllUsersFromSelectedProject() {
         if (this.projectSelectedId) {
-            let project: Project | undefined = this.myProjects.find(x => x.id==this.projectSelectedId)
-            if(project != undefined) {
+            let project: Project | undefined = this.myProjects.find(x => x.id == this.projectSelectedId)
+            if (project != undefined) {
                 this.usersInProject = project.projectRoles.map(x => x.user)
-            }   
+            }
         }
     }
 

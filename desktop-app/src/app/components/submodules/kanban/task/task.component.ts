@@ -1,3 +1,4 @@
+import { DatePipe } from "@angular/common";
 import { Component, Input, OnInit, ViewChild } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { KanbanTask, KanbanTaskChildrens, KanbanTaskCreate, KanbanTaskUpdate } from "src/app/models/kanban/kanbanTask";
@@ -7,7 +8,7 @@ import { UserService } from "src/app/services/user/user.service";
 
 
 @Component({
-    selector: 'task',
+    selector: 'task-modal-view',
     templateUrl: './task.component.html',
     styleUrls: ['./task.component.css']
 })
@@ -33,6 +34,7 @@ export class TaskComponent implements OnInit {
     myTasks: Array<KanbanTask> = []
 
     // is editing right now?
+    @Input()
     isEditing: boolean = false
 
     // error messages
@@ -183,8 +185,8 @@ export class TaskComponent implements OnInit {
     }
 
     handleNext(n: any) {
+        this.selectedTask = n
         this.clearForms()
-        this.closeButtonTask.nativeElement.click()
     }
 
     handleError(e: any) {
@@ -200,13 +202,25 @@ export class TaskComponent implements OnInit {
         METHODS -> AUXILIAR
     ***************************/
 
-    //PROFILE IMAGE
+    // TIME
+    timeToDoubleString(number: number): string {
+        if (number == null) number = 0
+        return (number % 1 ? number.toFixed(3) : number) + ''
+    }
+
+    // DATES
+    getFormatedDate(date: Date, format: string) {
+        let datePipe = new DatePipe('en-US');
+        return datePipe.transform(date, format);
+    }
+
+    // PROFILE IMAGE
 
     public getProfileImageUrlFromUser(user: ShowUser): any {
         return this.userService.getUrlFromProfile(user.imageUid)
     }
 
-    //USERS
+    // USERS
 
     addAssignedUsername() {
         var username = this.formAddAssignedUser.value.username

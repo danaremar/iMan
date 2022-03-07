@@ -30,3 +30,9 @@
 <hr style="height: 2px">
 
 <div #gantt_here class='gantt-chart'></div>
+
+<button hidden type="button" #openTaskModal class="btn btn-danger" data-bs-target="#taskModal" data-bs-toggle="modal">
+</button>
+
+<task-modal-view [isEditable]="memberAccess" [selectedTask]="selectedTask" [usersInProject]="usersInProject"
+    [myTasks]="myTasks"></task-modal-view>
