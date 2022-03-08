@@ -21,7 +21,7 @@
 
     <div class="mx-3">
         <a ngbTooltip="Add column" placement="left" [openDelay]="300" *ngIf="adminAccess" data-bs-toggle="modal"
-            data-bs-target="#createColumnModal">
+            (click)="addTask()">
             <em class="bi bi-plus-lg"></em>
         </a>
     </div>
@@ -34,5 +34,5 @@
 <button hidden type="button" #openTaskModal class="btn btn-danger" data-bs-target="#taskModal" data-bs-toggle="modal">
 </button>
 
-<task-modal-view [isEditable]="memberAccess" [selectedTask]="selectedTask" [usersInProject]="usersInProject"
+<task-modal-view [isEditable]="memberAccess" [selectedTask]="selectedTask" [selectedKanbanColumnId]="selectedKanbanColumnId" [usersInProject]="usersInProject"
     [myTasks]="myTasks"></task-modal-view>
