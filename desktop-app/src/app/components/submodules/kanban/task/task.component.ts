@@ -109,8 +109,10 @@ export class TaskComponent implements OnInit {
     }
 
     buildForm() {
-        this.formTask.reset()
+        this.clearForms()
         if (this.selectedTask != undefined) {
+            this.assignedUsers = this.selectedTask.assignedUsers
+            this.selectedChildrens = this.selectedTask.children
             this.formTask = this.formBuilder.group({
                 title: [this.selectedTask.title, [Validators.required]],
                 description: [this.selectedTask.description, []],
@@ -121,6 +123,14 @@ export class TaskComponent implements OnInit {
                 dueEndDate: [this.selectedTask.dueEndDate, []]
             })
         }
+    }
+
+    clearForms() {
+        this.formTask.reset()
+        this.assignedUsers = []
+        this.formAddAssignedUser.reset()
+        this.selectedChildrens = []
+        this.formAddChildrenTask.reset()
     }
 
 
@@ -180,12 +190,6 @@ export class TaskComponent implements OnInit {
     /***************************
         METHODS -> HANDLERS
     ***************************/
-
-    clearForms() {
-        this.formTask.reset()
-        this.formAddAssignedUser.reset()
-        this.formAddChildrenTask.reset()
-    }
 
     handleNext(n: any) {
         this.selectedTask = n
