@@ -18,85 +18,6 @@
                         <div *ngIf="containError" class="alert alert-danger mt-5"> {{messageError}}
                         </div>
 
-                        <!-- title -->
-                        <div class="form-group mb-4 mt-3">
-                            <p class="mb-0">Title</p>
-                            <input class="form-control {{inputClass(formTask, 'title')}}" type="text" name="title"
-                                formControlName="title" maxlength="50" minlength="2" placeholder="" />
-                            <div class="invalid-feedback"
-                                *ngIf="formTask.get('title')?.touched && formTask.get('title')?.invalid">
-                                <div *ngIf="formTask.get('title')?.errors?.required">Cannot be empty</div>
-                                <div *ngIf="formTask.get('title')?.errors?.minlength">Must containt at least 2
-                                    characters</div>
-                                <div *ngIf="formTask.get('title')?.errors?.maxlength">Only 50 characters are
-                                    allowed</div>
-                            </div>
-                        </div>
-
-                        <!-- description -->
-                        <div class="form-group mb-4 mt-3">
-                            <p class="mb-0">Description</p>
-                            <input class="form-control {{inputClass(formTask, 'description')}}" type="text"
-                                name="description" formControlName="description" maxlength="255" placeholder="" />
-                            <div class="invalid-feedback"
-                                *ngIf="formTask.get('description')?.touched && formTask.get('description')?.invalid">
-                                <div *ngIf="formTask.get('description')?.errors?.maxlength">Only 255 characters
-                                    are
-                                    allowed</div>
-                            </div>
-                        </div>
-
-                        <!-- estimated time -->
-                        <div class="form-group mb-4 mt-3">
-                            <p class="mb-0">Estimated time</p>
-                            <input class="form-control {{inputClass(formTask, 'estimatedTime')}}" type="number"
-                                step="0.5" name="estimatedTime" formControlName="estimatedTime" min="0" value="0" />
-                            <div class="invalid-feedback"
-                                *ngIf="formTask.get('estimatedTime')?.touched && formTask.get('estimatedTime')?.invalid">
-                                <div *ngIf="formTask.get('estimatedTime')?.errors?.min">Cannot be negative time
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- importance -->
-                        <div class="form-group mb-4 mt-3">
-                            <p class="mb-0">Importance</p>
-                            <input class="form-control {{inputClass(formTask, 'importance')}}" type="text"
-                                name="importance" formControlName="importance" list="impDataLs" maxlength="50"
-                                placeholder="" />
-                            <div class="invalid-feedback"
-                                *ngIf="formTask.get('importance')?.touched && formTask.get('importance')?.invalid">
-                                <div *ngIf="formTask.get('importance')?.errors?.maxlength">Only 50 characters are
-                                    allowed</div>
-                            </div>
-                        </div>
-
-                        <!-- tags -->
-                        <div class="form-group mb-4 mt-3">
-                            <p class="mb-0">Tags</p>
-                            <input class="form-control {{inputClass(formTask, 'tags')}}" type="text" name="tags"
-                                formControlName="tags" maxlength="255" placeholder="" />
-                            <div class="invalid-feedback"
-                                *ngIf="formTask.get('tags')?.touched && formTask.get('tags')?.invalid">
-                                <div *ngIf="formTask.get('tags')?.errors?.maxlength">Only 255 characters are
-                                    allowed</div>
-                            </div>
-                        </div>
-
-                        <!-- start date -->
-                        <div class="form-group mb-4 mt-3">
-                            <p class="mb-0">Due start date</p>
-                            <input class="form-control {{inputClass(formTask, 'dueStartDate')}}" type="date"
-                                name="dueStartDate" formControlName="dueStartDate" placeholder="" />
-                        </div>
-
-                        <!-- end date -->
-                        <div class="form-group mb-4 mt-3">
-                            <p class="mb-0">Due end date</p>
-                            <input class="form-control {{inputClass(formTask, 'dueEndDate')}}" type="date"
-                                name="dueEndDate" formControlName="dueEndDate" placeholder="" min="" />
-                        </div>
-
                         <!-- users -->
                         <div class="form-group mb-4 mt-3">
                             <p class="mb-0">Users</p>
@@ -233,6 +154,7 @@
                     <div *ngIf="selectedTask!=undefined && !isEditing" class="container">
                         <div class="row">
 
+                            <!-- left -->
                             <div
                                 class="d-flex flex-wrap mt-2 {{((selectedTask.assignedUsers && selectedTask.assignedUsers.length!=0) || (selectedTask.children && selectedTask.children.length!=0))?'col-lg-7':'col-lg-12'}}">
 
@@ -253,7 +175,7 @@
                                     </div>
                                 </div>
 
-                                <!-- estimated time -->
+                                <!-- computed time -->
                                 <div class="w-50 d-flex p-2" *ngIf="selectedTask.computedTime!=null">
                                     <em class="bi bi-hourglass-bottom my-auto" style="font-size: 20px !important;"></em>
                                     <div class="my-auto mx-2">
@@ -297,6 +219,7 @@
                                 </div>
                             </div>
 
+                            <!-- right -->
                             <div *ngIf="(selectedTask.assignedUsers && selectedTask.assignedUsers.length!=0) || (selectedTask.children && selectedTask.children.length!=0)"
                                 class="col-lg-5 mt-2">
 
@@ -335,12 +258,22 @@
                                     <div class="d-flex mx-2" *ngFor="let c of selectedTask.children, let j=index">
                                         <div class="flex-grow-1 my-auto">#{{c.number}}: {{c.title}}</div>
                                     </div>
+                                </div>
+                            </div>
 
+                            <!-- actions -->
+                            <div class="col-lg-12">
+
+                                <!-- edit button -->
+                                <div *ngIf="isEditable && !isEditing && selectedTask!=undefined"
+                                    class="w-100 d-flex p-2 mt-2">
+                                    <button type="button" class="btn btn-secondary ms-auto d-flex" (click)="edit()">
+                                        <em class="bi bi-sm bi-pencil-fill ms-auto me-2"></em>
+                                        <div class="my-auto">Edit</div>
+                                    </button>
                                 </div>
 
                             </div>
-
-
 
                         </div>
                     </div>
@@ -348,9 +281,134 @@
                     <!-- CREATE/UPDATE -->
                     <div *ngIf="isEditable && isEditing" class="container">
                         <div class="row">
+                            <form [formGroup]="formTask" (ngSubmit)="uploadTask()">
 
+                                <!-- left -->
+                                <div class="col-lg-7 d-flex flex-wrap">
 
+                                    <!-- title -->
+                                    <div class="w-100 d-flex p-2">
+                                        <div class="my-auto">Title:</div>
+                                        <input class="form-control {{inputClass(formTask, 'title')}}" type="text"
+                                            name="title" formControlName="title" maxlength="50" minlength="2"
+                                            placeholder="" />
+                                        <div class="invalid-feedback"
+                                            *ngIf="formTask.get('title')?.touched && formTask.get('title')?.invalid">
+                                            <div *ngIf="formTask.get('title')?.errors?.required">Cannot be empty</div>
+                                            <div *ngIf="formTask.get('title')?.errors?.minlength">Must containt at least
+                                                2
+                                                characters</div>
+                                            <div *ngIf="formTask.get('title')?.errors?.maxlength">Only 50 characters are
+                                                allowed</div>
+                                        </div>
+                                    </div>
 
+                                    <!-- description -->
+                                    <div class="w-100 d-flex p-2">
+                                        <em class="bi bi-card-text my-auto" style="font-size: 20px !important;"></em>
+                                        <div class="my-auto mx-2">Description:</div>
+                                    </div>
+                                    <textarea class="form-control {{inputClass(formTask, 'description')}}"
+                                        formControlName="description" maxlength="255" rows="3">
+                                    </textarea>
+                                    <div class="invalid-feedback"
+                                        *ngIf="formTask.get('description')?.touched && formTask.get('description')?.invalid">
+                                        <div *ngIf="formTask.get('description')?.errors?.maxlength">Only 255 characters
+                                            are
+                                            allowed</div>
+                                    </div>
+
+                                    <!-- estimated time -->
+                                    <div class="w-50 d-flex p-2">
+                                        <em class="bi bi-hourglass-top my-auto"
+                                            style="font-size: 20px !important;"></em>
+                                        <input class="form-control {{inputClass(formTask, 'estimatedTime')}}"
+                                            type="number" step="0.5" formControlName="estimatedTime" min="0"
+                                            value="0" />
+                                        <div class="invalid-feedback"
+                                            *ngIf="formTask.get('estimatedTime')?.touched && formTask.get('estimatedTime')?.invalid">
+                                            <div *ngIf="formTask.get('estimatedTime')?.errors?.min">Cannot be negative
+                                                time
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- importance -->
+                                    <div class="w-50 d-flex p-2">
+                                        <em class="bi bi-stoplights my-auto" style="font-size: 20px !important;"></em>
+                                        <div class="my-auto mx-2">
+                                            Importance:
+                                        </div>
+                                        <input class="form-control {{inputClass(formTask, 'importance')}}" type="text"
+                                            name="importance" formControlName="importance" list="impDataLs"
+                                            maxlength="50" placeholder="" />
+                                        <div class="invalid-feedback"
+                                            *ngIf="formTask.get('importance')?.touched && formTask.get('importance')?.invalid">
+                                            <div *ngIf="formTask.get('importance')?.errors?.maxlength">Only 50
+                                                characters
+                                                are
+                                                allowed</div>
+                                        </div>
+                                        <!-- importance data list (new & update task) -->
+                                        <datalist id="impDataLs">
+                                            <option>Very high</option>
+                                            <option>High</option>
+                                            <option>Medium</option>
+                                            <option>Low</option>
+                                            <option>Very low</option>
+                                        </datalist>
+                                    </div>
+
+                                    <!-- tags -->
+                                    <div class="w-50 d-flex flex-wrap p-2">
+                                        <em class="bi bi-tags my-auto" style="font-size: 20px !important;"></em>
+                                        <div class="my-auto mx-2">
+                                            Tags:
+                                        </div>
+                                        <input class="form-control {{inputClass(formTask, 'tags')}}" type="text"
+                                            formControlName="tags" maxlength="255" placeholder="" />
+                                        <div class="invalid-feedback"
+                                            *ngIf="formTask.get('tags')?.touched && formTask.get('tags')?.invalid">
+                                            <div *ngIf="formTask.get('tags')?.errors?.maxlength">Only 255 characters are
+                                                allowed</div>
+                                        </div>
+                                    </div>
+
+                                    <!-- start date -->
+                                    <div class="w-50 d-flex p-2">
+                                        <em class="bi bi-caret-right my-auto" style="font-size: 20px !important;"></em>
+                                        <div class="my-auto mx-2">
+                                            Due start date:
+                                        </div>
+                                        <input class="form-control {{inputClass(formTask, 'dueStartDate')}}" type="date"
+                                            formControlName="dueStartDate" placeholder="" />
+                                    </div>
+
+                                    <!-- end date -->
+                                    <div class="w-50 d-flex p-2">
+                                        <em class="bi bi-flag my-auto" style="font-size: 20px !important;"></em>
+                                        <div class="my-auto mx-2">
+                                            Due end date:
+                                        </div>
+                                        <input class="form-control {{inputClass(formTask, 'dueEndDate')}}" type="date"
+                                            formControlName="dueEndDate" placeholder="" min="" />
+                                    </div>
+
+                                </div>
+
+                                <!-- right -->
+                                <div class="col-lg-5">
+
+                                </div>
+
+                                <!-- actions -->
+                                <div class="col-lg-12 form-group d-flex flex-row-reverse">
+                                    <button type="button" class="btn btn-danger" (click)="edit()">Close</button>
+                                    <button type="submit" class="btn btn-success me-2"
+                                        [disabled]="!formTask.valid">{{selectedTask==undefined?'Create':'Edit'}}</button>
+                                </div>
+
+                            </form>
                         </div>
                     </div>
 

@@ -84,7 +84,7 @@ export class TaskComponent implements OnInit {
 
 
     ngOnInit(): void {
-        // TODO
+        // NOTHING
     }
 
     /***************************
@@ -103,6 +103,9 @@ export class TaskComponent implements OnInit {
 
     edit() {
         this.isEditing = !this.isEditing
+        if(this.isEditing) {
+            this.buildForm()
+        }
     }
 
     buildForm() {
@@ -187,6 +190,7 @@ export class TaskComponent implements OnInit {
     handleNext(n: any) {
         this.selectedTask = n
         this.clearForms()
+        this.edit()
     }
 
     handleError(e: any) {

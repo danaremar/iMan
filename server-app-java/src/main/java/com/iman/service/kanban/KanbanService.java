@@ -236,6 +236,7 @@ public class KanbanService {
 		kanbanTask.setOrderInColumn(countKanbanTaskByColumn(kanbanColumn)); // set last orderInColumn
 		kanbanTask.setActive(true);
 		kanbanTask.setCreator(userService.getCurrentUser());
+		kanbanTask.setImportance(kanbanTaskCreateDto.getImportance());
 		kanbanTask.setAssignedUsers(getUsersFromUsernames(kanbanTaskCreateDto.getAssignedUsernames(),
 				kanbanColumn.getSprint().getProject()));
 		kanbanTask
@@ -253,6 +254,7 @@ public class KanbanService {
 		kanbanTask.setTags(kanbanTaskUpdateDto.getTags());
 		kanbanTask.setDueStartDate(kanbanTaskUpdateDto.getDueStartDate());
 		kanbanTask.setDueEndDate(kanbanTaskUpdateDto.getDueEndDate());
+		kanbanTask.setImportance(kanbanTaskUpdateDto.getImportance());
 		kanbanTask.setAssignedUsers(getUsersFromUsernames(kanbanTaskUpdateDto.getAssignedUsernames(),
 				kanbanTask.getKanbanColumn().getSprint().getProject()));
 		kanbanTask.setChildren(getKanbanTasksByLongList(kanbanTaskUpdateDto.getChildrenIds(),
