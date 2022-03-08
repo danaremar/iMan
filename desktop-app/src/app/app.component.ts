@@ -29,8 +29,6 @@ export class AppComponent {
       this.tokenService.logOut();
       this.toastr.error("Expired session")
       this.reload()
-    } else {
-      this.router.navigate(["/app/effort"])
     }
 
     Aos.init({

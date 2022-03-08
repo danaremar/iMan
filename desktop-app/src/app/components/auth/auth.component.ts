@@ -105,7 +105,7 @@ export class AuthComponent implements OnInit {
         this.isLogged = true
         this.tokenService.setToken(responseLogin.token)
         this.tokenService.setUsername(responseLogin.username)
-        this.router.navigateByUrl("/")
+        this.router.navigateByUrl("/effort")
     }
 
     returnError(err: any, isLogin: boolean) {
