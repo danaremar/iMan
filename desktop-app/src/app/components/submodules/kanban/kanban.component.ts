@@ -55,6 +55,8 @@ export class KanbanComponent extends ImanSubmodule implements OnInit {
             TASKS
     ***************************/
 
+    myTasks: KanbanTask[] = []
+
     // NEW
     formNewTask: FormGroup
     newTaskContainError: boolean = false
@@ -128,6 +130,7 @@ export class KanbanComponent extends ImanSubmodule implements OnInit {
 
     ngOnInit(): void {
         this.loadKanban = true
+        this.loadTasks = true
         this.loadMyProjects()
     }
 
@@ -248,7 +251,7 @@ export class KanbanComponent extends ImanSubmodule implements OnInit {
     addAssignedUsername() {
         var username = this.formAddAssignedUser.value.username
         var u = this.usersInProject.find(x => x.username == username)
-        if (u !== undefined && this.assignedUsers.indexOf(u)==-1) {
+        if (u !== undefined && this.assignedUsers.indexOf(u) == -1) {
             this.assignedUsers.push(u)
             this.formAddAssignedUser.reset()
         }
@@ -267,7 +270,7 @@ export class KanbanComponent extends ImanSubmodule implements OnInit {
     addChildrenTask() {
         var children: number = this.formAddChildrenTask.value.children
         var c = this.myTasks.find((x: KanbanTask) => x.id == children)
-        if(c!==undefined && this.selectedChildrens.indexOf(c)==-1){
+        if (c !== undefined && this.selectedChildrens.indexOf(c) == -1) {
             this.selectedChildrens.push(c)
             this.formAddChildrenTask.reset()
         }
@@ -284,7 +287,7 @@ export class KanbanComponent extends ImanSubmodule implements OnInit {
     // NEW TASK
 
     newTask() {
-        let createTask: KanbanTaskCreate = new KanbanTaskCreate(this.formNewTask.value.title, this.formNewTask.value.description, this.formNewTask.value.estimatedTime, this.kanbanColumnSelected.id, this.formNewTask.value.tags, this.formNewTask.value.importance, this.formNewTask.value.dueStartDate, this.formNewTask.value.dueEndDate,this.getUsernamesInArray(this.assignedUsers), this.getChildrenIdsInArray(this.selectedChildrens))
+        let createTask: KanbanTaskCreate = new KanbanTaskCreate(this.formNewTask.value.title, this.formNewTask.value.description, this.formNewTask.value.estimatedTime, this.kanbanColumnSelected.id, this.formNewTask.value.tags, this.formNewTask.value.importance, this.formNewTask.value.dueStartDate, this.formNewTask.value.dueEndDate, this.getUsernamesInArray(this.assignedUsers), this.getChildrenIdsInArray(this.selectedChildrens))
         this.kanbanService.createKanbanTask(createTask).subscribe(
             res => {
                 this.formNewTask.reset()
@@ -313,10 +316,10 @@ export class KanbanComponent extends ImanSubmodule implements OnInit {
             title: [kanbanTask.title, [Validators.required]],
             description: [kanbanTask.description, []],
             estimatedTime: [kanbanTask.estimatedTime, []],
-            importance: [kanbanTask.importance,[]],
-            tags: [kanbanTask.tags,[]],
-            dueStartDate: [kanbanTask.dueStartDate,[]],
-            dueEndDate: [kanbanTask.dueEndDate,[]]
+            importance: [kanbanTask.importance, []],
+            tags: [kanbanTask.tags, []],
+            dueStartDate: [kanbanTask.dueStartDate, []],
+            dueEndDate: [kanbanTask.dueEndDate, []]
         })
     }
 

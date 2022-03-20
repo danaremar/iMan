@@ -187,11 +187,6 @@ export class SprintComponent extends ImanSubmodule implements OnInit {
         )
     }
 
-    timeToDoubleString(number: number): string {
-        if (number == null) number = 0
-        return (number % 1 ? number.toFixed(3) : number) + ''
-    }
-
     loadPieChartEffortsByTask() {
         this.pieChartEffortsByTask=[]
         for (let e of this.effortReport.effortsByTask) {

@@ -33,6 +33,7 @@ export class ImanSubmodule {
     loadSprint: boolean = false
     loadKanban: boolean = false
     loadTasks: boolean = false
+    loadEfforts: boolean = false
 
     activeEffort: any
 
@@ -80,7 +81,7 @@ export class ImanSubmodule {
         this.projectService.myProjects().subscribe(
             data => {
                 this.myProjects = data
-                if(this.loadProject || this.loadSprint || this.loadKanban || this.loadTasks){
+                if (this.loadProject || this.loadSprint || this.loadKanban || this.loadTasks || this.loadEfforts) {
                     this.projectSelectedId = this.projectService.getStoredProjectId()
                     this.loadFirstProject()
                 }
@@ -97,9 +98,9 @@ export class ImanSubmodule {
             if (projectId == null || projectId == 0) {
                 this.projectSelectedId = this.myProjects[0].id
                 this.projectService.setStoredProjectId(this.projectSelectedId)
-                
+
             }
-            if(this.projectSelectedId) {
+            if (this.projectSelectedId) {
                 this.editIsAllowed(this.projectSelectedId)
             }
             this.getAllUsersFromSelectedProject()
@@ -116,7 +117,7 @@ export class ImanSubmodule {
     }
 
     loadAfterProject() {
-        if(this.loadSprint || this.loadKanban || this.loadTasks) {
+        if (this.loadSprint || this.loadKanban || this.loadTasks || this.loadEfforts) {
             this.loadSprintsBySelectedProject()
         }
     }
@@ -151,7 +152,7 @@ export class ImanSubmodule {
             this.sprintService.sprintFromProject(projectId).subscribe(
                 data => {
                     this.mySprints = data
-                    if(this.mySprints!=undefined && this.mySprints.length==0){
+                    if (this.mySprints != undefined && this.mySprints.length == 0) {
                         this.sprintService.setStoredSprintId(0)
                         this.myTasks = []
                         this.kanban = null
@@ -178,11 +179,11 @@ export class ImanSubmodule {
     }
 
     loadAfterSprint() {
-        if(this.loadKanban) {
+        if (this.loadKanban) {
             this.loadKanbanBySelectedSprint()
         }
 
-        if(this.loadTasks){
+        if (this.loadTasks || this.loadEfforts) {
             this.loadTasksBySelectedSprint()
         }
     }
@@ -231,7 +232,6 @@ export class ImanSubmodule {
                     this.containError = false
                     this.loadFirstTask()
                     this.kanbanTaskSelectedId = this.kanbanService.getStoredKanbanTaskId()
-                    this.loadEfforts()
                 },
                 err => {
                     this.returnPrincipalError(err)
@@ -246,6 +246,13 @@ export class ImanSubmodule {
             if (taskId == undefined || taskId == 0) {
                 this.kanbanService.setStoredKanbanTaskId(this.myTasks[0].id)
             }
+        }
+        this.loadAfterTask()
+    }
+
+    loadAfterTask() {
+        if (this.loadEfforts) {
+            this.getEfforts()
         }
     }
 
@@ -266,7 +273,7 @@ export class ImanSubmodule {
         )
     }
 
-    loadEfforts() {
+    getEfforts() {
         this.loadActiveEffort()
         this.effortService.getAllMyEfforts().subscribe(
             data => {
@@ -292,6 +299,11 @@ export class ImanSubmodule {
             minimumIntegerDigits: integers,
             minimumFractionDigits: fraction
         })
+    }
+
+    timeToDoubleString(number: number): string {
+        if (number == null) number = 0
+        return (number % 1 ? number.toFixed(3) : number) + ''
     }
 
     getDifferenceFormatted(d1: any, d2: any): string {
@@ -361,10 +373,10 @@ export class ImanSubmodule {
 
     getAllUsersFromSelectedProject() {
         if (this.projectSelectedId) {
-            let project: Project | undefined = this.myProjects.find(x => x.id==this.projectSelectedId)
-            if(project != undefined) {
+            let project: Project | undefined = this.myProjects.find(x => x.id == this.projectSelectedId)
+            if (project != undefined) {
                 this.usersInProject = project.projectRoles.map(x => x.user)
-            }   
+            }
         }
     }
 

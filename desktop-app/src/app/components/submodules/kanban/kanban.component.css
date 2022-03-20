@@ -18,11 +18,3 @@
     overflow-x: auto;
     width: calc(100vw - 50px - var(--sidebar-size)) !important;
 }
-
-.chip {
-    border-radius: 50rem !important;
-    background-color: var(--dark-pallete-0);
-    color: var(--dark-contrast-text);
-    font-size: 0.85rem;
-    padding-inline: 0.4rem;
-}

@@ -225,7 +225,7 @@ public class KanbanService {
 	}
 
 	@Transactional
-	public void createKanbanTask(KanbanTaskCreateDto kanbanTaskCreateDto) {
+	public KanbanTask createKanbanTask(KanbanTaskCreateDto kanbanTaskCreateDto) {
 		KanbanColumn kanbanColumn = findColumnById(kanbanTaskCreateDto.getKanbanColumnId());
 		verifyMember(kanbanColumn.getSprint());
 		KanbanTask kanbanTask = modelMapper.map(kanbanTaskCreateDto, KanbanTask.class);
@@ -236,15 +236,16 @@ public class KanbanService {
 		kanbanTask.setOrderInColumn(countKanbanTaskByColumn(kanbanColumn)); // set last orderInColumn
 		kanbanTask.setActive(true);
 		kanbanTask.setCreator(userService.getCurrentUser());
+		kanbanTask.setImportance(kanbanTaskCreateDto.getImportance());
 		kanbanTask.setAssignedUsers(getUsersFromUsernames(kanbanTaskCreateDto.getAssignedUsernames(),
 				kanbanColumn.getSprint().getProject()));
 		kanbanTask
 				.setChildren(getKanbanTasksByLongList(kanbanTaskCreateDto.getChildrenIds(), kanbanColumn.getSprint()));
-		kanbanTaskRepository.save(kanbanTask);
+		return kanbanTaskRepository.save(kanbanTask);
 	}
 
 	@Transactional
-	public void updateKanbanTask(KanbanTaskUpdateDto kanbanTaskUpdateDto) {
+	public KanbanTask updateKanbanTask(KanbanTaskUpdateDto kanbanTaskUpdateDto) {
 		KanbanTask kanbanTask = findTaskById(kanbanTaskUpdateDto.getId());
 		verifyMember(kanbanTask.getKanbanColumn().getSprint());
 		kanbanTask.setTitle(kanbanTaskUpdateDto.getTitle());
@@ -253,11 +254,12 @@ public class KanbanService {
 		kanbanTask.setTags(kanbanTaskUpdateDto.getTags());
 		kanbanTask.setDueStartDate(kanbanTaskUpdateDto.getDueStartDate());
 		kanbanTask.setDueEndDate(kanbanTaskUpdateDto.getDueEndDate());
+		kanbanTask.setImportance(kanbanTaskUpdateDto.getImportance());
 		kanbanTask.setAssignedUsers(getUsersFromUsernames(kanbanTaskUpdateDto.getAssignedUsernames(),
 				kanbanTask.getKanbanColumn().getSprint().getProject()));
 		kanbanTask.setChildren(getKanbanTasksByLongList(kanbanTaskUpdateDto.getChildrenIds(),
 				kanbanTask.getKanbanColumn().getSprint()));
-		kanbanTaskRepository.save(kanbanTask);
+		return kanbanTaskRepository.save(kanbanTask);
 	}
 	
 	public void removeChildren(KanbanTask parent, KanbanTask child) {

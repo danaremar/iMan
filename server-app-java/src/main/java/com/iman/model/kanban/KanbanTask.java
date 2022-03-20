@@ -69,11 +69,11 @@ public class KanbanTask {
 	@JoinColumn(name = "kanban_column_id")
 	@JsonIgnore
 	private KanbanColumn kanbanColumn;
-	
+
 	@OneToOne
-	@JsonIncludeProperties({"id","username","imageUid"})
+	@JsonIncludeProperties({ "id", "username", "imageUid" })
 	private User creator;
-	
+
 	@Length(max = 255)
 	private String tags;
 
@@ -84,7 +84,11 @@ public class KanbanTask {
 	private List<Effort> efforts;
 
 	public Double getComputedTime() {
-		return efforts.stream().mapToDouble(Effort::getTime).sum();
+		if (efforts != null && !efforts.isEmpty()) {
+			return efforts.stream().mapToDouble(Effort::getTime).sum();
+		} else {
+			return 0.;
+		}
 	}
 
 	// GANTT
@@ -95,15 +99,15 @@ public class KanbanTask {
 	private Date dueStartDate;
 
 	private Date dueEndDate;
-	
+
 	@ManyToMany
 	@JoinTable(name = "kanban_task_assignation")
-	@JsonIncludeProperties({"username", "imageUid"})
+	@JsonIncludeProperties({ "username", "imageUid" })
 	private List<User> assignedUsers;
-	
+
 	@ManyToMany
 	@JoinTable(name = "kanban_task_children")
-	@JsonIncludeProperties({"id", "title", "number", "active"})
+	@JsonIncludeProperties({ "id", "title", "number", "active" })
 	private List<KanbanTask> children;
 
 }

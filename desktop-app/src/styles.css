@@ -161,6 +161,18 @@ a{
 
 
 
+/* CHIPS */
+
+.chip {
+    border-radius: 50rem !important;
+    background-color: var(--dark-pallete-0);
+    color: var(--dark-contrast-text);
+    font-size: 0.85rem;
+    padding-inline: 0.4rem;
+}
+
+
+
 
 /* CARD */
 
@@ -206,12 +218,17 @@ a{
     border-radius: 20px !important;
 }
 
+
+
+/* FORMS / INPUT */
+
 .form-control {
     background: none;
     border: none;
     border-bottom: 2px solid var(--dark-pallete-1);
     border-radius: 0;
     color: inherit;
+    background-color: transparent !important;
     -webkit-text-fill-color: var(--dark-pallete-text) !important;
 }
 

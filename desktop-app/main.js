@@ -14,8 +14,16 @@ function createWindow() {
         frame: false,
         icon: "src/favicon.ico",
         webPreferences: {
+
+            // SECURITY -> set to false
+            // CONTROL BUTTONS -> set to true
             nodeIntegration: true,
+
+            // SECURITY -> set to true
+            // CONTROL BUTTONS -> set to false
             contextIsolation: false,
+
+            // open devTools -> Inspector...
             devTools: false
         }
     });
@@ -30,11 +38,11 @@ function createWindow() {
         appWin = null;
     });
 
-    ipc.on('minimizeApp', ()=>{
+    ipc.on('minimizeApp', () => {
         appWin.minimize();
     })
 
-    ipc.on('maximizeApp', ()=>{
+    ipc.on('maximizeApp', () => {
         if (appWin.isMaximized()) {
             appWin.unmaximize();
         } else {
@@ -42,9 +50,10 @@ function createWindow() {
         }
     })
 
-    ipc.on('closeApp', ()=>{
+    ipc.on('closeApp', () => {
         appWin.close();
     })
+
 }
 
 app.on("ready", createWindow);

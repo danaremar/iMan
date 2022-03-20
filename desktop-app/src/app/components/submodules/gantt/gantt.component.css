@@ -1,0 +1,73 @@
+@import "~dhtmlx-gantt/codebase/dhtmlxgantt.css";
+/* @import "~dhtmlx-gantt/codebase/skins/dhtmlxgantt_material.css"; */
+
+.gantt-chart{
+    position: relative;
+    width: 100%;
+    height: calc(100vh - 120px - var(--navbar-size)) !important;
+}
+.gantt_bar_task {
+    border-radius: 50px !important;
+}
+.gantt_container {
+    border-radius: 10px !important;
+}
+.gantt_task_progress_drag {
+    display: none !important;
+}
+
+
+
+/* BORDERS */
+.gantt_task_scale, .gantt_task_cell, .gantt_scale_cell, .gantt_grid_head_cell {
+    border-color: var(--dark-pallete-text) !important;
+}
+.gantt_row.odd, .gantt_task_row.odd {
+    border-bottom: 1px solid;
+}
+.gantt_task_line.gantt_task_inline_color {
+    border-color: transparent !important;
+}
+
+
+
+/* MARGINS IN LINE */
+.gantt_task_line.gantt_task_inline_color {
+    margin-top: 2.5px !important;
+    height: 25px !important;
+}
+.gantt_task_content {
+    top: -1.5px;
+}
+
+
+/* HEADERS */
+.gantt_grid_scale, .gantt_task_scale {
+    background-color: var(--dark-pallete-4) !important;
+    
+}
+.gantt_grid_head_cell, .gantt_scale_cell {
+    color: white !important;
+}
+
+
+/* EACH ROW */
+.gantt_container, .gantt_row, .gantt_task_row {
+    background-color: var(--dark-pallete-3) !important;
+    border-color: var(--dark-pallete-text) !important;
+}
+.gantt_container.gantt_selected, .gantt_row.gantt_selected, .gantt_task_row.gantt_selected {
+    background-color: var(--dark-pallete-4) !important;
+}
+.gantt_tree_content {
+    color: white !important;
+}
+
+
+/* IN CELL */
+.gantt_cell.gantt_cell_tree{
+    margin-left: 5px !important;
+}
+.gantt_blank, .gantt_file, .gantt_add {
+    display: none !important;
+}

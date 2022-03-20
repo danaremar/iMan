@@ -29,7 +29,7 @@ export class AppComponent {
       this.tokenService.logOut();
       this.toastr.error("Expired session")
       this.reload()
-    } else {
+    } else if(["","/","/app","/app/"].includes(this.router.url)) {
       this.router.navigate(["/app/effort"])
     }
 
