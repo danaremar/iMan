@@ -370,6 +370,7 @@
 
                                 <form [formGroup]="formAddAssignedUser" (ngSubmit)="addAssignedUsername()">
                                     <div class="d-flex">
+
                                         <!-- input new assigned user -->
                                         <div class="flex-grow-1 form-group me-3">
                                             <input class="form-control {{inputClass(formAddAssignedUser, 'username')}}"
@@ -389,14 +390,13 @@
                                                 <option *ngFor="let u of usersInProject">{{u.username}}</option>
                                             </datalist>
                                         </div>
-
-                                        <!-- add assigned user -->
                                         <div>
                                             <button class="btn btn-success my-auto"
                                                 [disabled]="!formAddAssignedUser.valid">
                                                 Add
                                             </button>
                                         </div>
+                                        
                                     </div>
                                 </form>
 
@@ -430,7 +430,6 @@
                                 <!-- input new children task -->
                                 <form class="mb-3" [formGroup]="formAddChildrenTask" (ngSubmit)="addChildrenTask()">
                                     <div class="d-flex">
-                                        <!-- input new assigned user -->
                                         <div class="flex-grow-1 form-group me-3">
                                             <select class="form-select {{inputClass(formAddChildrenTask, 'children')}}"
                                                 formControlName="children">
@@ -438,8 +437,6 @@
                                                     {{c.title}}</option>
                                             </select>
                                         </div>
-
-                                        <!-- add assigned user -->
                                         <div>
                                             <button class="btn btn-success my-auto"
                                                 [disabled]="!formAddChildrenTask.valid">

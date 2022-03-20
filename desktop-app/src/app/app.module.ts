@@ -23,6 +23,7 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { GanttComponent } from './components/submodules/gantt/gantt.component';
 import { IncidentComponent } from './components/submodules/incident/incident.component';
 import { AgGridModule } from 'ag-grid-angular';
+import { TaskComponent } from './components/submodules/kanban/task/task.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import { AgGridModule } from 'ag-grid-angular';
     KanbanComponent,
     SprintComponent,
     GanttComponent,
-    IncidentComponent
+    IncidentComponent,
+    TaskComponent
   ],
   imports: [
     DragDropModule,

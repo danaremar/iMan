@@ -116,8 +116,8 @@ public class KanbanRestController {
 	@PostMapping(value = "/task")
 	public ResponseEntity<Object> createKanbanTask(@RequestBody @Valid KanbanTaskCreateDto kanbanTaskCreateDto) {
 		try {
-			kanbanService.createKanbanTask(kanbanTaskCreateDto);
-			return new ResponseEntity<>(HttpStatus.CREATED);
+			KanbanTask kanbanTask = kanbanService.createKanbanTask(kanbanTaskCreateDto);
+			return new ResponseEntity<>(kanbanTask,HttpStatus.CREATED);
 		} catch (Exception e) {
 			return new ResponseEntity<>(new Message(e.getMessage()), HttpStatus.CONFLICT);
 		}
@@ -126,8 +126,8 @@ public class KanbanRestController {
 	@PutMapping(value = "/task")
 	public ResponseEntity<Object> updateKanbanTask(@RequestBody @Valid KanbanTaskUpdateDto kanbanTaskUpdateDto) {
 		try {
-			kanbanService.updateKanbanTask(kanbanTaskUpdateDto);
-			return new ResponseEntity<>(HttpStatus.OK);
+			KanbanTask kanbanTask = kanbanService.updateKanbanTask(kanbanTaskUpdateDto);
+			return new ResponseEntity<>(kanbanTask,HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(new Message(e.getMessage()), HttpStatus.CONFLICT);
 		}

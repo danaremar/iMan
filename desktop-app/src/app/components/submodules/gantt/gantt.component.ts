@@ -10,7 +10,6 @@ import { ImanSubmodule } from "../submodule.component";
 import { gantt } from "dhtmlx-gantt";
 import { GanttService } from "src/app/services/gantt/gantt.service";
 import { KanbanTask, KanbanTaskUpdate } from "src/app/models/kanban/kanbanTask";
-import { Link } from "src/app/models/gantt/gantt-link";
 
 @Component({
     encapsulation: ViewEncapsulation.None,
@@ -21,6 +20,10 @@ import { Link } from "src/app/models/gantt/gantt-link";
 export class GanttComponent extends ImanSubmodule implements AfterViewInit {
 
     @ViewChild("gantt_here") ganttContainer: any
+    @ViewChild('openTaskModal') openTaskModal: any
+
+    selectedTask: any
+    selectedKanbanColumnId: number = 0
 
     constructor(effortService: EffortService, kanbanService: KanbanService, sprintService: SprintService, projectService: ProjectService, formBuilder: FormBuilder, tokenService: TokenService, private ganttService: GanttService) {
         super(effortService, kanbanService, sprintService, projectService, formBuilder, tokenService)
@@ -28,6 +31,7 @@ export class GanttComponent extends ImanSubmodule implements AfterViewInit {
 
     ngAfterViewInit(): void {
         this.loadTasks = true
+        this.loadKanban = true
         this.loadMyProjects()
 
         gantt.init(this.ganttContainer.nativeElement)
@@ -100,6 +104,20 @@ export class GanttComponent extends ImanSubmodule implements AfterViewInit {
             }
         }, '')
 
+        // TASK -> open modal view: task
+        gantt.attachEvent("onTaskDblClick", (id, item) => {
+            this.selectedTask = this.getTaskById(id)
+            this.openTaskModal.nativeElement.click()
+        },'')
+
+    }
+
+    addTask() {
+        this.selectedTask = undefined
+        if(this.kanban && this.kanban.length!=0) {
+            this.selectedKanbanColumnId = this.kanban[0].id
+        }
+        this.openTaskModal.nativeElement.click()
     }
 
     getTaskById(id: number): KanbanTask | undefined {
