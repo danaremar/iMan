@@ -1,0 +1,15 @@
+
+
+	  _   __  __                 
+	 (_) |  \/  |   __ _   _ __  
+	 | | | |\/| |  / _` | | '_ \ 
+	 | | | |  | | | (_| | | | | |
+	 |_| |_|  |_|  \__,_| |_| |_|
+	                             
+
+	Project: iMan ©
+	License: GPLv3
+	Version: v1.1
+	Author: Daniel Arellano Martinez
+	
+
