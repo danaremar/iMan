@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  backendEndpoint: "http://localhost:8080",
+  backendEndpoint: "https://iman-back.herokuapp.com",
   enableElectron: false,
   defaultPageSize: 25
 };
