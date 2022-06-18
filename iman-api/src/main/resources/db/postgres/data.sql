@@ -98,3 +98,15 @@ INSERT INTO incident (id, affects, date, description, estimated_time, priority, 
 -- INCIDENT UPDATE
 INSERT INTO incident_update (id, affects, date, description, estimated_time, priority, status, assigned_user_id, user_id, incident_id) VALUES(1, 'Scope & €', '2022-02-06 19:49:50.562', 'Image is not updated so well', 12.0, 1, 'To do', 1, 1, 1);
 INSERT INTO incident_update (id, affects, date, description, estimated_time, priority, status, assigned_user_id, user_id, incident_id) VALUES(2, NULL, '2022-02-06 19:55:22.900', 'Jysus is going to solve this', NULL, NULL, 'In progress', 3, 1, 1);
+
+
+-- SEQUENCES
+SELECT setval('effort_id_seq', 1000);
+SELECT setval('incident_id_seq', 1000);
+SELECT setval('incident_update_id_seq', 1000);
+SELECT setval('kanban_column_id_seq', 1000);
+SELECT setval('kanban_task_id_seq', 1000);
+SELECT setval('project2role_id_seq', 1000);
+SELECT setval('projects_id_seq', 1000);
+SELECT setval('sprint_id_seq', 1000);
+SELECT setval('users_id_seq', 1000);
