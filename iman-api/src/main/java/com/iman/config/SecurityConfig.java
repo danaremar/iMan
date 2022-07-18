@@ -69,8 +69,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		
 		// CSRF protection
 		if(Boolean.FALSE.equals(enableCsrfProtection)) {
-			// deepcode ignore DisablesCSRFProtection: <please specify a reason of ignoring this>
-   http.csrf().disable();
+			// deepcode ignore DisablesCSRFProtection: Is normally enabled CSRF
+			http.csrf().disable();
 		}
 		
 		// Requests
