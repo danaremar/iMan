@@ -22,6 +22,7 @@ import org.hibernate.validator.constraints.Length;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIncludeProperties;
+import com.iman.model.projects.Project;
 import com.iman.model.users.User;
 
 import lombok.Data;
@@ -117,5 +118,11 @@ public class Active {
 	@ManyToMany
 	@JoinTable(name = "active_users")
 	private List<ActiveUsers> activeUsers;
+	
+	@NotNull
+	@ManyToOne
+	@JoinColumn(name = "project_id")
+	@JsonIgnore
+	private Project project;
 
 }

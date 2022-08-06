@@ -16,10 +16,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ActiveCreateDto {
-	
-	@NotNull
-	@Min(value = 0)
-	private Long code;
 
 	@NotBlank
 	@Length(max = 50)
@@ -67,7 +63,7 @@ public class ActiveCreateDto {
 	@Length(max = 50)
 	private String location;
 	
-	private List<String> children;
+	private List<Long> children;
 	
 	private List<ActiveUsersCreateDto> activeUsers;
 

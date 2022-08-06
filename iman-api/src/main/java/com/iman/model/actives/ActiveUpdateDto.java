@@ -20,10 +20,6 @@ public class ActiveUpdateDto {
 	
 	@NotNull
 	private Long id;
-	
-	@NotNull
-	@Min(value = 0)
-	private Long code;
 
 	@NotBlank
 	@Length(max = 50)
@@ -71,8 +67,8 @@ public class ActiveUpdateDto {
 	@Length(max = 50)
 	private String location;
 	
-	private List<String> children;
+	private List<Long> children;
 	
-	private List<ActiveUsersUpdateDto> activeUsers;
+	private List<ActiveUsersCreateDto> activeUsers;
 
 }

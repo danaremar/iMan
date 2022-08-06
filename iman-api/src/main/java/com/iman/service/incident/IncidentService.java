@@ -144,8 +144,9 @@ public class IncidentService {
 	@Transactional
 	public void disableIncident(Long incidentId) {
 		Incident incident = findIncidentById(incidentId);
-		projectService.verifyMember(incident.getProject());
+		projectService.verifyOwnerOrAdmin(incident.getProject());
 
+		incident.setLastModification(new Date());
 		incident.setActive(false);
 		incidentRepository.save(incident);
 	}
@@ -171,6 +172,7 @@ public class IncidentService {
 			incident.setAssignedUser(assignedUser);
 		}
 		incident.setProject(project);
+		incident.setActive(true);
 		ExampleMatcher matcher = ExampleMatcher.matching().withIgnoreCase()
 				.withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
 		Example<Incident> example = Example.of(incident, matcher);
