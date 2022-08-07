@@ -18,7 +18,6 @@ public class ActiveShowDto extends ActiveListDto {
 	@JsonIncludeProperties({ "id", "code", "name", "description", "children" })
 	private List<ActiveShowDto> children;
 
-	@JsonIncludeProperties({ "id", "code", "name", "active", "children" })
 	private List<ActiveUsersShowDto> activeUsers;
 
 }
