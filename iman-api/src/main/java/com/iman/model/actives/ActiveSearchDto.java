@@ -34,8 +34,6 @@ public class ActiveSearchDto {
 	@Length(max = 50)
 	private String modifiedBy;
 
-	private Boolean active;
-
 	@Length(max = 50)
 	private String type;
 
@@ -51,19 +49,16 @@ public class ActiveSearchDto {
 	@Length(max = 50)
 	private String cpeType;
 
-	@Length(max = 50)
+	@Length(max = 255)
 	private String cpe;
 
 	@Length(max = 50)
 	private String importance;
 
-	@Length(max = 50)
 	private Date startAdquisition;
 
-	@Length(max = 50)
 	private Date endAdquisition;
 
-	@Length(max = 50)
 	private Date endOfLife;
 
 	@Min(value = 0)

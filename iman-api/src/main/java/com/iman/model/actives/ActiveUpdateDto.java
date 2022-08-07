@@ -43,7 +43,7 @@ public class ActiveUpdateDto {
 	@Length(max = 10)
 	private String cpeType;
 
-	@Length(max = 50)
+	@Length(max = 255)
 	private String cpe;
 
 	@Length(max = 50)

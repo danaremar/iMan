@@ -3,7 +3,9 @@ package com.iman.model.actives;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -12,6 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
@@ -86,7 +89,7 @@ public class Active {
 	@Length(max = 10)
 	private String cpeType;
 
-	@Length(max = 50)
+	@Length(max = 255)
 	private String cpe;
 
 	@Length(max = 50)
@@ -110,13 +113,12 @@ public class Active {
 	@Length(max = 50)
 	private String location;
 
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinTable(name = "active_children")
 	@JsonIncludeProperties({ "id", "code", "name", "active", "children" })
 	private List<Active> children;
 
-	@ManyToMany
-	@JoinTable(name = "active_users")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "active", cascade = CascadeType.ALL)
 	private List<ActiveUsers> activeUsers;
 	
 	@NotNull

@@ -25,6 +25,7 @@ import com.iman.model.actives.ActiveUsersCreateDto;
 import com.iman.model.projects.Project;
 import com.iman.model.users.User;
 import com.iman.repository.active.ActiveRepository;
+import com.iman.repository.active.ActiveUsersRepository;
 import com.iman.service.projects.ProjectService;
 import com.iman.service.users.UserService;
 
@@ -33,6 +34,9 @@ public class ActiveService {
 
 	@Autowired
 	private ActiveRepository activeRepository;
+
+	@Autowired
+	private ActiveUsersRepository activeUsersRepository;
 
 	@Autowired
 	private ProjectService projectService;
@@ -57,7 +61,11 @@ public class ActiveService {
 	}
 
 	public Active findActiveById(Long id) {
-		return activeRepository.findById(id).orElseThrow();
+		Active exampleActive = new Active();
+		exampleActive.setId(id);
+		exampleActive.setActive(true);
+		Example<Active> example = Example.of(exampleActive);
+		return activeRepository.findOne(example).orElseThrow();
 	}
 
 	public Long countActivesInProject(Project project) {
@@ -84,9 +92,16 @@ public class ActiveService {
 	}
 
 	public List<ActiveUsers> getActiveUsersFromCreate(List<ActiveUsersCreateDto> ls, Project project) {
+		if (ls == null || ls.isEmpty()) {
+			return null;
+		}
 		List<String> usernamesInProject = projectService.usernamesInProject(project);
 		return ls.stream().map(x -> mapActiveUserCreateDtoToActiveUser(x, usernamesInProject))
 				.collect(Collectors.toList());
+	}
+
+	public void saveActiveUsersFromCreate(List<ActiveUsers> activeUsers, Active active) {
+		activeUsers.stream().map(x -> activeUsersRepository.save(x));
 	}
 
 	/*
@@ -149,10 +164,14 @@ public class ActiveService {
 		Project project = projectService.findProjectById(activeCreateDto.getProjectId());
 		projectService.verifyOwnerOrAdmin(project);
 
+		// To must saved in activeUsersRepository
+		List<ActiveUsersCreateDto> activeUsersCreateDto = activeCreateDto.getActiveUsers();
+		activeCreateDto.setActiveUsers(null);
+
 		// Creation
 		Active active = modelMapper.map(activeCreateDto, Active.class);
 		active.setId(null);
-		active.setCode(countActivesInProject(project));
+		active.setCode(countActivesInProject(project) + 1);
 		active.setActive(true);
 		active.setCreationDate(new Date());
 		active.setCreatedBy(userService.getCurrentUser());
@@ -160,7 +179,7 @@ public class ActiveService {
 		active.setModifiedBy(userService.getCurrentUser());
 		active.setProject(project);
 		active.setChildren(getChildrenFromCreate(activeCreateDto.getChildren()));
-		active.setActiveUsers(getActiveUsersFromCreate(activeCreateDto.getActiveUsers(), project));
+		active.setActiveUsers(getActiveUsersFromCreate(activeUsersCreateDto, project));
 
 		// Save
 		activeRepository.save(active);
@@ -179,10 +198,14 @@ public class ActiveService {
 
 		// Permissions
 		projectService.verifyOwnerOrAdmin(oldActive.getProject());
+		
+		// To must saved in activeUsersRepository
+		List<ActiveUsersCreateDto> activeUsersCreateDto = activeUpdateDto.getActiveUsers();
+		activeUpdateDto.setActiveUsers(null);
 
-		// Update
+		// Update & fetch from previous
 		Active newActive = modelMapper.map(activeUpdateDto, Active.class);
-		newActive.setId(oldActive.getId());
+		newActive.setCode(oldActive.getCode());
 		newActive.setCreationDate(oldActive.getCreationDate());
 		newActive.setActive(oldActive.getActive());
 		newActive.setCreatedBy(oldActive.getCreatedBy());
@@ -191,7 +214,7 @@ public class ActiveService {
 
 		// Create from scratch
 		newActive.setChildren(getChildrenFromCreate(activeUpdateDto.getChildren()));
-		newActive.setActiveUsers(getActiveUsersFromCreate(activeUpdateDto.getActiveUsers(), oldActive.getProject()));
+		newActive.setActiveUsers(getActiveUsersFromCreate(activeUsersCreateDto, oldActive.getProject()));
 
 		// Save
 		activeRepository.save(newActive);

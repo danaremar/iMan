@@ -11,6 +11,7 @@ import javax.persistence.Table;
 
 import org.hibernate.validator.constraints.Length;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import com.iman.model.users.User;
 
@@ -20,26 +21,31 @@ import lombok.Data;
 @Data
 @Table(name = "active_users", indexes = { @Index(columnList = "status"), @Index(columnList = "ips") })
 public class ActiveUsers {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
+
 	@Length(max = 50)
 	private String status;
-	
+
 	@Length(max = 255)
 	private String serial;
-	
+
 	@Length(max = 255)
 	private String notes;
-	
+
 	@Length(max = 255)
 	private String ips;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "user_id")
 	@JsonIncludeProperties({ "username", "imageUid", "active" })
 	private User user;
-	
+
+	@JsonIgnore
+	@ManyToOne
+	@JoinColumn(name = "active_id")
+	private Active active;
+
 }
