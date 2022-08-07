@@ -22,7 +22,7 @@ export class EffortReportService {
     */
 
     public getEffortReportBySprintId(sprintId: number): Observable<any> {
-        var url = this.hostUrl + 'effort/' + sprintId
+        let url = this.hostUrl + 'effort/' + sprintId
         return this.httpClient.get<EffortReport>(url)
     }
 
