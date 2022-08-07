@@ -73,7 +73,7 @@ public class IncidentRestController {
 	}
 	
 	@GetMapping(value = "/project/{projectId}")
-	public ResponseEntity<Object> getIncidentsByProject(IncidentSearch incidentSearch,
+	public ResponseEntity<Object> getIncidentsByProject(@Valid IncidentSearch incidentSearch,
 			@PathVariable Long projectId, Pageable pageable) {
 		try {
 			Page<Incident> incidentPage = incidentService.findIncidents(incidentSearch, projectId, pageable);

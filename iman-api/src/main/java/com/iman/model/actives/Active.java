@@ -112,7 +112,7 @@ public class Active {
 
 	@ManyToMany
 	@JoinTable(name = "active_children")
-	@JsonIncludeProperties({ "id", "code", "name", "active" })
+	@JsonIncludeProperties({ "id", "code", "name", "active", "children" })
 	private List<Active> children;
 
 	@ManyToMany

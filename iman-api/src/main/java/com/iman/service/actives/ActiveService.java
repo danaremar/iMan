@@ -67,6 +67,28 @@ public class ActiveService {
 		return activeRepository.count(example);
 	}
 
+	public List<Active> getChildrenFromCreate(List<Long> childrens) {
+		return childrens.stream().map(this::findVerifiedActiveById).collect(Collectors.toList());
+	}
+
+	public ActiveUsers mapActiveUserCreateDtoToActiveUser(ActiveUsersCreateDto activeUsersCreateDto,
+			List<String> usernamesInProject) {
+		ActiveUsers activeUsers = modelMapper.map(activeUsersCreateDto, ActiveUsers.class);
+		if (!usernamesInProject.isEmpty() && StringUtils.isNotBlank(activeUsersCreateDto.getUsername())
+				&& usernamesInProject.contains(activeUsersCreateDto.getUsername())) {
+			activeUsers.setUser(userService.findUserByUsername(activeUsersCreateDto.getUsername()));
+		} else {
+			activeUsers.setUser(null);
+		}
+		return activeUsers;
+	}
+
+	public List<ActiveUsers> getActiveUsersFromCreate(List<ActiveUsersCreateDto> ls, Project project) {
+		List<String> usernamesInProject = projectService.usernamesInProject(project);
+		return ls.stream().map(x -> mapActiveUserCreateDtoToActiveUser(x, usernamesInProject))
+				.collect(Collectors.toList());
+	}
+
 	/*
 	 * FIND BY FILTER, SORTING & PAGING
 	 * 
@@ -120,33 +142,11 @@ public class ActiveService {
 	 * 
 	 */
 
-	public List<Active> getChildrenFromCreate(List<Long> childrens) {
-		return childrens.stream().map(this::findVerifiedActiveById).collect(Collectors.toList());
-	}
-
-	public ActiveUsers mapActiveUserCreateDtoToActiveUser(ActiveUsersCreateDto activeUsersCreateDto,
-			List<String> usernamesInProject) {
-		ActiveUsers activeUsers = modelMapper.map(activeUsersCreateDto, ActiveUsers.class);
-		if (!usernamesInProject.isEmpty() && StringUtils.isNotBlank(activeUsersCreateDto.getUsername())
-				&& usernamesInProject.contains(activeUsersCreateDto.getUsername())) {
-			activeUsers.setUser(userService.findUserByUsername(activeUsersCreateDto.getUsername()));
-		} else {
-			activeUsers.setUser(null);
-		}
-		return activeUsers;
-	}
-
-	public List<ActiveUsers> getActiveUsersFromCreate(List<ActiveUsersCreateDto> ls, Project project) {
-		List<String> usernamesInProject = projectService.usernamesInProject(project);
-		return ls.stream().map(x -> mapActiveUserCreateDtoToActiveUser(x, usernamesInProject))
-				.collect(Collectors.toList());
-	}
-
 	@Transactional
-	public void createActive(ActiveCreateDto activeCreateDto, Long projectId) {
+	public void createActive(ActiveCreateDto activeCreateDto) {
 
 		// Permissions
-		Project project = projectService.findProjectById(projectId);
+		Project project = projectService.findProjectById(activeCreateDto.getProjectId());
 		projectService.verifyOwnerOrAdmin(project);
 
 		// Creation
@@ -208,15 +208,15 @@ public class ActiveService {
 
 		// Get active
 		Active active = findActiveById(activeId);
-		
+
 		// Permissions
 		projectService.verifyOwnerOrAdmin(active.getProject());
-		
+
 		// Update
 		active.setActive(false);
 		active.setLastModification(new Date());
 		active.setModifiedBy(userService.getCurrentUser());
-		
+
 		// Save
 		activeRepository.save(active);
 	}
