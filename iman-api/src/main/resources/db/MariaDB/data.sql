@@ -98,3 +98,16 @@ INSERT INTO incident (id, affects, `date`, description, estimated_time, priority
 -- INCIDENT UPDATE
 INSERT INTO incident_update (id, affects, `date`, description, estimated_time, priority, status, assigned_user_id, user_id, incident_id) VALUES(1, 'Scope & €', '2022-02-06 19:49:50.562', 'Image is not updated so well', 12.0, 1, 'To do', 1, 1, 1);
 INSERT INTO incident_update (id, affects, `date`, description, estimated_time, priority, status, assigned_user_id, user_id, incident_id) VALUES(2, NULL, '2022-02-06 19:55:22.900', 'Jysus is going to solve this', NULL, NULL, 'In progress', 3, 1, 1);
+
+
+-- ACTIVES
+INSERT INTO active (id, active, code, company, cost, cpe, cpe_type, creation_date, description, end_adquisition, end_of_life, importance, last_modification, location, name, periodicity, product, start_adquisition, subscription_type, `type`, version, created_by_user_id, modified_by_user_id, project_id) VALUES(1, 1, 1, 'Huawei', 600.0, 'cpe:2.3:a:huawei:pcmanager:10.0.5.51:*:*:*:*:*:*:*', 'CPE 2.3', '2022-08-07 16:15:33.334', 'Personal laptop', NULL, NULL, 'High', '2022-08-07 16:15:33.336', 'Seville', 'Matebook D14', 'Once', 'Matebook', '2021-08-07 12:37:55.714', NULL, 'Hardware/Laptop', 'D14 8GB 512GB', 1, 1, 1);
+INSERT INTO active (id, active, code, company, cost, cpe, cpe_type, creation_date, description, end_adquisition, end_of_life, importance, last_modification, location, name, periodicity, product, start_adquisition, subscription_type, `type`, version, created_by_user_id, modified_by_user_id, project_id) VALUES(2, 1, 2, 'Microsoft', 5.0, 'cpe:2.3:o:microsoft:windows_11:22H1:*:*:*:*:*:x64:*', 'CPE 2.3', '2022-08-07 17:09:23.086', 'Main Operating System', NULL, NULL, 'High', '2022-08-07 17:09:23.451', 'Seville', 'Personal Windows 11', 'Once', 'Windows 11', '2021-08-07 12:37:55.714', NULL, 'Software/Operating system', '22H1', 1, 1, 1);
+
+
+-- ACTIVES USERS
+INSERT INTO active_users (id, ips, notes, serial, status, active_id, user_id) VALUES(1, '192.168.1.38', '', '', 'New', NULL, 1);
+
+
+-- ACTIVE CHILDRENS
+INSERT INTO active_children (active_id, children_id) VALUES(1, 2);

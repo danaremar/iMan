@@ -26,10 +26,10 @@ export class GanttService {
     getGanttDate(date: Date): string {
         let datePipe = new DatePipe('en-US');
         if (date) {
-            var strDate = datePipe.transform(date, 'dd-MM-yyyy')
+            let strDate = datePipe.transform(date, 'dd-MM-yyyy')
             return strDate ? strDate : ''
         } else {
-            var strTodayDate = datePipe.transform(new Date(), 'dd-MM-yyyy')
+            let strTodayDate = datePipe.transform(new Date(), 'dd-MM-yyyy')
             return strTodayDate ? strTodayDate : ''
         }
     }
@@ -45,7 +45,7 @@ export class GanttService {
 
     // GET GANTT LINKS
     getGanttLinks(tasks: Array<KanbanTask>): any {
-        var links: Array<Link> = []
+        let links: Array<Link> = []
         tasks.forEach(task => task.children.forEach(x => links.push(new Link(links.length, task.id, x.id, '0'))))
         return links
     }

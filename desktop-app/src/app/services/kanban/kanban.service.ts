@@ -28,45 +28,45 @@ export class KanbanService {
 
     // GET ALL
     public getAllKanbanBySprintId(sprintId: number): Observable<any> {
-        var url = this.hostUrl + 'sprint/' + sprintId
+        let url = this.hostUrl + 'sprint/' + sprintId
         return this.httpClient.get<KanbanColumnShow>(url)
     }
 
 
     // COLUMNS
     public createKanbanColumn(kanbanColumn: KanbanColumnCreate): Observable<any> {
-        var url = this.kanbanColumnUrl
+        let url = this.kanbanColumnUrl
         return this.httpClient.post<KanbanColumnCreate>(url, kanbanColumn)
     }
     public updateKanbanColumn(kanbanColumn: KanbanColumnUpdate): Observable<any> {
-        var url = this.kanbanColumnUrl
+        let url = this.kanbanColumnUrl
         return this.httpClient.put<KanbanColumnUpdate>(url, kanbanColumn)
     }
     public disableKanbanColumn(columnId: number) {
-        var url = this.kanbanColumnUrl + columnId + '/disable'
+        let url = this.kanbanColumnUrl + columnId + '/disable'
         return this.httpClient.put<any>(url, undefined)
     }
 
 
     // TASKS
     public getAllKanbanTasksBySprintId(sprintId: number): Observable<any> {
-        var url = this.hostUrl + 'task/sprint/' + sprintId
+        let url = this.hostUrl + 'task/sprint/' + sprintId
         return this.httpClient.get<KanbanTask>(url)
     }
     public createKanbanTask(kanbanTask: KanbanTaskCreate): Observable<any> {
-        var url = this.kanbanTaskUrl
+        let url = this.kanbanTaskUrl
         return this.httpClient.post<KanbanTaskCreate>(url, kanbanTask)
     }
     public updateKanbanTask(kanbanTask: KanbanTaskUpdate): Observable<any> {
-        var url = this.kanbanTaskUrl
+        let url = this.kanbanTaskUrl
         return this.httpClient.put<KanbanTaskUpdate>(url, kanbanTask)
     }
     public disableKanbanTask(kanbanTaskId: number): Observable<any> {
-        var url = this.kanbanTaskUrl + kanbanTaskId + '/disable'
+        let url = this.kanbanTaskUrl + kanbanTaskId + '/disable'
         return this.httpClient.put<any>(url, undefined)
     }
     public moveKanbanTask(kanbanTask: KanbanTaskMove): Observable<any> {
-        var url = this.kanbanTaskUrl + 'move'
+        let url = this.kanbanTaskUrl + 'move'
         return this.httpClient.put<KanbanTaskMove>(url, kanbanTask)
     }
 

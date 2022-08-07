@@ -23,37 +23,37 @@ export class SprintService {
     * 
     */
     public createSprint(sprint: SprintCreate): Observable<any> {
-        var url = this.hostUrl
+        let url = this.hostUrl
         return this.httpClient.post<SprintCreate>(url, sprint)
     }
 
     public updateSprint(sprint: SprintUpdate): Observable<any> {
-        var url = this.hostUrl
+        let url = this.hostUrl
         return this.httpClient.put<SprintUpdate>(url, sprint)
     }
 
     public deleteSprint(sprintId: number): Observable<any> {
-        var url = this.hostUrl + sprintId
+        let url = this.hostUrl + sprintId
         return this.httpClient.delete<any>(url)
     }
 
     public closeSprint(sprintId: number): Observable<any> {
-        var url = this.hostUrl + sprintId + '/close'
+        let url = this.hostUrl + sprintId + '/close'
         return this.httpClient.put<any>(url,undefined)
     }
 
     public disableSprint(sprintId: number): Observable<any> {
-        var url = this.hostUrl + sprintId + '/disable'
+        let url = this.hostUrl + sprintId + '/disable'
         return this.httpClient.put<any>(url,undefined)
     }
 
     public startSprint(sprintId: number): Observable<any> {
-        var url = this.hostUrl + sprintId + '/start'
+        let url = this.hostUrl + sprintId + '/start'
         return this.httpClient.put<any>(url,undefined)
     }
 
     public sprintFromProject(projectId: number): Observable<any> {
-        var url = this.hostUrl + 'project/' + projectId
+        let url = this.hostUrl + 'project/' + projectId
         return this.httpClient.get<SprintShow>(url)
     }
 

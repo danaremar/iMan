@@ -56,6 +56,18 @@ public class ProjectService {
 	public void verifyUserRelatedWithProject(Project project) {
 		verify(project, List.of(0,1,2,3));
 	}
+	
+	public List<User> usersInProject(Project project) {
+		return project.getProjectRoles().parallelStream()
+				.map(x->x.getUser())
+				.collect(Collectors.toList());
+	}
+	
+	public List<String> usernamesInProject(Project project) {
+		return usersInProject(project).stream()
+				.map(x->x.getUsername())
+				.collect(Collectors.toList());
+	}
 
 	@Transactional
 	public ProjectRole findProjectRoleById(Long id) {

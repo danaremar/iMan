@@ -10,7 +10,7 @@ export class InterceptorService implements HttpInterceptor {
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     
-    var newReq = req
+    let newReq = req
     const token = this.tokenService.getToken()
     if(token != null){
       newReq = req.clone({ headers: req.headers.set('Authorization', 'Bearer ' + token) })

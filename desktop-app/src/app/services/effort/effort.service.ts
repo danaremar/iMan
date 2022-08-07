@@ -23,39 +23,39 @@ export class EffortService {
 
     // GET
     public getAllMyEfforts(): Observable<any> {
-        var url = this.hostUrl
+        let url = this.hostUrl
         return this.httpClient.get<Effort>(url)
     }
     public getAllEffortsByTaskId(taskId: number): Observable<any> {
-        var url = this.hostUrl + 'task/' + taskId
+        let url = this.hostUrl + 'task/' + taskId
         return this.httpClient.get<Effort>(url)
     }
     public getActiveEffort(): Observable<any> {
-        var url = this.hostUrl + 'active/'
+        let url = this.hostUrl + 'active/'
         return this.httpClient.get<Effort>(url)
     }
 
     // START
     public startEffort(effortStart: EffortStart): Observable<any> {
-        var url = this.hostUrl
+        let url = this.hostUrl
         return this.httpClient.post<EffortStart>(url, effortStart)
     }
 
     // END
     public endEffort(effortId: number): Observable<any> {
-        var url = this.hostUrl + effortId + '/end'
+        let url = this.hostUrl + effortId + '/end'
         return this.httpClient.put<any>(url, undefined)
     }
 
     // UPDATE
     public updateEffort(effortUpdate: EffortUpdate): Observable<any> {
-        var url = this.hostUrl
+        let url = this.hostUrl
         return this.httpClient.put<EffortUpdate>(url, effortUpdate)
     }
 
     // DELETE
     public deleteEffort(effortId: number): Observable<any> {
-        var url = this.hostUrl + effortId
+        let url = this.hostUrl + effortId
         return this.httpClient.delete<any>(url)
     }
 

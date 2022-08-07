@@ -29,19 +29,19 @@ export class UserService {
 
     // GET
     public getMyProfile(): Observable<any> {
-        var url = this.hostUrl
+        let url = this.hostUrl
         return this.httpClient.get<MyUser>(url)
     }
 
     // UPDATE
     public updateProfile(userUpdate: UserUpdate): Observable<any> {
-        var url = this.hostUrl
+        let url = this.hostUrl
         return this.httpClient.put<UserUpdate>(url, userUpdate)
     }
 
     // DELETE
     public deleteUserProfile(): Observable<any> {
-        var url = this.hostUrl
+        let url = this.hostUrl
         return this.httpClient.delete<any>(url)
     }
 
@@ -75,7 +75,7 @@ export class UserService {
     public reloadProfileImage(): void {
         this.getMyProfile().subscribe(
             data => {
-                var profileImageUid = data.imageUid
+                let profileImageUid = data.imageUid
                 this.setImage(profileImageUid ? profileImageUid : null)
             },
             res => {
@@ -87,7 +87,7 @@ export class UserService {
 
     // UPLOAD REMOTE
     public uploadUserImageProfile(profileImage: File): Observable<any> {
-        var url = this.hostUrl + 'image'
+        let url = this.hostUrl + 'image'
         const formData: FormData = new FormData()
         formData.append('image', profileImage)
         return this.httpClient.post<any>(url, formData)
@@ -95,7 +95,7 @@ export class UserService {
 
     // DELETE REMOTE
     public deleteUserImageProfile(): Observable<any> {
-        var url = this.hostUrl + 'image'
+        let url = this.hostUrl + 'image'
         return this.httpClient.delete<any>(url)
     }
 
