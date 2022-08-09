@@ -24,6 +24,8 @@ import { GanttComponent } from './components/submodules/gantt/gantt.component';
 import { IncidentComponent } from './components/submodules/incident/incident.component';
 import { AgGridModule } from 'ag-grid-angular';
 import { TaskComponent } from './components/submodules/kanban/task/task.component';
+import { SecurityComponent } from './components/submodules/security/security.component';
+import { ActiveComponent } from './components/submodules/security/active/active.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +41,9 @@ import { TaskComponent } from './components/submodules/kanban/task/task.componen
     SprintComponent,
     GanttComponent,
     IncidentComponent,
-    TaskComponent
+    TaskComponent,
+    SecurityComponent,
+    ActiveComponent
   ],
   imports: [
     DragDropModule,
