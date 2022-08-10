@@ -54,7 +54,7 @@ export class ActiveComponent extends ImanSubmodule implements OnInit {
             sortable: true,
             filter: true,
             resizable: true,
-            valueFormatter: (params: { data: ActiveListDto }) => this.formatDateAgGrid(params.data, params.data.creationDate)
+            valueFormatter: (params: { data: ActiveListDto }) => params.data!=undefined?this.formatDateAgGrid(params.data.creationDate):''
         },
         {
             headerName: "Created by",
@@ -62,7 +62,7 @@ export class ActiveComponent extends ImanSubmodule implements OnInit {
             sortable: true,
             filter: true,
             resizable: true,
-            valueFormatter: (params: { data: ActiveListDto }) => this.formatUsernameAgGrid(params.data, params.data.createdBy)
+            valueFormatter: (params: { data: ActiveListDto }) => params.data!=undefined?this.formatUsernameAgGrid(params.data.createdBy):''
         },
         {
             headerName: "Last update",
@@ -70,7 +70,7 @@ export class ActiveComponent extends ImanSubmodule implements OnInit {
             sortable: true,
             filter: true,
             resizable: true,
-            valueFormatter: (params: { data: ActiveListDto }) => this.formatDateAgGrid(params.data, params.data.lastModification)
+            valueFormatter: (params: { data: ActiveListDto }) => params.data!=undefined?this.formatDateAgGrid(params.data.lastModification):''
         },
         {
             headerName: "Modified by",
@@ -78,7 +78,7 @@ export class ActiveComponent extends ImanSubmodule implements OnInit {
             sortable: true,
             filter: true,
             resizable: true,
-            valueFormatter: (params: { data: ActiveListDto }) => this.formatUsernameAgGrid(params.data, params.data.modifiedBy)
+            valueFormatter: (params: { data: ActiveListDto }) => params.data!=undefined?this.formatUsernameAgGrid(params.data.modifiedBy):''
         },
         {
             headerName: "Type",
@@ -135,7 +135,7 @@ export class ActiveComponent extends ImanSubmodule implements OnInit {
             sortable: true,
             filter: true,
             resizable: true,
-            valueFormatter: (params: { data: ActiveListDto }) => this.formatDateAgGrid(params.data, params.data.startAdquisition)
+            valueFormatter: (params: { data: ActiveListDto }) => params.data!=undefined?this.formatDateAgGrid(params.data.startAdquisition):''
         },
         {
             headerName: "End adquisition",
@@ -143,7 +143,7 @@ export class ActiveComponent extends ImanSubmodule implements OnInit {
             sortable: true,
             filter: true,
             resizable: true,
-            valueFormatter: (params: { data: ActiveListDto }) => this.formatDateAgGrid(params.data, params.data.endAdquisition)
+            valueFormatter: (params: { data: ActiveListDto }) => params.data!=undefined?this.formatDateAgGrid(params.data.endAdquisition):''
         },
         {
             headerName: "End of life",
@@ -151,7 +151,7 @@ export class ActiveComponent extends ImanSubmodule implements OnInit {
             sortable: true,
             filter: true,
             resizable: true,
-            valueFormatter: (params: { data: ActiveListDto }) => this.formatDateAgGrid(params.data, params.data.endOfLife)
+            valueFormatter: (params: { data: ActiveListDto }) => params.data!=undefined?this.formatDateAgGrid(params.data.endOfLife):''
         },
         {
             headerName: "Cost",
@@ -270,7 +270,7 @@ export class ActiveComponent extends ImanSubmodule implements OnInit {
         METHODS -> FORMAT
     ***************************/
 
-    formatDateAgGrid(parent: any, date: Date | undefined): string {
+    formatDateAgGrid(date: Date | undefined): string {
         if (parent != undefined && date != undefined) {
             let dateStr = this.getFormatedDate(date, 'HH:mm:ss dd/MM/yyyy')
             return dateStr ? dateStr : ''
@@ -279,7 +279,7 @@ export class ActiveComponent extends ImanSubmodule implements OnInit {
         }
     }
 
-    formatUsernameAgGrid(parent: any, user: ShowUser | undefined): string {
+    formatUsernameAgGrid(user: ShowUser | undefined): string {
         if (parent != undefined && user != undefined && user.username != undefined) {
             return '@' + user.username
         } else {
