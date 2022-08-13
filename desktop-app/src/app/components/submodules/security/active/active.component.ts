@@ -200,8 +200,7 @@ export class ActiveComponent extends ImanSubmodule implements OnInit {
     ***************************/
 
     // open modal view
-    @ViewChild('openViewModal') openViewModal: any
-    @ViewChild('closebuttonModalView') closebuttonModalView: any
+    @ViewChild('openActiveViewModal') openActiveViewModal: any
 
     // list of actives
     actives: Array<ActiveListDto> = []
@@ -301,7 +300,7 @@ export class ActiveComponent extends ImanSubmodule implements OnInit {
         // load view/edit data
         this.loadSelectedData(event.data)
         // open modal
-        this.openViewModal.nativeElement.click()
+        this.openActiveViewModal.nativeElement.click()
     }
 
 

@@ -23,3 +23,10 @@
 
     </ag-grid-angular>
 </div>
+
+<button hidden type="button" #openActiveViewModal class="btn btn-danger" data-bs-target="#activeModal" data-bs-toggle="modal">
+</button>
+
+<active-modal-view [isEditable]="memberAccess" [selectedActive]="selectedActive" [projectId]="projectSelectedId"
+    [usersInProject]="usersInProject">
+</active-modal-view>

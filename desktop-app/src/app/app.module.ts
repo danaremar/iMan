@@ -26,6 +26,7 @@ import { AgGridModule } from 'ag-grid-angular';
 import { TaskComponent } from './components/submodules/kanban/task/task.component';
 import { SecurityComponent } from './components/submodules/security/security.component';
 import { ActiveComponent } from './components/submodules/security/active/active.component';
+import { ModalActive } from './components/submodules/security/active/modal/modal_active.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +44,8 @@ import { ActiveComponent } from './components/submodules/security/active/active.
     IncidentComponent,
     TaskComponent,
     SecurityComponent,
-    ActiveComponent
+    ActiveComponent,
+    ModalActive
   ],
   imports: [
     DragDropModule,

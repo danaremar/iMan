@@ -1,0 +1,22 @@
+<div class="modal fade" id="activeModal" tabindex="-1" aria-labelledby="activeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content bg-dark-5">
+            <div class="modal-body">
+                <div class="card overflow-auto">
+
+                    <!-- title -->
+                    <div class="d-flex">
+                        <div class="flex-grow-1 card-title mt-2">{{selectedActive!=undefined?(isEditing?'Update task':'#'
+                            + selectedActive.code + ': ' + selectedActive.name):'New active'}}</div>
+                        <div class="close-card-button" data-bs-dismiss="modal">
+                            <em class="bi bi-x"></em>
+                        </div>
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
