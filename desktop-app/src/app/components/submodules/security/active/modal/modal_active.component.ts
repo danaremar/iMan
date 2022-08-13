@@ -176,6 +176,11 @@ export class ModalActive implements OnInit {
         METHODS -> AUXILIAR
     ***************************/
 
+    // PROFILE IMAGE
+    public getProfileImageUrlFromUser(user: ShowUser): any {
+        return this.userService.getUrlFromProfile(user.imageUid)
+    }
+
 
     // CHILDRENS
 

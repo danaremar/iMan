@@ -6,14 +6,168 @@
 
                     <!-- title -->
                     <div class="d-flex">
-                        <div class="flex-grow-1 card-title mt-2">{{selectedActive!=undefined?(isEditing?'Update task':'#'
+                        <div class="flex-grow-1 card-title mt-2">{{selectedActive!=undefined?(isEditing?
+                            'Update active':'#'
                             + selectedActive.code + ': ' + selectedActive.name):'New active'}}</div>
                         <div class="close-card-button" data-bs-dismiss="modal">
                             <em class="bi bi-x"></em>
                         </div>
                     </div>
 
+                    <!-- errors -->
+                    <div *ngIf="containError" class="alert alert-danger mt-5">
+                        {{messageError}}
+                    </div>
 
+                    <!-- VIEW ACTIVE -->
+                    <div *ngIf="selectedActive!=undefined && !isEditing" class="container">
+
+                        <div class="row">
+
+                            <!-- DESCRIPTION -->
+                            <div class="col-lg-12 p-2">
+                                <div class="text-break my-auto">{{selectedActive.description}}</div>
+                            </div>
+
+                            <!-- PROPERTIES -->
+                            <div class="col-lg-12 d-flex">
+
+                                <!-- creation: user + date -->
+                                <div class="w-100 p-2 d-flex">
+                                    <div>Creation: </div>
+                                    <show-user [user]="selectedActive.createdBy"></show-user>
+                                    <div class="ms-2">({{selectedActive.creationDate}})</div>
+                                </div>
+
+                                <!-- modification: user + date -->
+                                <div class="w-100 p-2 d-flex">
+                                    <div>Modified: </div>
+                                    <show-user [user]="selectedActive.modifiedBy"></show-user>
+                                    <div class="ms-2">({{selectedActive.lastModification}})</div>
+                                </div>
+
+                                <!-- type -->
+                                <div class="w-50 d-flex" *ngIf="selectedActive.type!=undefined">
+                                    <div>Type: {{selectedActive.type}}</div>
+                                </div>
+
+                                <!-- company -->
+                                <div class="w-50 d-flex" *ngIf="selectedActive.company!=undefined">
+                                    <div>Company: {{selectedActive.company}}</div>
+                                </div>
+
+                                <!-- product -->
+                                <div class="w-50 d-flex" *ngIf="selectedActive.product!=undefined">
+                                    <div>Product: {{selectedActive.product}}</div>
+                                </div>
+
+                                <!-- version -->
+                                <div class="w-50 d-flex" *ngIf="selectedActive.version!=undefined">
+                                    <div>Version: {{selectedActive.version}}</div>
+                                </div>
+
+                                <!-- cpe -->
+                                <div class="w-50 d-flex" *ngIf="selectedActive.cpeType!=undefined && selectedActive.cpe!=undefined">
+                                    <div>{{selectedActive.cpeType}}: {{selectedActive.type}}</div>
+                                </div>
+
+                                <!-- importance -->
+                                <div class="w-50 d-flex" *ngIf="selectedActive.importance!=undefined">
+                                    <div>Type: {{selectedActive.importance}}</div>
+                                </div>
+
+                                <!-- startAdquisition -->
+                                <div class="w-50 d-flex" *ngIf="selectedActive.startAdquisition!=undefined">
+                                    <div>Start adquisition: {{selectedActive.startAdquisition}}</div>
+                                </div>
+
+                                <!-- endAdquisition -->
+                                <div class="w-50 d-flex" *ngIf="selectedActive.endAdquisition!=undefined">
+                                    <div>End adquisition: {{selectedActive.endAdquisition}}</div>
+                                </div>
+
+                                <!-- endOfLife -->
+                                <div class="w-50 d-flex" *ngIf="selectedActive.endOfLife!=undefined">
+                                    <div>End of life: {{selectedActive.endOfLife}}</div>
+                                </div>
+
+                                <!-- cost -->
+                                <div class="w-50 d-flex" *ngIf="selectedActive.cost!=undefined">
+                                    <div>Cost: {{selectedActive.cost}}</div>
+                                </div>
+
+                                <!-- periodicity -->
+                                <div class="w-50 d-flex" *ngIf="selectedActive.periodicity!=undefined">
+                                    <div>Periodicity: {{selectedActive.periodicity}}</div>
+                                </div>
+
+                                <!-- subscriptionType -->
+                                <div class="w-50 d-flex" *ngIf="selectedActive.subscriptionType!=undefined">
+                                    <div>Subscription type: {{selectedActive.subscriptionType}}</div>
+                                </div>
+
+                                <!-- location -->
+                                <div class="w-50 d-flex" *ngIf="selectedActive.location!=undefined">
+                                    <div>Location: {{selectedActive.location}}</div>
+                                </div>
+
+
+                            </div>
+
+                            <!-- USER ASSINGATIONS -->
+                            <div class="col-lg-6 d-flex" *ngFor="let a of selectedActive.activeUsers">
+
+                                <!-- USER -->
+                                <show-user [user]="a.user"></show-user>
+
+                                <!-- STATUS -->
+                                <div class="w-50 d-flex" *ngIf="a.status!=undefined">
+                                    <div>Status: {{a.status}}</div>
+                                </div>
+
+                                <!-- SERIAL -->
+                                <div class="w-50 d-flex" *ngIf="a.serial!=undefined">
+                                    <div>Serial: {{a.serial}}</div>
+                                </div>
+
+                                <!-- NOTES -->
+                                <div class="w-50 d-flex" *ngIf="a.notes!=undefined">
+                                    <div>Notes: {{a.notes}}</div>
+                                </div>
+
+                                <!-- IPs -->
+                                <div class="w-50 d-flex" *ngIf="a.ips!=undefined">
+                                    <div>IPs: {{a.ips}}</div>
+                                </div>
+
+                            </div>
+
+                            <!-- ACTIVE CHILDRENS -->
+                            <div class="col-lg-6 d-flex" *ngFor="let c of selectedActive.children">
+
+                                <!-- CODE + NAME -->
+                                <div class="w-50 d-flex" *ngIf="c.code!=undefined && c.name!=undefined">
+                                    <div>{{c.code}}: {{c.name}}</div>
+                                </div>
+
+                                <!-- DESCRIPTION -->
+                                <div class="w-50 d-flex" *ngIf="c.description!=undefined">
+                                    <div class="text-break">{{c.description}}</div>
+                                </div>
+
+                                <!-- ADD OTHER CHILDRENS -->
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <!-- CREATE/UPDATE -->
+                    <div *ngIf="selectedActive!=undefined || (isEditable && isEditing)" class="container">
+
+
+                    </div>
 
                 </div>
             </div>

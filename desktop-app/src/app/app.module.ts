@@ -27,6 +27,7 @@ import { TaskComponent } from './components/submodules/kanban/task/task.componen
 import { SecurityComponent } from './components/submodules/security/security.component';
 import { ActiveComponent } from './components/submodules/security/active/active.component';
 import { ModalActive } from './components/submodules/security/active/modal/modal_active.component';
+import { ShowUserPhoto } from './components/auxiliar/show_user/show_user.component';
 
 @NgModule({
   declarations: [
@@ -45,7 +46,8 @@ import { ModalActive } from './components/submodules/security/active/modal/modal
     TaskComponent,
     SecurityComponent,
     ActiveComponent,
-    ModalActive
+    ModalActive,
+    ShowUserPhoto
   ],
   imports: [
     DragDropModule,

@@ -222,17 +222,10 @@ export class TaskComponent implements OnInit {
         return datePipe.transform(date, format);
     }
 
-    // PROFILE IMAGE
-
-    public getProfileImageUrlFromUser(user: ShowUser): any {
-        return this.userService.getUrlFromProfile(user.imageUid)
-    }
-
     // USERS
-
     addAssignedUsername() {
-        var username = this.formAddAssignedUser.value.username
-        var u = this.usersInProject.find(x => x.username == username)
+        let username = this.formAddAssignedUser.value.username
+        let u = this.usersInProject.find(x => x.username == username)
         if (u !== undefined && this.assignedUsers.indexOf(u) == -1) {
             this.assignedUsers.push(u)
             this.formAddAssignedUser.reset()
@@ -250,8 +243,8 @@ export class TaskComponent implements OnInit {
     // CHILDRENS
 
     addChildrenTask() {
-        var children: number = this.formAddChildrenTask.value.children
-        var c = this.myTasks.find((x: KanbanTask) => x.id == children)
+        let children: number = this.formAddChildrenTask.value.children
+        let c = this.myTasks.find((x: KanbanTask) => x.id == children)
         if (c !== undefined && this.selectedChildrens.indexOf(c) == -1) {
             this.selectedChildrens.push(c)
             this.formAddChildrenTask.reset()
