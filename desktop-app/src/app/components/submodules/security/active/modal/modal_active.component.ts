@@ -1,3 +1,4 @@
+import { DatePipe } from "@angular/common";
 import { Component, Input, OnInit, ViewChild } from "@angular/core";
 import { FormArray, FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { ActiveListDto, ActiveShowChildrenDto, ActiveShowDto } from "src/app/models/actives/actives";
@@ -36,6 +37,10 @@ export class ModalActive implements OnInit {
     // form
     formActive: FormGroup
 
+    // search
+    childrenToAdd: ActiveShowChildrenDto | undefined
+    searchChildren: Array<ActiveShowChildrenDto> = []
+
     // close modal button
     @ViewChild('closeButtonActive') closeButtonTask: any
 
@@ -65,20 +70,17 @@ export class ModalActive implements OnInit {
             subscriptionType: ['', []],
             location: ['', []],
             children: this.formBuilder.array([]),
-            activeUsers: this.formBuilder.array([])
+            activeUsers: this.formBuilder.array([]),
         })
     }
-
-
-    ngOnInit(): void {
-        // NOTHING
-    }
-
-
 
     /***************************
         METHODS -> GENERAL
     ***************************/
+
+    ngOnInit(): void {
+        // NOTHING
+    }
 
     inputClass(form: FormGroup, property: string) {
         if (form?.get(property)?.touched && form?.get(property)?.valid) {
@@ -101,7 +103,7 @@ export class ModalActive implements OnInit {
         this.formActive.reset()
         if (this.selectedActive != undefined) {
             this.formActive = this.formBuilder.group({
-                name: [this.selectedActive.name, [Validators.required]],
+                name: [this.selectedActive.name, []],
                 description: [this.selectedActive.description, []],
                 type: [this.selectedActive.type, []],
                 company: [this.selectedActive.company, []],
@@ -176,6 +178,13 @@ export class ModalActive implements OnInit {
         METHODS -> AUXILIAR
     ***************************/
 
+
+    // TIME
+    getFormatedDate(date: Date, format: string) {
+        let datePipe = new DatePipe('en-US');
+        return datePipe.transform(date, format);
+    }
+
     // PROFILE IMAGE
     public getProfileImageUrlFromUser(user: ShowUser): any {
         return this.userService.getUrlFromProfile(user.imageUid)
@@ -184,17 +193,31 @@ export class ModalActive implements OnInit {
 
     // CHILDRENS
 
+    searchChildrenByName(childName: any) {
+        if (this.projectId) {
+            this.activeService.findActivesByProject(this.projectId, 0, 5, [], { name: { filterType: 'text', type: 'contains', filter: childName.value } }, []).subscribe(
+                data => { this.searchChildren = data.content })
+        }
+    }
+
+
     get childrens(): FormArray {
         return this.formActive.get("children") as FormArray
     }
 
-    addChildrenForm(a: ActiveShowChildrenDto) {
-        let fg = this.formBuilder.group({
-            id: [a.id, []],
-            code: [a.code, []],
-            name: [a.name, []],
-        })
-        this.childrens.push(fg)
+    addChildrenFormInput() {
+        this.addChildrenForm(this.childrenToAdd)
+    }
+
+    addChildrenForm(c: ActiveShowChildrenDto | undefined) {
+        if(c) {
+            let fg = this.formBuilder.group({
+                id: [c.id, []],
+                code: [c.code, []],
+                name: [c.name, []],
+            })
+            this.childrens.push(fg)
+        }
     }
 
     removeChildrenForm(i: number) {

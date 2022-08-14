@@ -1,10 +1,10 @@
 <div class="d-flex" *ngIf="user!=undefined" ngbTooltip="@{{username}}" placement="right" [openDelay]="300">
     <ng-container *ngIf="showProfileImage">
         <ng-container *ngIf="imageUrl!=''; else showIconProfile">
-            <img class="profile-image my-2 me-1" src="{{imageUrl}}" alt="@{{username}} profile image">
+            <img class="profile-image my-2 me-2" src="{{imageUrl}}" alt="@{{username}} profile image">
         </ng-container>
         <ng-template #showIconProfile>
-            <em class="bi bi-person-circle me-1" style="font-size: 35px !important;"></em>
+            <em class="bi bi-person-circle me-2" style="font-size: 35px !important;"></em>
         </ng-template>
     </ng-container>
     <ng-container *ngIf="showUsername">
