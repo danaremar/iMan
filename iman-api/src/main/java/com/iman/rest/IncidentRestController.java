@@ -10,7 +10,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,12 +30,13 @@ import com.iman.model.incident.IncidentUpdateShowDto;
 import com.iman.model.util.Message;
 import com.iman.service.incident.IncidentService;
 
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/incident")
-@Api(tags = "Incident")
-@CrossOrigin
+@Tag(name = "Incident")
+@SecurityRequirement(name = "Bearer Authentication")
 public class IncidentRestController {
 
 	@Autowired

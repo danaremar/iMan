@@ -13,11 +13,13 @@ import com.iman.model.reports.effort.EffortReport;
 import com.iman.model.util.Message;
 import com.iman.service.reports.ReportEffortService;
 
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/reports")
-@Api(tags = "Reports")
+@Tag(name = "Reports")
+@SecurityRequirement(name = "Bearer Authentication")
 @CrossOrigin
 public class ReportRestController {
 	

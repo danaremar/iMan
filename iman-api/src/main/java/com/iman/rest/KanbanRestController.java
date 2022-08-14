@@ -9,7 +9,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,12 +28,13 @@ import com.iman.model.kanban.KanbanTaskUpdateDto;
 import com.iman.model.util.Message;
 import com.iman.service.kanban.KanbanService;
 
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/kanban")
-@Api(tags = "Kanban")
-@CrossOrigin
+@Tag(name = "Kanban")
+@SecurityRequirement(name = "Bearer Authentication")
 public class KanbanRestController {
 
 	@Autowired

@@ -31,10 +31,10 @@ import com.iman.security.jwt.JwtDto;
 import com.iman.security.jwt.JwtProvider;
 import com.iman.service.users.UserService;
 
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
-@Api(tags = "Login")
+@Tag(name = "Authentication")
 @RequestMapping
 @CrossOrigin
 public class AuthController {
