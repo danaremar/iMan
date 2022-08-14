@@ -106,7 +106,7 @@ INSERT INTO active (id, active, code, company, cost, cpe, cpe_type, creation_dat
 
 
 -- ACTIVES USERS
-INSERT INTO active_users (id, ips, notes, serial, status, active_id, user_id) VALUES(1, '192.168.1.38', '', '', 'New', NULL, 1);
+INSERT INTO active_users (id, ips, notes, serial, status, active_id, user_id) VALUES(1, '192.168.1.38', '', '', 'New', 1, 1);
 
 
 -- ACTIVE CHILDRENS
