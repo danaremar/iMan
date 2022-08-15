@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, ViewChild, ViewEncapsulation } from "@angular/core";
+import { AfterViewInit, Component, ViewChild, ViewEncapsulation } from "@angular/core";
 import { FormBuilder } from "@angular/forms";
 import { TokenService } from "src/app/services/authentication/token.service";
 import { EffortService } from "src/app/services/effort/effort.service";
@@ -33,11 +33,12 @@ export class GanttComponent extends ImanSubmodule implements AfterViewInit {
         this.loadTasks = true
         this.loadKanban = true
         this.loadMyProjects()
+        this.loadGantt()
+    }
 
+    loadGantt() {
         gantt.init(this.ganttContainer.nativeElement)
-
         gantt.config.sort = true
-
         gantt.config.columns = [
             { name: "text", label: "Task name", width: "*", resize: true },
             { name: "start_date", label: "Start", align: "center", resize: true },
@@ -48,9 +49,9 @@ export class GanttComponent extends ImanSubmodule implements AfterViewInit {
 
         // TASK RESIZE
         gantt.attachEvent("onBeforeTaskUpdate", (id: any, updateTask: any) => {
-            var selTask = this.getTaskById(id)
+            let selTask = this.getTaskById(id)
             if (selTask != undefined) {
-                var updTask = new KanbanTaskUpdate(selTask.id, selTask.title, selTask.description, selTask.estimatedTime, selTask.tags, selTask.importance,
+                let updTask = new KanbanTaskUpdate(selTask.id, selTask.title, selTask.description, selTask.estimatedTime, selTask.tags, selTask.importance,
                     updateTask.start_date, updateTask.end_date, selTask.assignedUsers.map(x => x.username), selTask.children.map(x => x.id))
                 this.kanbanService.updateKanbanTask(updTask).subscribe(
                     data => {
@@ -65,11 +66,11 @@ export class GanttComponent extends ImanSubmodule implements AfterViewInit {
 
         // LINK -> create
         gantt.attachEvent("onAfterLinkAdd", (id, item) => {
-            var selTask = this.getTaskById(item.source)
+            let selTask = this.getTaskById(item.source)
             if (selTask != undefined) {
-                var childrens = selTask.children.map(x => x.id)
+                let childrens = selTask.children.map(x => x.id)
                 childrens.push(item.target)
-                var updTask = new KanbanTaskUpdate(selTask.id, selTask.title, selTask.description, selTask.estimatedTime, selTask.tags, selTask.importance,
+                let updTask = new KanbanTaskUpdate(selTask.id, selTask.title, selTask.description, selTask.estimatedTime, selTask.tags, selTask.importance,
                     selTask.dueStartDate, selTask.dueEndDate, selTask.assignedUsers.map(x => x.username), childrens)
                 this.kanbanService.updateKanbanTask(updTask).subscribe(
                     data => {
@@ -85,12 +86,12 @@ export class GanttComponent extends ImanSubmodule implements AfterViewInit {
 
         // LINK -> delete
         gantt.attachEvent("onAfterLinkDelete", (id, item) => {
-            var selTask = this.getTaskById(item.source)
+            let selTask = this.getTaskById(item.source)
             if (selTask != undefined) {
-                var childrens = selTask.children.map(x => x.id)
-                var indexToRemove = childrens.indexOf(item.target)
+                let childrens = selTask.children.map(x => x.id)
+                let indexToRemove = childrens.indexOf(item.target)
                 childrens.splice(indexToRemove, 1)
-                var updTask = new KanbanTaskUpdate(selTask.id, selTask.title, selTask.description, selTask.estimatedTime, selTask.tags, selTask.importance,
+                let updTask = new KanbanTaskUpdate(selTask.id, selTask.title, selTask.description, selTask.estimatedTime, selTask.tags, selTask.importance,
                     selTask.dueStartDate, selTask.dueEndDate, selTask.assignedUsers.map(x => x.username), childrens)
                 this.kanbanService.updateKanbanTask(updTask).subscribe(
                     data => {
@@ -109,7 +110,6 @@ export class GanttComponent extends ImanSubmodule implements AfterViewInit {
             this.selectedTask = this.getTaskById(id)
             this.openTaskModal.nativeElement.click()
         },'')
-
     }
 
     addTask() {
@@ -125,9 +125,11 @@ export class GanttComponent extends ImanSubmodule implements AfterViewInit {
     }
 
     loadAfterTask() {
-        var ganttTask = this.ganttService.getGanttTasks(this.myTasks)
-        var ganttLinks = this.ganttService.getGanttLinks(this.myTasks)
+        
+        let ganttTask = this.ganttService.getGanttTasks(this.myTasks)
+        let ganttLinks = this.ganttService.getGanttLinks(this.myTasks)
         gantt.parse({ "data": ganttTask, "links": ganttLinks });
+        gantt.refreshData()
     }
 
 
