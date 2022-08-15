@@ -1,5 +1,5 @@
 import { DatePipe } from "@angular/common";
-import { Component, Input, OnInit, ViewChild } from "@angular/core";
+import { Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { KanbanTask, KanbanTaskChildrens, KanbanTaskCreate, KanbanTaskUpdate } from "src/app/models/kanban/kanbanTask";
 import { ShowUser } from "src/app/models/user/show-user";
@@ -12,7 +12,7 @@ import { UserService } from "src/app/services/user/user.service";
     templateUrl: './task.component.html',
     styleUrls: ['./task.component.css']
 })
-export class TaskComponent implements OnInit {
+export class TaskComponent implements OnInit, OnChanges {
 
     // user can edit?
     @Input()
@@ -27,7 +27,7 @@ export class TaskComponent implements OnInit {
     usersInProject: Array<ShowUser> = []
 
     @Input()
-    selectedKanbanColumnId: number = 0
+    selectedKanbanColumnId: number | undefined = 0
 
     // all my tasks in the sprint
     @Input()
@@ -82,9 +82,12 @@ export class TaskComponent implements OnInit {
 
     }
 
-
     ngOnInit(): void {
-        // NOTHING
+        this.buildForm()
+    }
+
+    ngOnChanges(_changes: SimpleChanges): void {
+        this.buildForm()
     }
 
     /***************************
@@ -131,6 +134,7 @@ export class TaskComponent implements OnInit {
         this.formAddAssignedUser.reset()
         this.selectedChildrens = []
         this.formAddChildrenTask.reset()
+        this.containError = false
     }
 
 
@@ -156,7 +160,7 @@ export class TaskComponent implements OnInit {
     ***************************/
 
     newTask() {
-        if (this.selectedChildrens) {
+        if (this.selectedChildrens && this.selectedKanbanColumnId) {
             let createTask: KanbanTaskCreate = new KanbanTaskCreate(this.formTask.value.title, this.formTask.value.description, this.formTask.value.estimatedTime, this.selectedKanbanColumnId, this.formTask.value.tags, this.formTask.value.importance, this.formTask.value.dueStartDate, this.formTask.value.dueEndDate, this.getUsernamesInArray(this.assignedUsers), this.getChildrenIdsInArray(this.selectedChildrens))
             this.kanbanService.createKanbanTask(createTask).subscribe({
                 next: (n) => {
@@ -198,7 +202,7 @@ export class TaskComponent implements OnInit {
     }
 
     handleError(e: any) {
-        var r = e.error.text
+        let r = e.error.text
         if (r == undefined) {
             r = 'Error produced'
         }
