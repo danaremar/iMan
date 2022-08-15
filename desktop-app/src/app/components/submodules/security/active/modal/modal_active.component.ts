@@ -1,6 +1,6 @@
 import { DatePipe } from "@angular/common";
 import { Component, Input, OnInit, ViewChild } from "@angular/core";
-import { FormArray, FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
 import { ActiveListDto, ActiveShowChildrenDto, ActiveShowDto } from "src/app/models/actives/actives";
 import { ActiveUsersShowDto } from "src/app/models/actives/user-actives";
 import { ShowUser } from "src/app/models/user/show-user";
@@ -36,9 +36,9 @@ export class ModalActive implements OnInit {
 
     // form
     formActive: FormGroup
+    formAddChild: FormGroup
 
     // search
-    childrenToAdd: ActiveShowChildrenDto | undefined
     searchChildren: Array<ActiveShowChildrenDto> = []
 
     // close modal button
@@ -71,6 +71,9 @@ export class ModalActive implements OnInit {
             location: ['', []],
             children: this.formBuilder.array([]),
             activeUsers: this.formBuilder.array([]),
+        })
+        this.formAddChild = this.formBuilder.group({
+            children: ['', []]
         })
     }
 
@@ -195,22 +198,32 @@ export class ModalActive implements OnInit {
 
     searchChildrenByName(childName: any) {
         if (this.projectId) {
-            this.activeService.findActivesByProject(this.projectId, 0, 5, [], { name: { filterType: 'text', type: 'contains', filter: childName.value } }, []).subscribe(
-                data => { this.searchChildren = data.content })
+            this.activeService.findActivesByProject(this.projectId, 0, 5, [], 
+                { name: { filterType: 'text', type: 'contains', filter: childName.value } }, 
+                [{field: "name"}]).subscribe(
+                    data => { this.searchChildren = data.content
+                })
         }
     }
-
 
     get childrens(): FormArray {
         return this.formActive.get("children") as FormArray
     }
 
     addChildrenFormInput() {
-        this.addChildrenForm(this.childrenToAdd)
+        if (this.projectId) {
+            let s: string = this.formAddChild.value.children
+            let c = s.split("#")[1].split(")")[0]
+            this.activeService.findActivesByProject(this.projectId, 0, 1, [], 
+                { code: { filterType: 'text', type: 'contains', filter: c } }, 
+                [{field: "code"}]).subscribe(
+                    data => { this.addChildrenForm(data.content[0])
+                })
+        }
     }
 
     addChildrenForm(c: ActiveShowChildrenDto | undefined) {
-        if(c) {
+        if (c) {
             let fg = this.formBuilder.group({
                 id: [c.id, []],
                 code: [c.code, []],

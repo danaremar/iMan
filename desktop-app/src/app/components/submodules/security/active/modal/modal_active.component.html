@@ -257,7 +257,7 @@
                             <div class="col-lg-12 d-flex my-3">
                                 <div class="my-auto me-2">Type:</div>
                                 <input class="form-control {{inputClass(formActive, 'type')}}" type="text"
-                                    formControlName="type" list="typeLs" maxlength="50"/>
+                                    formControlName="type" list="typeLs" maxlength="50" />
                                 <div class="invalid-feedback"
                                     *ngIf="formActive.get('type')?.touched && formActive.get('type')?.invalid">
                                     <div *ngIf="formActive.get('type')?.errors?.maxlength">
@@ -295,7 +295,7 @@
                             <div class="col-lg-12 d-flex my-3">
                                 <div class="my-auto me-2">Company:</div>
                                 <input class="form-control {{inputClass(formActive, 'company')}}" type="text"
-                                    formControlName="company" maxlength="50"/>
+                                    formControlName="company" maxlength="50" />
                                 <div class="invalid-feedback"
                                     *ngIf="formActive.get('company')?.touched && formActive.get('company')?.invalid">
                                     <div *ngIf="formActive.get('company')?.errors?.maxlength">
@@ -308,7 +308,7 @@
                             <div class="col-lg-12 d-flex my-3">
                                 <div class="my-auto me-2">Product:</div>
                                 <input class="form-control {{inputClass(formActive, 'product')}}" type="text"
-                                    formControlName="product" maxlength="50"/>
+                                    formControlName="product" maxlength="50" />
                                 <div class="invalid-feedback"
                                     *ngIf="formActive.get('product')?.touched && formActive.get('product')?.invalid">
                                     <div *ngIf="formActive.get('product')?.errors?.maxlength">
@@ -321,7 +321,7 @@
                             <div class="col-lg-12 d-flex my-3">
                                 <div class="my-auto me-2">Version:</div>
                                 <input class="form-control {{inputClass(formActive, 'version')}}" type="text"
-                                    formControlName="version" maxlength="50"/>
+                                    formControlName="version" maxlength="50" />
                                 <div class="invalid-feedback"
                                     *ngIf="formActive.get('version')?.touched && formActive.get('version')?.invalid">
                                     <div *ngIf="formActive.get('version')?.errors?.maxlength">
@@ -333,7 +333,8 @@
                             <!-- cpeType -->
                             <div class="col-lg-12 d-flex my-3">
                                 <div class="my-auto me-2">CPE type:</div>
-                                <select formControlName="cpeType" class="form-control {{inputClass(formActive, 'cpeType')}}">
+                                <select formControlName="cpeType"
+                                    class="form-control {{inputClass(formActive, 'cpeType')}}">
                                     <option>CPE 2.2</option>
                                     <option>CPE 2.3</option>
                                 </select>
@@ -343,7 +344,7 @@
                             <div class="col-lg-12 d-flex my-3">
                                 <div class="my-auto me-2">CPE:</div>
                                 <input class="form-control {{inputClass(formActive, 'cpe')}}" type="text"
-                                    formControlName="cpe" maxlength="255"/>
+                                    formControlName="cpe" maxlength="255" />
                                 <div class="invalid-feedback"
                                     *ngIf="formActive.get('cpe')?.touched && formActive.get('cpe')?.invalid">
                                     <div *ngIf="formActive.get('cpe')?.errors?.maxlength">
@@ -356,7 +357,7 @@
                             <div class="col-lg-12 d-flex my-3">
                                 <div class="my-auto me-2">Importance:</div>
                                 <input class="form-control {{inputClass(formActive, 'importance')}}" type="text"
-                                    formControlName="importance" list="importanceLs" maxlength="50"/>
+                                    formControlName="importance" list="importanceLs" maxlength="50" />
                                 <div class="invalid-feedback"
                                     *ngIf="formActive.get('importance')?.touched && formActive.get('importance')?.invalid">
                                     <div *ngIf="formActive.get('importance')?.errors?.maxlength">
@@ -376,7 +377,7 @@
                             <div class="col-lg-12 d-flex my-3">
                                 <div class="my-auto me-2">Location:</div>
                                 <input class="form-control {{inputClass(formActive, 'location')}}" type="text"
-                                    formControlName="location" maxlength="50"/>
+                                    formControlName="location" maxlength="50" />
                                 <div class="invalid-feedback"
                                     *ngIf="formActive.get('location')?.touched && formActive.get('location')?.invalid">
                                     <div *ngIf="formActive.get('location')?.errors?.maxlength">
@@ -406,7 +407,7 @@
                             <div class="col-lg-12 d-flex my-3">
                                 <div class="my-auto me-2">Periodicity:</div>
                                 <input class="form-control {{inputClass(formActive, 'periodicity')}}" type="text"
-                                    formControlName="periodicity" list="periodicityLs" maxlength="50"/>
+                                    formControlName="periodicity" list="periodicityLs" maxlength="50" />
                                 <div class="invalid-feedback"
                                     *ngIf="formActive.get('periodicity')?.touched && formActive.get('periodicity')?.invalid">
                                     <div *ngIf="formActive.get('periodicity')?.errors?.maxlength">
@@ -424,29 +425,31 @@
                             <!-- startAdquisition -->
                             <div class="col-lg-12 d-flex my-3">
                                 <div class="my-auto me-2">Start adquisition:</div>
-                                <input class="form-control {{inputClass(formActive, 'startAdquisition')}}" type="datetime-local"
-                                    formControlName="startAdquisition" placeholder="" min="1971-01-01"/>
+                                <input class="form-control {{inputClass(formActive, 'startAdquisition')}}"
+                                    type="datetime-local" formControlName="startAdquisition"
+                                    min="1971-01-01" />
                             </div>
 
                             <!-- endAdquisition -->
                             <div class="col-lg-12 d-flex my-3">
                                 <div class="my-auto me-2">End adquisition:</div>
-                                <input class="form-control {{inputClass(formActive, 'endAdquisition')}}" type="datetime-local"
-                                    formControlName="endAdquisition" placeholder=""  min="1971-01-01"/>
+                                <input class="form-control {{inputClass(formActive, 'endAdquisition')}}"
+                                    type="datetime-local" formControlName="endAdquisition"
+                                    min="1971-01-01" />
                             </div>
 
                             <!-- endOfLife -->
                             <div class="col-lg-12 d-flex my-3">
                                 <div class="my-auto me-2">End of life:</div>
-                                <input class="form-control {{inputClass(formActive, 'endOfLife')}}" type="datetime-local"
-                                    formControlName="endOfLife" placeholder="" min="1971-01-01"/>
+                                <input class="form-control {{inputClass(formActive, 'endOfLife')}}"
+                                    type="datetime-local" formControlName="endOfLife" min="1971-01-01" />
                             </div>
 
                             <!-- subscriptionType -->
                             <div class="col-lg-12 d-flex my-3">
                                 <div class="my-auto me-2">Subscription type:</div>
                                 <input class="form-control {{inputClass(formActive, 'subscriptionType')}}" type="text"
-                                    formControlName="subscriptionType" list="subscriptionTypeLs" maxlength="50"/>
+                                    formControlName="subscriptionType" list="subscriptionTypeLs" maxlength="50" />
                                 <div class="invalid-feedback"
                                     *ngIf="formActive.get('subscriptionType')?.touched && formActive.get('subscriptionType')?.invalid">
                                     <div *ngIf="formActive.get('subscriptionType')?.errors?.maxlength">
@@ -474,22 +477,47 @@
                             </div>
 
                             <!-- CHILDRENS -->
-                            <div class="col-lg-12 d-flex mt-4 mb-2">
-                                <em class="bi bi-diagram-2 my-auto me-3"></em>
-                                <div class="m-text my-auto">Childrens</div>
+                            <div class="col-lg-12">
+
+                                <!-- title -->
+                                <div class="col-lg-12 d-flex mt-4 mb-2">
+                                    <em class="bi bi-diagram-2 my-auto me-3"></em>
+                                    <div class="m-text my-auto">Childrens</div>
+                                </div>
+
+                                <!-- search -->
+                                <form [formGroup]="formAddChild" class="col-lg-12 d-flex mt-4 mb-2"
+                                    (ngSubmit)="addChildrenFormInput()">
+                                    <em class="bi bi-search bi-sm my-auto me-3"></em>
+                                    <input class="form-control" list="searchChildren" type="text"
+                                        (keyup)="searchChildrenByName($event.target)" formControlName="children" />
+                                    <datalist id="searchChildren">
+                                        <option *ngFor="let s of searchChildren"
+                                            [attr.data-value]="s.id+','+s.code+','+s.name">
+                                            {{s.name + ' (#'+s.code+')'}}
+                                        </option>
+                                    </datalist>
+                                    <button class="btn btn-success my-auto ms-3" [disabled]="!formAddChild.valid">
+                                        Add
+                                    </button>
+                                </form>
+
+                                <!-- show -->
+                                <div formArrayName="children">
+                                    <div *ngFor="let c of childrens.controls; let i = index" class="d-flex">
+                                        <!-- <div [formGroupName]="i">
+                                        <input type="text" formControlName="code">
+                                        <input type="text" formControlName="name">
+                                        </div> -->
+                                        <div class="my-auto">#{{childrens.controls[i].value.code}}: {{childrens.controls[i].value.name}}
+                                        </div>
+                                        <em class="bi bi-sm bi-trash-fill ms-auto" (click)="removeChildrenForm(i)"></em>
+                                    </div>
+                                </div>
+
                             </div>
 
-                            <!-- search -->
-                            <div class="col-lg-12 d-flex mt-4 mb-2">
-                                <em class="bi bi-search bi-sm my-auto me-3"></em>
-                                <input class="form-control" list="searchChildren" type="text"
-                                    (keyup)="searchChildrenByName($event.target)" [ngModel]="childrenToAdd" />
-                                <datalist id="searchChildren">
-                                    <option *ngFor="let s of searchChildren" [ngValue]="s" (value)="s">{{s.name + '
-                                        (#'+s.code+')'}}</option>
-                                </datalist>
-                                <em class="bi bi-plus bi-sm my-auto me-3" (click)="addChildrenFormInput()"></em>
-                            </div>
+
 
                             <!-- actions -->
                             <div class="col-lg-12 form-group d-flex flex-row-reverse mt-3">
