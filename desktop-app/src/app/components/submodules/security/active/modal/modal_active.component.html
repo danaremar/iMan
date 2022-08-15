@@ -218,7 +218,7 @@
                             <!-- name -->
                             <div class="col-lg-12 my-3 d-flex">
                                 <div class="my-auto me-2">Name:</div>
-                                <input class="form-control {{inputClass(formActive, 'name')}}" type="text" name="name"
+                                <input class="form-control {{inputClass(formActive, 'name')}}" type="text"
                                     formControlName="name" maxlength="50" minlength="2" />
                                 <div class="invalid-feedback" *ngIf="formActive.get('name')?.touched 
                                     && formActive.get('name')?.invalid">
@@ -238,8 +238,7 @@
                             <div class="col-lg-12 my-3">
                                 <div class="my-auto me-2">Description:</div>
                                 <textarea class="form-control {{inputClass(formActive, 'description')}}"
-                                    name="description" formControlName="description" maxlength="255"
-                                    rows="2"></textarea>
+                                    formControlName="description" maxlength="255" rows="2"></textarea>
                                 <div class="invalid-feedback" *ngIf="formActive.get('description')?.touched 
                                     && formActive.get('description')?.invalid">
                                     <div *ngIf="formActive.get('description')?.errors?.maxlength">
@@ -255,19 +254,218 @@
                             </div>
 
                             <!-- type -->
+                            <div class="col-lg-12 d-flex my-3">
+                                <div class="my-auto me-2">Type:</div>
+                                <input class="form-control {{inputClass(formActive, 'type')}}" type="text"
+                                    formControlName="type" list="typeLs" maxlength="50"/>
+                                <div class="invalid-feedback"
+                                    *ngIf="formActive.get('type')?.touched && formActive.get('type')?.invalid">
+                                    <div *ngIf="formActive.get('type')?.errors?.maxlength">
+                                        Only 50 characters are allowed
+                                    </div>
+                                </div>
+                                <datalist id="typeLs">
+                                    <option>Hardware</option>
+                                    <option>Hardware/Desktop computer</option>
+                                    <option>Hardware/Laptop</option>
+                                    <option>Hardware/IoT</option>
+                                    <option>Hardware/Network</option>
+                                    <option>Hardware/Server</option>
+                                    <option>Hardware/Screen</option>
+                                    <option>Hardware/Printer</option>
+                                    <option>Hardware/Speakers</option>
+                                    <option>Hardware/Mouse</option>
+                                    <option>Hardware/Keyboard</option>
+                                    <option>Hardware/Storage device</option>
+                                    <option>Software</option>
+                                    <option>Software/Operating system</option>
+                                    <option>Software/BIOS</option>
+                                    <option>Software/Application</option>
+                                    <option>Software/Website</option>
+                                    <option>Cloud</option>
+                                    <option>Cloud/Server</option>
+                                    <option>Cloud/SaaS</option>
+                                    <option>Cloud/PaaS</option>
+                                    <option>Service</option>
+                                    <option>Other</option>
+                                </datalist>
+                            </div>
+
                             <!-- company -->
+                            <div class="col-lg-12 d-flex my-3">
+                                <div class="my-auto me-2">Company:</div>
+                                <input class="form-control {{inputClass(formActive, 'company')}}" type="text"
+                                    formControlName="company" maxlength="50"/>
+                                <div class="invalid-feedback"
+                                    *ngIf="formActive.get('company')?.touched && formActive.get('company')?.invalid">
+                                    <div *ngIf="formActive.get('company')?.errors?.maxlength">
+                                        Only 50 characters are allowed
+                                    </div>
+                                </div>
+                            </div>
+
                             <!-- product -->
+                            <div class="col-lg-12 d-flex my-3">
+                                <div class="my-auto me-2">Product:</div>
+                                <input class="form-control {{inputClass(formActive, 'product')}}" type="text"
+                                    formControlName="product" maxlength="50"/>
+                                <div class="invalid-feedback"
+                                    *ngIf="formActive.get('product')?.touched && formActive.get('product')?.invalid">
+                                    <div *ngIf="formActive.get('product')?.errors?.maxlength">
+                                        Only 50 characters are allowed
+                                    </div>
+                                </div>
+                            </div>
+
                             <!-- version -->
+                            <div class="col-lg-12 d-flex my-3">
+                                <div class="my-auto me-2">Version:</div>
+                                <input class="form-control {{inputClass(formActive, 'version')}}" type="text"
+                                    formControlName="version" maxlength="50"/>
+                                <div class="invalid-feedback"
+                                    *ngIf="formActive.get('version')?.touched && formActive.get('version')?.invalid">
+                                    <div *ngIf="formActive.get('version')?.errors?.maxlength">
+                                        Only 50 characters are allowed
+                                    </div>
+                                </div>
+                            </div>
+
                             <!-- cpeType -->
+                            <div class="col-lg-12 d-flex my-3">
+                                <div class="my-auto me-2">CPE type:</div>
+                                <select formControlName="cpeType" class="form-control {{inputClass(formActive, 'cpeType')}}">
+                                    <option>CPE 2.2</option>
+                                    <option>CPE 2.3</option>
+                                </select>
+                            </div>
+
                             <!-- cpe -->
+                            <div class="col-lg-12 d-flex my-3">
+                                <div class="my-auto me-2">CPE:</div>
+                                <input class="form-control {{inputClass(formActive, 'cpe')}}" type="text"
+                                    formControlName="cpe" maxlength="255"/>
+                                <div class="invalid-feedback"
+                                    *ngIf="formActive.get('cpe')?.touched && formActive.get('cpe')?.invalid">
+                                    <div *ngIf="formActive.get('cpe')?.errors?.maxlength">
+                                        Only 255 characters are allowed
+                                    </div>
+                                </div>
+                            </div>
+
                             <!-- importance -->
+                            <div class="col-lg-12 d-flex my-3">
+                                <div class="my-auto me-2">Importance:</div>
+                                <input class="form-control {{inputClass(formActive, 'importance')}}" type="text"
+                                    formControlName="importance" list="importanceLs" maxlength="50"/>
+                                <div class="invalid-feedback"
+                                    *ngIf="formActive.get('importance')?.touched && formActive.get('importance')?.invalid">
+                                    <div *ngIf="formActive.get('importance')?.errors?.maxlength">
+                                        Only 50 characters are allowed
+                                    </div>
+                                </div>
+                                <datalist id="importanceLs">
+                                    <option>Very high</option>
+                                    <option>High</option>
+                                    <option>Medium</option>
+                                    <option>Low</option>
+                                    <option>Very low</option>
+                                </datalist>
+                            </div>
+
                             <!-- location -->
+                            <div class="col-lg-12 d-flex my-3">
+                                <div class="my-auto me-2">Location:</div>
+                                <input class="form-control {{inputClass(formActive, 'location')}}" type="text"
+                                    formControlName="location" maxlength="50"/>
+                                <div class="invalid-feedback"
+                                    *ngIf="formActive.get('location')?.touched && formActive.get('location')?.invalid">
+                                    <div *ngIf="formActive.get('location')?.errors?.maxlength">
+                                        Only 50 characters are allowed
+                                    </div>
+                                </div>
+                            </div>
 
                             <!-- ADQUISITION -->
                             <div class="col-lg-12 d-flex mt-4 mb-2">
                                 <em class="bi bi-cart my-auto me-3"></em>
                                 <div class="m-text my-auto">Adquisition</div>
                             </div>
+
+                            <!-- cost -->
+                            <div class="col-lg-12 d-flex my-3">
+                                <div class="my-auto me-2">Cost:</div>
+                                <input class="form-control {{inputClass(formActive, 'cost')}}" type="number"
+                                    formControlName="cost" step="5" min="0" value="0" />
+                                <div class="invalid-feedback"
+                                    *ngIf="formActive.get('cost')?.touched && formActive.get('cost')?.invalid">
+                                    <div *ngIf="formActive.get('cost')?.errors?.min">Cannot be negative</div>
+                                </div>
+                            </div>
+
+                            <!-- periodicity -->
+                            <div class="col-lg-12 d-flex my-3">
+                                <div class="my-auto me-2">Periodicity:</div>
+                                <input class="form-control {{inputClass(formActive, 'periodicity')}}" type="text"
+                                    formControlName="periodicity" list="periodicityLs" maxlength="50"/>
+                                <div class="invalid-feedback"
+                                    *ngIf="formActive.get('periodicity')?.touched && formActive.get('periodicity')?.invalid">
+                                    <div *ngIf="formActive.get('periodicity')?.errors?.maxlength">
+                                        Only 50 characters are allowed
+                                    </div>
+                                </div>
+                                <datalist id="periodicityLs">
+                                    <option>Once</option>
+                                    <option>Per year</option>
+                                    <option>Per month</option>
+                                    <option>Per day</option>
+                                </datalist>
+                            </div>
+
+                            <!-- startAdquisition -->
+                            <div class="col-lg-12 d-flex my-3">
+                                <div class="my-auto me-2">Start adquisition:</div>
+                                <input class="form-control {{inputClass(formActive, 'startAdquisition')}}" type="datetime-local"
+                                    formControlName="startAdquisition" placeholder="" min="1971-01-01"/>
+                            </div>
+
+                            <!-- endAdquisition -->
+                            <div class="col-lg-12 d-flex my-3">
+                                <div class="my-auto me-2">End adquisition:</div>
+                                <input class="form-control {{inputClass(formActive, 'endAdquisition')}}" type="datetime-local"
+                                    formControlName="endAdquisition" placeholder=""  min="1971-01-01"/>
+                            </div>
+
+                            <!-- endOfLife -->
+                            <div class="col-lg-12 d-flex my-3">
+                                <div class="my-auto me-2">End of life:</div>
+                                <input class="form-control {{inputClass(formActive, 'endOfLife')}}" type="datetime-local"
+                                    formControlName="endOfLife" placeholder="" min="1971-01-01"/>
+                            </div>
+
+                            <!-- subscriptionType -->
+                            <div class="col-lg-12 d-flex my-3">
+                                <div class="my-auto me-2">Subscription type:</div>
+                                <input class="form-control {{inputClass(formActive, 'subscriptionType')}}" type="text"
+                                    formControlName="subscriptionType" list="subscriptionTypeLs" maxlength="50"/>
+                                <div class="invalid-feedback"
+                                    *ngIf="formActive.get('subscriptionType')?.touched && formActive.get('subscriptionType')?.invalid">
+                                    <div *ngIf="formActive.get('subscriptionType')?.errors?.maxlength">
+                                        Only 50 characters are allowed
+                                    </div>
+                                </div>
+                                <datalist id="subscriptionTypeLs">
+                                    <option>Open Source</option>
+                                    <option>Free</option>
+                                    <option>Freemium</option>
+                                    <option>Basic</option>
+                                    <option>Premium</option>
+                                    <option>Pro</option>
+                                    <option>Ultimate</option>
+                                    <option>Monthly</option>
+                                    <option>Annually</option>
+                                </datalist>
+                            </div>
+
 
                             <!-- USER ASSIGNATIONS -->
                             <div class="col-lg-12 d-flex mt-4 mb-2">

@@ -6,6 +6,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,11 +22,14 @@ import com.iman.model.effort.EffortUpdateDto;
 import com.iman.model.util.Message;
 import com.iman.service.effort.EffortService;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/effort")
 @Tag(name = "Effort")
+@SecurityRequirement(name = "Bearer Authentication")
+@CrossOrigin
 public class EffortRestController {
 
 	@Autowired
