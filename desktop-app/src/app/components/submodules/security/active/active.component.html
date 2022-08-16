@@ -11,7 +11,7 @@
         </div>
     </div>
     <div class="mx-3">
-        <a ngbTooltip="Add active" placement="left" [openDelay]="300" *ngIf="adminAccess" (click)="newActive()">
+        <a ngbTooltip="Add active" placement="left" [openDelay]="300" *ngIf="adminAccess && projectSelectedId!=undefined && projectSelectedId!=0" (click)="newActive()">
             <em class="bi bi-plus-lg"></em>
         </a>
     </div>
@@ -32,6 +32,6 @@
 <button hidden type="button" #openActiveViewModal class="btn btn-danger" data-bs-target="#activeModal" data-bs-toggle="modal">
 </button>
 
-<active-modal-view [isEditable]="memberAccess" [isEditing]="isEditing" [selectedActive]="selectedActive" 
+<active-modal-view [isEditable]="adminAccess" [isEditing]="isEditing" [selectedActive]="selectedActive" 
     [projectId]="projectSelectedId" [usersInProject]="usersInProject" (reload)="reloadGridTable()">
 </active-modal-view>
