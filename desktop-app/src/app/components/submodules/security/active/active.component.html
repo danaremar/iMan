@@ -28,5 +28,5 @@
 </button>
 
 <active-modal-view [isEditable]="memberAccess" [selectedActive]="selectedActive" [projectId]="projectSelectedId"
-    [usersInProject]="usersInProject">
+    [usersInProject]="usersInProject" (reload)="reloadGridTable()">
 </active-modal-view>

@@ -67,8 +67,8 @@ public class ActiveRestController {
 	@PostMapping(value = "/")
 	public ResponseEntity<Object> createActive(@RequestBody @Valid ActiveCreateDto activeCreateDto) {
 		try {
-			activeService.createActive(activeCreateDto);
-			return new ResponseEntity<>(HttpStatus.CREATED);
+			ActiveShowDto a = activeService.createActive(activeCreateDto);
+			return new ResponseEntity<>(a, HttpStatus.CREATED);
 		} catch (Exception e) {
 			return new ResponseEntity<>(new Message(e.getMessage()), HttpStatus.CONFLICT);
 		}
@@ -77,8 +77,8 @@ public class ActiveRestController {
 	@PutMapping(value = "/")
 	public ResponseEntity<Object> updateActive(@RequestBody @Valid ActiveUpdateDto activeUpdateDto) {
 		try {
-			activeService.updateActive(activeUpdateDto);
-			return new ResponseEntity<>(HttpStatus.OK);
+			ActiveShowDto a = activeService.updateActive(activeUpdateDto);
+			return new ResponseEntity<>(a, HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(new Message(e.getMessage()), HttpStatus.CONFLICT);
 		}

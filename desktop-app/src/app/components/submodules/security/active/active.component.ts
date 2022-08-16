@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
-import { FormBuilder, FormGroup } from "@angular/forms";
+import { FormBuilder } from "@angular/forms";
 import { TokenService } from "src/app/services/authentication/token.service";
 import { EffortService } from "src/app/services/effort/effort.service";
 import { KanbanService } from "src/app/services/kanban/kanban.service";
@@ -7,7 +7,7 @@ import { ProjectService } from "src/app/services/projects/project.service";
 import { SprintService } from "src/app/services/sprints/sprint.service";
 import { UserService } from "src/app/services/user/user.service";
 import { ImanSubmodule } from "../../submodule.component";
-import { ActiveListDto, ActiveShowDto, ActiveCreateDto, ActiveSearchDto, ActiveShowChildrenDto, ActiveUpdateDto } from "src/app/models/actives/actives";
+import { ActiveListDto, ActiveShowDto } from "src/app/models/actives/actives";
 import { ShowUser } from "src/app/models/user/show-user";
 import { environment } from "src/environments/environment";
 import { ActiveService } from "src/app/services/actives/actives.service";
@@ -54,7 +54,7 @@ export class ActiveComponent extends ImanSubmodule implements OnInit {
             sortable: true,
             filter: true,
             resizable: true,
-            valueFormatter: (params: { data: ActiveListDto }) => params.data!=undefined?this.formatDateAgGrid(params.data.creationDate):''
+            valueFormatter: (params: { data: ActiveListDto }) => params.data != undefined ? this.formatDateAgGrid(params.data.creationDate) : ''
         },
         {
             headerName: "Created by",
@@ -62,7 +62,7 @@ export class ActiveComponent extends ImanSubmodule implements OnInit {
             sortable: true,
             filter: true,
             resizable: true,
-            valueFormatter: (params: { data: ActiveListDto }) => params.data!=undefined?this.formatUsernameAgGrid(params.data.createdBy):''
+            valueFormatter: (params: { data: ActiveListDto }) => params.data != undefined ? this.formatUsernameAgGrid(params.data.createdBy) : ''
         },
         {
             headerName: "Last update",
@@ -70,7 +70,7 @@ export class ActiveComponent extends ImanSubmodule implements OnInit {
             sortable: true,
             filter: true,
             resizable: true,
-            valueFormatter: (params: { data: ActiveListDto }) => params.data!=undefined?this.formatDateAgGrid(params.data.lastModification):''
+            valueFormatter: (params: { data: ActiveListDto }) => params.data != undefined ? this.formatDateAgGrid(params.data.lastModification) : ''
         },
         {
             headerName: "Modified by",
@@ -78,7 +78,7 @@ export class ActiveComponent extends ImanSubmodule implements OnInit {
             sortable: true,
             filter: true,
             resizable: true,
-            valueFormatter: (params: { data: ActiveListDto }) => params.data!=undefined?this.formatUsernameAgGrid(params.data.modifiedBy):''
+            valueFormatter: (params: { data: ActiveListDto }) => params.data != undefined ? this.formatUsernameAgGrid(params.data.modifiedBy) : ''
         },
         {
             headerName: "Type",
@@ -135,7 +135,7 @@ export class ActiveComponent extends ImanSubmodule implements OnInit {
             sortable: true,
             filter: true,
             resizable: true,
-            valueFormatter: (params: { data: ActiveListDto }) => params.data!=undefined?this.formatDateAgGrid(params.data.startAdquisition):''
+            valueFormatter: (params: { data: ActiveListDto }) => params.data != undefined ? this.formatDateAgGrid(params.data.startAdquisition) : ''
         },
         {
             headerName: "End adquisition",
@@ -143,7 +143,7 @@ export class ActiveComponent extends ImanSubmodule implements OnInit {
             sortable: true,
             filter: true,
             resizable: true,
-            valueFormatter: (params: { data: ActiveListDto }) => params.data!=undefined?this.formatDateAgGrid(params.data.endAdquisition):''
+            valueFormatter: (params: { data: ActiveListDto }) => params.data != undefined ? this.formatDateAgGrid(params.data.endAdquisition) : ''
         },
         {
             headerName: "End of life",
@@ -151,7 +151,7 @@ export class ActiveComponent extends ImanSubmodule implements OnInit {
             sortable: true,
             filter: true,
             resizable: true,
-            valueFormatter: (params: { data: ActiveListDto }) => params.data!=undefined?this.formatDateAgGrid(params.data.endOfLife):''
+            valueFormatter: (params: { data: ActiveListDto }) => params.data != undefined ? this.formatDateAgGrid(params.data.endOfLife) : ''
         },
         {
             headerName: "Cost",
@@ -210,12 +210,6 @@ export class ActiveComponent extends ImanSubmodule implements OnInit {
 
     // active form in modal view
     isEditable: boolean = false
-    formActive: FormGroup
-    formActiveUpdate: FormGroup
-    activeContainError: boolean = false
-    activeMessageError: string | undefined
-
-
 
 
     /***************************
@@ -224,14 +218,6 @@ export class ActiveComponent extends ImanSubmodule implements OnInit {
 
     constructor(effortService: EffortService, kanbanService: KanbanService, sprintService: SprintService, projectService: ProjectService, formBuilder: FormBuilder, tokenService: TokenService, private userService: UserService, public activeService: ActiveService) {
         super(effortService, kanbanService, sprintService, projectService, formBuilder, tokenService)
-
-        this.formActive = formBuilder.group({
-
-        })
-
-        this.formActiveUpdate = formBuilder.group({
-
-        })
     }
 
 
@@ -252,17 +238,16 @@ export class ActiveComponent extends ImanSubmodule implements OnInit {
     }
 
     loadSelectedData(obj: any) {
-        this.activeService.getActiveById(obj.id).subscribe(
-            data => {
+        this.activeService.getActiveById(obj.id).subscribe({
+            next: (n) => {
                 this.containError = false
-                this.selectedActive = data
+                this.selectedActive = n
                 this.isEditable = false
-                // TODO
             },
-            err => {
-                this.returnPrincipalError(err)
+            error: (e) => {
+                this.returnPrincipalError(e)
             }
-        )
+        })
     }
 
     /***************************
@@ -314,20 +299,20 @@ export class ActiveComponent extends ImanSubmodule implements OnInit {
         if (this.projectSelectedId) {
             this.pageSize = this.gridApi.paginationGetPageSize()
             this.pageNumber = this.gridApi.paginationGetCurrentPage() + 1
-            this.activeService.findActivesByProject(this.projectSelectedId, this.pageNumber, this.pageSize, params.sortModel, params.filterModel, this.incCol).subscribe(
-                data => {
+            this.activeService.findActivesByProject(this.projectSelectedId, this.pageNumber, this.pageSize, params.sortModel, params.filterModel, this.incCol).subscribe({
+                next: (n) => {
                     this.containError = false
-                    this.actives = data.content
-                    this.pageNumber = data.pageable.pageNumber + 1
-                    this.pageSize = data.pageable.pageSize
-                    this.totalElements = data.totalElements
+                    this.actives = n.content
+                    this.pageNumber = n.pageable.pageNumber + 1
+                    this.pageSize = n.pageable.pageSize
+                    this.totalElements = n.totalElements
                     params.successCallback(this.actives, this.totalElements)
                 },
-                err => {
-                    this.returnPrincipalError(err)
+                error: (e) => {
+                    this.returnPrincipalError(e)
                     params.failCallback()
                 }
-            )
+            })
         }
     }
 

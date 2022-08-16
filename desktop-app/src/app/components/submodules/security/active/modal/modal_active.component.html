@@ -332,7 +332,7 @@
 
                             <!-- cpeType -->
                             <div class="col-lg-12 d-flex my-3">
-                                <div class="my-auto me-2">CPE type:</div>
+                                <div class="my-auto me-2 text-nowrap">CPE type:</div>
                                 <select formControlName="cpeType"
                                     class="form-control {{inputClass(formActive, 'cpeType')}}">
                                     <option>CPE 2.2</option>
@@ -424,30 +424,28 @@
 
                             <!-- startAdquisition -->
                             <div class="col-lg-12 d-flex my-3">
-                                <div class="my-auto me-2">Start adquisition:</div>
+                                <div class="my-auto me-2 text-nowrap">Start adquisition:</div>
                                 <input class="form-control {{inputClass(formActive, 'startAdquisition')}}"
-                                    type="datetime-local" formControlName="startAdquisition"
-                                    min="1971-01-01" />
+                                    type="datetime-local" formControlName="startAdquisition" min="1971-01-01" />
                             </div>
 
                             <!-- endAdquisition -->
                             <div class="col-lg-12 d-flex my-3">
-                                <div class="my-auto me-2">End adquisition:</div>
+                                <div class="my-auto me-2 text-nowrap">End adquisition:</div>
                                 <input class="form-control {{inputClass(formActive, 'endAdquisition')}}"
-                                    type="datetime-local" formControlName="endAdquisition"
-                                    min="1971-01-01" />
+                                    type="datetime-local" formControlName="endAdquisition" min="1971-01-01" />
                             </div>
 
                             <!-- endOfLife -->
                             <div class="col-lg-12 d-flex my-3">
-                                <div class="my-auto me-2">End of life:</div>
+                                <div class="my-auto me-2 text-nowrap">End of life:</div>
                                 <input class="form-control {{inputClass(formActive, 'endOfLife')}}"
                                     type="datetime-local" formControlName="endOfLife" min="1971-01-01" />
                             </div>
 
                             <!-- subscriptionType -->
                             <div class="col-lg-12 d-flex my-3">
-                                <div class="my-auto me-2">Subscription type:</div>
+                                <div class="my-auto me-2 text-nowrap">Subscription type:</div>
                                 <input class="form-control {{inputClass(formActive, 'subscriptionType')}}" type="text"
                                     formControlName="subscriptionType" list="subscriptionTypeLs" maxlength="50" />
                                 <div class="invalid-feedback"
@@ -471,22 +469,160 @@
 
 
                             <!-- USER ASSIGNATIONS -->
-                            <div class="col-lg-12 d-flex mt-4 mb-2">
-                                <em class="bi bi-people my-auto me-3"></em>
-                                <div class="m-text my-auto">User assignations</div>
-                            </div>
-
-                            <!-- CHILDRENS -->
-                            <div class="col-lg-12">
+                            <div class="col-lg-6" formArrayName="activeUsers">
 
                                 <!-- title -->
-                                <div class="col-lg-12 d-flex mt-4 mb-2">
+                                <div class="d-flex mt-4 mb-2">
+                                    <em class="bi bi-people my-auto me-3"></em>
+                                    <div class="m-text my-auto">User assignations</div>
+                                </div>
+
+                                <!-- <div [formGroupName]="i">
+                                    <input type="text" formControlName="code">
+                                    <input type="text" formControlName="name">
+                                </div> -->
+
+                                <!-- add new one -->
+                                <form [formGroup]="formAddUserAssignation" class="my-4"
+                                    (ngSubmit)="addActiveUserFormInput()">
+
+                                    <!-- username -->
+                                    <div class="d-flex my-3">
+                                        <div class="my-auto me-2">User (username):</div>
+                                        <input class="form-control {{inputClass(formAddUserAssignation, 'username')}}"
+                                            type="text" formControlName="username" list="usernameLs" maxlength="50" />
+                                        <div class="invalid-feedback"
+                                            *ngIf="formAddUserAssignation.get('username')?.touched && formAddUserAssignation.get('username')?.invalid">
+                                            <div *ngIf="formAddUserAssignation.get('username')?.errors?.maxlength">
+                                                Only 50 characters are allowed
+                                            </div>
+                                        </div>
+                                        <datalist id="usernameLs">
+                                            <option *ngFor="let u of usersInProject">{{u.username}}</option>
+                                        </datalist>
+                                    </div>
+
+                                    <!-- status -->
+                                    <div class="d-flex my-3">
+                                        <div class="my-auto me-2">Status:</div>
+                                        <input class="form-control {{inputClass(formAddUserAssignation, 'status')}}"
+                                            type="text" formControlName="status" list="statusLs" maxlength="50" />
+                                        <div class="invalid-feedback"
+                                            *ngIf="formAddUserAssignation.get('status')?.touched && formAddUserAssignation.get('status')?.invalid">
+                                            <div *ngIf="formAddUserAssignation.get('status')?.errors?.maxlength">
+                                                Only 50 characters are allowed
+                                            </div>
+                                        </div>
+                                        <datalist id="statusLs">
+                                            <option>Very high</option>
+                                            <option>High</option>
+                                            <option>Medium</option>
+                                            <option>Low</option>
+                                            <option>Very low</option>
+                                        </datalist>
+                                    </div>
+
+                                    <!-- serial -->
+                                    <div class="d-flex my-3">
+                                        <div class="my-auto me-2">Serial:</div>
+                                        <input class="form-control {{inputClass(formAddUserAssignation, 'serial')}}"
+                                            type="text" formControlName="serial" maxlength="255" />
+                                        <div class="invalid-feedback"
+                                            *ngIf="formAddUserAssignation.get('serial')?.touched && formAddUserAssignation.get('serial')?.invalid">
+                                            <div *ngIf="formAddUserAssignation.get('serial')?.errors?.maxlength">
+                                                Only 255 characters are allowed
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- IPs -->
+                                    <div class="d-flex my-3">
+                                        <div class="my-auto me-2">IPs:</div>
+                                        <input class="form-control {{inputClass(formAddUserAssignation, 'ips')}}"
+                                            type="text" formControlName="ips" maxlength="255" />
+                                        <div class="invalid-feedback"
+                                            *ngIf="formAddUserAssignation.get('ips')?.touched && formAddUserAssignation.get('ips')?.invalid">
+                                            <div *ngIf="formAddUserAssignation.get('ips')?.errors?.maxlength">
+                                                Only 255 characters are allowed
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- notes -->
+                                    <div class="col-lg-12 my-3">
+                                        <div class="my-auto me-2">Notes:</div>
+                                        <textarea class="form-control {{inputClass(formAddUserAssignation, 'notes')}}"
+                                            formControlName="notes" maxlength="255" rows="2"></textarea>
+                                        <div class="invalid-feedback" *ngIf="formAddUserAssignation.get('notes')?.touched 
+                                            && formAddUserAssignation.get('notes')?.invalid">
+                                            <div *ngIf="formAddUserAssignation.get('notes')?.errors?.maxlength">
+                                                Only 255 characters are allowed
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="my-auto ms-auto flex-row-reverse d-flex">
+                                        <button class="btn btn-success" [disabled]="!formAddChild.valid">
+                                            Add
+                                        </button>
+                                    </div>
+                                    
+                                </form>
+
+                                <!-- SHOW -->
+                                <div *ngFor="let a of activeUsers.controls; let i = index" class="my-3">
+
+                                    <!-- user -->
+                                    <div class="d-flex my-2" *ngIf="activeUsers.controls[i].value.username">
+                                        <show-user [username]="activeUsers.controls[i].value.username"
+                                            [imageUrl]="activeUsers.controls[i].value.imageUid"></show-user>
+                                        <em class="bi bi-sm bi-trash-fill ms-auto my-auto"
+                                            (click)="removeActiveUserForm(i)"></em>
+                                    </div>
+
+                                    <div class="d-flex flex-wrap ms-5">
+                                        <!-- status -->
+                                        <div class="w-50 d-flex my-2" *ngIf="activeUsers.controls[i].value.status">
+                                            <div class="my-auto">Status: {{activeUsers.controls[i].value.status}}</div>
+                                        </div>
+
+                                        <!-- serial -->
+                                        <div class="w-50 d-flex my-2" *ngIf="activeUsers.controls[i].value.serial">
+                                            <div class="my-auto">Serial: {{activeUsers.controls[i].value.serial}}</div>
+                                        </div>
+
+                                        <!-- ips -->
+                                        <div class="w-50 d-flex my-2" *ngIf="activeUsers.controls[i].value.ips">
+                                            <div class="my-auto">IPs: {{activeUsers.controls[i].value.ips}}</div>
+                                        </div>
+
+                                        <!-- notes -->
+                                        <div class="w-100 mt-2 my-2" *ngIf="activeUsers.controls[i].value.notes">
+                                            <div class="my-auto">Notes:</div>
+                                            <div class="text-break">{{activeUsers.controls[i].value.notes}}</div>
+                                        </div>
+                                    </div>
+
+                                    <hr *ngIf="activeUsers.controls.length>i+1" style="height: 2px;">
+
+                                </div>
+
+
+
+                            </div>
+
+
+                            <!-- CHILDRENS -->
+                            <div class="col-lg-6">
+
+                                <!-- title -->
+                                <div class="d-flex mt-4 mb-2">
                                     <em class="bi bi-diagram-2 my-auto me-3"></em>
                                     <div class="m-text my-auto">Childrens</div>
                                 </div>
 
                                 <!-- search -->
-                                <form [formGroup]="formAddChild" class="col-lg-12 d-flex mt-4 mb-2"
+                                <form [formGroup]="formAddChild" class="d-flex mt-4 mb-2"
                                     (ngSubmit)="addChildrenFormInput()">
                                     <em class="bi bi-search bi-sm my-auto me-3"></em>
                                     <input class="form-control" list="searchChildren" type="text"
@@ -504,12 +640,13 @@
 
                                 <!-- show -->
                                 <div formArrayName="children">
-                                    <div *ngFor="let c of childrens.controls; let i = index" class="d-flex">
+                                    <div *ngFor="let c of childrens.controls; let i = index" class="d-flex mt-3">
                                         <!-- <div [formGroupName]="i">
                                         <input type="text" formControlName="code">
                                         <input type="text" formControlName="name">
                                         </div> -->
-                                        <div class="my-auto">#{{childrens.controls[i].value.code}}: {{childrens.controls[i].value.name}}
+                                        <div class="my-auto">#{{childrens.controls[i].value.code}}:
+                                            {{childrens.controls[i].value.name}}
                                         </div>
                                         <em class="bi bi-sm bi-trash-fill ms-auto" (click)="removeChildrenForm(i)"></em>
                                     </div>

@@ -1,8 +1,8 @@
 import { DatePipe } from "@angular/common";
-import { Component, Input, OnInit, ViewChild } from "@angular/core";
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
-import { ActiveListDto, ActiveShowChildrenDto, ActiveShowDto } from "src/app/models/actives/actives";
-import { ActiveUsersShowDto } from "src/app/models/actives/user-actives";
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from "@angular/core";
+import { FormArray, FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { ActiveCreateDto, ActiveListDto, ActiveShowChildrenDto, ActiveShowDto, ActiveUpdateDto } from "src/app/models/actives/actives";
+import { ActiveUsersCreateDto, ActiveUsersShowDto } from "src/app/models/actives/user-actives";
 import { ShowUser } from "src/app/models/user/show-user";
 import { ActiveService } from "src/app/services/actives/actives.service";
 import { UserService } from "src/app/services/user/user.service";
@@ -29,6 +29,10 @@ export class ModalActive implements OnInit {
     // is editing right now?
     @Input()
     isEditing: boolean = false
+    
+    // emit one event to reload
+    @Output()
+    reload = new EventEmitter<boolean>()
 
     // error messages
     containError: boolean = false
@@ -37,6 +41,7 @@ export class ModalActive implements OnInit {
     // form
     formActive: FormGroup
     formAddChild: FormGroup
+    formAddUserAssignation: FormGroup
 
     // search
     searchChildren: Array<ActiveShowChildrenDto> = []
@@ -74,6 +79,14 @@ export class ModalActive implements OnInit {
         })
         this.formAddChild = this.formBuilder.group({
             children: ['', []]
+        })
+        this.formAddUserAssignation = this.formBuilder.group({
+            username: ['', []],
+            imageUid: ['', []],
+            status: ['', []],
+            serial: ['', []],
+            notes: ['', []],
+            ips: ['', []]
         })
     }
 
@@ -138,6 +151,33 @@ export class ModalActive implements OnInit {
         }
     }
 
+    clearForms() {
+        this.formActive.reset()
+        this.formAddChild.reset()
+        this.formAddUserAssignation.reset()
+    }
+
+    /***************************
+        METHODS -> HANDLERS
+    ***************************/
+
+    handleNext(n: any) {
+        this.selectedActive = n
+        this.clearForms()
+        this.reload.emit(true)
+        this.containError = false
+        this.edit()
+    }
+
+    handleError(e: any) {
+        let r = e.error.text
+        if (r == undefined) {
+            r = 'Error produced'
+        }
+        this.messageError = r;
+        this.containError = true
+    }
+
 
     /***************************
         METHODS -> UPLOAD
@@ -155,25 +195,50 @@ export class ModalActive implements OnInit {
         }
     }
 
+    childrensToSave(): Array<number> {
+        return this.childrens.controls.map(x => x.value.id)
+    }
+
+    activeUsersToSave(): Array<ActiveUsersCreateDto> {
+        return this.activeUsers.controls.map(x => new ActiveUsersCreateDto(
+            x.value.status, x.value.serial, x.value.notes, x.value.ips, x.value.username
+        ))
+    }
 
     newActive() {
-        // get childrens
+        if (this.projectId) {
 
+            // create object
+            let createActive: ActiveCreateDto = new ActiveCreateDto(this.formActive.value.name, this.formActive.value.description, this.formActive.value.type, this.formActive.value.company, this.formActive.value.product, this.formActive.value.version, this.formActive.value.cpeType, this.formActive.value.cpe, this.formActive.value.importance, this.formActive.value.startAdquisition, this.formActive.value.endAdquisition, this.formActive.value.endOfLife, this.formActive.value.cost, this.formActive.value.periodicity, this.formActive.value.subscriptionType, this.formActive.value.location, this.childrensToSave(), this.activeUsersToSave(), this.projectId)
 
-        // get activeUsers
-
-
-        // rest
+            // rest
+            this.activeService.createActive(createActive).subscribe({
+                next: (n) => {
+                    this.handleNext(n)
+                },
+                error: (e) => {
+                    this.handleError(e)
+                }
+            })
+        }
     }
 
     editActive() {
-        // get childrens
+        if (this.projectId && this.selectedActive) {
 
+            // create object
+            let updateActive: ActiveUpdateDto = new ActiveUpdateDto(this.selectedActive.id,this.formActive.value.name, this.formActive.value.description, this.formActive.value.type, this.formActive.value.company, this.formActive.value.product, this.formActive.value.version, this.formActive.value.cpeType, this.formActive.value.cpe, this.formActive.value.importance, this.formActive.value.startAdquisition, this.formActive.value.endAdquisition, this.formActive.value.endOfLife, this.formActive.value.cost, this.formActive.value.periodicity, this.formActive.value.subscriptionType, this.formActive.value.location, this.childrensToSave(), this.activeUsersToSave())
 
-        // get activeUsers
-
-
-        // rest
+            // rest
+            this.activeService.updateActive(updateActive).subscribe({
+                next: (n) => {
+                    this.handleNext(n)
+                },
+                error: (e) => {
+                    this.handleError(e)
+                }
+            })
+        }
     }
 
 
@@ -198,11 +263,12 @@ export class ModalActive implements OnInit {
 
     searchChildrenByName(childName: any) {
         if (this.projectId) {
-            this.activeService.findActivesByProject(this.projectId, 0, 5, [], 
-                { name: { filterType: 'text', type: 'contains', filter: childName.value } }, 
-                [{field: "name"}]).subscribe(
-                    data => { this.searchChildren = data.content
-                })
+            this.activeService.findActivesByProject(this.projectId, 0, 5, [],
+                { name: { filterType: 'text', type: 'contains', filter: childName.value } },
+                [{ field: "name" }]).subscribe(
+                    data => {
+                        this.searchChildren = data.content
+                    })
         }
     }
 
@@ -214,11 +280,12 @@ export class ModalActive implements OnInit {
         if (this.projectId) {
             let s: string = this.formAddChild.value.children
             let c = s.split("#")[1].split(")")[0]
-            this.activeService.findActivesByProject(this.projectId, 0, 1, [], 
-                { code: { filterType: 'text', type: 'contains', filter: c } }, 
-                [{field: "code"}]).subscribe(
-                    data => { this.addChildrenForm(data.content[0])
-                })
+            this.activeService.findActivesByProject(this.projectId, 0, 1, [],
+                { code: { filterType: 'text', type: 'contains', filter: c } },
+                [{ field: "code" }]).subscribe(
+                    data => {
+                        this.addChildrenForm(data.content[0])
+                    })
         }
     }
 
@@ -245,6 +312,13 @@ export class ModalActive implements OnInit {
         return this.formActive.get("activeUsers") as FormArray
     }
 
+    addActiveUserFormInput() {
+        let user = this.usersInProject.filter(x => x.username == this.formAddUserAssignation.value.username)[0]
+        let a: ActiveUsersShowDto = new ActiveUsersShowDto(0, this.formAddUserAssignation.value.status, this.formAddUserAssignation.value.serial, this.formAddUserAssignation.value.notes, this.formAddUserAssignation.value.ips, user)
+        this.addActiveUserForm(a)
+        this.formAddUserAssignation.reset()
+    }
+
     addActiveUserForm(a: ActiveUsersShowDto) {
         let fg = this.formBuilder.group({
             username: [a.user ? a.user.username : '', []],
@@ -254,7 +328,7 @@ export class ModalActive implements OnInit {
             notes: [a.notes, []],
             ips: [a.ips, []]
         })
-        this.childrens.push(fg)
+        this.activeUsers.push(fg)
     }
 
     removeActiveUserForm(i: number) {

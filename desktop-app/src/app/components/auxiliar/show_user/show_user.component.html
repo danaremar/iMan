@@ -1,4 +1,4 @@
-<div class="d-flex" *ngIf="user!=undefined" ngbTooltip="@{{username}}" placement="right" [openDelay]="300">
+<div class="d-flex" *ngIf="user!=undefined || username!='' || imageUrl!=''" ngbTooltip="@{{username}}" placement="right" [openDelay]="300">
     <ng-container *ngIf="showProfileImage">
         <ng-container *ngIf="imageUrl!=''; else showIconProfile">
             <img class="profile-image my-2 me-2" src="{{imageUrl}}" alt="@{{username}} profile image">

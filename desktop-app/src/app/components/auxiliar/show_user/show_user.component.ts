@@ -23,17 +23,22 @@ export class ShowUserPhoto implements OnInit {
 
     // INIT
 
+    @Input()
     username: string = ''
 
+    @Input()
     imageUrl: string = ''
 
-    
+
     ngOnInit(): void {
-        if(this.user!=undefined) {
+        if (this.user != undefined) {
             this.username = this.user.username
             this.imageUrl = this.getProfileImageUrlFromUser(this.user)
+        } else if (this.imageUrl != '') {
+            let p = this.userService.getUrlFromProfile(this.imageUrl)
+            this.imageUrl = p?p:this.imageUrl
         }
-        
+
     }
 
 
