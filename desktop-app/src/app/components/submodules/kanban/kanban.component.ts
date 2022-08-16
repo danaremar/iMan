@@ -99,10 +99,6 @@ export class KanbanComponent extends ImanSubmodule implements OnInit {
         this.loadMyProjects()
     }
 
-    reload() {
-        this.loadKanbanBySelectedSprint()
-    }
-
 
 
     /***************************
