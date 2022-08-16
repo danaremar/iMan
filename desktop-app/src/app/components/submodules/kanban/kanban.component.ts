@@ -48,8 +48,6 @@ export class KanbanComponent extends ImanSubmodule implements OnInit {
     updateColumnContainError: boolean = false
     updateColumnMessageError: string | undefined
 
-    formAddAssignedUser: FormGroup
-    formAddChildrenTask: FormGroup
 
 
     /***************************
@@ -88,16 +86,6 @@ export class KanbanComponent extends ImanSubmodule implements OnInit {
             columnOrder: ['', [Validators.required]],
         })
 
-        // ADD ASSIGNED USER
-        this.formAddAssignedUser = formBuilder.group({
-            username: ['', []]
-        })
-
-        // ADD CHILDREN TASK
-        this.formAddChildrenTask = formBuilder.group({
-            children: ['', []]
-        })
-
     }
 
 
@@ -109,6 +97,10 @@ export class KanbanComponent extends ImanSubmodule implements OnInit {
         this.loadKanban = true
         this.loadTasks = true
         this.loadMyProjects()
+    }
+
+    reload() {
+        this.loadKanbanBySelectedSprint()
     }
 
 
@@ -219,8 +211,6 @@ export class KanbanComponent extends ImanSubmodule implements OnInit {
     reloadTaskAttributes() {
         this.assignedUsers = []
         this.selectedChildrens = []
-        this.formAddAssignedUser.reset()
-        this.formAddChildrenTask.reset()
     }
 
 

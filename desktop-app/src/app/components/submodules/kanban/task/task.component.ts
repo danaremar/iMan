@@ -1,5 +1,5 @@
 import { DatePipe } from "@angular/common";
-import { Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from "@angular/core";
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { KanbanTask, KanbanTaskChildrens, KanbanTaskCreate, KanbanTaskUpdate } from "src/app/models/kanban/kanbanTask";
 import { ShowUser } from "src/app/models/user/show-user";
@@ -36,6 +36,10 @@ export class TaskComponent implements OnInit, OnChanges {
     // is editing right now?
     @Input()
     isEditing: boolean = false
+
+    // emit one event to reload
+    @Output()
+    reload = new EventEmitter<boolean>()
 
     // error messages
     containError: boolean = false
@@ -106,7 +110,7 @@ export class TaskComponent implements OnInit, OnChanges {
 
     edit() {
         this.isEditing = !this.isEditing
-        if(this.isEditing) {
+        if (this.isEditing) {
             this.buildForm()
         }
     }
@@ -198,6 +202,8 @@ export class TaskComponent implements OnInit, OnChanges {
     handleNext(n: any) {
         this.selectedTask = n
         this.clearForms()
+        this.reload.emit(true)
+        this.containError = false
         this.edit()
     }
 

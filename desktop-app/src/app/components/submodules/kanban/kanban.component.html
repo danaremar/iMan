@@ -265,4 +265,4 @@
 <button hidden type="button" #openTaskModal class="btn btn-danger" data-bs-target="#taskModal" data-bs-toggle="modal">
 </button>
 <task-modal-view [isEditable]="memberAccess" [selectedTask]="selectedTask" [selectedKanbanColumnId]="selectedColumnId" [usersInProject]="usersInProject"
-                                    [isEditing]="taskIsEditing" [myTasks]="myTasks"></task-modal-view>
+                                    [isEditing]="taskIsEditing" [myTasks]="myTasks" (reload)=" this.loadKanbanBySelectedSprint()"></task-modal-view>
