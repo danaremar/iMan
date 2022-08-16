@@ -10,6 +10,11 @@
             </select>
         </div>
     </div>
+    <div class="mx-3">
+        <a ngbTooltip="Add active" placement="left" [openDelay]="300" *ngIf="adminAccess" (click)="newActive()">
+            <em class="bi bi-plus-lg"></em>
+        </a>
+    </div>
 </div>
 
 <hr style="height: 2px">
@@ -27,6 +32,6 @@
 <button hidden type="button" #openActiveViewModal class="btn btn-danger" data-bs-target="#activeModal" data-bs-toggle="modal">
 </button>
 
-<active-modal-view [isEditable]="memberAccess" [selectedActive]="selectedActive" [projectId]="projectSelectedId"
-    [usersInProject]="usersInProject" (reload)="reloadGridTable()">
+<active-modal-view [isEditable]="memberAccess" [isEditing]="isEditing" [selectedActive]="selectedActive" 
+    [projectId]="projectSelectedId" [usersInProject]="usersInProject" (reload)="reloadGridTable()">
 </active-modal-view>

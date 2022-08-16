@@ -209,7 +209,7 @@ export class ActiveComponent extends ImanSubmodule implements OnInit {
     selectedActive: ActiveShowDto | undefined
 
     // active form in modal view
-    isEditable: boolean = false
+    isEditing: boolean = false
 
 
     /***************************
@@ -242,12 +242,18 @@ export class ActiveComponent extends ImanSubmodule implements OnInit {
             next: (n) => {
                 this.containError = false
                 this.selectedActive = n
-                this.isEditable = false
+                this.isEditing = false
             },
             error: (e) => {
                 this.returnPrincipalError(e)
             }
         })
+    }
+
+    newActive() {
+        this.selectedActive = undefined
+        this.isEditing = true
+        this.openActiveViewModal.nativeElement.click()
     }
 
     /***************************
