@@ -111,3 +111,12 @@ INSERT INTO active_users (id, ips, notes, serial, status, active_id, user_id) VA
 
 -- ACTIVE CHILDRENS
 INSERT INTO active_children (active_id, children_id) VALUES(1, 2);
+
+
+-- VULNLINK
+INSERT INTO vulnlink (id, url, website_name, vulnlib_id) VALUES(1, 'https://nvd.nist.gov/vuln/detail/CVE-2022-24315', 'NVD', NULL);
+
+
+-- VULNLIB
+INSERT INTO vulnlib (id, active, affected_versions, company, creation_date, cvss, cvss_manual, cvss_vector, cwe_type, description, lang, modification_date, name, product, standard, project_id) VALUES(1, 1, 'V15.0.0.22020', 'SCADA', '2022-08-17 10:23:27.963', 7.5, 1, 'CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H', 'DoS', 'Out-of-bounds Read vulnerability exists that could cause denial of service when an attacker repeatedly sends a specially crafted message.', 'EN-US', '2022-08-17 10:23:27.963', 'CVE-2022-24315', 'Interactive Graphical SCADA System Data Server', 0, 1);
+INSERT INTO vulnlib (id, active, affected_versions, company, creation_date, cvss, cvss_manual, cvss_vector, cwe_type, description, lang, modification_date, name, product, standard, project_id) VALUES(2, 1, '3.1.6, 3.2.2 & older', 'Spring', '2022-08-17 10:23:27.963', 9.8, 0, 'CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H', 'Code injection', 'User can provide a specially crafted SpEL as a routing-expression that may result in remote code execution and access to local resources.', 'EN-US', '2022-08-17 10:23:27.963', 'CVE-2022-22963', 'Spring Cloud Function', 1, NULL);
