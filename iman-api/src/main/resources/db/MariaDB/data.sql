@@ -103,6 +103,7 @@ INSERT INTO incident_update (id, affects, `date`, description, estimated_time, p
 -- ACTIVES
 INSERT INTO active (id, active, code, company, cost, cpe, cpe_type, creation_date, description, end_adquisition, end_of_life, importance, last_modification, location, name, periodicity, product, start_adquisition, subscription_type, `type`, version, created_by_user_id, modified_by_user_id, project_id) VALUES(1, 1, 1, 'Huawei', 600.0, 'cpe:2.3:a:huawei:pcmanager:10.0.5.51:*:*:*:*:*:*:*', 'CPE 2.3', '2022-08-07 16:15:33.334', 'Personal laptop', NULL, NULL, 'High', '2022-08-07 16:15:33.336', 'Seville', 'Matebook D14', 'Once', 'Matebook', '2021-08-07 12:37:55.714', NULL, 'Hardware/Laptop', 'D14 8GB 512GB', 1, 1, 1);
 INSERT INTO active (id, active, code, company, cost, cpe, cpe_type, creation_date, description, end_adquisition, end_of_life, importance, last_modification, location, name, periodicity, product, start_adquisition, subscription_type, `type`, version, created_by_user_id, modified_by_user_id, project_id) VALUES(2, 1, 2, 'Microsoft', 5.0, 'cpe:2.3:o:microsoft:windows_11:22H1:*:*:*:*:*:x64:*', 'CPE 2.3', '2022-08-07 17:09:23.086', 'Main Operating System', NULL, NULL, 'High', '2022-08-07 17:09:23.451', 'Seville', 'Personal Windows 11', 'Once', 'Windows 11', '2021-08-07 12:37:55.714', NULL, 'Software/Operating system', '22H1', 1, 1, 1);
+INSERT INTO active (id, active, code, company, cost, cpe, cpe_type, creation_date, description, end_adquisition, end_of_life, importance, last_modification, location, name, periodicity, product, start_adquisition, subscription_type, `type`, version, created_by_user_id, modified_by_user_id, project_id) VALUES(3, 1, 3, 'Oracle', 1000, 'cpe:2.3:a:oracle:mysql_enterprise_monitor:8.0.29:*:*:*:*:*:*:*', 'CPE2.3', '2022-08-07 16:15:33.334', 'Oracle Enterprise Monitor', NULL, NULL, 'Critical', '2022-08-07 16:15:33.336', 'Seville', 'MySQL Enterprise Monitor', 'Per year', 'MySQL Enterprise Monitor', '2021-08-07 12:37:55.714', NULL, 'Software/Database', 'Enterprise', 1, 1, 1);
 
 
 -- ACTIVES USERS
@@ -120,3 +121,11 @@ INSERT INTO vulnlink (id, url, website_name, vulnlib_id) VALUES(1, 'https://nvd.
 -- VULNLIB
 INSERT INTO vulnlib (id, active, affected_versions, company, creation_date, cvss, cvss_manual, cvss_vector, cwe_type, description, lang, modification_date, name, product, standard, project_id) VALUES(1, 1, 'V15.0.0.22020', 'SCADA', '2022-08-17 10:23:27.963', 7.5, 1, 'CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H', 'DoS', 'Out-of-bounds Read vulnerability exists that could cause denial of service when an attacker repeatedly sends a specially crafted message.', 'EN-US', '2022-08-17 10:23:27.963', 'CVE-2022-24315', 'Interactive Graphical SCADA System Data Server', 0, 1);
 INSERT INTO vulnlib (id, active, affected_versions, company, creation_date, cvss, cvss_manual, cvss_vector, cwe_type, description, lang, modification_date, name, product, standard, project_id) VALUES(2, 1, '3.1.6, 3.2.2 & older', 'Spring', '2022-08-17 10:23:27.963', 9.8, 0, 'CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H', 'Code injection', 'User can provide a specially crafted SpEL as a routing-expression that may result in remote code execution and access to local resources.', 'EN-US', '2022-08-17 10:23:27.963', 'CVE-2022-22963', 'Spring Cloud Function', 1, NULL);
+
+
+-- VULN
+INSERT INTO vuln (id, active, affected_version, affects, code, creation_date, description, fixed, name, new_version, notified, patch_date, patch_type, created_by_user_id, project_id, active_id) VALUES(1, 1, 'Oracle Enterprise Monitor 8.0.29 and previous', 1, 0, '2022-08-18 17:02:58.617', 'Oracle MySQL Enterprise Monitor is affected by Spring4Shell, allowing RCE', 0, 'MySQL Enterprise / Spring4Shell', '8.0.30', 1, '2022-08-22 10:26:31.803', 'To fix', 1, 1, 3);
+
+
+-- VULN_VULNLIB
+INSERT INTO vuln_vulnlib (vuln_id, vulnlib_id) VALUES(1, 2);

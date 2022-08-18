@@ -45,7 +45,6 @@ public class VulnLibRestController {
     @GetMapping(value = "/{vulnLibId}")
 	public ResponseEntity<Object> getVulnLibIdById(@PathVariable Long vulnLibId) {
 		try {
-
 			VulnLibShowDto activeShowDto = vulnLibService.findVerifiedVulnLibShowById(vulnLibId);
 			return new ResponseEntity<>(activeShowDto, HttpStatus.OK);
 		} catch (Exception e) {
@@ -104,10 +103,4 @@ public class VulnLibRestController {
 			return new ResponseEntity<>(new Message(e.getMessage()), HttpStatus.CONFLICT);
 		}
 	}
-    
-    
-
-    
-
-
 }

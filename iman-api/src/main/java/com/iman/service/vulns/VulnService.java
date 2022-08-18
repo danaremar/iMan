@@ -2,10 +2,7 @@ package com.iman.service.vulns;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
-
-import javax.ws.rs.NotAllowedException;
 
 import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
@@ -23,16 +20,10 @@ import com.iman.model.users.User;
 import com.iman.model.vulnerability.Vuln;
 import com.iman.model.vulnerability.VulnCreateDto;
 import com.iman.model.vulnerability.VulnLib;
-import com.iman.model.vulnerability.VulnLibCreateDto;
-import com.iman.model.vulnerability.VulnLibListDto;
-import com.iman.model.vulnerability.VulnLibSearchDto;
-import com.iman.model.vulnerability.VulnLibShowDto;
-import com.iman.model.vulnerability.VulnLibUpdateDto;
 import com.iman.model.vulnerability.VulnListDto;
 import com.iman.model.vulnerability.VulnSearchDto;
 import com.iman.model.vulnerability.VulnShowDto;
 import com.iman.model.vulnerability.VulnUpdateDto;
-import com.iman.repository.vulns.VulnRepository;
 import com.iman.repository.vulns.VulnRepository;
 import com.iman.service.actives.ActiveService;
 import com.iman.service.projects.ProjectService;
@@ -84,6 +75,13 @@ public class VulnService {
         exampleVuln.setActive(true);
         Example<Vuln> example = Example.of(exampleVuln);
         return vulnRepository.findOne(example).orElseThrow();
+    }
+
+    public Long countVulnsInProject(Project project) {
+        Vuln exampleVuln = new Vuln();
+        exampleVuln.setProject(project);
+        Example<Vuln> example = Example.of(exampleVuln);
+        return vulnRepository.count(example);
     }
 
     /*
@@ -149,15 +147,22 @@ public class VulnService {
         // Permissions
         Project project = projectService.findProjectById(projectId);
         projectService.verifyOwnerOrAdmin(project);
+        
+        // Properties not allowed to map
+        Active active = activeService.findActiveById(vulnCreateDto.getRelActiveId());
+        vulnCreateDto.setRelActiveId(null);
+        List<VulnLib> vulnLibIdLs = vulnLibIdsToVulnLibs(vulnCreateDto.getVulnlibIdLs());
+        vulnCreateDto.setVulnlibIdLs(null);
 
         // Creation
         Vuln v = modelMapper.map(vulnCreateDto, Vuln.class);
+        v.setCode(countVulnsInProject(project));
         v.setActive(true);
         v.setProject(project);
         v.setCreationDate(new Date());
         v.setCreatedBy(userService.getCurrentUser());
-        v.setRelActive(activeService.findActiveById(vulnCreateDto.getActiveId()));
-        v.setVulnlib(vulnLibIdsToVulnLibs(vulnCreateDto.getVulnlibIdLs()));
+        v.setRelActive(active);
+        v.setVulnlib(vulnLibIdLs);
 
         // Save
         Vuln a = vulnRepository.save(v);
@@ -170,7 +175,7 @@ public class VulnService {
      */
 
     @Transactional
-    public VulnShowDto createVuln(VulnUpdateDto vulnUpdateDto, Long projectId) {
+    public VulnShowDto updateVuln(VulnUpdateDto vulnUpdateDto) {
 
         // Get previous vuln
         Vuln oldVuln = findVulnById(vulnUpdateDto.getId());
@@ -178,14 +183,21 @@ public class VulnService {
         // Permissions
         projectService.verifyOwnerOrAdmin(oldVuln.getProject());
 
+        // Properties not allowed to map
+        Active active = activeService.findActiveById(vulnUpdateDto.getRelActiveId());
+        vulnUpdateDto.setRelActiveId(null);
+        List<VulnLib> vulnLibIdLs = vulnLibIdsToVulnLibs(vulnUpdateDto.getVulnlibIdLs());
+        vulnUpdateDto.setVulnlibIdLs(null);
+
         // Update & fetch from previous
         Vuln newVuln = modelMapper.map(vulnUpdateDto, Vuln.class);
+        newVuln.setCode(oldVuln.getCode());
         newVuln.setActive(true);
         newVuln.setProject(oldVuln.getProject());
         newVuln.setCreationDate(new Date());
         newVuln.setCreatedBy(userService.getCurrentUser());
-        newVuln.setRelActive(activeService.findActiveById(vulnUpdateDto.getActiveId()));
-        newVuln.setVulnlib(vulnLibIdsToVulnLibs(vulnUpdateDto.getVulnlibIdLs()));
+        newVuln.setRelActive(active);
+        newVuln.setVulnlib(vulnLibIdLs);
 
         // Save
         Vuln a = vulnRepository.save(newVuln);

@@ -164,7 +164,7 @@ public class ActiveService {
 		Project project = projectService.findProjectById(activeCreateDto.getProjectId());
 		projectService.verifyOwnerOrAdmin(project);
 
-		// To must saved in activeUsersRepository
+		// Properties not allowed to map
 		List<ActiveUsersCreateDto> activeUsersCreateDto = activeCreateDto.getActiveUsers();
 		activeCreateDto.setActiveUsers(null);
 
@@ -200,7 +200,7 @@ public class ActiveService {
 		// Permissions
 		projectService.verifyOwnerOrAdmin(oldActive.getProject());
 		
-		// To must saved in activeUsersRepository
+		// Properties not allowed to map
 		List<ActiveUsersCreateDto> activeUsersCreateDto = activeUpdateDto.getActiveUsers();
 		activeUpdateDto.setActiveUsers(null);
 
