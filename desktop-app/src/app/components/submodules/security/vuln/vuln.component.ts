@@ -17,13 +17,96 @@ import { ImanSubmodule } from "../../submodule.component";
     templateUrl: './vuln.component.html',
     styleUrls: ['./vuln.component.css'],
 })
-export class VulnlibComponent extends ImanSubmodule implements OnInit {
+export class VulnComponent extends ImanSubmodule implements OnInit {
 
     /***************************
             AG GRID
     ***************************/
 
-    incCol = []
+    incCol = [
+        {
+            headerName: "Code",
+            field: "code",
+            sortable: true,
+            filter: true,
+            maxWidth: 120,
+            unSortIcon: true,
+            pinned: 'left'
+        },
+        {
+            headerName: "Name",
+            field: "name",
+            sortable: true,
+            filter: true,
+            resizable: true
+        },
+        {
+            headerName: "Creation date",
+            field: "creationDate",
+            sortable: true,
+            filter: true,
+            resizable: true,
+            valueFormatter: (params: { data: VulnListDto }) => params.data != undefined ? this.formatDateAgGrid(params.data.creationDate) : ''
+        },
+        {
+            headerName: "Affected version",
+            field: "affectedVersion",
+            sortable: true,
+            filter: true,
+            resizable: true
+        },
+        {
+            headerName: "New version",
+            field: "version",
+            sortable: true,
+            filter: true,
+            resizable: true
+        },
+        {
+            headerName: "Affects",
+            field: "affects",
+            sortable: true,
+            filter: true,
+            resizable: true
+        },
+        {
+            headerName: "Notified",
+            field: "notified",
+            sortable: true,
+            filter: true,
+            resizable: true
+        },
+        {
+            headerName: "Fixed",
+            field: "fixed",
+            sortable: true,
+            filter: true,
+            resizable: true
+        },
+        {
+            headerName: "Patch type",
+            field: "patchType",
+            sortable: true,
+            filter: true,
+            resizable: true
+        },
+        {
+            headerName: "Patch date",
+            field: "patchDate",
+            sortable: true,
+            filter: true,
+            resizable: true,
+            valueFormatter: (params: { data: VulnListDto }) => params.data != undefined ? this.formatDateAgGrid(params.data.patchDate) : ''
+        },
+        {
+            headerName: "Created by",
+            field: "createdBy",
+            sortable: true,
+            filter: true,
+            resizable: true,
+            valueFormatter: (params: { data: VulnListDto }) => params.data != undefined ? this.formatUsernameAgGrid(params.data.createdBy) : ''
+        },
+    ]
 
     private gridApi: any
     private gridColumnApi: any

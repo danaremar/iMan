@@ -124,7 +124,7 @@ INSERT INTO vulnlib (id, active, affected_versions, company, creation_date, cvss
 
 
 -- VULN
-INSERT INTO vuln (id, active, affected_version, affects, code, creation_date, description, fixed, name, new_version, notified, patch_date, patch_type, created_by_user_id, project_id, active_id) VALUES(1, 1, 'Oracle Enterprise Monitor 8.0.29 and previous', 1, 0, '2022-08-18 17:02:58.617', 'Oracle MySQL Enterprise Monitor is affected by Spring4Shell, allowing RCE', 0, 'MySQL Enterprise / Spring4Shell', '8.0.30', 1, '2022-08-22 10:26:31.803', 'To fix', 1, 1, 3);
+INSERT INTO vuln (id, active, affected_version, affects, code, creation_date, description, fixed, name, new_version, notified, patch_date, patch_type, created_by_user_id, project_id, active_id) VALUES(1, 1, 'Oracle Enterprise Monitor 8.0.29 and previous', 1, 1, '2022-08-18 17:02:58.617', 'Oracle MySQL Enterprise Monitor is affected by Spring4Shell, allowing RCE', 0, 'MySQL Enterprise / Spring4Shell', '8.0.30', 1, '2022-08-22 10:26:31.803', 'To fix', 1, 1, 3);
 
 
 -- VULN_VULNLIB

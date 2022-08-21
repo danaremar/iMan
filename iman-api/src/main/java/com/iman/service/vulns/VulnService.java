@@ -156,7 +156,7 @@ public class VulnService {
 
         // Creation
         Vuln v = modelMapper.map(vulnCreateDto, Vuln.class);
-        v.setCode(countVulnsInProject(project));
+        v.setCode(countVulnsInProject(project) + 1);
         v.setActive(true);
         v.setProject(project);
         v.setCreationDate(new Date());

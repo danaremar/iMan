@@ -12,7 +12,7 @@
     </div>
     <div class="mx-3">
         <a ngbTooltip="Add active" placement="left" [openDelay]="300"
-            *ngIf="adminAccess && projectSelectedId!=undefined && projectSelectedId!=0" (click)="newActive()">
+            *ngIf="adminAccess && projectSelectedId!=undefined && projectSelectedId!=0" (click)="newVulnLib()">
             <em class="bi bi-plus-lg"></em>
         </a>
     </div>
@@ -22,7 +22,7 @@
 
 <!-- TABLE -->
 <div class="overflow-auto scrollable-content">
-    <ag-grid-angular style="width: 100%; height: 100%" class="ag-theme-alpine-dark" [rowData]="vulnLib"
+    <ag-grid-angular style="width: 100%; height: 100%" class="ag-theme-alpine-dark" [rowData]="vulnlib"
         [columnDefs]="incCol" [cacheBlockSize]="pageSize" [pagination]="true" [paginationPageSize]="pageSize"
         [enableRangeSelection]="true" (gridReady)="onGridReady($event)" [rowModelType]="'infinite'"
         (rowDoubleClicked)="loadSelectedRow($event)">

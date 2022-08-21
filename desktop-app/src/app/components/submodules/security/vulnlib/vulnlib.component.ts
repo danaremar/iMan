@@ -29,7 +29,7 @@ export class VulnlibComponent extends ImanSubmodule implements OnInit {
             field: "name",
             sortable: true,
             filter: true,
-            maxWidth: 120,
+            maxWidth: 200,
             unSortIcon: true,
             pinned: 'left'
         },
@@ -40,7 +40,6 @@ export class VulnlibComponent extends ImanSubmodule implements OnInit {
             filter: true,
             resizable: true
         },
-        
         {
             headerName: "Product",
             field: "product",
@@ -172,7 +171,7 @@ export class VulnlibComponent extends ImanSubmodule implements OnInit {
         })
     }
 
-    newVulnLin() {
+    newVulnLib() {
         this.selectedVulnLib = undefined
         this.isEditing = true
         this.openVulnLibViewModal.nativeElement.click()

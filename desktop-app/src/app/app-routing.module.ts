@@ -12,6 +12,7 @@ import { GanttComponent } from './components/submodules/gantt/gantt.component';
 import { IncidentComponent } from './components/submodules/incident/incident.component';
 import { ActiveComponent } from './components/submodules/security/active/active.component';
 import { VulnlibComponent } from './components/submodules/security/vulnlib/vulnlib.component';
+import { VulnComponent } from './components/submodules/security/vuln/vuln.component';
 
 const routes: Routes = [
   { path: '', component: AppComponent },
@@ -26,9 +27,9 @@ const routes: Routes = [
       { path: 'sprint', component: SprintComponent },
       { path: 'gantt', component: GanttComponent },
       { path: 'incidents', component: IncidentComponent},
-      { path: 'security', component: ActiveComponent},
       { path: 'actives', component: ActiveComponent},
       { path: 'vulnlib', component: VulnlibComponent},
+      { path: 'vulns', component: VulnComponent },
     ],
   },
 
