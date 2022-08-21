@@ -24,7 +24,88 @@ export class VulnlibComponent extends ImanSubmodule implements OnInit {
             AG GRID
     ***************************/
 
-    incCol = []
+    incCol = [
+        {
+            headerName: "Name",
+            field: "name",
+            sortable: true,
+            filter: true,
+            maxWidth: 120,
+            unSortIcon: true,
+            pinned: 'left'
+        },
+        {
+            headerName: "Company",
+            field: "company",
+            sortable: true,
+            filter: true,
+            resizable: true
+        },
+        
+        {
+            headerName: "Product",
+            field: "product",
+            sortable: true,
+            filter: true,
+            resizable: true
+        },
+        {
+            headerName: "Affected versions",
+            field: "affectedVersions",
+            sortable: true,
+            filter: true,
+            resizable: true
+        },
+        {
+            headerName: "Standard",
+            field: "standard",
+            sortable: true,
+            filter: true,
+            resizable: true
+        },
+        {
+            headerName: "Creation date",
+            field: "creationDate",
+            sortable: true,
+            filter: true,
+            resizable: true
+        },
+        {
+            headerName: "Modification date",
+            field: "modificationDate",
+            sortable: true,
+            filter: true,
+            resizable: true
+        },
+        {
+            headerName: "CWE type",
+            field: "cweType",
+            sortable: true,
+            filter: true,
+            resizable: true
+        },
+        {
+            headerName: "CWE",
+            field: "cwe",
+            sortable: true,
+            filter: true,
+            resizable: true
+        },
+        {
+            headerName: "CVSS",
+            field: "cvss",
+            sortable: true,
+            filter: true,
+            resizable: true
+        },
+        {
+            headerName: "CVSS vector",
+            field: "cvssVector",
+            sortable: true,
+            filter: true,
+            resizable: true
+        }
+    ]
 
     private gridApi: any
     private gridColumnApi: any

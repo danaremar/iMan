@@ -74,6 +74,7 @@ export class VulnLibListDto {
         creationDate: Date,
         modificationDate: Date,
         cweType: string,
+        cwe: string,
         cvss: number,
         cvssVector: string,
         lang: string
@@ -88,6 +89,7 @@ export class VulnLibListDto {
         this.creationDate = creationDate
         this.modificationDate = modificationDate
         this.cweType = cweType
+        this.cwe = cwe
         this.cvss = cvss
         this.cvssVector = cvssVector
         this.lang = lang
@@ -103,6 +105,7 @@ export class VulnLibListDto {
     creationDate: Date
     modificationDate: Date
     cweType: string
+    cwe: string
     cvss: number
     cvssVector: string
     lang: string
@@ -120,12 +123,13 @@ export class VulnLibShowDto extends VulnLibListDto {
         creationDate: Date,
         modificationDate: Date,
         cweType: string,
+        cwe: string,
         cvss: number,
         cvssVector: string,
         lang: string,
         vulnlinks: Array<VulnLinkShowDto>
     ) {
-        super(id, name, description, company, product, affectedVersions, standard, creationDate, modificationDate, cweType, cvss, cvssVector, lang)
+        super(id, name, description, company, product, affectedVersions, standard, creationDate, modificationDate, cweType, cwe, cvss, cvssVector, lang)
         this.vulnlinks = vulnlinks
     }
 

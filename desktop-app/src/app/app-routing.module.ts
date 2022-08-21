@@ -11,6 +11,7 @@ import { UserComponent } from './components/submodules/user/user.component';
 import { GanttComponent } from './components/submodules/gantt/gantt.component';
 import { IncidentComponent } from './components/submodules/incident/incident.component';
 import { ActiveComponent } from './components/submodules/security/active/active.component';
+import { VulnlibComponent } from './components/submodules/security/vulnlib/vulnlib.component';
 
 const routes: Routes = [
   { path: '', component: AppComponent },
@@ -27,6 +28,7 @@ const routes: Routes = [
       { path: 'incidents', component: IncidentComponent},
       { path: 'security', component: ActiveComponent},
       { path: 'actives', component: ActiveComponent},
+      { path: 'vulnlib', component: VulnlibComponent},
     ],
   },
 
