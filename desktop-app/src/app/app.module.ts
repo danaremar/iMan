@@ -30,6 +30,7 @@ import { ShowUserPhoto } from './components/auxiliar/show_user/show_user.compone
 import { VulnlibComponent } from './components/submodules/security/vulnlib/vulnlib.component';
 import { VulnComponent } from './components/submodules/security/vuln/vuln.component';
 import { ModalVulnLib } from './components/submodules/security/vulnlib/modal/modal_vulnlib.component';
+import { ModalVuln } from './components/submodules/security/vuln/modal/modal_vuln.component';
 
 @NgModule({
   declarations: [
@@ -51,7 +52,8 @@ import { ModalVulnLib } from './components/submodules/security/vulnlib/modal/mod
     ShowUserPhoto,
     VulnlibComponent,
     ModalVulnLib,
-    VulnComponent
+    VulnComponent,
+    ModalVuln
   ],
   imports: [
     DragDropModule,
