@@ -85,9 +85,9 @@ export class ProjectComponent extends ImanSubmodule implements OnInit {
 
     loadMyRoles() {
         this.myRoles = []       // clear
-        for (var project of this.myProjects) {
+        for (let project of this.myProjects) {
             loopRole:
-            for (var role of project.projectRoles) {
+            for (let role of project.projectRoles) {
                 if (role.user.username == this.tokenService.getUsername()) {
                     this.myRoles.push(role.role)
                     break loopRole
@@ -164,7 +164,7 @@ export class ProjectComponent extends ImanSubmodule implements OnInit {
     }
 
     projectRoleError(err: any, msg: string) {
-        var retErr = err.error.text
+        let retErr = err.error.text
         if (retErr == undefined) {
             retErr = msg
         }
@@ -213,7 +213,7 @@ export class ProjectComponent extends ImanSubmodule implements OnInit {
     }
 
     roleError(err: any, msg: string) {
-        var retErr = err.error.text
+        let retErr = err.error.text
         if (retErr == undefined) {
             retErr = msg
         }

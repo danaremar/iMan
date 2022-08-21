@@ -147,7 +147,7 @@ export class KanbanComponent extends ImanSubmodule implements OnInit {
                     this.loadKanbanBySelectedSprint()
                 },
                 err => {
-                    var r = err.error.text
+                    let r = err.error.text
                     if (r == undefined) {
                         r = 'Error produced'
                     }
@@ -176,7 +176,7 @@ export class KanbanComponent extends ImanSubmodule implements OnInit {
                 this.loadKanbanBySelectedSprint()
             },
             err => {
-                var r = err.error.text
+                let r = err.error.text
                 if (r == undefined) {
                     r = 'Error produced'
                 }
@@ -261,7 +261,7 @@ export class KanbanComponent extends ImanSubmodule implements OnInit {
 
     updateTemporallyDragDrop(event: CdkDragDrop<any>) {
         // saved task
-        var task = this.kanban[event.previousContainer.data.id - 1].tasks[event.previousIndex]
+        let task = this.kanban[event.previousContainer.data.id - 1].tasks[event.previousIndex]
 
         // delete previous
         this.kanban[event.previousContainer.data.id - 1].tasks.splice(event.previousIndex, 1)

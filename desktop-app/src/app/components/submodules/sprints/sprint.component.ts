@@ -100,7 +100,7 @@ export class SprintComponent extends ImanSubmodule implements OnInit {
     }
 
     returnNewError(err: any) {
-        var r = err.error.text
+        let r = err.error.text
         if (r == undefined) {
             r = "Error adding the user"
         }
@@ -119,7 +119,7 @@ export class SprintComponent extends ImanSubmodule implements OnInit {
                 this.updateSprintContainError = false
             },
             err => {
-                var r = err.error.text
+                let r = err.error.text
                 if (r == undefined) {
                     r = "Error adding the user"
                 }

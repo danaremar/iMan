@@ -102,7 +102,7 @@ export class UserComponent extends ImanSubmodule implements OnInit {
     }
 
     uploadProfileImage(images: any) {
-        var file: File = images.files[0]
+        let file: File = images.files[0]
         if(file && file.size > 4000000) {
             this.returnPrincipalError('Profile image can\'t be bigger than 4MB')
         } else if(file?.type != 'image/jpeg' && file?.type != 'image/jpg' && file?.type != 'image/png'){
