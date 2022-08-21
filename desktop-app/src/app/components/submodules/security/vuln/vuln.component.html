@@ -1,0 +1,34 @@
+<!-- MENU -->
+<div class="d-flex mb-3 mr-3 flex-wrap">
+    <div class="flex-grow-1 center d-flex flex-wrap">
+        <div class="d-flex mx-3 my-auto" *ngIf="myProjects && myProjects.length!=0">
+            <em class="bi bi-md bi-folder2 me-2" ngbTooltip="Project" placement="bottom" [openDelay]="300"></em>
+            <select class="m-auto" (change)="loadProjectByIdEvent($event.target)">
+                <option class="dark-text" *ngFor="let p of myProjects"
+                    [attr.selected]="p.id==projectSelectedId?true:null" [ngValue]="p" value="{{p.id}}">
+                    {{p.name}}</option>
+            </select>
+        </div>
+    </div>
+    <div class="mx-3">
+        <a ngbTooltip="Add active" placement="left" [openDelay]="300"
+            *ngIf="adminAccess && projectSelectedId!=undefined && projectSelectedId!=0" (click)="newActive()">
+            <em class="bi bi-plus-lg"></em>
+        </a>
+    </div>
+</div>
+
+<hr style="height: 2px">
+
+<!-- TABLE -->
+<div class="overflow-auto scrollable-content">
+    <ag-grid-angular style="width: 100%; height: 100%" class="ag-theme-alpine-dark" [rowData]="vulns"
+        [columnDefs]="incCol" [cacheBlockSize]="pageSize" [pagination]="true" [paginationPageSize]="pageSize"
+        [enableRangeSelection]="true" (gridReady)="onGridReady($event)" [rowModelType]="'infinite'"
+        (rowDoubleClicked)="loadSelectedRow($event)">
+    </ag-grid-angular>
+</div>
+
+<button hidden type="button" #openVulnViewModal class="btn btn-danger" data-bs-target="#vulnModal"
+    data-bs-toggle="modal">
+</button>

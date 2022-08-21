@@ -2,20 +2,20 @@ import { Component, OnInit, ViewChild } from "@angular/core";
 import { FormBuilder } from "@angular/forms";
 import { IDatasource, IGetRowsParams } from "ag-grid-community";
 import { ShowUser } from "src/app/models/user/show-user";
-import { VulnLibListDto, VulnLibShowDto } from "src/app/models/vulns/vulnlib";
+import { VulnListDto, VulnShowDto } from "src/app/models/vulns/vuln";
 import { TokenService } from "src/app/services/authentication/token.service";
 import { EffortService } from "src/app/services/effort/effort.service";
 import { KanbanService } from "src/app/services/kanban/kanban.service";
 import { ProjectService } from "src/app/services/projects/project.service";
 import { SprintService } from "src/app/services/sprints/sprint.service";
-import { VulnLibService } from "src/app/services/vulns/vulnlib.service";
+import { VulnService } from "src/app/services/vulns/vuln.service";
 import { environment } from "src/environments/environment";
 import { ImanSubmodule } from "../../submodule.component";
 
 @Component({
-    selector: 'iMan-vulnlib',
-    templateUrl: './vulnlib.component.html',
-    styleUrls: ['./vulnlib.component.css'],
+    selector: 'iMan-vuln',
+    templateUrl: './vuln.component.html',
+    styleUrls: ['./vuln.component.css'],
 })
 export class VulnlibComponent extends ImanSubmodule implements OnInit {
 
@@ -23,88 +23,7 @@ export class VulnlibComponent extends ImanSubmodule implements OnInit {
             AG GRID
     ***************************/
 
-    incCol = [
-        {
-            headerName: "Name",
-            field: "name",
-            sortable: true,
-            filter: true,
-            maxWidth: 120,
-            unSortIcon: true,
-            pinned: 'left'
-        },
-        {
-            headerName: "Company",
-            field: "company",
-            sortable: true,
-            filter: true,
-            resizable: true
-        },
-        
-        {
-            headerName: "Product",
-            field: "product",
-            sortable: true,
-            filter: true,
-            resizable: true
-        },
-        {
-            headerName: "Affected versions",
-            field: "affectedVersions",
-            sortable: true,
-            filter: true,
-            resizable: true
-        },
-        {
-            headerName: "Standard",
-            field: "standard",
-            sortable: true,
-            filter: true,
-            resizable: true
-        },
-        {
-            headerName: "Creation date",
-            field: "creationDate",
-            sortable: true,
-            filter: true,
-            resizable: true
-        },
-        {
-            headerName: "Modification date",
-            field: "modificationDate",
-            sortable: true,
-            filter: true,
-            resizable: true
-        },
-        {
-            headerName: "CWE type",
-            field: "cweType",
-            sortable: true,
-            filter: true,
-            resizable: true
-        },
-        {
-            headerName: "CWE",
-            field: "cwe",
-            sortable: true,
-            filter: true,
-            resizable: true
-        },
-        {
-            headerName: "CVSS",
-            field: "cvss",
-            sortable: true,
-            filter: true,
-            resizable: true
-        },
-        {
-            headerName: "CVSS vector",
-            field: "cvssVector",
-            sortable: true,
-            filter: true,
-            resizable: true
-        }
-    ]
+    incCol = []
 
     private gridApi: any
     private gridColumnApi: any
@@ -123,13 +42,13 @@ export class VulnlibComponent extends ImanSubmodule implements OnInit {
     ***************************/
 
     // open modal view
-    @ViewChild('openVulnViewModal') openVulnLibViewModal: any
+    @ViewChild('openVulnViewModal') openVulnViewModal: any
 
     // list of vulnlib
-    vulnlib: Array<VulnLibListDto> = []
+    vulns: Array<VulnListDto> = []
 
     // select vulnlin
-    selectedVulnLib: VulnLibShowDto | undefined
+    selectedVuln: VulnShowDto | undefined
 
     // active form in modal view
     isEditing: boolean = false
@@ -140,7 +59,7 @@ export class VulnlibComponent extends ImanSubmodule implements OnInit {
             CONSTRUCTOR
     ***************************/
 
-    constructor(effortService: EffortService, kanbanService: KanbanService, sprintService: SprintService, projectService: ProjectService, formBuilder: FormBuilder, tokenService: TokenService, public vulnLibService: VulnLibService) {
+    constructor(effortService: EffortService, kanbanService: KanbanService, sprintService: SprintService, projectService: ProjectService, formBuilder: FormBuilder, tokenService: TokenService, public vulnService: VulnService) {
         super(effortService, kanbanService, sprintService, projectService, formBuilder, tokenService)
     }
 
@@ -160,22 +79,19 @@ export class VulnlibComponent extends ImanSubmodule implements OnInit {
     }
 
     loadSelectedData(obj: any) {
-        this.vulnLibService.getVulnLibById(obj.id).subscribe({
+        this.vulnService.getVulnById(obj.id).subscribe({
             next: (n) => {
                 this.containError = false
-                this.selectedVulnLib = n
+                this.selectedVuln = n
                 this.isEditing = false
-            },
-            error: (e) => {
-                this.returnPrincipalError(e)
             }
         })
     }
 
-    newVulnLin() {
-        this.selectedVulnLib = undefined
+    newVuln() {
+        this.selectedVuln = undefined
         this.isEditing = true
-        this.openVulnLibViewModal.nativeElement.click()
+        this.openVulnViewModal.nativeElement.click()
     }
 
 
@@ -200,8 +116,6 @@ export class VulnlibComponent extends ImanSubmodule implements OnInit {
         }
     }
 
-
-
     /***************************
         METHODS -> AG GRID 
     ***************************/
@@ -214,7 +128,7 @@ export class VulnlibComponent extends ImanSubmodule implements OnInit {
         // load view/edit data
         this.loadSelectedData(event.data)
         // open modal
-        this.openVulnLibViewModal.nativeElement.click()
+        this.openVulnViewModal.nativeElement.click()
     }
 
 
@@ -225,17 +139,17 @@ export class VulnlibComponent extends ImanSubmodule implements OnInit {
     }
 
     getRows(params: IGetRowsParams) {
-        if (this.projectSelectedId) {
+        if(this.projectSelectedId) {
             this.pageSize = this.gridApi.paginationGetPageSize()
             this.pageNumber = this.gridApi.paginationGetCurrentPage() + 1
-            this.vulnLibService.findVulnLibsByProject(this.projectSelectedId, this.pageNumber, this.pageSize, params.sortModel, params.filterModel, this.incCol).subscribe({
+            this.vulnService.findVulnsByProject(this.projectSelectedId, this.pageNumber, this.pageSize, params.sortModel, params.filterModel, this.incCol).subscribe({
                 next: (n) => {
                     this.containError = false
-                    this.vulnlib = n.content
+                    this.vulns = n.content
                     this.pageNumber = n.pageable.pageNumber + 1
                     this.pageSize = n.pageable.pageSize
                     this.totalElements = n.totalElements
-                    params.successCallback(this.vulnlib,this.totalElements)
+                    params.successCallback(this.vulns,this.totalElements)
                 },
                 error: (e) => {
                     this.returnPrincipalError(e)
@@ -250,5 +164,6 @@ export class VulnlibComponent extends ImanSubmodule implements OnInit {
         this.gridColumnApi = params.columnApi;
         this.gridApi.setDatasource(this.dataSource);
     }
+
 
 }
