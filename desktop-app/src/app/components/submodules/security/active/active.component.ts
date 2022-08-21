@@ -14,7 +14,7 @@ import { ActiveService } from "src/app/services/actives/actives.service";
 import { IDatasource, IGetRowsParams } from "ag-grid-community";
 
 @Component({
-    selector: 'iMan-security',
+    selector: 'iMan-active',
     templateUrl: './active.component.html',
     styleUrls: ['./active.component.css'],
 })
@@ -326,16 +326,6 @@ export class ActiveComponent extends ImanSubmodule implements OnInit {
         this.gridApi = params.api;
         this.gridColumnApi = params.columnApi;
         this.gridApi.setDatasource(this.dataSource);
-    }
-
-
-
-    /***************************
-       METHODS -> IMAGE
-    ***************************/
-
-    public getProfileImageUrlFromUser(user: ShowUser): any {
-        return this.userService.getUrlFromProfile(user.imageUid)
     }
 
 }
