@@ -29,6 +29,7 @@ import { ModalActive } from './components/submodules/security/active/modal/modal
 import { ShowUserPhoto } from './components/auxiliar/show_user/show_user.component';
 import { VulnlibComponent } from './components/submodules/security/vulnlib/vulnlib.component';
 import { VulnComponent } from './components/submodules/security/vuln/vuln.component';
+import { ModalVulnLib } from './components/submodules/security/vulnlib/modal/modal_vulnlib.component';
 
 @NgModule({
   declarations: [
@@ -49,6 +50,7 @@ import { VulnComponent } from './components/submodules/security/vuln/vuln.compon
     ModalActive,
     ShowUserPhoto,
     VulnlibComponent,
+    ModalVulnLib,
     VulnComponent
   ],
   imports: [

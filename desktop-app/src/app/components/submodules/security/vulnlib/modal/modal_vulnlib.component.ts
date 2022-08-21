@@ -1,7 +1,7 @@
 import { DatePipe } from "@angular/common";
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from "@angular/core";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { VulnLibCreateDto, VulnLibShowDto } from "src/app/models/vulns/vulnlib";
+import { FormArray, FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { VulnLibCreateDto, VulnLibShowDto, VulnLibUpdateDto, VulnLinkCreateDto, VulnLinkShowDto } from "src/app/models/vulns/vulnlib";
 import { VulnLibService } from "src/app/services/vulns/vulnlib.service";
 
 @Component({
@@ -53,7 +53,7 @@ export class ModalVulnLib implements OnInit {
             cvss: ['', []],
             cvssVector: ['', []],
             lang: ['', []],
-            vulnlinks: ['', []]
+            vulnlinks: this.formBuilder.array([])
         })
     }
 
@@ -96,8 +96,9 @@ export class ModalVulnLib implements OnInit {
                 cvss: [this.selectedVulnLib.cvss, []],
                 cvssVector: [this.selectedVulnLib.cvssVector, []],
                 lang: [this.selectedVulnLib.lang, []],
-                vulnlinks: [this.selectedVulnLib.vulnlinks, []]
+                vulnlinks: this.formBuilder.array([])
             })
+
         }
     }
 
@@ -143,15 +144,42 @@ export class ModalVulnLib implements OnInit {
         }
     }
 
+    vulnlinkToSave(): Array<VulnLinkCreateDto> {
+        return this.vulnlinks.controls.map(x => new VulnLinkCreateDto(x.value.websiteName, x.value.url))
+    }
+
     newVulnLib() {
-        if(this.projectId) {
+        if (this.projectId) {
             // create object
-            let createVulnLib: VulnLibCreateDto = new VulnLibCreateDto(this.formVulnLib.value.name,this.formVulnLib.value.description,this.formVulnLib.value.company,this.formVulnLib.value.product,this.formVulnLib.value.affectedVersions,this.formVulnLib.value.standard,this.formVulnLib.value.cweType,this.formVulnLib.value.cvss,this.formVulnLib.value.cvssVector,this.formVulnLib.value.lang,[])
+            let createVulnLib: VulnLibCreateDto = new VulnLibCreateDto(this.formVulnLib.value.name, this.formVulnLib.value.description, this.formVulnLib.value.company, this.formVulnLib.value.product, this.formVulnLib.value.affectedVersions, this.formVulnLib.value.standard, this.formVulnLib.value.cweType, this.formVulnLib.value.cvss, this.formVulnLib.value.cvssVector, this.formVulnLib.value.lang, this.vulnlinkToSave())
+
+            // rest
+            this.vulnLibService.createVulnLib(this.projectId, createVulnLib).subscribe({
+                next: (n) => {
+                    this.handleNext(n)
+                },
+                error: (e) => {
+                    this.handleError(e)
+                }
+            })
         }
     }
 
     editVulnLib() {
+        if (this.projectId && this.selectedVulnLib) {
+            // create object
+            let updateVulnLib: VulnLibUpdateDto = new VulnLibUpdateDto(this.selectedVulnLib.id, this.formVulnLib.value.name, this.formVulnLib.value.description, this.formVulnLib.value.company, this.formVulnLib.value.product, this.formVulnLib.value.affectedVersions, this.formVulnLib.value.standard, this.formVulnLib.value.cweType, this.formVulnLib.value.cvss, this.formVulnLib.value.cvssVector, this.formVulnLib.value.lang, this.vulnlinkToSave())
 
+            // rest
+            this.vulnLibService.updateVulnLib(updateVulnLib).subscribe({
+                next: (n) => {
+                    this.handleNext(n)
+                },
+                error: (e) => {
+                    this.handleError(e)
+                }
+            })
+        }
     }
 
 
@@ -164,5 +192,23 @@ export class ModalVulnLib implements OnInit {
     getFormatedDate(date: Date, format: string) {
         let datePipe = new DatePipe('en-US');
         return datePipe.transform(date, format);
+    }
+
+    // VULNLINKS
+    get vulnlinks(): FormArray {
+        return this.formVulnLib.get("vulnlinks") as FormArray
+    }
+    addVulnLinkForm(c: VulnLinkShowDto | undefined) {
+        if (c) {
+            let fg = this.formBuilder.group({
+                id: [c.id, []],
+                websiteName: [c.websiteName, []],
+                url: [c.url, []],
+            })
+            this.vulnlinks.push(fg)
+        }
+    }
+    removeVulnLinkForm(i: number) {
+        this.vulnlinks.removeAt(i)
     }
 }
