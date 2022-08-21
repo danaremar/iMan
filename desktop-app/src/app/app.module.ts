@@ -24,7 +24,6 @@ import { GanttComponent } from './components/submodules/gantt/gantt.component';
 import { IncidentComponent } from './components/submodules/incident/incident.component';
 import { AgGridModule } from 'ag-grid-angular';
 import { TaskComponent } from './components/submodules/kanban/task/task.component';
-import { SecurityComponent } from './components/submodules/security/security.component';
 import { ActiveComponent } from './components/submodules/security/active/active.component';
 import { ModalActive } from './components/submodules/security/active/modal/modal_active.component';
 import { ShowUserPhoto } from './components/auxiliar/show_user/show_user.component';
@@ -45,7 +44,6 @@ import { VulnlibComponent } from './components/submodules/security/vulnlib/vulnl
     GanttComponent,
     IncidentComponent,
     TaskComponent,
-    SecurityComponent,
     ActiveComponent,
     ModalActive,
     ShowUserPhoto,
