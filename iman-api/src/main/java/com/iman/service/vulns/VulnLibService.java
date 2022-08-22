@@ -132,6 +132,7 @@ public class VulnLibService {
         vl.setStandard(false);
         vl.setCreationDate(new Date());
         vl.setModificationDate(new Date());
+        vl.setLang("EN-US");
 
         // Save
         VulnLib v = vulnLibRepository.save(vl);
@@ -165,7 +166,9 @@ public class VulnLibService {
         newVl.setCvssManual(true);
         newVl.setStandard(false);
         newVl.setProject(oldVl.getProject());
+        newVl.setCreationDate(oldVl.getCreationDate());
         newVl.setModificationDate(new Date());
+        newVl.setLang("EN-US");
 
         // Save
         VulnLib v = vulnLibRepository.save(newVl);
