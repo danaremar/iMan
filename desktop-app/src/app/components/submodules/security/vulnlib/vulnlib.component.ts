@@ -122,7 +122,7 @@ export class VulnlibComponent extends ImanSubmodule implements OnInit {
     ***************************/
 
     // open modal view
-    @ViewChild('openVulnViewModal') openVulnLibViewModal: any
+    @ViewChild('openVulnLibViewModal') openVulnLibViewModal: any
 
     // list of vulnlib
     vulnlib: Array<VulnLibListDto> = []

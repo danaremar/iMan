@@ -1,0 +1,106 @@
+<div class="modal fade" id="vulnLibModal" tabindex="-1" aria-labelledby="vulnLibModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content bg-dark-5">
+            <div class="modal-body">
+                <div class="card overflow-auto">
+
+                    <!-- title -->
+                    <div class="d-flex">
+                        <div class="flex-grow-1 card-title mt-2">{{selectedVulnLib!=undefined?
+                            (isEditing?'Update vulnlib': selectedVulnLib.name):
+                            'New vulnlib'}}</div>
+                        <div class="close-card-button" data-bs-dismiss="modal">
+                            <em class="bi bi-x"></em>
+                        </div>
+                    </div>
+
+                    <!-- errors -->
+                    <div *ngIf="containError" class="alert alert-danger mt-5">
+                        {{messageError}}
+                    </div>
+
+                    <!-- VIEW VULNLIB -->
+                    <div *ngIf="selectedVulnLib!=undefined && !isEditing" class="container">
+
+                        <div class="row">
+
+                            <!-- LEFT CONTAINER -->
+                            <div class="d-flex flex-wrap col-lg-6 p-3">
+
+                                <!-- description -->
+                                <div class="w-100">
+                                    <div class="d-flex flex-wrap">
+                                        <em class="bi bi-card-text my-auto" style="font-size: 20px !important;"></em>
+                                        <div class="text-break my-auto mx-2">Description</div>
+                                    </div>
+                                    <div class="text-break my-auto mt-2">{{selectedVulnLib.description}}</div>
+                                </div>
+
+                                <!-- company -->
+                                <div class="w-50 d-flex flex-wrap">
+                                    <div class="me-2">Company:</div>
+                                    <div>{{selectedVulnLib.company}}</div>
+                                </div>
+
+                                <!-- product -->
+                                <div class="w-50 d-flex flex-wrap">
+                                    <div class="me-2">Product:</div>
+                                    <div>{{selectedVulnLib.product}}</div>
+                                </div>
+
+                                <!-- affectedVersions -->
+                                <div class="w-100">
+                                    <div class="me-2">Affected versions:</div>
+                                    <div class="text-break my-auto mt-2">{{selectedVulnLib.affectedVersions}}</div>
+                                </div>
+
+                                <!-- standard -->
+                                <div class="w-50 d-flex flex-wrap">
+                                    <div class="me-2">Standard:</div>
+                                    <div>{{selectedVulnLib.standard}}</div>
+                                </div>
+
+                                <!-- cweType -->
+                                <div class="w-50 d-flex flex-wrap">
+                                    <div class="me-2">CWE:</div>
+                                    <div>{{selectedVulnLib.cweType}}</div>
+                                </div>
+
+                                <!-- cvss -->
+                                <div class="w-50 d-flex flex-wrap">
+                                    <div class="me-2">CVSS:</div>
+                                    <div>{{selectedVulnLib.cvss}}</div>
+                                </div>
+
+                                <!-- cvssVector -->
+                                <div class="w-50 d-flex flex-wrap">
+                                    <div class="me-2">CVSS vector:</div>
+                                    <div>{{selectedVulnLib.cvssVector}}</div>
+                                </div>
+
+                                <!-- vulnlinks -->
+                                <div class="w-50 d-flex flex-wrap">
+                                    <div class="me-2">Product:</div>
+                                    <div>{{selectedVulnLib.vulnlinks}}</div>
+                                </div>
+
+                            </div>
+
+                            <!-- RIGHT CONTAINER -->
+                            <div class="col-lg-6 p-3">
+
+                                <div class="m-text">Links</div>
+                                <div class="" *ngFor="let l in selectedVulnLib.vulnlinks">
+                                    <a href="l.url">l.websiteName</a>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
