@@ -1,0 +1,143 @@
+<div class="modal fade" id="vulnModal" tabindex="-1" aria-labelledby="vulnModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content bg-dark-5">
+            <div class="modal-body">
+                <div class="card overflow-auto">
+
+                    <!-- title -->
+                    <div class="d-flex">
+                        <div class="flex-grow-1 card-title mt-2">{{selectedVuln!=undefined?
+                            (isEditing?'Update vuln': selectedVuln.name):
+                            'New vuln'}}</div>
+                        <div class="close-card-button" data-bs-dismiss="modal">
+                            <em class="bi bi-x"></em>
+                        </div>
+                    </div>
+
+                    <!-- errors -->
+                    <div *ngIf="containError" class="alert alert-danger mt-5">
+                        {{messageError}}
+                    </div>
+
+                    <!-- VIEW VULN -->
+                    <div *ngIf="selectedVuln!=undefined && !isEditing" class="container">
+                        <div class="row">
+
+                            <!-- LEFT CONTAINER -->
+                            <div class="d-flex flex-wrap col-lg-6 p-3">
+
+                                <!-- description -->
+                                <div class="w-100" *ngIf="selectedVuln.description">
+                                    <div class="d-flex flex-wrap my-3">
+                                        <em class="bi bi-card-text my-auto" style="font-size: 20px !important;"></em>
+                                        <div class="text-break my-auto mx-2">Description</div>
+                                    </div>
+                                    <div class="text-break my-auto mt-2">{{selectedVuln.description}}</div>
+                                </div>
+
+                                <div class="d-flex w-100 mt-4 mb-1">
+                                    <em class="bi bi-clock-history my-auto me-3"></em>
+                                    <div class="m-text my-auto">Versions</div>
+                                </div>
+
+                                <!-- affectedVersion -->
+                                <div class="w-100 d-flex flex-wrap my-3" *ngIf="selectedVuln.affectedVersion">
+                                    <div class="me-2">Affected version:</div>
+                                    <div>{{selectedVuln.affectedVersion}}</div>
+                                </div>
+
+                                <!-- newVersion -->
+                                <div class="w-100 d-flex flex-wrap my-3" *ngIf="selectedVuln.affectedVersion">
+                                    <div class="me-2">Affected version:</div>
+                                    <div>{{selectedVuln.affectedVersion}}</div>
+                                </div>
+
+                                <div class="d-flex w-100 mt-4 mb-1">
+                                    <em class="bi bi-clock-history my-auto me-3"></em>
+                                    <div class="m-text my-auto">Status</div>
+                                </div>
+
+                                <!-- affects -->
+                                <div class="w-25 d-flex flex-wrap my-3" *ngIf="selectedVuln.affects!=undefined">
+                                    <div class="me-2">Affects</div>
+                                    <em class="bi {{selectedVuln.affects?'bi-check-square':'bi-square'}}"></em>
+                                </div>
+
+                                <!-- notified -->
+                                <div class="w-25 d-flex flex-wrap my-3" *ngIf="selectedVuln.notified!=undefined">
+                                    <div class="me-2">Notified</div>
+                                    <em class="bi {{selectedVuln.notified?'bi-check-square':'bi-square'}}"></em>
+                                </div>
+
+                                <!-- fixed -->
+                                <div class="w-25 d-flex flex-wrap my-3" *ngIf="selectedVuln.fixed!=undefined">
+                                    <div class="me-2">Fixed</div>
+                                    <em class="bi {{selectedVuln.fixed?'bi-check-square':'bi-square'}}"></em>
+                                </div>
+
+                                <!-- patchType -->
+                                <div class="w-100 d-flex flex-wrap my-3"
+                                    *ngIf="selectedVuln.patchType || selectedVuln.patchDate">
+                                    <div>Patch</div>
+                                    <div *ngIf="selectedVuln.patchType">: {{selectedVuln.patchType}}</div>
+                                    <div *ngIf="selectedVuln.patchDate">:
+                                        {{getFormatedDate(selectedVuln.patchDate,'HH:mm:ss dd/MM/yyyy')}}</div>
+                                </div>
+
+                                <!-- creation: user + date -->
+                                <div class="w-50 p-2 d-flex flex-wrap">
+                                    <div class="my-auto me-2">Creation: </div>
+                                    <show-user [user]="selectedVuln.createdBy"></show-user>
+                                    <div class="my-auto ms-2">(
+                                        {{getFormatedDate(selectedVuln.creationDate,'HH:mm:ss dd/MM/yyyy')}})
+                                    </div>
+                                </div>
+
+                                <!-- relActive -->
+                                <div class="w-100 d-flex flex-wrap my-3" *ngIf="selectedVuln.affectedVersion">
+                                    <div class="me-2">Active:</div>
+                                    <div>(#{{selectedVuln.relActive.code}}) {{selectedVuln.relActive.name}}</div>
+                                </div>
+
+                            </div>
+
+                            <!-- RIGHT CONTAINER -->
+                            <div class="d-flex flex-wrap col-lg-6 p-3">
+
+                                <div class="d-flex w-100 mt-4 mb-2">
+                                    <em class="bi bi-people my-auto me-3"></em>
+                                    <div class="m-text my-auto">Vulnerability library</div>
+                                </div>
+
+                                <!-- vulnlib -->
+                                <table class="table">
+                                    <thead>
+                                        <th>Name</th>
+                                        <th>CWE</th>
+                                        <th>CVSS</th>
+                                        <th>CVSS Vector</th>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let a of selectedVuln.vulnlib">
+                                            <th>{{a.name}}</th>
+                                            <th>{{a.cweType}}</th>
+                                            <th>{{a.cvss}}</th>
+                                            <th>{{a.cvssVector}}</th>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+
+                        <!-- CREATE/UPDATE -->
+                        <div *ngIf="selectedVuln==undefined || (isEditable && isEditing)" class="container p-3">
+
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
