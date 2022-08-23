@@ -48,11 +48,9 @@ export class ModalVulnLib implements OnInit {
             company: ['', []],
             product: ['', []],
             affectedVersions: ['', []],
-            standard: ['', []],
             cweType: ['', []],
             cvss: ['', []],
             cvssVector: ['', []],
-            lang: ['', []],
             vulnlinks: this.formBuilder.array([])
         })
     }
@@ -91,11 +89,9 @@ export class ModalVulnLib implements OnInit {
                 company: [this.selectedVulnLib.company, []],
                 product: [this.selectedVulnLib.product, []],
                 affectedVersions: [this.selectedVulnLib.affectedVersions, []],
-                standard: [this.selectedVulnLib.standard, []],
                 cweType: [this.selectedVulnLib.cweType, []],
                 cvss: [this.selectedVulnLib.cvss, []],
                 cvssVector: [this.selectedVulnLib.cvssVector, []],
-                lang: [this.selectedVulnLib.lang, []],
                 vulnlinks: this.formBuilder.array([])
             })
 
@@ -132,7 +128,7 @@ export class ModalVulnLib implements OnInit {
         METHODS -> UPLOAD
     ***************************/
 
-    uploadTask() {
+    uploadVulnLib() {
 
         // CREATE
         if (this.selectedVulnLib == undefined) {
@@ -151,7 +147,7 @@ export class ModalVulnLib implements OnInit {
     newVulnLib() {
         if (this.projectId) {
             // create object
-            let createVulnLib: VulnLibCreateDto = new VulnLibCreateDto(this.formVulnLib.value.name, this.formVulnLib.value.description, this.formVulnLib.value.company, this.formVulnLib.value.product, this.formVulnLib.value.affectedVersions, this.formVulnLib.value.standard, this.formVulnLib.value.cweType, this.formVulnLib.value.cvss, this.formVulnLib.value.cvssVector, this.formVulnLib.value.lang, this.vulnlinkToSave())
+            let createVulnLib: VulnLibCreateDto = new VulnLibCreateDto(this.formVulnLib.value.name, this.formVulnLib.value.description, this.formVulnLib.value.company, this.formVulnLib.value.product, this.formVulnLib.value.affectedVersions, this.formVulnLib.value.cweType, this.formVulnLib.value.cvss, this.formVulnLib.value.cvssVector, this.formVulnLib.value.lang, this.vulnlinkToSave())
 
             // rest
             this.vulnLibService.createVulnLib(this.projectId, createVulnLib).subscribe({
@@ -168,7 +164,7 @@ export class ModalVulnLib implements OnInit {
     editVulnLib() {
         if (this.projectId && this.selectedVulnLib) {
             // create object
-            let updateVulnLib: VulnLibUpdateDto = new VulnLibUpdateDto(this.selectedVulnLib.id, this.formVulnLib.value.name, this.formVulnLib.value.description, this.formVulnLib.value.company, this.formVulnLib.value.product, this.formVulnLib.value.affectedVersions, this.formVulnLib.value.standard, this.formVulnLib.value.cweType, this.formVulnLib.value.cvss, this.formVulnLib.value.cvssVector, this.formVulnLib.value.lang, this.vulnlinkToSave())
+            let updateVulnLib: VulnLibUpdateDto = new VulnLibUpdateDto(this.selectedVulnLib.id, this.formVulnLib.value.name, this.formVulnLib.value.description, this.formVulnLib.value.company, this.formVulnLib.value.product, this.formVulnLib.value.affectedVersions, this.formVulnLib.value.cweType, this.formVulnLib.value.cvss, this.formVulnLib.value.cvssVector, this.formVulnLib.value.lang, this.vulnlinkToSave())
 
             // rest
             this.vulnLibService.updateVulnLib(updateVulnLib).subscribe({
@@ -201,9 +197,14 @@ export class ModalVulnLib implements OnInit {
     addVulnLinkForm(c: VulnLinkShowDto | undefined) {
         if (c) {
             let fg = this.formBuilder.group({
-                id: [c.id, []],
                 websiteName: [c.websiteName, []],
                 url: [c.url, []],
+            })
+            this.vulnlinks.push(fg)
+        } else {
+            let fg = this.formBuilder.group({
+                websiteName: ['', []],
+                url: ['', []],
             })
             this.vulnlinks.push(fg)
         }

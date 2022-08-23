@@ -6,7 +6,6 @@ export class VulnLibCreateDto {
         company: string,
         product: string,
         affectedVersions: string,
-        standard: boolean,
         cweType: string,
         cvss: number,
         cvssVector: string,
@@ -18,7 +17,6 @@ export class VulnLibCreateDto {
         this.company = company
         this.product = product
         this.affectedVersions = affectedVersions
-        this.standard = standard
         this.cweType = cweType
         this.cvss = cvss
         this.cvssVector = cvssVector
@@ -31,7 +29,6 @@ export class VulnLibCreateDto {
     company: string
     product: string
     affectedVersions: string
-    standard: boolean
     cweType: string
     cvss: number
     cvssVector: string
@@ -47,14 +44,13 @@ export class VulnLibUpdateDto extends VulnLibCreateDto {
         company: string,
         product: string,
         affectedVersions: string,
-        standard: boolean,
         cweType: string,
         cvss: number,
         cvssVector: string,
         lang: string,
         vulnlinks: Array<VulnLinkCreateDto>
     ) {
-        super(name, description, company, product, affectedVersions, standard, cweType, cvss, cvssVector, lang, vulnlinks)
+        super(name, description, company, product, affectedVersions, cweType, cvss, cvssVector, lang, vulnlinks)
         this.id = id
     }
 

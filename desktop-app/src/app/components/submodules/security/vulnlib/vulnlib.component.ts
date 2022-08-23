@@ -29,7 +29,7 @@ export class VulnlibComponent extends ImanSubmodule implements OnInit {
             field: "name",
             sortable: true,
             filter: true,
-            maxWidth: 200,
+            maxWidth: 150,
             unSortIcon: true,
             pinned: 'left'
         },
@@ -38,6 +38,7 @@ export class VulnlibComponent extends ImanSubmodule implements OnInit {
             field: "company",
             sortable: true,
             filter: true,
+            width: 150,
             resizable: true
         },
         {
@@ -45,6 +46,7 @@ export class VulnlibComponent extends ImanSubmodule implements OnInit {
             field: "product",
             sortable: true,
             filter: true,
+            width: 250,
             resizable: true
         },
         {
@@ -59,21 +61,27 @@ export class VulnlibComponent extends ImanSubmodule implements OnInit {
             field: "standard",
             sortable: true,
             filter: true,
-            resizable: true
+            width: 120,
+            resizable: true,
+            valueFormatter: (params: { data: VulnLibListDto }) => params.data != undefined ? (params.data.standard?'Yes':'No') : ''
         },
         {
             headerName: "Creation date",
             field: "creationDate",
             sortable: true,
             filter: true,
-            resizable: true
+            width: 170,
+            resizable: true,
+            valueFormatter: (params: { data: VulnLibListDto }) => params.data != undefined ? this.formatDateAgGrid(params.data.creationDate) : ''
         },
         {
             headerName: "Modification date",
             field: "modificationDate",
             sortable: true,
             filter: true,
-            resizable: true
+            width: 170,
+            resizable: true,
+            valueFormatter: (params: { data: VulnLibListDto }) => params.data != undefined ? this.formatDateAgGrid(params.data.modificationDate) : ''
         },
         {
             headerName: "CWE type",
@@ -83,17 +91,11 @@ export class VulnlibComponent extends ImanSubmodule implements OnInit {
             resizable: true
         },
         {
-            headerName: "CWE",
-            field: "cwe",
-            sortable: true,
-            filter: true,
-            resizable: true
-        },
-        {
             headerName: "CVSS",
             field: "cvss",
             sortable: true,
             filter: true,
+            width: 90,
             resizable: true
         },
         {
@@ -101,6 +103,7 @@ export class VulnlibComponent extends ImanSubmodule implements OnInit {
             field: "cvssVector",
             sortable: true,
             filter: true,
+            width: 330,
             resizable: true
         }
     ]
