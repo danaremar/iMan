@@ -258,7 +258,7 @@
 
                                                 <div class="my-auto me-2 text-nowrap">Website name:</div>
                                                 <input class="form-control {{inputClass(formVulnLib, 'websiteName'+i)}}"
-                                                    type="text" formControlName="websiteName" maxlength="50" />
+                                                    type="text" formControlName="websiteName" maxlength="50" required/>
                                                 <div class="invalid-feedback" *ngIf="formVulnLib.get('websiteName'+i)?.touched 
                                                         && formVulnLib.get('websiteName'+i)?.invalid">
                                                     <div *ngIf="formVulnLib.get('websiteName'+i)?.errors?.required">
@@ -273,7 +273,7 @@
                                             <div class="d-flex ms-2">
                                                 <div class="my-auto me-2">URL:</div>
                                                 <input class="form-control {{inputClass(formVulnLib, 'url'+i)}}" type="text"
-                                                    formControlName="url" maxlength="255" />
+                                                    formControlName="url" maxlength="255" required/>
                                                 <div class="invalid-feedback" *ngIf="formVulnLib.get('url'+i)?.touched 
                                                         && formVulnLib.get('url'+i)?.invalid">
                                                     <div *ngIf="formVulnLib.get('url'+i)?.errors?.required">
