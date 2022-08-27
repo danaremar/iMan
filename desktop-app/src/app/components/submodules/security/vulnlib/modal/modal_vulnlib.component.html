@@ -82,7 +82,8 @@
                                 <!-- modificationDate -->
                                 <div class="w-50 d-flex flex-wrap my-3" *ngIf="selectedVulnLib.modificationDate">
                                     <div class="me-2">Modification date:</div>
-                                    <div>{{getFormatedDate(selectedVulnLib.modificationDate,'HH:mm:ss dd/MM/yyyy')}}</div>
+                                    <div>{{getFormatedDate(selectedVulnLib.modificationDate,'HH:mm:ss dd/MM/yyyy')}}
+                                    </div>
                                 </div>
 
 
@@ -242,21 +243,54 @@
                             </div>
 
                             <!-- vulnlinks -->
-                            <div class="col-lg-12 my-3 d-flex">
+                            <div class="col-lg-12 my-3">
                                 <div class="d-flex flex-wrap">
-                                    <div class="m-text me-auto">Vulnk links</div>
-                                    <button class="btn btn-success my-auto ms-3" (click)="addVulnLinkForm(undefined)">
+                                    <div class="m-text me-auto">Vulnlib links</div>
+                                    <button type="button" class="btn btn-success my-auto ms-3" (click)="addVulnLinkForm(undefined)">
                                         Add
                                     </button>
                                 </div>
 
                                 <div formArrayName="vulnlinks">
                                     <div *ngFor="let v of vulnlinks.controls; let i = index" class="d-flex mt-3">
-                                        <div class="my-auto">
-                                            <input type="text" formControlName="websiteName">
-                                            <input type="text" formControlName="url">
+                                        <div class="d-flex" [formGroupName]="i">
+                                            <div class="d-flex">
+
+                                                <div class="my-auto me-2 text-nowrap">Website name:</div>
+                                                <input class="form-control {{inputClass(formVulnLib, 'websiteName'+i)}}"
+                                                    type="text" formControlName="websiteName" maxlength="50" />
+                                                <div class="invalid-feedback" *ngIf="formVulnLib.get('websiteName'+i)?.touched 
+                                                        && formVulnLib.get('websiteName'+i)?.invalid">
+                                                    <div *ngIf="formVulnLib.get('websiteName'+i)?.errors?.required">
+                                                        Cannot be empty
+                                                    </div>
+                                                    <div *ngIf="formVulnLib.get('websiteName'+i)?.errors?.maxlength">
+                                                        Only 50 characters are allowed
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="d-flex ms-2">
+                                                <div class="my-auto me-2">URL:</div>
+                                                <input class="form-control {{inputClass(formVulnLib, 'url'+i)}}" type="text"
+                                                    formControlName="url" maxlength="255" />
+                                                <div class="invalid-feedback" *ngIf="formVulnLib.get('url'+i)?.touched 
+                                                        && formVulnLib.get('url'+i)?.invalid">
+                                                    <div *ngIf="formVulnLib.get('url'+i)?.errors?.required">
+                                                        Cannot be empty
+                                                    </div>
+                                                    <div *ngIf="formVulnLib.get('url'+i)?.errors?.maxlength">
+                                                        Only 255 characters are allowed
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <em class="bi bi-sm bi-trash-fill ms-auto" (click)="removeVulnLinkForm(i)"></em>
+
+                                        <!-- <input class="form-control" type="text" formControlName="websiteName"> -->
+                                        <!-- <input class="form-control" type="text" formControlName="url"> -->
+
+                                        <em class="bi bi-sm bi-trash-fill my-auto ms-auto"
+                                            (click)="removeVulnLinkForm(i)"></em>
                                     </div>
                                 </div>
                             </div>

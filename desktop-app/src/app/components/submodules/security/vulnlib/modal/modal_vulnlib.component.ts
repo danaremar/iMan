@@ -94,6 +94,9 @@ export class ModalVulnLib implements OnInit {
                 cvssVector: [this.selectedVulnLib.cvssVector, []],
                 vulnlinks: this.formBuilder.array([])
             })
+            if(this.selectedVulnLib.vulnlinks != undefined) {
+                this.selectedVulnLib.vulnlinks.forEach(a => this.addVulnLinkForm(a))
+            }
 
         }
     }
