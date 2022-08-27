@@ -24,7 +24,7 @@
                         <div class="row">
 
                             <!-- LEFT CONTAINER -->
-                            <div class="d-flex flex-wrap col-lg-6 p-3">
+                            <div class="d-flex flex-wrap col-lg-12 p-3">
 
                                 <!-- description -->
                                 <div class="w-100" *ngIf="selectedVuln.description">
@@ -47,9 +47,9 @@
                                 </div>
 
                                 <!-- newVersion -->
-                                <div class="w-100 d-flex flex-wrap my-3" *ngIf="selectedVuln.affectedVersion">
-                                    <div class="me-2">Affected version:</div>
-                                    <div>{{selectedVuln.affectedVersion}}</div>
+                                <div class="w-100 d-flex flex-wrap my-3" *ngIf="selectedVuln.newVersion">
+                                    <div class="me-2">New version:</div>
+                                    <div>{{selectedVuln.newVersion}}</div>
                                 </div>
 
                                 <div class="d-flex w-100 mt-4 mb-1">
@@ -59,19 +59,19 @@
 
                                 <!-- affects -->
                                 <div class="w-25 d-flex flex-wrap my-3" *ngIf="selectedVuln.affects!=undefined">
-                                    <div class="me-2">Affects</div>
+                                    <div class="me-2 my-auto">Affects</div>
                                     <em class="bi {{selectedVuln.affects?'bi-check-square':'bi-square'}}"></em>
                                 </div>
 
                                 <!-- notified -->
                                 <div class="w-25 d-flex flex-wrap my-3" *ngIf="selectedVuln.notified!=undefined">
-                                    <div class="me-2">Notified</div>
+                                    <div class="me-2 my-auto">Notified</div>
                                     <em class="bi {{selectedVuln.notified?'bi-check-square':'bi-square'}}"></em>
                                 </div>
 
                                 <!-- fixed -->
                                 <div class="w-25 d-flex flex-wrap my-3" *ngIf="selectedVuln.fixed!=undefined">
-                                    <div class="me-2">Fixed</div>
+                                    <div class="me-2 my-auto">Fixed</div>
                                     <em class="bi {{selectedVuln.fixed?'bi-check-square':'bi-square'}}"></em>
                                 </div>
 
@@ -85,7 +85,7 @@
                                 </div>
 
                                 <!-- creation: user + date -->
-                                <div class="w-50 p-2 d-flex flex-wrap">
+                                <div class="w-100 d-flex flex-wrap">
                                     <div class="my-auto me-2">Creation: </div>
                                     <show-user [user]="selectedVuln.createdBy"></show-user>
                                     <div class="my-auto ms-2">(
@@ -99,18 +99,14 @@
                                     <div>(#{{selectedVuln.relActive.code}}) {{selectedVuln.relActive.name}}</div>
                                 </div>
 
-                            </div>
 
-                            <!-- RIGHT CONTAINER -->
-                            <div class="d-flex flex-wrap col-lg-6 p-3">
-
-                                <div class="d-flex w-100 mt-4 mb-2">
+                                <div class="d-flex mt-4 mb-2">
                                     <em class="bi bi-people my-auto me-3"></em>
                                     <div class="m-text my-auto">Vulnerability library</div>
                                 </div>
 
                                 <!-- vulnlib -->
-                                <table class="table">
+                                <table class="table table-dark table-sm table-responsive">
                                     <thead>
                                         <th>Name</th>
                                         <th>CWE</th>
@@ -119,13 +115,23 @@
                                     </thead>
                                     <tbody>
                                         <tr *ngFor="let a of selectedVuln.vulnlib">
-                                            <th>{{a.name}}</th>
-                                            <th>{{a.cweType}}</th>
-                                            <th>{{a.cvss}}</th>
-                                            <th>{{a.cvssVector}}</th>
+                                            <td>{{a.name}}</td>
+                                            <td>{{a.cweType}}</td>
+                                            <td>{{a.cvss}}</td>
+                                            <td>{{a.cvssVector}}</td>
                                         </tr>
                                     </tbody>
                                 </table>
+
+                            </div>
+
+                            <!-- edit button -->
+                            <div *ngIf="isEditable && selectedVuln!=undefined"
+                                class="w-100 d-flex p-2 mt-2">
+                                <button type="button" class="btn btn-secondary ms-auto d-flex" (click)="edit()">
+                                    <em class="bi bi-sm bi-pencil-fill ms-auto me-2"></em>
+                                    <div class="my-auto">Edit</div>
+                                </button>
                             </div>
 
                         </div>

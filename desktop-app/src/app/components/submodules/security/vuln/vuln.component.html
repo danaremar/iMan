@@ -32,3 +32,6 @@
 <button hidden type="button" #openVulnViewModal class="btn btn-danger" data-bs-target="#vulnModal"
     data-bs-toggle="modal">
 </button>
+
+<vuln-modal-view [isEditable]="adminAccess" [isEditing]="isEditing" [selectedVuln]="selectedVuln"
+[projectId]="projectSelectedId" (reload)="reloadGridTable()"></vuln-modal-view>
