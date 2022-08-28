@@ -1,5 +1,6 @@
 package com.iman.service.vulns;
 
+import java.nio.file.AccessDeniedException;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -142,14 +143,17 @@ public class VulnService {
     
 
     @Transactional
-    public VulnShowDto createVuln(VulnCreateDto vulnCreateDto, Long projectId) {
+    public VulnShowDto createVuln(VulnCreateDto vulnCreateDto, Long projectId) throws AccessDeniedException {
 
         // Permissions
         Project project = projectService.findProjectById(projectId);
         projectService.verifyOwnerOrAdmin(project);
         
         // Properties not allowed to map
-        Active active = activeService.findActiveById(vulnCreateDto.getRelActiveId());
+        Active active = vulnCreateDto.getRelActiveId()!=null?activeService.findActiveById(vulnCreateDto.getRelActiveId()):null;
+        if(active!=null && !active.getProject().getId().equals(project.getId())){
+            throw new AccessDeniedException("Cannot be added actives from another project");
+        }
         vulnCreateDto.setRelActiveId(null);
         List<VulnLib> vulnLibIdLs = vulnLibIdsToVulnLibs(vulnCreateDto.getVulnlibIdLs());
         vulnCreateDto.setVulnlibIdLs(null);
@@ -175,7 +179,7 @@ public class VulnService {
      */
 
     @Transactional
-    public VulnShowDto updateVuln(VulnUpdateDto vulnUpdateDto) {
+    public VulnShowDto updateVuln(VulnUpdateDto vulnUpdateDto) throws AccessDeniedException {
 
         // Get previous vuln
         Vuln oldVuln = findVulnById(vulnUpdateDto.getId());
@@ -184,7 +188,10 @@ public class VulnService {
         projectService.verifyOwnerOrAdmin(oldVuln.getProject());
 
         // Properties not allowed to map
-        Active active = activeService.findActiveById(vulnUpdateDto.getRelActiveId());
+        Active active = vulnUpdateDto.getRelActiveId()!=null?activeService.findActiveById(vulnUpdateDto.getRelActiveId()):null;
+        if(active!=null && !active.getProject().getId().equals(oldVuln.getProject().getId())){
+            throw new AccessDeniedException("Cannot be added actives from another project");
+        }
         vulnUpdateDto.setRelActiveId(null);
         List<VulnLib> vulnLibIdLs = vulnLibIdsToVulnLibs(vulnUpdateDto.getVulnlibIdLs());
         vulnUpdateDto.setVulnlibIdLs(null);
