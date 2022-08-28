@@ -29,7 +29,7 @@ export class ModalActive implements OnInit {
     // is editing right now?
     @Input()
     isEditing: boolean = false
-    
+
     // emit one event to reload
     @Output()
     reload = new EventEmitter<boolean>()
@@ -128,9 +128,9 @@ export class ModalActive implements OnInit {
                 cpeType: [this.selectedActive.cpeType, []],
                 cpe: [this.selectedActive.cpe, []],
                 importance: [this.selectedActive.importance, []],
-                startAdquisition: [this.selectedActive.startAdquisition, []],
-                endAdquisition: [this.selectedActive.endAdquisition, []],
-                endOfLife: [this.selectedActive.endOfLife, []],
+                startAdquisition: [this.getFormatedDateTimeLikeInput(this.selectedActive.startAdquisition), []],
+                endAdquisition: [this.getFormatedDateTimeLikeInput(this.selectedActive.endAdquisition), []],
+                endOfLife: [this.getFormatedDateTimeLikeInput(this.selectedActive.endOfLife), []],
                 cost: [this.selectedActive.cost, []],
                 periodicity: [this.selectedActive.periodicity, []],
                 subscriptionType: [this.selectedActive.subscriptionType, []],
@@ -200,16 +200,21 @@ export class ModalActive implements OnInit {
     }
 
     activeUsersToSave(): Array<ActiveUsersCreateDto> {
-        return this.activeUsers.controls.map(x => new ActiveUsersCreateDto(
-            x.value.status, x.value.serial, x.value.notes, x.value.ips, x.value.username
-        ))
+        if(this.activeUsers){
+            return this.activeUsers.controls.map(x => new ActiveUsersCreateDto(
+                x.value.status, x.value.serial, x.value.notes, x.value.ips, x.value.username
+            ))
+        } else {
+            return []
+        }
+        
     }
 
     newActive() {
         if (this.projectId) {
 
             // create object
-            let createActive: ActiveCreateDto = new ActiveCreateDto(this.formActive.value.name, this.formActive.value.description, this.formActive.value.type, this.formActive.value.company, this.formActive.value.product, this.formActive.value.version, this.formActive.value.cpeType, this.formActive.value.cpe, this.formActive.value.importance, this.formActive.value.startAdquisition, this.formActive.value.endAdquisition, this.formActive.value.endOfLife, this.formActive.value.cost, this.formActive.value.periodicity, this.formActive.value.subscriptionType, this.formActive.value.location, this.childrensToSave(), this.activeUsersToSave(), this.projectId)
+            let createActive: ActiveCreateDto = new ActiveCreateDto(this.formActive.value.name, this.formActive.value.description, this.formActive.value.type, this.formActive.value.company, this.formActive.value.product, this.formActive.value.version, this.formActive.value.cpeType, this.formActive.value.cpe, this.formActive.value.importance, new Date(this.formActive.value.startAdquisition), new Date(this.formActive.value.endAdquisition), new Date(this.formActive.value.endOfLife), this.formActive.value.cost, this.formActive.value.periodicity, this.formActive.value.subscriptionType, this.formActive.value.location, this.childrensToSave(), this.activeUsersToSave(), this.projectId)
 
             // rest
             this.activeService.createActive(createActive).subscribe({
@@ -227,7 +232,7 @@ export class ModalActive implements OnInit {
         if (this.projectId && this.selectedActive) {
 
             // create object
-            let updateActive: ActiveUpdateDto = new ActiveUpdateDto(this.selectedActive.id,this.formActive.value.name, this.formActive.value.description, this.formActive.value.type, this.formActive.value.company, this.formActive.value.product, this.formActive.value.version, this.formActive.value.cpeType, this.formActive.value.cpe, this.formActive.value.importance, this.formActive.value.startAdquisition, this.formActive.value.endAdquisition, this.formActive.value.endOfLife, this.formActive.value.cost, this.formActive.value.periodicity, this.formActive.value.subscriptionType, this.formActive.value.location, this.childrensToSave(), this.activeUsersToSave())
+            let updateActive: ActiveUpdateDto = new ActiveUpdateDto(this.selectedActive.id, this.formActive.value.name, this.formActive.value.description, this.formActive.value.type, this.formActive.value.company, this.formActive.value.product, this.formActive.value.version, this.formActive.value.cpeType, this.formActive.value.cpe, this.formActive.value.importance, new Date(this.formActive.value.startAdquisition), new Date(this.formActive.value.endAdquisition), new Date(this.formActive.value.endOfLife), this.formActive.value.cost, this.formActive.value.periodicity, this.formActive.value.subscriptionType, this.formActive.value.location, this.childrensToSave(), this.activeUsersToSave())
 
             // rest
             this.activeService.updateActive(updateActive).subscribe({
@@ -248,6 +253,9 @@ export class ModalActive implements OnInit {
 
 
     // TIME
+    getFormatedDateTimeLikeInput(date: Date) {
+        return this.getFormatedDate(date, 'yyyy-MM-ddTHH:mm:ss')
+    }
     getFormatedDate(date: Date, format: string) {
         let datePipe = new DatePipe('en-US');
         return datePipe.transform(date, format);
@@ -271,11 +279,9 @@ export class ModalActive implements OnInit {
                     })
         }
     }
-
     get childrens(): FormArray {
         return this.formActive.get("children") as FormArray
     }
-
     addChildrenFormInput() {
         if (this.projectId) {
             let s: string = this.formAddChild.value.children
