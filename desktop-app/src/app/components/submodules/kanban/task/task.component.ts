@@ -1,5 +1,5 @@
 import { DatePipe } from "@angular/common";
-import { Component, Input, OnInit, ViewChild } from "@angular/core";
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { KanbanTask, KanbanTaskChildrens, KanbanTaskCreate, KanbanTaskUpdate } from "src/app/models/kanban/kanbanTask";
 import { ShowUser } from "src/app/models/user/show-user";
@@ -12,7 +12,7 @@ import { UserService } from "src/app/services/user/user.service";
     templateUrl: './task.component.html',
     styleUrls: ['./task.component.css']
 })
-export class TaskComponent implements OnInit {
+export class TaskComponent implements OnInit, OnChanges {
 
     // user can edit?
     @Input()
@@ -27,7 +27,7 @@ export class TaskComponent implements OnInit {
     usersInProject: Array<ShowUser> = []
 
     @Input()
-    selectedKanbanColumnId: number = 0
+    selectedKanbanColumnId: number | undefined = 0
 
     // all my tasks in the sprint
     @Input()
@@ -36,6 +36,10 @@ export class TaskComponent implements OnInit {
     // is editing right now?
     @Input()
     isEditing: boolean = false
+
+    // emit one event to reload
+    @Output()
+    reload = new EventEmitter<boolean>()
 
     // error messages
     containError: boolean = false
@@ -82,9 +86,12 @@ export class TaskComponent implements OnInit {
 
     }
 
-
     ngOnInit(): void {
-        // NOTHING
+        this.buildForm()
+    }
+
+    ngOnChanges(_changes: SimpleChanges): void {
+        this.buildForm()
     }
 
     /***************************
@@ -103,7 +110,7 @@ export class TaskComponent implements OnInit {
 
     edit() {
         this.isEditing = !this.isEditing
-        if(this.isEditing) {
+        if (this.isEditing) {
             this.buildForm()
         }
     }
@@ -131,6 +138,7 @@ export class TaskComponent implements OnInit {
         this.formAddAssignedUser.reset()
         this.selectedChildrens = []
         this.formAddChildrenTask.reset()
+        this.containError = false
     }
 
 
@@ -156,7 +164,7 @@ export class TaskComponent implements OnInit {
     ***************************/
 
     newTask() {
-        if (this.selectedChildrens) {
+        if (this.selectedChildrens && this.selectedKanbanColumnId) {
             let createTask: KanbanTaskCreate = new KanbanTaskCreate(this.formTask.value.title, this.formTask.value.description, this.formTask.value.estimatedTime, this.selectedKanbanColumnId, this.formTask.value.tags, this.formTask.value.importance, this.formTask.value.dueStartDate, this.formTask.value.dueEndDate, this.getUsernamesInArray(this.assignedUsers), this.getChildrenIdsInArray(this.selectedChildrens))
             this.kanbanService.createKanbanTask(createTask).subscribe({
                 next: (n) => {
@@ -194,11 +202,13 @@ export class TaskComponent implements OnInit {
     handleNext(n: any) {
         this.selectedTask = n
         this.clearForms()
+        this.reload.emit(true)
+        this.containError = false
         this.edit()
     }
 
     handleError(e: any) {
-        var r = e.error.text
+        let r = e.error.text
         if (r == undefined) {
             r = 'Error produced'
         }
@@ -222,17 +232,10 @@ export class TaskComponent implements OnInit {
         return datePipe.transform(date, format);
     }
 
-    // PROFILE IMAGE
-
-    public getProfileImageUrlFromUser(user: ShowUser): any {
-        return this.userService.getUrlFromProfile(user.imageUid)
-    }
-
     // USERS
-
     addAssignedUsername() {
-        var username = this.formAddAssignedUser.value.username
-        var u = this.usersInProject.find(x => x.username == username)
+        let username = this.formAddAssignedUser.value.username
+        let u = this.usersInProject.find(x => x.username == username)
         if (u !== undefined && this.assignedUsers.indexOf(u) == -1) {
             this.assignedUsers.push(u)
             this.formAddAssignedUser.reset()
@@ -250,8 +253,8 @@ export class TaskComponent implements OnInit {
     // CHILDRENS
 
     addChildrenTask() {
-        var children: number = this.formAddChildrenTask.value.children
-        var c = this.myTasks.find((x: KanbanTask) => x.id == children)
+        let children: number = this.formAddChildrenTask.value.children
+        let c = this.myTasks.find((x: KanbanTask) => x.id == children)
         if (c !== undefined && this.selectedChildrens.indexOf(c) == -1) {
             this.selectedChildrens.push(c)
             this.formAddChildrenTask.reset()

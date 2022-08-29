@@ -109,7 +109,7 @@ export class AuthComponent implements OnInit {
     }
 
     returnError(err: any, isLogin: boolean) {
-        var returned_error = err.error.text
+        let returned_error = err.error.text
         if (returned_error == undefined) {
             returned_error = 'Incorrect user'
         }

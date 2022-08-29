@@ -22,11 +22,13 @@ import com.iman.model.effort.EffortUpdateDto;
 import com.iman.model.util.Message;
 import com.iman.service.effort.EffortService;
 
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/effort")
-@Api(tags = "Effort")
+@Tag(name = "Effort")
+@SecurityRequirement(name = "Bearer Authentication")
 @CrossOrigin
 public class EffortRestController {
 

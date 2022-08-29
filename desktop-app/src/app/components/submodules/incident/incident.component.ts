@@ -249,7 +249,7 @@ export class IncidentComponent extends ImanSubmodule implements OnInit {
 
     formatCreationDate(incidentShowDto: IncidentShowDto): string {
         if (incidentShowDto != undefined && incidentShowDto.date != undefined) {
-            var date = this.getFormatedDate(incidentShowDto.date, 'HH:mm:ss dd/MM/yyyy')
+            let date = this.getFormatedDate(incidentShowDto.date, 'HH:mm:ss dd/MM/yyyy')
             return date ? date : ''
         } else {
             return ''
@@ -258,7 +258,7 @@ export class IncidentComponent extends ImanSubmodule implements OnInit {
 
     formatLastModification(incidentShowDto: IncidentShowDto): string {
         if (incidentShowDto != undefined && incidentShowDto.lastModification != undefined) {
-            var date = this.getFormatedDate(incidentShowDto.lastModification, 'HH:mm:ss dd/MM/yyyy')
+            let date = this.getFormatedDate(incidentShowDto.lastModification, 'HH:mm:ss dd/MM/yyyy')
             return date ? date : ''
         } else {
             return ''
@@ -292,7 +292,7 @@ export class IncidentComponent extends ImanSubmodule implements OnInit {
                         this.closebuttonModalView.nativeElement.click()
                     },
                     err => {
-                        var r = err.error.text
+                        let r = err.error.text
                         if (r == undefined) {
                             r = 'Error produced'
                         }
@@ -312,7 +312,7 @@ export class IncidentComponent extends ImanSubmodule implements OnInit {
                     this.isEditable = false
                 },
                 err => {
-                    var r = err.error.text
+                    let r = err.error.text
                     if (r == undefined) {
                         r = 'Error produced'
                     }
@@ -334,7 +334,7 @@ export class IncidentComponent extends ImanSubmodule implements OnInit {
                     this.reloadGridTable()
                 },
                 err => {
-                    var r = err.error.text
+                    let r = err.error.text
                     if (r == undefined) {
                         r = 'Error produced'
                     }

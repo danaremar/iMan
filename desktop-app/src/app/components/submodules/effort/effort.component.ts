@@ -157,7 +157,7 @@ export class EffortComponent extends ImanSubmodule implements OnInit {
                     this.getEfforts()
                 },
                 err => {
-                    var r = err.error.text
+                    let r = err.error.text
                     if (r == undefined) {
                         r = 'Error produced'
                     }

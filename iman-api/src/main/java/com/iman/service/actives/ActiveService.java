@@ -158,13 +158,13 @@ public class ActiveService {
 	 */
 
 	@Transactional
-	public void createActive(ActiveCreateDto activeCreateDto) {
+	public ActiveShowDto createActive(ActiveCreateDto activeCreateDto) {
 
 		// Permissions
 		Project project = projectService.findProjectById(activeCreateDto.getProjectId());
 		projectService.verifyOwnerOrAdmin(project);
 
-		// To must saved in activeUsersRepository
+		// Properties not allowed to map
 		List<ActiveUsersCreateDto> activeUsersCreateDto = activeCreateDto.getActiveUsers();
 		activeCreateDto.setActiveUsers(null);
 
@@ -182,7 +182,8 @@ public class ActiveService {
 		active.setActiveUsers(getActiveUsersFromCreate(activeUsersCreateDto, project));
 
 		// Save
-		activeRepository.save(active);
+		Active a = activeRepository.save(active);
+		return modelMapper.map(a, ActiveShowDto.class);
 	}
 
 	/*
@@ -191,7 +192,7 @@ public class ActiveService {
 	 */
 
 	@Transactional
-	public void updateActive(ActiveUpdateDto activeUpdateDto) {
+	public ActiveShowDto updateActive(ActiveUpdateDto activeUpdateDto) {
 
 		// Get previous active
 		Active oldActive = findActiveById(activeUpdateDto.getId());
@@ -199,7 +200,7 @@ public class ActiveService {
 		// Permissions
 		projectService.verifyOwnerOrAdmin(oldActive.getProject());
 		
-		// To must saved in activeUsersRepository
+		// Properties not allowed to map
 		List<ActiveUsersCreateDto> activeUsersCreateDto = activeUpdateDto.getActiveUsers();
 		activeUpdateDto.setActiveUsers(null);
 
@@ -209,15 +210,18 @@ public class ActiveService {
 		newActive.setCreationDate(oldActive.getCreationDate());
 		newActive.setActive(oldActive.getActive());
 		newActive.setCreatedBy(oldActive.getCreatedBy());
+		newActive.setProject(oldActive.getProject());
 		newActive.setLastModification(new Date());
 		newActive.setModifiedBy(userService.getCurrentUser());
+		
 
 		// Create from scratch
 		newActive.setChildren(getChildrenFromCreate(activeUpdateDto.getChildren()));
 		newActive.setActiveUsers(getActiveUsersFromCreate(activeUsersCreateDto, oldActive.getProject()));
 
 		// Save
-		activeRepository.save(newActive);
+		Active a = activeRepository.save(newActive);
+		return modelMapper.map(a, ActiveShowDto.class);
 
 	}
 

@@ -1,0 +1,351 @@
+<div class="modal fade" id="vulnModal" tabindex="-1" aria-labelledby="vulnModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content bg-dark-5">
+            <div class="modal-body">
+                <div class="card overflow-auto">
+
+                    <!-- title -->
+                    <div class="d-flex">
+                        <div class="flex-grow-1 card-title mt-2">{{selectedVuln!=undefined?
+                            (isEditing?'Update vuln': selectedVuln.name):
+                            'New vuln'}}</div>
+                        <div class="close-card-button" data-bs-dismiss="modal">
+                            <em class="bi bi-x"></em>
+                        </div>
+                    </div>
+
+                    <!-- errors -->
+                    <div *ngIf="containError" class="alert alert-danger mt-5">
+                        {{messageError}}
+                    </div>
+
+                    <!-- VIEW VULN -->
+                    <div *ngIf="selectedVuln!=undefined && !isEditing" class="container">
+                        <div class="row">
+
+                            <!-- LEFT CONTAINER -->
+                            <div class="d-flex flex-wrap col-lg-12 p-3">
+
+                                <!-- description -->
+                                <div class="w-100" *ngIf="selectedVuln.description">
+                                    <div class="d-flex flex-wrap my-3">
+                                        <em class="bi bi-card-text my-auto" style="font-size: 20px !important;"></em>
+                                        <div class="text-break my-auto mx-2">Description</div>
+                                    </div>
+                                    <div class="text-break my-auto mt-2">{{selectedVuln.description}}</div>
+                                </div>
+
+                                <div class="d-flex w-100 mt-4 mb-1">
+                                    <em class="bi bi-clock-history my-auto me-3"></em>
+                                    <div class="m-text my-auto">Versions</div>
+                                </div>
+
+                                <!-- affectedVersion -->
+                                <div class="w-100 d-flex flex-wrap my-3" *ngIf="selectedVuln.affectedVersion">
+                                    <div class="me-2">Affected version:</div>
+                                    <div>{{selectedVuln.affectedVersion}}</div>
+                                </div>
+
+                                <!-- newVersion -->
+                                <div class="w-100 d-flex flex-wrap my-3" *ngIf="selectedVuln.newVersion">
+                                    <div class="me-2">New version:</div>
+                                    <div>{{selectedVuln.newVersion}}</div>
+                                </div>
+
+                                <div class="d-flex w-100 mt-4 mb-1">
+                                    <em class="bi bi-clock-history my-auto me-3"></em>
+                                    <div class="m-text my-auto">Status</div>
+                                </div>
+
+                                <!-- affects -->
+                                <div class="w-25 d-flex flex-wrap my-3" *ngIf="selectedVuln.affects!=undefined">
+                                    <div class="me-2 my-auto">Affects</div>
+                                    <em class="bi {{selectedVuln.affects?'bi-check-square':'bi-square'}}"></em>
+                                </div>
+
+                                <!-- notified -->
+                                <div class="w-25 d-flex flex-wrap my-3" *ngIf="selectedVuln.notified!=undefined">
+                                    <div class="me-2 my-auto">Notified</div>
+                                    <em class="bi {{selectedVuln.notified?'bi-check-square':'bi-square'}}"></em>
+                                </div>
+
+                                <!-- fixed -->
+                                <div class="w-25 d-flex flex-wrap my-3" *ngIf="selectedVuln.fixed!=undefined">
+                                    <div class="me-2 my-auto">Fixed</div>
+                                    <em class="bi {{selectedVuln.fixed?'bi-check-square':'bi-square'}}"></em>
+                                </div>
+
+                                <!-- patchType -->
+                                <div class="w-100 d-flex flex-wrap my-3"
+                                    *ngIf="selectedVuln.patchType || selectedVuln.patchDate">
+                                    <div>Patch</div>
+                                    <div *ngIf="selectedVuln.patchType">: {{selectedVuln.patchType}}</div>
+                                    <div *ngIf="selectedVuln.patchDate">:
+                                        {{getFormatedDate(selectedVuln.patchDate,'HH:mm:ss dd/MM/yyyy')}}</div>
+                                </div>
+
+                                <!-- creation: user + date -->
+                                <div class="w-100 d-flex flex-wrap">
+                                    <div class="my-auto me-2">Creation: </div>
+                                    <show-user [user]="selectedVuln.createdBy"></show-user>
+                                    <div class="my-auto ms-2">(
+                                        {{getFormatedDate(selectedVuln.creationDate,'HH:mm:ss dd/MM/yyyy')}})
+                                    </div>
+                                </div>
+
+                                <!-- relActive -->
+                                <div class="w-100 d-flex flex-wrap my-3" *ngIf="selectedVuln.affectedVersion">
+                                    <div class="me-2">Active:</div>
+                                    <div>(#{{selectedVuln.relActive.code}}) {{selectedVuln.relActive.name}}</div>
+                                </div>
+
+
+                                <div class="d-flex mt-4 mb-2">
+                                    <em class="bi bi-people my-auto me-3"></em>
+                                    <div class="m-text my-auto">Vulnerability library</div>
+                                </div>
+
+                                <!-- vulnlib -->
+                                <table class="table table-dark table-sm table-responsive">
+                                    <thead>
+                                        <th>Name</th>
+                                        <th>CWE</th>
+                                        <th>CVSS</th>
+                                        <th>CVSS Vector</th>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let a of selectedVuln.vulnlib">
+                                            <td>{{a.name}}</td>
+                                            <td>{{a.cweType}}</td>
+                                            <td>{{a.cvss}}</td>
+                                            <td>{{a.cvssVector}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                            </div>
+
+                            <!-- edit button -->
+                            <div *ngIf="isEditable && selectedVuln!=undefined" class="w-100 d-flex p-2 mt-2">
+                                <button type="button" class="btn btn-secondary ms-auto d-flex" (click)="edit()">
+                                    <em class="bi bi-sm bi-pencil-fill ms-auto me-2"></em>
+                                    <div class="my-auto">Edit</div>
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- CREATE/UPDATE -->
+                    <div *ngIf="selectedVuln==undefined || (isEditable && isEditing)" class="container p-3">
+
+                        <form class="row" [formGroup]="formVuln" (ngSubmit)="uploadVuln()">
+
+                            <!-- name -->
+                            <div class="col-lg-12 my-3 d-flex">
+                                <div class="my-auto me-2">Name:</div>
+                                <input class="form-control {{inputClass(formVuln, 'name')}}" type="text"
+                                    formControlName="name" maxlength="50" minlength="2" />
+                                <div class="invalid-feedback" *ngIf="formVuln.get('name')?.touched 
+                                        && formVuln.get('name')?.invalid">
+                                    <div *ngIf="formVuln.get('name')?.errors?.required">
+                                        Cannot be empty
+                                    </div>
+                                    <div *ngIf="formVuln.get('name')?.errors?.minlength">
+                                        Must containt at least 2 characters
+                                    </div>
+                                    <div *ngIf="formVuln.get('name')?.errors?.maxlength">
+                                        Only 50 characters are allowed
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- description -->
+                            <div class="col-lg-12 my-3">
+                                <div class="my-auto me-2">Description:</div>
+                                <textarea class="form-control {{inputClass(formVuln, 'description')}}"
+                                    formControlName="description" maxlength="255" rows="2"></textarea>
+                                <div class="invalid-feedback" *ngIf="formVuln.get('description')?.touched 
+                                    && formVuln.get('description')?.invalid">
+                                    <div *ngIf="formVuln.get('description')?.errors?.maxlength">
+                                        Only 255 characters are allowed
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- affectedVersion -->
+                            <div class="col-lg-12 my-3 d-flex">
+                                <div class="my-auto me-2">Affected version:</div>
+                                <input class="form-control {{inputClass(formVuln, 'affectedVersion')}}" type="text"
+                                    formControlName="affectedVersion" maxlength="50" />
+                                <div class="invalid-feedback" *ngIf="formVuln.get('affectedVersion')?.touched 
+                                        && formVuln.get('affectedVersion')?.invalid">
+                                    <div *ngIf="formVuln.get('affectedVersion')?.errors?.required">
+                                        Cannot be empty
+                                    </div>
+                                    <div *ngIf="formVuln.get('affectedVersion')?.errors?.maxlength">
+                                        Only 50 characters are allowed
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- newVersion -->
+                            <div class="col-lg-12 my-3 d-flex">
+                                <div class="my-auto me-2">New version:</div>
+                                <input class="form-control {{inputClass(formVuln, 'newVersion')}}" type="text"
+                                    formControlName="newVersion" maxlength="50" />
+                                <div class="invalid-feedback" *ngIf="formVuln.get('newVersion')?.touched 
+                                        && formVuln.get('newVersion')?.invalid">
+                                    <div *ngIf="formVuln.get('newVersion')?.errors?.required">
+                                        Cannot be empty
+                                    </div>
+                                    <div *ngIf="formVuln.get('newVersion')?.errors?.maxlength">
+                                        Only 50 characters are allowed
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-12 my-3 d-flex flex-wrap">
+
+                                <!-- affects -->
+                                <input class="form-check-input" type="checkbox" formControlName="affects"
+                                    id="flexAffects" class="me-2">
+                                <label class="form-check-label" for="flexAffects" class="me-3">
+                                    Affects
+                                </label>
+
+                                <!-- notified -->
+                                <input class="form-check-input" type="checkbox" formControlName="notified"
+                                    id="flexNotified" class="me-2">
+                                <label class="form-check-label" for="flexNotified" class="me-3">
+                                    Notified
+                                </label>
+
+
+                                <!-- fixed -->
+                                <input class="form-check-input" type="checkbox" formControlName="fixed" id="flexFixed"
+                                    class="me-2">
+                                <label class="form-check-label" for="flexFixed" class="me-3">
+                                    Fixed
+                                </label>
+
+                            </div>
+
+                            <!-- patchType -->
+                            <div class="col-lg-12 d-flex my-3">
+                                <div class="my-auto me-2">Patch type:</div>
+                                <input class="form-control {{inputClass(formVuln, 'patchType')}}" type="text"
+                                    formControlName="patchType" list="patchTypeLs" maxlength="50" />
+                                <div class="invalid-feedback"
+                                    *ngIf="formVuln.get('patchType')?.touched && formVuln.get('patchType')?.invalid">
+                                    <div *ngIf="formVuln.get('patchType')?.errors?.maxlength">
+                                        Only 50 characters are allowed
+                                    </div>
+                                </div>
+                                <datalist id="patchTypeLs">
+                                    <option>To fix</option>
+                                    <option>No fix</option>
+                                    <option>No solution exists</option>
+                                    <option>Waiting for patch</option>
+                                    <option>Mitigation</option>
+                                    <option>Workaround</option>
+                                    <option>Vendor patch</option>
+                                </datalist>
+                            </div>
+
+                            <!-- patchDate -->
+                            <div class="col-lg-12 d-flex my-3">
+                                <div class="my-auto me-2 text-nowrap">Patch date:</div>
+                                <input class="form-control {{inputClass(formVuln, 'patchDate')}}" type="datetime-local"
+                                    formControlName="patchDate" name="patchDate" min="1971-01-01" />
+                            </div>
+
+                            <!-- relActiveId -->
+                            <div class="d-flex mt-4 mb-2">
+                                <em class="bi bi-diagram-2 my-auto me-3"></em>
+                                <div class="m-text my-auto">Active</div>
+                            </div>
+                            <form [formGroup]="formAddActive" class="d-flex mt-1 mb-2">
+                                <em class="bi bi-search bi-sm my-auto me-3"></em>
+
+                                <!-- search by id -->
+                                <input class="form-control me-2" type="text" formControlName="id" hidden />
+
+                                <!-- search by code -->
+                                <div class="m-text my-auto">#</div>
+                                <input class="form-control me-2" list="searchChildrenByCode" type="text"
+                                    (keyup)="searchActiveByCode($event.target)" (mouseleave)="addActiveFormInput()"
+                                    formControlName="code" style="width: 100px;" />
+                                <datalist id="searchChildrenByCode">
+                                    <option *ngFor="let s of searchActives" [attr.data-value]="s.code">
+                                        {{s.code}}
+                                    </option>
+                                </datalist>
+
+                                <!-- search by name -->
+                                <div class="ms-2 s-text my-auto">Name:</div>
+                                <input class="form-control" list="searchChildrenByName" type="text"
+                                    (keyup)="searchActiveByName($event.target)" (mouseleave)="addActiveFormInput()"
+                                    formControlName="name" />
+                                <datalist id="searchChildrenByName">
+                                    <option *ngFor="let s of searchActives" [ngValue]="s" [attr.data-value]="s.name">
+                                        {{s.name}}
+                                    </option>
+                                </datalist>
+                            </form>
+
+                            <!-- vulnlibs -->
+                            <div class="d-flex mt-5 mb-2">
+                                <em class="bi bi-diagram-2 my-auto me-3"></em>
+                                <div class="m-text my-auto">Vulnlibs</div>
+                            </div>
+                            <form [formGroup]="formAddVulnLib" class="d-flex mt-1 mb-2"
+                                (ngSubmit)="addVulnLibFormInput()">
+                                <em class="bi bi-search bi-sm my-auto me-3"></em>
+                                <input class="form-control" list="searchVulnlibByName" type="text"
+                                    (keyup)="searchVulnLibByName($event.target)" formControlName="name" maxlength="50">
+                                <datalist id="searchVulnlibByName">
+                                    <option *ngFor="let vl of searchVulnlibs">{{vl.name}}</option>
+                                </datalist>
+                                <button class="btn btn-success my-auto ms-3" [disabled]="!formAddVulnLib.valid">
+                                    Add
+                                </button>
+                            </form>
+                            <div formArrayName="vulnlibs" *ngIf="vulnlibs && vulnlibs.length!=0" class="mt-3">
+                                <table class="table table-dark table-sm table-responsive">
+                                    <thead>
+                                        <th>Name</th>
+                                        <th>CWE</th>
+                                        <th>CVSS</th>
+                                        <th>CVSS Vector</th>
+                                        <th>Actions</th>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let a of vulnlibs.controls; let i = index">
+                                            <td>{{a.value.name}}</td>
+                                            <td>{{a.value.cweType}}</td>
+                                            <td>{{a.value.cvss}}</td>
+                                            <td>{{a.value.cvssVector}}</td>
+                                            <td>
+                                                <em class="bi bi-sm bi-trash-fill ms-auto"
+                                                    (click)="removeVulnLibForm(i)"></em>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-- actions -->
+                            <div class="col-lg-12 form-group d-flex flex-row-reverse mt-3">
+                                <button type="button" class="btn btn-danger" (click)="edit()">Close</button>
+                                <button type="submit" class="btn btn-success me-2"
+                                    [disabled]="!formVuln.valid">{{selectedVuln==undefined?'Create':'Edit'}}</button>
+                            </div>
+
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

@@ -25,7 +25,13 @@ public class ImanApiApplication {
 			}
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("/**").allowedOrigins("*");
+				registry.addMapping("/**")
+				
+						// WEB RESTRICTED
+						.allowedOrigins("http://localhost:4200", "https://danaremar.github.io");
+				
+						// VISIBLE FOR ALL
+						// .allowedOrigins("*");
 			}
 		};
 	}

@@ -29,11 +29,13 @@ import com.iman.model.kanban.KanbanTaskUpdateDto;
 import com.iman.model.util.Message;
 import com.iman.service.kanban.KanbanService;
 
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/kanban")
-@Api(tags = "Kanban")
+@Tag(name = "Kanban")
+@SecurityRequirement(name = "Bearer Authentication")
 @CrossOrigin
 public class KanbanRestController {
 

@@ -31,11 +31,13 @@ import com.iman.model.incident.IncidentUpdateShowDto;
 import com.iman.model.util.Message;
 import com.iman.service.incident.IncidentService;
 
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/incident")
-@Api(tags = "Incident")
+@Tag(name = "Incident")
+@SecurityRequirement(name = "Bearer Authentication")
 @CrossOrigin
 public class IncidentRestController {
 

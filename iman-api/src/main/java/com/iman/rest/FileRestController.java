@@ -16,11 +16,13 @@ import org.springframework.web.multipart.MultipartFile;
 import com.iman.service.images.FileService;
 import com.iman.service.users.UserService;
 
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/file")
-@Api(tags = "File")
+@Tag(name = "File")
+@SecurityRequirement(name = "Bearer Authentication")
 @CrossOrigin
 public class FileRestController {
 	

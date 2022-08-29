@@ -24,6 +24,13 @@ import { GanttComponent } from './components/submodules/gantt/gantt.component';
 import { IncidentComponent } from './components/submodules/incident/incident.component';
 import { AgGridModule } from 'ag-grid-angular';
 import { TaskComponent } from './components/submodules/kanban/task/task.component';
+import { ActiveComponent } from './components/submodules/security/active/active.component';
+import { ModalActive } from './components/submodules/security/active/modal/modal_active.component';
+import { ShowUserPhoto } from './components/auxiliar/show_user/show_user.component';
+import { VulnlibComponent } from './components/submodules/security/vulnlib/vulnlib.component';
+import { VulnComponent } from './components/submodules/security/vuln/vuln.component';
+import { ModalVulnLib } from './components/submodules/security/vulnlib/modal/modal_vulnlib.component';
+import { ModalVuln } from './components/submodules/security/vuln/modal/modal_vuln.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +46,14 @@ import { TaskComponent } from './components/submodules/kanban/task/task.componen
     SprintComponent,
     GanttComponent,
     IncidentComponent,
-    TaskComponent
+    TaskComponent,
+    ActiveComponent,
+    ModalActive,
+    ShowUserPhoto,
+    VulnlibComponent,
+    ModalVulnLib,
+    VulnComponent,
+    ModalVuln
   ],
   imports: [
     DragDropModule,

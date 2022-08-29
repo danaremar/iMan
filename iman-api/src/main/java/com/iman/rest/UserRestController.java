@@ -30,11 +30,13 @@ import com.iman.model.users.UserUpdateDto;
 import com.iman.model.util.Message;
 import com.iman.service.users.UserService;
 
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/profile")
-@Api(tags = "Users")
+@Tag(name = "Users")
+@SecurityRequirement(name = "Bearer Authentication")
 @CrossOrigin
 public class UserRestController {
 

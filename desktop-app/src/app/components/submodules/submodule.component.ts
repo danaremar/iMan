@@ -60,7 +60,7 @@ export class ImanSubmodule {
     }
 
     returnPrincipalError(err: any) {
-        var r = err.error.text
+        let r = err.error.text
         if (r == undefined) {
             r = 'Error produced'
         }
@@ -307,7 +307,7 @@ export class ImanSubmodule {
     }
 
     getDifferenceFormatted(d1: any, d2: any): string {
-        var time: number = Math.abs((new Date(d1)).getTime() - (new Date(d2)).getTime())
+        let time: number = Math.abs((new Date(d1)).getTime() - (new Date(d2)).getTime())
         return this.transformNumberToString(Math.floor(time / 3600000), 1, 0) + ':' + this.transformNumberToString((Math.floor(time / 60000)) % 60, 2, 0) + ':' + this.transformNumberToString((Math.floor(time / 1000)) % 60, 2, 0)
     }
 

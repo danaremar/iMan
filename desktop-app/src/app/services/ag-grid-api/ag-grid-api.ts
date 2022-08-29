@@ -14,7 +14,7 @@ export class AgGridApi {
         if (filter) {
             let b = this.getAllColumns(incCol)
             for (let column of b) {
-                var searchFilter = filter[column]
+                let searchFilter = filter[column]
                 if (searchFilter) {
                     params = params.append(column, searchFilter.filter)
                 }

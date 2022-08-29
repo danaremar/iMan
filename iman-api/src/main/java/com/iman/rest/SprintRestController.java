@@ -25,11 +25,14 @@ import com.iman.model.sprints.SprintShowDto;
 import com.iman.model.sprints.SprintUpdateDto;
 import com.iman.model.util.Message;
 import com.iman.service.sprints.SprintService;
-import io.swagger.annotations.Api;
+
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/sprint")
-@Api(tags = "Sprint")
+@Tag(name = "Sprint")
+@SecurityRequirement(name = "Bearer Authentication")
 @CrossOrigin
 public class SprintRestController {
 

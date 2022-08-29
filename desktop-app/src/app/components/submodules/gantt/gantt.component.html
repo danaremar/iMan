@@ -20,7 +20,7 @@
     </div>
 
     <div class="mx-3">
-        <a ngbTooltip="Add column" placement="left" [openDelay]="300" *ngIf="adminAccess" data-bs-toggle="modal"
+        <a ngbTooltip="Add task" placement="left" [openDelay]="300" *ngIf="adminAccess" data-bs-toggle="modal"
             (click)="addTask()">
             <em class="bi bi-plus-lg"></em>
         </a>
@@ -35,4 +35,4 @@
 </button>
 
 <task-modal-view [isEditable]="memberAccess" [selectedTask]="selectedTask" [selectedKanbanColumnId]="selectedKanbanColumnId" [usersInProject]="usersInProject"
-    [myTasks]="myTasks"></task-modal-view>
+    [isEditing]="false" [myTasks]="myTasks"></task-modal-view>

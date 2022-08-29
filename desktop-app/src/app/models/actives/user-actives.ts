@@ -1,3 +1,5 @@
+import { ShowUser } from "../user/show-user"
+
 export class ActiveUsersCreateDto {
 
     constructor(
@@ -21,20 +23,28 @@ export class ActiveUsersCreateDto {
     username: string
 }
 
-export class ActiveUsersShowDto extends ActiveUsersCreateDto {
+export class ActiveUsersShowDto {
 
-
-    constructor(id: number,
+    constructor(
+        id: number,
         status: string,
         serial: string,
         notes: string,
         ips: string,
-        username: string
+        user: ShowUser
     ) {
-        super(status, serial, notes, ips, username)
         this.id = id
+        this.status = status
+        this.serial = serial
+        this.notes = notes
+        this.ips = ips
+        this.user = user
     }
 
     id: number
-
+    status: string
+    serial: string
+    notes: string
+    ips: string
+    user: ShowUser
 }
