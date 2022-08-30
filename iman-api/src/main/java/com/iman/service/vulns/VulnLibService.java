@@ -15,12 +15,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.iman.model.projects.Project;
-import com.iman.model.vulnerability.VulnLib;
-import com.iman.model.vulnerability.VulnLibCreateDto;
-import com.iman.model.vulnerability.VulnLibListDto;
-import com.iman.model.vulnerability.VulnLibSearchDto;
-import com.iman.model.vulnerability.VulnLibShowDto;
-import com.iman.model.vulnerability.VulnLibUpdateDto;
+import com.iman.model.vulnerability.vulnlib.VulnLib;
+import com.iman.model.vulnerability.vulnlib.VulnLibCreateDto;
+import com.iman.model.vulnerability.vulnlib.VulnLibListDto;
+import com.iman.model.vulnerability.vulnlib.VulnLibSearchDto;
+import com.iman.model.vulnerability.vulnlib.VulnLibShowDto;
+import com.iman.model.vulnerability.vulnlib.VulnLibUpdateDto;
 import com.iman.repository.vulns.VulnLibRepository;
 import com.iman.service.projects.ProjectService;
 

@@ -18,11 +18,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.iman.model.util.Message;
-import com.iman.model.vulnerability.VulnCreateDto;
-import com.iman.model.vulnerability.VulnListDto;
-import com.iman.model.vulnerability.VulnSearchDto;
-import com.iman.model.vulnerability.VulnShowDto;
-import com.iman.model.vulnerability.VulnUpdateDto;
+import com.iman.model.vulnerability.vuln.VulnCreateDto;
+import com.iman.model.vulnerability.vuln.VulnListDto;
+import com.iman.model.vulnerability.vuln.VulnSearchDto;
+import com.iman.model.vulnerability.vuln.VulnShowDto;
+import com.iman.model.vulnerability.vuln.VulnUpdateDto;
 import com.iman.service.vulns.VulnService;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
