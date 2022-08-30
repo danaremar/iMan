@@ -1,4 +1,4 @@
-package com.iman.model.risk.sfg;
+package com.iman.model.risk.sfgred;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -13,6 +13,7 @@ import javax.validation.constraints.Min;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.iman.model.risk.dimension.RiskDimension;
+import com.iman.model.risk.sfg.RiskSfg;
 
 import lombok.Data;
 

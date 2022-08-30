@@ -20,6 +20,7 @@ import org.hibernate.validator.constraints.Length;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.iman.model.risk.risk.Risk;
+import com.iman.model.risk.sfgred.RiskSfgReduction;
 
 import lombok.Data;
 
