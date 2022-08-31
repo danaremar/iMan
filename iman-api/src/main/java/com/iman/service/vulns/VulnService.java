@@ -34,19 +34,19 @@ import com.iman.service.users.UserService;
 public class VulnService {
 
     @Autowired
-    private VulnRepository vulnRepository;
+    VulnRepository vulnRepository;
 
     @Autowired
-    private ProjectService projectService;
+    ProjectService projectService;
 
     @Autowired
-    private UserService userService;
+    UserService userService;
 
     @Autowired
-    private ActiveService activeService;
+    ActiveService activeService;
 
     @Autowired
-    private VulnLibService vulnLibService;
+    VulnLibService vulnLibService;
 
     @Autowired(required = true)
     protected ModelMapper modelMapper;
@@ -78,7 +78,7 @@ public class VulnService {
         return vulnRepository.findOne(example).orElseThrow();
     }
 
-    public Long countVulnsInProject(Project project) {
+    Long countVulnsInProject(Project project) {
         Vuln exampleVuln = new Vuln();
         exampleVuln.setProject(project);
         Example<Vuln> example = Example.of(exampleVuln);
@@ -215,7 +215,8 @@ public class VulnService {
      * DISABLE -> Set no active
      * 
      */
-
+    
+    @Transactional
     public void disableVuln(Long vulnId) {
 
         // Get previous vuln

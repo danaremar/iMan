@@ -1,5 +1,8 @@
 package com.iman.service.risks;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -34,8 +37,11 @@ public class RiskDimensionService {
 		return riskDimensionRepository.findById(id).orElseThrow();
 	}
 
-	public RiskDimensionShowDto findRiskDimensionByProjectId(Long projectId) {
-
+	/*
+	 * SHOW ALL BY PROJECT
+	 * 
+	 */
+	public List<RiskDimensionShowDto> findAllRiskDimensionByProjectId(Long projectId) {
 		// Permissions
 		Project project = projectService.findProjectById(projectId);
 		projectService.verifyUserRelatedWithProject(project);
@@ -43,8 +49,9 @@ public class RiskDimensionService {
 		RiskDimension exampleRiskDimension = new RiskDimension();
 		exampleRiskDimension.setProject(project);
 		Example<RiskDimension> example = Example.of(exampleRiskDimension);
-		RiskDimension riskDimension = riskDimensionRepository.findOne(example).orElseThrow();
-		return modelMapper.map(riskDimension, RiskDimensionShowDto.class);
+		List<RiskDimension> riskDimensionLs = riskDimensionRepository.findAll(example);
+		return riskDimensionLs.parallelStream().map(x -> modelMapper.map(x, RiskDimensionShowDto.class))
+				.collect(Collectors.toList());
 	}
 
 	/*
@@ -72,7 +79,7 @@ public class RiskDimensionService {
 	 * 
 	 */
 	@Transactional
-	public RiskDimensionShowDto updateRiskDimension(RiskDimensionUpdateDto  riskDimensionUpdateDto) {
+	public RiskDimensionShowDto updateRiskDimension(RiskDimensionUpdateDto riskDimensionUpdateDto) {
 
 		// Get previous riskDimension
 		RiskDimension oldRiskDimension = findById(riskDimensionUpdateDto.getId());

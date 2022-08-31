@@ -130,3 +130,24 @@ INSERT INTO vuln (id, active, affected_version, affects, code, creation_date, de
 
 -- VULN_VULNLIB
 INSERT INTO vuln_vulnlib (vuln_id, vulnlib_id) VALUES(1, 2);
+
+
+-- RISK FREQ
+INSERT INTO risk_freq (id, name, quantity, project_id) VALUES(1, 'Very often', 1.0, 1);
+INSERT INTO risk_freq (id, name, quantity, project_id) VALUES(2, 'Often', 0.7, 1);
+INSERT INTO risk_freq (id, name, quantity, project_id) VALUES(3, 'Normal', 0.4, 1);
+INSERT INTO risk_freq (id, name, quantity, project_id) VALUES(4, 'Unusual', 0.1, 1);
+INSERT INTO risk_freq (id, name, quantity, project_id) VALUES(5, 'Very unusual', 0.05, 1);
+
+
+-- RISK DIMENSION
+INSERT INTO risk_dim (id, abbreviation, name, project_id) VALUES(1, 'I', 'Integrity', 1);
+INSERT INTO risk_dim (id, abbreviation, name, project_id) VALUES(2, 'C', 'Confidentiality', 1);
+INSERT INTO risk_dim (id, abbreviation, name, project_id) VALUES(3, 'A', 'Avaliability', 1);
+
+
+
+
+
+
+

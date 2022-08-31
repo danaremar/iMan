@@ -1,5 +1,8 @@
 package com.iman.service.risks;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -38,8 +41,7 @@ public class RiskFreqService {
 	 * SHOW ALL BY PROJECT
 	 * 
 	 */
-	public RiskFreqShowDto findRiskFreqByProjectId(Long projectId) {
-
+	public List<RiskFreqShowDto> findAllRiskFreqByProjectId(Long projectId) {
 		// Permissions
 		Project project = projectService.findProjectById(projectId);
 		projectService.verifyUserRelatedWithProject(project);
@@ -47,8 +49,9 @@ public class RiskFreqService {
 		RiskFreq exampleRiskFreq = new RiskFreq();
 		exampleRiskFreq.setProject(project);
 		Example<RiskFreq> example = Example.of(exampleRiskFreq);
-		RiskFreq riskFreq = riskFreqRepository.findOne(example).orElseThrow();
-		return modelMapper.map(riskFreq, RiskFreqShowDto.class);
+		List<RiskFreq> riskFreqLs = riskFreqRepository.findAll(example);
+		return riskFreqLs.parallelStream().map(x -> modelMapper.map(x, RiskFreqShowDto.class))
+				.collect(Collectors.toList());
 	}
 
 	/*

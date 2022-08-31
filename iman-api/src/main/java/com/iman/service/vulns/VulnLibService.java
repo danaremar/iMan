@@ -28,10 +28,10 @@ import com.iman.service.projects.ProjectService;
 public class VulnLibService {
 
     @Autowired
-    private VulnLibRepository vulnLibRepository;
+    VulnLibRepository vulnLibRepository;
 
     @Autowired
-    private ProjectService projectService;
+    ProjectService projectService;
 
     @Autowired(required = true)
     protected ModelMapper modelMapper;
@@ -40,15 +40,15 @@ public class VulnLibService {
      * AUX
      * 
      */
-    public VulnLibListDto mapVulnLibToList(VulnLib vl) {
+    VulnLibListDto mapVulnLibToList(VulnLib vl) {
         return modelMapper.map(vl, VulnLibListDto.class);
     }
 
-    public Page<VulnLibListDto> mapPageToPageDto(Page<VulnLib> vl) {
+    Page<VulnLibListDto> mapPageToPageDto(Page<VulnLib> vl) {
         return vl.map(this::mapVulnLibToList);
     }
 
-    public VulnLib findVulnLibById(Long id) {
+    VulnLib findVulnLibById(Long id) {
         VulnLib exampleVulnLib = new VulnLib();
         exampleVulnLib.setId(id);
         exampleVulnLib.setActive(true);
@@ -100,7 +100,7 @@ public class VulnLibService {
      * SHOW
      * 
      */
-    public VulnLib findVerifiedVulnLib(Long vulnLibId) {
+    VulnLib findVerifiedVulnLib(Long vulnLibId) {
         VulnLib vulnLib = findVulnLibById(vulnLibId);
         if (!vulnLib.getStandard()) {
             projectService.verifyUserRelatedWithProject(vulnLib.getProject());
@@ -143,7 +143,7 @@ public class VulnLibService {
      * UPDATE
      * 
      */
-    public void verifyEditVulnLib(VulnLib vulnLib) {
+    void verifyEditVulnLib(VulnLib vulnLib) {
         if (!vulnLib.getStandard()) {
             projectService.verifyMember(vulnLib.getProject());
         } else {

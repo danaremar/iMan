@@ -59,13 +59,13 @@ public class ProjectService {
 	
 	public List<User> usersInProject(Project project) {
 		return project.getProjectRoles().parallelStream()
-				.map(x->x.getUser())
+				.map(ProjectRole::getUser)
 				.collect(Collectors.toList());
 	}
 	
 	public List<String> usernamesInProject(Project project) {
 		return usersInProject(project).stream()
-				.map(x->x.getUsername())
+				.map(User::getUsername)
 				.collect(Collectors.toList());
 	}
 

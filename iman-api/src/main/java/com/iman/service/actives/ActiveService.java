@@ -1,5 +1,6 @@
 package com.iman.service.actives;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -33,16 +34,16 @@ import com.iman.service.users.UserService;
 public class ActiveService {
 
 	@Autowired
-	private ActiveRepository activeRepository;
+	ActiveRepository activeRepository;
 
 	@Autowired
-	private ActiveUsersRepository activeUsersRepository;
+	ActiveUsersRepository activeUsersRepository;
 
 	@Autowired
-	private ProjectService projectService;
+	ProjectService projectService;
 
 	@Autowired
-	private UserService userService;
+	UserService userService;
 
 	@Autowired(required = true)
 	protected ModelMapper modelMapper;
@@ -52,11 +53,11 @@ public class ActiveService {
 	 * 
 	 */
 
-	public ActiveListDto mapActiveToList(Active active) {
+	ActiveListDto mapActiveToList(Active active) {
 		return modelMapper.map(active, ActiveListDto.class);
 	}
 
-	public Page<ActiveListDto> mapPageToPageDto(Page<Active> activePage) {
+	Page<ActiveListDto> mapPageToPageDto(Page<Active> activePage) {
 		return activePage.map(this::mapActiveToList);
 	}
 
@@ -68,18 +69,18 @@ public class ActiveService {
 		return activeRepository.findOne(example).orElseThrow();
 	}
 
-	public Long countActivesInProject(Project project) {
+	Long countActivesInProject(Project project) {
 		Active exampleActive = new Active();
 		exampleActive.setProject(project);
 		Example<Active> example = Example.of(exampleActive);
 		return activeRepository.count(example);
 	}
 
-	public List<Active> getChildrenFromCreate(List<Long> childrens) {
+	List<Active> getChildrenFromCreate(List<Long> childrens) {
 		return childrens.stream().map(this::findVerifiedActiveById).collect(Collectors.toList());
 	}
 
-	public ActiveUsers mapActiveUserCreateDtoToActiveUser(ActiveUsersCreateDto activeUsersCreateDto,
+	ActiveUsers mapActiveUserCreateDtoToActiveUser(ActiveUsersCreateDto activeUsersCreateDto,
 			List<String> usernamesInProject) {
 		ActiveUsers activeUsers = modelMapper.map(activeUsersCreateDto, ActiveUsers.class);
 		if (!usernamesInProject.isEmpty() && StringUtils.isNotBlank(activeUsersCreateDto.getUsername())
@@ -91,16 +92,16 @@ public class ActiveService {
 		return activeUsers;
 	}
 
-	public List<ActiveUsers> getActiveUsersFromCreate(List<ActiveUsersCreateDto> ls, Project project) {
+	List<ActiveUsers> getActiveUsersFromCreate(List<ActiveUsersCreateDto> ls, Project project) {
 		if (ls == null || ls.isEmpty()) {
-			return null;
+			return new ArrayList<>();
 		}
 		List<String> usernamesInProject = projectService.usernamesInProject(project);
 		return ls.stream().map(x -> mapActiveUserCreateDtoToActiveUser(x, usernamesInProject))
 				.collect(Collectors.toList());
 	}
 
-	public void saveActiveUsersFromCreate(List<ActiveUsers> activeUsers, Active active) {
+	void saveActiveUsersFromCreate(List<ActiveUsers> activeUsers) {
 		activeUsers.stream().map(x -> activeUsersRepository.save(x));
 	}
 
