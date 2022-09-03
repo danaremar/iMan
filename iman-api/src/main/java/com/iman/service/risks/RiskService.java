@@ -217,7 +217,6 @@ public class RiskService {
 		
 		// set parameters
 		r.setId(null);
-		r.setRiskSfg(null);
 		r.setRiskDimension(riskDimension);
 		if(r.getReduction()==null) {
 			r.setReduction(0.0);
@@ -236,7 +235,6 @@ public class RiskService {
 
 		// TODO: verify permissions: now only create, not update
 		s.setId(null);
-		s.setRisk(null);
 
 		// set riskSfgReduction & return
 		List<RiskSfgReduction> ls = riskSfgUpdateDto.getRiskSfgReduction().stream()
@@ -282,12 +280,13 @@ public class RiskService {
 				
 		// ---> riskCalc List<RiskCalcUpdateDto>
 		List<RiskCalc> riskCalcLs = getRiskCalcLs(riskCreateDto.getRiskCalc(), riskCreateDto.getRiskSfg(), project);
+		
+		riskCreateDto.setRiskSfg(null);
+		riskCreateDto.setRiskCalc(null);
 
 		// Properties not allowed to map
 		Vuln vuln = vulnService.findVerifiedVulnById(riskCreateDto.getVulnId());
 		Active active = activeService.findVerifiedActiveById(riskCreateDto.getActiveId());
-		riskCreateDto.setRiskSfg(null);
-		riskCreateDto.setRiskCalc(null);
 		
 		// Creation
 		Risk risk = modelMapper.map(riskCreateDto, Risk.class);
@@ -324,15 +323,18 @@ public class RiskService {
 		Project project = oldRisk.getProject();
 		projectService.verifyOwnerOrAdmin(project);
 
+		// ---> riskCalc List<RiskCalcUpdateDto>
+		List<RiskCalc> riskCalcLs = getRiskCalcLs(riskUpdateDto.getRiskCalc(), riskUpdateDto.getRiskSfg(), project);
+		
+		// ---> riskSfg List<RiskSfgUpdateDto>
+		List<RiskSfg> riskSfgLs = getRiskSfgLs(riskUpdateDto.getRiskSfg(), project);
+		
+		riskUpdateDto.setRiskCalc(null);
+		riskUpdateDto.setRiskSfg(null);
+		
 		// Properties not allowed to map
 		Vuln vuln = vulnService.findVerifiedVulnById(riskUpdateDto.getVulnId());
 		Active active = activeService.findVerifiedActiveById(riskUpdateDto.getActiveId());
-		// ---> riskCalc List<RiskCalcUpdateDto>
-		List<RiskCalc> riskCalcLs = getRiskCalcLs(riskUpdateDto.getRiskCalc(), riskUpdateDto.getRiskSfg(), project);
-		riskUpdateDto.setRiskCalc(null);
-		// ---> riskSfg List<RiskSfgUpdateDto>
-		List<RiskSfg> riskSfgLs = getRiskSfgLs(riskUpdateDto.getRiskSfg(), project);
-		riskUpdateDto.setRiskSfg(null);
 
 		// Update & fetch from previous
 		Risk newRisk = modelMapper.map(riskUpdateDto, Risk.class);

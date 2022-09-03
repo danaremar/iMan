@@ -98,10 +98,10 @@ public class Risk {
 	@JsonIgnore
 	private Project project;
 	
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "risk", cascade = CascadeType.ALL)
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<RiskCalc> riskCalc;
 	
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "risk", cascade = CascadeType.ALL)
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<RiskSfg> riskSfg;
 	
 

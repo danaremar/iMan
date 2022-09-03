@@ -36,10 +36,5 @@ public class RiskSfgReduction {
 	@JoinColumn(name="risk_dim_id")
 	@JsonIgnore
 	private RiskDimension riskDimension;
-	
-	@ManyToOne
-	@JoinColumn(name = "risk_sfg_id")
-	@JsonIgnore
-	private RiskSfg riskSfg;
 
 }

@@ -9,8 +9,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Index;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
@@ -18,8 +16,6 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.iman.model.risk.risk.Risk;
 import com.iman.model.risk.sfgred.RiskSfgReduction;
 
 import lombok.Data;
@@ -44,12 +40,7 @@ public class RiskSfg {
 	@NotNull
 	private Boolean active;
 	
-	@JsonIgnore
-	@ManyToOne
-	@JoinColumn(name = "risk_id")
-	private Risk risk;
-	
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "riskSfg", cascade = CascadeType.ALL)
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<RiskSfgReduction> riskSfgReduction;
 
 }

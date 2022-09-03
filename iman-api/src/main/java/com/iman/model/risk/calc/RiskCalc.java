@@ -13,8 +13,6 @@ import javax.validation.constraints.NotNull;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.iman.model.risk.dimension.RiskDimension;
 import com.iman.model.risk.freq.RiskFreq;
-import com.iman.model.risk.risk.Risk;
-
 import lombok.Data;
 
 @Entity
@@ -41,11 +39,6 @@ public class RiskCalc {
 	@NotNull
 	@Min(value = 0)
 	private Double total;
-	
-	@JsonIgnore
-	@ManyToOne
-	@JoinColumn(name = "risk_id")
-	private Risk risk;
 	
 	@ManyToOne
 	@JoinColumn(name = "risk_freq_id")
