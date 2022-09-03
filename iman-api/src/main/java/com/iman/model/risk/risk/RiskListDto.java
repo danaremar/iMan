@@ -1,10 +1,10 @@
 package com.iman.model.risk.risk;
 
 import java.util.Date;
-import com.iman.model.actives.ActiveShowDto;
-import com.iman.model.users.UserShowDto;
-import com.iman.model.vulnerability.vuln.VulnShowDto;
 
+import com.iman.model.actives.ActiveListDto;
+import com.iman.model.users.UserShowDto;
+import com.iman.model.vulnerability.vuln.VulnListDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -30,9 +30,9 @@ public class RiskListDto {
 
 	private UserShowDto modifiedBy;
 	
-	private ActiveShowDto assignedActive;
+	private ActiveListDto assignedActive;
 	
-	private VulnShowDto assignedVuln;
+	private VulnListDto assignedVuln;
 	
 	private String riskType;
 	

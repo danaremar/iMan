@@ -5,10 +5,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
@@ -18,6 +17,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import com.iman.config.ImanMessages;
+import com.iman.model.actives.Active;
 import com.iman.model.projects.Project;
 import com.iman.model.risk.calc.RiskCalc;
 import com.iman.model.risk.calc.RiskCalcUpdateDto;
@@ -34,6 +34,7 @@ import com.iman.model.risk.sfg.RiskSfgUpdateDto;
 import com.iman.model.risk.sfgred.RiskSfgReduction;
 import com.iman.model.risk.sfgred.RiskSfgReductionUpdateDto;
 import com.iman.model.users.User;
+import com.iman.model.vulnerability.vuln.Vuln;
 import com.iman.repository.risk.RiskRepository;
 import com.iman.service.actives.ActiveService;
 import com.iman.service.projects.ProjectService;
@@ -151,6 +152,8 @@ public class RiskService {
 	 */
 	RiskCalc getRiskCalc(RiskCalcUpdateDto riskCalcUpdateDto, Map<Long, Double> sfgReductionMap,
 			Map<Long, Double> sfgCostMap, Project project) {
+		
+		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 		RiskCalc riskCalc = modelMapper.map(riskCalcUpdateDto, RiskCalc.class);
 
 		// TODO: verify permissions: now only create, not update
@@ -175,7 +178,7 @@ public class RiskService {
 		riskCalc.setTotalWoSfg(totalWoSfg);
 
 		// TOTAL
-		Double total = totalWoSfg * Math.pow(sfgReductionMap.get(riskCalcUpdateDto.getRiskDimensionId()), 2)
+		Double total = totalWoSfg * Math.pow(1.0 - sfgReductionMap.get(riskCalcUpdateDto.getRiskDimensionId()), 2)
 				- sfgCostMap.get(riskCalcUpdateDto.getRiskDimensionId());
 		riskCalc.setTotal(total);
 
@@ -184,15 +187,17 @@ public class RiskService {
 
 	List<RiskCalc> getRiskCalcLs(List<RiskCalcUpdateDto> riskCalcUpdateDtoLs, List<RiskSfgUpdateDto> riskSfgUpdateDtoLs,
 			Project project) {
-		if (riskCalcUpdateDtoLs != null && !riskCalcUpdateDtoLs.isEmpty()) {
-			Stream<RiskSfgReductionUpdateDto> s = riskSfgUpdateDtoLs.stream().filter(RiskSfgUpdateDto::getActive)
-					.flatMap(x -> x.getRiskSfgReduction().stream());
+		if (riskCalcUpdateDtoLs != null && !riskCalcUpdateDtoLs.isEmpty() && riskSfgUpdateDtoLs != null && !riskSfgUpdateDtoLs.isEmpty()) {
 
-			Map<Long, Double> sfgReductionMap = s
+			Map<Long, Double> sfgReductionMap = riskSfgUpdateDtoLs.stream()
+					.filter(RiskSfgUpdateDto::getActive)
+					.flatMap(x -> x.getRiskSfgReduction().stream())
 					.collect(Collectors.groupingBy(RiskSfgReductionUpdateDto::getRiskDimensionId,
 							Collectors.summingDouble(RiskSfgReductionUpdateDto::getReduction)));
 
-			Map<Long, Double> sfgCostMap = s
+			Map<Long, Double> sfgCostMap = riskSfgUpdateDtoLs.stream()
+					.filter(RiskSfgUpdateDto::getActive)
+					.flatMap(x -> x.getRiskSfgReduction().stream())
 					.collect(Collectors.groupingBy(RiskSfgReductionUpdateDto::getRiskDimensionId,
 							Collectors.summingDouble(RiskSfgReductionUpdateDto::getCost)));
 
@@ -209,7 +214,18 @@ public class RiskService {
 		if (!riskDimension.getProject().getId().equals(project.getId())) {
 			throw new AccessDeniedException(ImanMessages.USER_NOT_ALLOWED);
 		}
+		
+		// set parameters
+		r.setId(null);
+		r.setRiskSfg(null);
 		r.setRiskDimension(riskDimension);
+		if(r.getReduction()==null) {
+			r.setReduction(0.0);
+		}
+		if(r.getCost()==null) {
+			r.setCost(0.0);
+		}
+		
 		return r;
 	}
 
@@ -220,6 +236,7 @@ public class RiskService {
 
 		// TODO: verify permissions: now only create, not update
 		s.setId(null);
+		s.setRisk(null);
 
 		// set riskSfgReduction & return
 		List<RiskSfgReduction> ls = riskSfgUpdateDto.getRiskSfgReduction().stream()
@@ -259,15 +276,19 @@ public class RiskService {
 		// Permissions
 		Project project = projectService.findProjectById(projectId);
 		projectService.verifyOwnerOrAdmin(project);
-
-		// Properties not allowed to map
-		// ---> riskCalc List<RiskCalcUpdateDto>
-		List<RiskCalc> riskCalcLs = getRiskCalcLs(riskCreateDto.getRiskCalc(), riskCreateDto.getRiskSfg(), project);
-		riskCreateDto.setRiskCalc(null);
+		
 		// ---> riskSfg List<RiskSfgUpdateDto>
 		List<RiskSfg> riskSfgLs = getRiskSfgLs(riskCreateDto.getRiskSfg(), project);
-		riskCreateDto.setRiskSfg(null);
+				
+		// ---> riskCalc List<RiskCalcUpdateDto>
+		List<RiskCalc> riskCalcLs = getRiskCalcLs(riskCreateDto.getRiskCalc(), riskCreateDto.getRiskSfg(), project);
 
+		// Properties not allowed to map
+		Vuln vuln = vulnService.findVerifiedVulnById(riskCreateDto.getVulnId());
+		Active active = activeService.findVerifiedActiveById(riskCreateDto.getActiveId());
+		riskCreateDto.setRiskSfg(null);
+		riskCreateDto.setRiskCalc(null);
+		
 		// Creation
 		Risk risk = modelMapper.map(riskCreateDto, Risk.class);
 		risk.setId(null);
@@ -282,6 +303,8 @@ public class RiskService {
 		risk.setRiskSfg(riskSfgLs);
 		risk.setTotalWoSfg(getRiskTotalWoSfg(riskCalcLs));
 		risk.setTotal(getRiskTotal(riskCalcLs));
+		risk.setAssignedVuln(vuln);
+		risk.setAssignedActive(active);
 
 		// Save
 		Risk r = riskRepository.save(risk);
@@ -302,6 +325,8 @@ public class RiskService {
 		projectService.verifyOwnerOrAdmin(project);
 
 		// Properties not allowed to map
+		Vuln vuln = vulnService.findVerifiedVulnById(riskUpdateDto.getVulnId());
+		Active active = activeService.findVerifiedActiveById(riskUpdateDto.getActiveId());
 		// ---> riskCalc List<RiskCalcUpdateDto>
 		List<RiskCalc> riskCalcLs = getRiskCalcLs(riskUpdateDto.getRiskCalc(), riskUpdateDto.getRiskSfg(), project);
 		riskUpdateDto.setRiskCalc(null);
@@ -323,6 +348,8 @@ public class RiskService {
 		newRisk.setRiskSfg(riskSfgLs);
 		newRisk.setTotalWoSfg(getRiskTotalWoSfg(riskCalcLs));
 		newRisk.setTotal(getRiskTotal(riskCalcLs));
+		newRisk.setAssignedVuln(vuln);
+		newRisk.setAssignedActive(active);
 
 		// Save
 		Risk r = riskRepository.save(newRisk);

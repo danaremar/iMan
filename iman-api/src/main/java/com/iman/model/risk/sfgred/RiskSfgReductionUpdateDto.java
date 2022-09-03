@@ -1,6 +1,7 @@
 package com.iman.model.risk.sfgred;
 
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,6 +21,7 @@ public class RiskSfgReductionUpdateDto {
 	@Min(value = 0)
 	private Double cost;
 	
+	@NotNull
 	@Min(value = 0)
 	private Long riskDimensionId;
 

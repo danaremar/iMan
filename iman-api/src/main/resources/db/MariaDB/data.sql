@@ -146,6 +146,21 @@ INSERT INTO risk_dim (id, abbreviation, name, project_id) VALUES(2, 'C', 'Confid
 INSERT INTO risk_dim (id, abbreviation, name, project_id) VALUES(3, 'A', 'Avaliability', 1);
 
 
+-- -- RISK 
+-- INSERT INTO risk (id, active, code, creation_date, description, last_modification, name, risk_type, total, total_wo_sfg, active_id, vuln_id, created_by_user_id, modified_by_user_id, project_id) VALUES(1, 1, 1, '2022-09-03 11:48:58.525', 'Water can cause electrical shotcuts in main server room', '2022-09-03 11:48:58.530', 'Flooding server room', 'Natural disaster', 88.00000000000006, 450.0, 1, 1, 1, 1, 1);
+
+-- -- RISK SFG
+-- INSERT INTO risk_sfg (id, active, description, name, risk_id) VALUES(1, 1, 'Allows to dewater servers room', 'Bumping system', 1);
+
+-- -- RISK SFG REDUCTION
+-- INSERT INTO risk_sfg_reduction (id, cost, reduction, risk_dim_id, risk_sfg_id) VALUES(1, 100.0, 0.2, 1, 1);
+-- INSERT INTO risk_sfg_reduction (id, cost, reduction, risk_dim_id, risk_sfg_id) VALUES(2, 0.0, 0.2, 2, 1);
+-- INSERT INTO risk_sfg_reduction (id, cost, reduction, risk_dim_id, risk_sfg_id) VALUES(3, 100.0, 0.2, 3, 1);
+
+-- -- RISK CALC
+-- INSERT INTO risk_calc (id, degradation, total, total_wo_sfg, value, risk_id, risk_dim_id, risk_freq_id) VALUES(1, 1.0, 60.00000000000003, 250.0, 5000.0, 1, 1, 5);
+-- INSERT INTO risk_calc (id, degradation, total, total_wo_sfg, value, risk_id, risk_dim_id, risk_freq_id) VALUES(2, 0.0, 0.0, 0.0, 10000.0, 1, 2, 5);
+-- INSERT INTO risk_calc (id, degradation, total, total_wo_sfg, value, risk_id, risk_dim_id, risk_freq_id) VALUES(3, 1.0, 28.00000000000003, 200.0, 4000.0, 1, 3, 5);
 
 
 
