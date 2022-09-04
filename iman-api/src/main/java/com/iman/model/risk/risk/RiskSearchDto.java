@@ -37,8 +37,6 @@ public class RiskSearchDto {
 	@Length(max = 50)
 	private String modifiedBy;
 	
-	private Boolean active;
-	
 	@Length(max = 50)
 	private String riskType;
 	
@@ -47,7 +45,5 @@ public class RiskSearchDto {
 	
 	@Min(value = 0)
 	private Double total;
-	
-	private Project project;
 
 }
