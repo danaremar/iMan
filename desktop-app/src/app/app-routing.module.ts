@@ -13,6 +13,7 @@ import { IncidentComponent } from './components/submodules/incident/incident.com
 import { ActiveComponent } from './components/submodules/security/active/active.component';
 import { VulnlibComponent } from './components/submodules/security/vulnlib/vulnlib.component';
 import { VulnComponent } from './components/submodules/security/vuln/vuln.component';
+import { RiskComponent } from './components/submodules/security/risk/risk.component';
 
 const routes: Routes = [
   { path: '', component: AppComponent },
@@ -30,6 +31,7 @@ const routes: Routes = [
       { path: 'actives', component: ActiveComponent},
       { path: 'vulnlib', component: VulnlibComponent},
       { path: 'vulns', component: VulnComponent },
+      { path: 'risks', component: RiskComponent },
     ],
   },
 
