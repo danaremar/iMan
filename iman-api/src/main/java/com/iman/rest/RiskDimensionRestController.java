@@ -70,6 +70,16 @@ public class RiskDimensionRestController {
 			return new ResponseEntity<>(new Message(e.getMessage()), HttpStatus.CONFLICT);
 		}
 	}
+	
+	@PutMapping(value = "/all/project/{projectId}")
+	public ResponseEntity<Object> saveAllRiskDimension(@RequestBody @Valid List<RiskDimensionUpdateDto> riskDimensionUpdateDtoLs, @PathVariable Long projectId) {
+		try {
+			List<RiskDimensionShowDto> a = riskDimensionService.saveAllRiskDimension(projectId, riskDimensionUpdateDtoLs);
+			return new ResponseEntity<>(a, HttpStatus.CREATED);
+		} catch (Exception e) {
+			return new ResponseEntity<>(new Message(e.getMessage()), HttpStatus.CONFLICT);
+		}
+	}
 
 	@DeleteMapping(value = "/{riskId}")
 	public ResponseEntity<Object> disableRiskDimension(@PathVariable Long riskDimensionId) {

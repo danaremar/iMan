@@ -70,6 +70,16 @@ public class RiskFreqRestController {
 			return new ResponseEntity<>(new Message(e.getMessage()), HttpStatus.CONFLICT);
 		}
 	}
+	
+	@PutMapping(value = "/all/project/{projectId}")
+	public ResponseEntity<Object> saveAllRiskFreq(@RequestBody @Valid List<RiskFreqUpdateDto> riskFreqUpdateDtoLs, @PathVariable Long projectId) {
+		try {
+			List<RiskFreqShowDto> a = riskFreqService.saveAllRiskFreq(projectId, riskFreqUpdateDtoLs);
+			return new ResponseEntity<>(a, HttpStatus.CREATED);
+		} catch (Exception e) {
+			return new ResponseEntity<>(new Message(e.getMessage()), HttpStatus.CONFLICT);
+		}
+	}
 
 	@DeleteMapping(value = "/{riskId}")
 	public ResponseEntity<Object> disableRiskFreq(@PathVariable Long riskFreqId) {

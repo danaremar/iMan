@@ -95,6 +95,17 @@ public class RiskDimensionService {
 		RiskDimension a = riskDimensionRepository.save(newRiskDimension);
 		return modelMapper.map(a, RiskDimensionShowDto.class);
 	}
+	
+	/*
+	 * SAVE ALL
+	 * 
+	 */
+	@Transactional
+	public List<RiskDimensionShowDto> saveAllRiskDimension(Long projectId, List<RiskDimensionUpdateDto> riskDimensionUpdateDto) {
+		return riskDimensionUpdateDto.stream()
+			.map(x -> x.getId()!=null?updateRiskDimension(x):createRiskDimension(projectId, modelMapper.map(x, RiskDimensionCreateDto.class)))
+			.collect(Collectors.toList());
+	}
 
 	/*
 	 * DELETE

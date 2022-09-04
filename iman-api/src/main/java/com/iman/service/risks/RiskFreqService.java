@@ -95,6 +95,17 @@ public class RiskFreqService {
 		RiskFreq a = riskFreqRepository.save(newRiskFreq);
 		return modelMapper.map(a, RiskFreqShowDto.class);
 	}
+	
+	/*
+	 * SAVE ALL
+	 * 
+	 */
+	@Transactional
+	public List<RiskFreqShowDto> saveAllRiskFreq(Long projectId, List<RiskFreqUpdateDto> riskFreqUpdateDto) {
+		return riskFreqUpdateDto.stream()
+			.map(x -> x.getId()!=null?updateRiskFreq(x):createRiskFreq(projectId, modelMapper.map(x, RiskFreqCreateDto.class)))
+			.collect(Collectors.toList());
+	}
 
 	/*
 	 * DELETE
