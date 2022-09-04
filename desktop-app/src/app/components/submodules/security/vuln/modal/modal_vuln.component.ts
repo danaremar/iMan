@@ -44,7 +44,7 @@ export class ModalVuln implements OnInit {
     formAddActive: FormGroup
     formAddVulnLib: FormGroup
 
-    // search actives
+    // search actives & vulnlib
     searchActives: Array<ActiveListDto> = []
     searchVulnlibs: Array<VulnLibListDto> = []
 
@@ -105,7 +105,7 @@ export class ModalVuln implements OnInit {
     }
 
     buildForm() {
-        this.formVuln.reset()
+        this.clearForms()
         if (this.selectedVuln != undefined) {
             this.formVuln = this.formBuilder.group({
                 name: [this.selectedVuln.name, [Validators.required]],
@@ -141,6 +141,8 @@ export class ModalVuln implements OnInit {
 
     clearForms() {
         this.formVuln.reset()
+        this.formAddActive.reset()
+        this.formAddVulnLib.reset()
     }
 
 
