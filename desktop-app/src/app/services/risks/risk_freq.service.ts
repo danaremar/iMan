@@ -39,6 +39,12 @@ export class RiskFreqService {
         return this.httpClient.put<RiskFreqUpdateDto>(url, riskFreqUpdateDto)
     }
 
+    // UPDATE ALL
+    public updateAllRiskFreq(projectId: number, riskFreqUpdateDtoLs: Array<RiskFreqUpdateDto>): Observable<any> {
+        let url = this.hostUrl + 'project/' + projectId
+        return this.httpClient.put<RiskFreqUpdateDto>(url, riskFreqUpdateDtoLs)
+    }
+
     // DELETE
     public deleteRiskFreq(riskId: number): Observable<any> {
         let url = this.hostUrl + riskId

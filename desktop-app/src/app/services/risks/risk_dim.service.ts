@@ -39,6 +39,12 @@ export class RiskDimService {
         return this.httpClient.put<RiskDimUpdateDto>(url, riskDimUpdateDto)
     }
 
+    // UPDATE ALL
+    public updateAllRiskDim(projectId: number, riskDimUpdateDtoLs: Array<RiskDimUpdateDto>): Observable<any> {
+        let url = this.hostUrl + 'project/' + projectId
+        return this.httpClient.put<RiskDimUpdateDto>(url, riskDimUpdateDtoLs)
+    }
+
     // DELETE
     public deleteRiskDim(riskId: number): Observable<any> {
         let url = this.hostUrl + riskId
