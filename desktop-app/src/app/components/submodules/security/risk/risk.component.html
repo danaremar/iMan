@@ -10,10 +10,15 @@
             </select>
         </div>
     </div>
-    <div class="mx-3">
-        <a ngbTooltip="Add risk" placement="left" [openDelay]="300"
-            *ngIf="adminAccess && projectSelectedId!=undefined && projectSelectedId!=0" (click)="newRisk()">
+    <div class="mx-3" *ngIf="adminAccess && projectSelectedId!=undefined && projectSelectedId!=0">
+        <a ngbTooltip="Add risk" placement="left" [openDelay]="300" (click)="newRisk()">
             <em class="bi bi-plus-lg"></em>
+        </a>
+    </div>
+    <div class="mx-3" *ngIf="adminAccess && projectSelectedId!=undefined && projectSelectedId!=0">
+        <a ngbTooltip="Configuration" placement="left" [openDelay]="300" data-bs-target="#riskConfigModal"
+            data-bs-toggle="modal">
+            <em class="bi bi-gear-fill"></em>
         </a>
     </div>
 </div>
@@ -31,6 +36,7 @@
 <button hidden type="button" #openRiskConfigViewModal class="btn btn-danger" data-bs-target="#riskConfigModal"
     data-bs-toggle="modal">
 </button>
+<risk-config-modal-view [projectId]="projectSelectedId" (reload)="reloadGridTable()"></risk-config-modal-view>
 
 
 <!-- RISK MODAL -->

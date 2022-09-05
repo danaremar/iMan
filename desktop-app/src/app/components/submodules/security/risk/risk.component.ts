@@ -163,6 +163,10 @@ export class RiskComponent extends ImanSubmodule implements OnInit {
         this.openRiskViewModal.nativeElement.click()
     }
 
+    openRiskConfig() {
+        this.openRiskConfigViewModal.nativeElement.click()
+    }
+
 
     /***************************
         METHODS -> FORMAT
