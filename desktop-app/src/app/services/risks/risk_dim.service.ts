@@ -41,7 +41,7 @@ export class RiskDimService {
 
     // UPDATE ALL
     public updateAllRiskDim(projectId: number, riskDimUpdateDtoLs: Array<RiskDimUpdateDto>): Observable<any> {
-        let url = this.hostUrl + 'project/' + projectId
+        let url = this.hostUrl + 'all/project/' + projectId
         return this.httpClient.put<RiskDimUpdateDto>(url, riskDimUpdateDtoLs)
     }
 

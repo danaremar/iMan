@@ -103,7 +103,7 @@ public class RiskDimensionService {
 	@Transactional
 	public List<RiskDimensionShowDto> saveAllRiskDimension(Long projectId, List<RiskDimensionUpdateDto> riskDimensionUpdateDto) {
 		return riskDimensionUpdateDto.stream()
-			.map(x -> x.getId()!=null?updateRiskDimension(x):createRiskDimension(projectId, modelMapper.map(x, RiskDimensionCreateDto.class)))
+			.map(x -> x.getId()==null?updateRiskDimension(x):createRiskDimension(projectId, modelMapper.map(x, RiskDimensionCreateDto.class)))
 			.collect(Collectors.toList());
 	}
 

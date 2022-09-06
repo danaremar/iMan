@@ -41,7 +41,7 @@ export class RiskFreqService {
 
     // UPDATE ALL
     public updateAllRiskFreq(projectId: number, riskFreqUpdateDtoLs: Array<RiskFreqUpdateDto>): Observable<any> {
-        let url = this.hostUrl + 'project/' + projectId
+        let url = this.hostUrl + 'all/project/' + projectId
         return this.httpClient.put<RiskFreqUpdateDto>(url, riskFreqUpdateDtoLs)
     }
 

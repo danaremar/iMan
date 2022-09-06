@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output, ViewChild } from "@angular/core"
+import { Component, EventEmitter, Input, OnChanges, Output, ViewChild } from "@angular/core"
 import { FormArray, FormBuilder, FormGroup } from "@angular/forms"
 import { RiskDimShowDto, RiskDimUpdateDto } from "src/app/models/risks/risk_dim"
 import { RiskFreqShowDto, RiskFreqUpdateDto } from "src/app/models/risks/risk_freq"
@@ -10,7 +10,7 @@ import { RiskFreqService } from "src/app/services/risks/risk_freq.service"
     templateUrl: './modal_risk_config.component.html',
     styleUrls: ['./modal_risk_config.component.css']
 })
-export class ModalRiskConfig implements OnInit {
+export class ModalRiskConfig implements OnChanges {
 
     // emit one event to reload
     @Output()
@@ -41,7 +41,7 @@ export class ModalRiskConfig implements OnInit {
         METHODS -> GENERAL
     ***************************/
 
-    ngOnInit(): void {
+    ngOnChanges() {
         this.buildForm()
     }
 
@@ -143,7 +143,7 @@ export class ModalRiskConfig implements OnInit {
     handleNext(n: any) {
         this.reload.emit(true)
         this.containError = false
-        this.buildForm()
+        // this.buildForm()
     }
 
     handleError(e: any) {

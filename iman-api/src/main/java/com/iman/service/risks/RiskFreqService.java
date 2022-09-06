@@ -103,7 +103,7 @@ public class RiskFreqService {
 	@Transactional
 	public List<RiskFreqShowDto> saveAllRiskFreq(Long projectId, List<RiskFreqUpdateDto> riskFreqUpdateDto) {
 		return riskFreqUpdateDto.stream()
-			.map(x -> x.getId()!=null?updateRiskFreq(x):createRiskFreq(projectId, modelMapper.map(x, RiskFreqCreateDto.class)))
+			.map(x -> x.getId()==null?updateRiskFreq(x):createRiskFreq(projectId, modelMapper.map(x, RiskFreqCreateDto.class)))
 			.collect(Collectors.toList());
 	}
 
