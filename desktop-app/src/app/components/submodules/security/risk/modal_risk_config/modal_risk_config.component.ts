@@ -1,6 +1,5 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from "@angular/core"
+import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output, ViewChild } from "@angular/core"
 import { FormArray, FormBuilder, FormGroup } from "@angular/forms"
-import { RiskShowDto } from "src/app/models/risks/risk"
 import { RiskDimShowDto, RiskDimUpdateDto } from "src/app/models/risks/risk_dim"
 import { RiskFreqShowDto, RiskFreqUpdateDto } from "src/app/models/risks/risk_freq"
 import { RiskDimService } from "src/app/services/risks/risk_dim.service"
@@ -21,13 +20,9 @@ export class ModalRiskConfig implements OnInit {
     containError: boolean = false
     messageError: string | undefined
 
-    // selected configs
-    riskFreqLs: Array<RiskFreqShowDto> | undefined
-    riskDimLs: Array<RiskDimShowDto> | undefined
-
     // selected project id
-    @Input()
-    projectId: number | undefined | null
+    @Input('projectId')
+    projectId: number | null | undefined
 
     // form
     formRiskConfig: FormGroup
@@ -66,24 +61,18 @@ export class ModalRiskConfig implements OnInit {
         // get risk freq & dim
         this.getRiskFreq()
         this.getRiskDim()
-
-        // create form risk freq
-        if (this.riskFreqLs) {
-            this.riskFreqLs.forEach(a => this.addRiskFreqForm(a))
-        }
-
-        // create form risk dim
-        if (this.riskDimLs) {
-            this.riskDimLs.forEach(a => this.addRiskDimForm(a))
-        }
-
     }
 
     getRiskFreq() {
         if (this.projectId) {
             this.riskFreqService.getRiskFreqByProjectId(this.projectId).subscribe({
                 next: (n) => {
-                    this.riskFreqLs = n.content
+                    let riskFreqLs: Array<RiskFreqShowDto> | undefined = n
+
+                    // create form risk freq
+                    if (riskFreqLs) {
+                        riskFreqLs.forEach(a => this.addRiskFreqForm(a))
+                    }
                 },
                 error: (e) => {
                     this.handleError(e)
@@ -96,7 +85,12 @@ export class ModalRiskConfig implements OnInit {
         if (this.projectId) {
             this.riskDimService.getRiskDimByProjectId(this.projectId).subscribe({
                 next: (n) => {
-                    this.riskDimLs = n.content
+                    let riskDimLs: Array<RiskDimShowDto> | undefined = n
+
+                    // create form risk dim
+                    if (riskDimLs) {
+                        riskDimLs.forEach(a => this.addRiskDimForm(a))
+                    }
                 },
                 error: (e) => {
                     this.handleError(e)
@@ -177,6 +171,13 @@ export class ModalRiskConfig implements OnInit {
                 quantity: [c.quantity, []]
             })
             this.riskFreqForm.push(fg)
+        } else {
+            let fg = this.formBuilder.group({
+                id: [undefined, []],
+                name: ['', []],
+                quantity: [1, []]
+            })
+            this.riskFreqForm.push(fg)
         }
     }
     removeRiskFreqForm(i: number) {
@@ -191,7 +192,7 @@ export class ModalRiskConfig implements OnInit {
     addRiskDimForm(c: RiskDimShowDto | undefined) {
         if (c) {
             let fg = this.formBuilder.group({
-                id: [c.id, []],
+                id: [undefined, []],
                 name: [c.name, []],
                 abbreviation: [c.abbreviation, []]
             })

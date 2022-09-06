@@ -16,8 +16,7 @@
         </a>
     </div>
     <div class="mx-3" *ngIf="adminAccess && projectSelectedId!=undefined && projectSelectedId!=0">
-        <a ngbTooltip="Configuration" placement="left" [openDelay]="300" data-bs-target="#riskConfigModal"
-            data-bs-toggle="modal">
+        <a ngbTooltip="Configuration" placement="left" [openDelay]="300" (click)="openRiskConfig()">
             <em class="bi bi-gear-fill"></em>
         </a>
     </div>
@@ -36,7 +35,7 @@
 <button hidden type="button" #openRiskConfigViewModal class="btn btn-danger" data-bs-target="#riskConfigModal"
     data-bs-toggle="modal">
 </button>
-<risk-config-modal-view [projectId]="projectSelectedId" (reload)="reloadGridTable()"></risk-config-modal-view>
+<risk-config-modal-view [projectId]="this.projectSelectedId" (reload)="reloadGridTable()"></risk-config-modal-view>
 
 
 <!-- RISK MODAL -->
