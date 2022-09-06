@@ -21,7 +21,7 @@ export class ModalRiskConfig implements OnInit {
     messageError: string | undefined
 
     // selected project id
-    @Input('projectId')
+    @Input()
     projectId: number | null | undefined
 
     // form
