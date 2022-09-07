@@ -1,8 +1,10 @@
 import { DatePipe } from "@angular/common";
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from "@angular/core";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { FormArray, FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { ActiveListDto } from "src/app/models/actives/actives";
 import { RiskCreateDto, RiskShowDto, RiskUpdateDto } from "src/app/models/risks/risk";
+import { RiskCalcShowDto } from "src/app/models/risks/risk_calc";
+import { RiskSfgShowDto } from "src/app/models/risks/risk_sfg";
 import { VulnListDto } from "src/app/models/vulns/vuln";
 import { ActiveService } from "src/app/services/actives/actives.service";
 import { RiskService } from "src/app/services/risks/risk.service";
@@ -57,6 +59,7 @@ export class ModalRisk implements OnInit {
         this.formRisk = this.formBuilder.group({
             name: ['', [Validators.required]],
             description: ['', []],
+            riskType: ['', []],
             riskCalc: this.formBuilder.array([]),
             riskSfg: this.formBuilder.array([])
         })
@@ -107,6 +110,36 @@ export class ModalRisk implements OnInit {
     buildForm() {
         this.clearForms()
         if (this.selectedRisk != undefined) {
+
+            // build forms
+            this.formRisk = this.formBuilder.group({
+                name: [this.selectedRisk.name, []],
+                description: [this.selectedRisk.description, []],
+                riskType: [this.selectedRisk.riskType, []],
+                riskCalc: this.formBuilder.array([]),
+                riskSfg: this.formBuilder.array([])
+            })
+            this.formAddActive = this.formBuilder.group({
+                id: [this.selectedRisk.assignedActive.id, []],
+                code: [this.selectedRisk.assignedActive.code, []],
+                name: [this.selectedRisk.assignedActive.name, []]
+            })
+            this.formAddVuln = this.formBuilder.group({
+                id: ['', []],
+                code: ['', []],
+                name: ['', []]
+            })
+
+            // add riskCalc
+            if(this.selectedRisk.riskCalc) {
+                this.selectedRisk.riskCalc.forEach(a => this.addRiskCalcForm(a))
+            }
+
+            // add riskSfg
+            if(this.selectedRisk.riskSfg) {
+                this.selectedRisk.riskSfg.forEach(a => this.addRiskSfgForm(a))
+            }
+
 
         }
     }
@@ -199,6 +232,59 @@ export class ModalRisk implements OnInit {
             minimumIntegerDigits: integers,
             maximumFractionDigits: fraction
         })
+    }
+
+    // RISK CALC
+    get riskCalcs(): FormArray {
+        return this.formRisk.get("riskCalc") as FormArray
+    }
+    addRiskCalcForm(c: RiskCalcShowDto | undefined) {
+        if (c) {
+            let fg = this.formBuilder.group({
+                id: [c.id, []],
+                dim: [c.riskDimension.name + ' (' + c.riskDimension.abbreviation + ')', []],
+                value: [c.value, []],
+                degradation: [c.degradation, []],
+                freq: [c.riskDimension.name, []],
+                totalWoSfg: [c.totalWoSfg, []],
+                sfgRed: ['', []],
+                sfgCost: ['', []],
+                total: [c.total, []]
+            })
+            this.riskCalcs.push(fg)
+        }
+    }
+    removeRiskCalcForm(i: number) {
+        this.riskCalcs.removeAt(i)
+    }
+
+    // RISK SFG
+    get riskSfg(): FormArray {
+        return this.formRisk.get("riskSfg") as FormArray
+    }
+    addRiskSfgForm(c: RiskSfgShowDto | undefined) {
+        if(c) {
+            let fg = this.formBuilder.group({
+                id: [c.id, []],
+                name: [c.name, []],
+                description: [c.description, []],
+                active: [c.active, []],
+                riskSfgRed: this.formBuilder.array([
+                    c.riskSfgReduction.map(
+                        r => this.formBuilder.group({
+                            id: [r.id, []],
+                            reduction: [r.reduction, []],
+                            cost: [r.cost, []],
+                            dim: [r.riskDimension.name + ' (' + r.riskDimension.abbreviation + ')', []],
+                        })
+                    )
+                ])
+            })
+            this.riskSfg.push(fg)
+        }
+    }
+    removeRiskSfgForm(i: number) {
+        this.riskSfg.removeAt(i)
     }
 
 

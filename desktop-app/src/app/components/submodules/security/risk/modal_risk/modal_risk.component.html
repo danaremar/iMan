@@ -62,7 +62,8 @@
                                 <!-- assignedActive -->
                                 <div class="w-100 d-flex flex-wrap my-3" *ngIf="selectedRisk.assignedActive">
                                     <div class="me-2">Active:</div>
-                                    <div>(#{{selectedRisk.assignedActive.code}}) {{selectedRisk.assignedActive.name}}</div>
+                                    <div>(#{{selectedRisk.assignedActive.code}}) {{selectedRisk.assignedActive.name}}
+                                    </div>
                                 </div>
 
                                 <!-- vuln -->
@@ -72,7 +73,8 @@
                                 </div>
 
                                 <!-- RISK CALC TABLE -->
-                                <table class="table table-dark table-sm table-responsive mt-3" *ngIf="selectedRisk.riskCalc && selectedRisk.riskCalc.length!=0">
+                                <table class="table table-dark table-sm table-responsive mt-3"
+                                    *ngIf="selectedRisk.riskCalc && selectedRisk.riskCalc.length!=0">
                                     <thead>
                                         <th>Dimension</th>
                                         <th>Value</th>
@@ -109,7 +111,8 @@
 
                                 <div class="b-text">Safeguards</div>
 
-                                <div class="card inc-upd-card p-3 mt-3" *ngFor="let s of selectedRisk.riskSfg; let i = index">
+                                <div class="card inc-upd-card p-3 mt-3"
+                                    *ngFor="let s of selectedRisk.riskSfg; let i = index">
 
                                     <!-- title + active -->
                                     <div class="d-flex flex-wrap">
@@ -121,7 +124,8 @@
                                     <div class="text-break my-auto mt-2">{{s.description}}</div>
 
                                     <!-- RISK REDUCTION TABLE -->
-                                    <table class="table table-dark table-sm table-responsive mt-3" *ngIf="s.riskSfgReduction && s.riskSfgReduction.length!=0">
+                                    <table class="table table-dark table-sm table-responsive mt-3"
+                                        *ngIf="s.riskSfgReduction && s.riskSfgReduction.length!=0">
                                         <thead>
                                             <th>Dimension</th>
                                             <th>Red.</th>
@@ -136,7 +140,6 @@
                                         </tbody>
                                     </table>
 
-
                                 </div>
 
 
@@ -145,6 +148,17 @@
                     </div>
 
                     <!-- EDIT RISK -->
+                    <div *ngIf="isEditing" class="container">
+                        <div class="row">
+
+                            <!-- LEFT CONTAINER: common things -->
+                            <div class="d-flex flex-wrap col-lg-8 p-3"></div>
+
+                            <!-- RIGHT CONTAINER: safeguards -->
+                            <div class="d-flex flex-wrap col-lg-8 p-3"></div>
+                            
+                        </div>
+                    </div>
 
 
                 </div>
