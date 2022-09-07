@@ -13,7 +13,7 @@ import { environment } from "src/environments/environment";
 import { ImanSubmodule } from "../../submodule.component";
 
 @Component({
-    selector: 'risk-modal-view',
+    selector: 'risk-component',
     templateUrl: './risk.component.html',
     styleUrls: ['./risk.component.css']
 })

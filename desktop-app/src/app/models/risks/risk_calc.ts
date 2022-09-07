@@ -10,7 +10,7 @@ export class RiskCalcShowDto {
         totalWoSfg: number,
         total: number,
         riskFreq: RiskFreqShowDto,
-        riskDim: RiskDimShowDto
+        riskDimension: RiskDimShowDto
     ) {
         this.id = id
         this.value = value
@@ -18,7 +18,7 @@ export class RiskCalcShowDto {
         this.totalWoSfg = totalWoSfg
         this.total = total
         this.riskFreq = riskFreq
-        this.riskDim = riskDim
+        this.riskDimension = riskDimension
     }
 
     id: number
@@ -27,7 +27,7 @@ export class RiskCalcShowDto {
     totalWoSfg: number
     total: number
     riskFreq: RiskFreqShowDto
-    riskDim: RiskDimShowDto
+    riskDimension: RiskDimShowDto
 }
 
 export class RiskCalcUpdateDto {

@@ -33,6 +33,7 @@ import { ModalVulnLib } from './components/submodules/security/vulnlib/modal/mod
 import { ModalVuln } from './components/submodules/security/vuln/modal/modal_vuln.component';
 import { RiskComponent } from './components/submodules/security/risk/risk.component';
 import { ModalRiskConfig } from './components/submodules/security/risk/modal_risk_config/modal_risk_config.component';
+import { ModalRisk } from './components/submodules/security/risk/modal_risk/modal_risk.component';
 
 @NgModule({
   declarations: [
@@ -57,7 +58,8 @@ import { ModalRiskConfig } from './components/submodules/security/risk/modal_ris
     VulnComponent,
     ModalVuln,
     RiskComponent,
-    ModalRiskConfig
+    ModalRiskConfig,
+    ModalRisk
   ],
   imports: [
     DragDropModule,

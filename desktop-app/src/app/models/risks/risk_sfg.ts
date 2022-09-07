@@ -1,4 +1,4 @@
-import { RiskSfgRedUpdateDto } from "./risk_sfg_red"
+import { RiskSfgRedShowDto, RiskSfgRedUpdateDto } from "./risk_sfg_red"
 
 export class RiskSfgShowDto {
 
@@ -7,7 +7,7 @@ export class RiskSfgShowDto {
         name: string,
         description: string,
         active: boolean,
-        riskSfgReduction: Array<RiskSfgShowDto>
+        riskSfgReduction: Array<RiskSfgRedShowDto>
     ) {
         this.id = id
         this.name = name
@@ -20,7 +20,7 @@ export class RiskSfgShowDto {
     name: string
     description: string
     active: boolean
-    riskSfgReduction: Array<RiskSfgShowDto>
+    riskSfgReduction: Array<RiskSfgRedShowDto>
 }
 
 export class RiskSfgUpdateDto {

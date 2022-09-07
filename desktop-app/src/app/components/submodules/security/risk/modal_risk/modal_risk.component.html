@@ -1,0 +1,153 @@
+<div class="modal fade" id="riskModal" tabindex="-1" aria-labelledby="riskModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content bg-dark-5">
+            <div class="modal-body">
+                <div class="card overflow-auto">
+
+                    <!-- title -->
+                    <div class="d-flex">
+                        <div class="flex-grow-1 card-title mt-2">{{selectedRisk!=undefined?
+                            (isEditing?'Update risk': '#' + selectedRisk.code + ': ' + selectedRisk.name):
+                            'New risk'}}</div>
+                        <div class="close-card-button" data-bs-dismiss="modal">
+                            <em class="bi bi-x"></em>
+                        </div>
+                    </div>
+
+                    <!-- errors -->
+                    <div *ngIf="containError" class="alert alert-danger mt-5">
+                        {{messageError}}
+                    </div>
+
+                    <!-- VIEW RISK -->
+                    <div *ngIf="selectedRisk!=undefined && !isEditing" class="container">
+                        <div class="row">
+
+                            <!-- LEFT CONTAINER: common things -->
+                            <div class="d-flex flex-wrap {{selectedRisk.riskSfg.length!=0?'col-lg-8':'col-lg-12'}} p-3">
+
+                                <!-- description -->
+                                <div class="w-100" *ngIf="selectedRisk.description">
+                                    <div class="d-flex flex-wrap my-3">
+                                        <em class="bi bi-card-text my-auto" style="font-size: 20px !important;"></em>
+                                        <div class="text-break my-auto mx-2">Description</div>
+                                    </div>
+                                    <div class="text-break my-auto mt-2">{{selectedRisk.description}}</div>
+                                </div>
+
+                                <!-- riskType -->
+                                <div class="w-100 d-flex flex-wrap my-3 mt-4" *ngIf="selectedRisk.riskType">
+                                    <div class="me-2">Risk type:</div>
+                                    <div>{{selectedRisk.riskType}}</div>
+                                </div>
+
+                                <!-- creation: user + date -->
+                                <div class="w-100 d-flex flex-wrap">
+                                    <div class="my-auto me-2">Creation: </div>
+                                    <show-user [user]="selectedRisk.createdBy"></show-user>
+                                    <div class="my-auto ms-2">(
+                                        {{getFormatedDate(selectedRisk.creationDate,'HH:mm:ss dd/MM/yyyy')}})
+                                    </div>
+                                </div>
+
+                                <!-- lastUpdate -->
+                                <div class="w-100 d-flex flex-wrap">
+                                    <div class="my-auto me-2">Last update: </div>
+                                    <show-user [user]="selectedRisk.modifiedBy"></show-user>
+                                    <div class="my-auto ms-2">(
+                                        {{getFormatedDate(selectedRisk.lastModification,'HH:mm:ss dd/MM/yyyy')}})
+                                    </div>
+                                </div>
+
+                                <!-- assignedActive -->
+                                <div class="w-100 d-flex flex-wrap my-3" *ngIf="selectedRisk.assignedActive">
+                                    <div class="me-2">Active:</div>
+                                    <div>(#{{selectedRisk.assignedActive.code}}) {{selectedRisk.assignedActive.name}}</div>
+                                </div>
+
+                                <!-- vuln -->
+                                <div class="w-100 d-flex flex-wrap my-3" *ngIf="selectedRisk.assignedVuln">
+                                    <div class="me-2">Vulnerability:</div>
+                                    <div>(#{{selectedRisk.assignedVuln.code}}) {{selectedRisk.assignedVuln.name}}</div>
+                                </div>
+
+                                <!-- RISK CALC TABLE -->
+                                <table class="table table-dark table-sm table-responsive mt-3" *ngIf="selectedRisk.riskCalc && selectedRisk.riskCalc.length!=0">
+                                    <thead>
+                                        <th>Dimension</th>
+                                        <th>Value</th>
+                                        <th>Deg.</th>
+                                        <th>Freq.</th>
+                                        <th>Total wo sfg</th>
+                                        <th>Total</th>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let r of selectedRisk.riskCalc">
+                                            <td>{{r.riskDimension.name}} ({{r.riskDimension.abbreviation}})</td>
+                                            <td>{{transformNumberToString(r.value,1,2)}}</td>
+                                            <td>{{transformNumberToString(r.degradation,1,2)}}</td>
+                                            <td>{{r.riskFreq.name}}</td>
+                                            <td>{{transformNumberToString(r.totalWoSfg,1,2)}}</td>
+                                            <td>{{transformNumberToString(r.total,1,2)}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td>{{transformNumberToString(selectedRisk.totalWoSfg,1,2)}}</td>
+                                            <td>{{transformNumberToString(selectedRisk.total,1,2)}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+
+                            </div>
+
+                            <!-- RIGHT CONTAINER: safeguards -->
+                            <div class="col-lg-4 p-3" *ngIf="selectedRisk.riskSfg && selectedRisk.riskSfg.length!=0">
+
+                                <div class="b-text">Safeguards</div>
+
+                                <div class="card inc-upd-card p-3 mt-3" *ngFor="let s of selectedRisk.riskSfg; let i = index">
+
+                                    <!-- title + active -->
+                                    <div class="d-flex flex-wrap">
+                                        <div class="m-text my-auto">{{s.name}}</div>
+                                        <em class="bi {{s.active?'bi-check-square':'bi-square'}} ms-auto"></em>
+                                    </div>
+
+                                    <!-- description -->
+                                    <div class="text-break my-auto mt-2">{{s.description}}</div>
+
+                                    <!-- RISK REDUCTION TABLE -->
+                                    <table class="table table-dark table-sm table-responsive mt-3" *ngIf="s.riskSfgReduction && s.riskSfgReduction.length!=0">
+                                        <thead>
+                                            <th>Dimension</th>
+                                            <th>Red.</th>
+                                            <th>Cost</th>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let r of s.riskSfgReduction">
+                                                <td>{{r.riskDimension.name}} ({{r.riskDimension.abbreviation}})</td>
+                                                <td>{{transformNumberToString(r.reduction,1,2)}}</td>
+                                                <td>{{transformNumberToString(r.cost,1,2)}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- EDIT RISK -->
+
+
+                </div>
+            </div>
+        </div>
+    </div>

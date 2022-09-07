@@ -42,3 +42,5 @@
 <button hidden type="button" #openRiskViewModal class="btn btn-danger" data-bs-target="#riskModal"
     data-bs-toggle="modal">
 </button>
+<risk-modal-view [isEditable]="adminAccess" [isEditing]="isEditing" [selectedRisk]="selectedRisk"
+    [projectId]="projectSelectedId" (reload)="reloadGridTable()"></risk-modal-view>

@@ -1,7 +1,8 @@
+import { DatePipe } from "@angular/common";
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { ActiveListDto } from "src/app/models/actives/actives";
-import { RiskShowDto } from "src/app/models/risks/risk";
+import { RiskCreateDto, RiskShowDto, RiskUpdateDto } from "src/app/models/risks/risk";
 import { VulnListDto } from "src/app/models/vulns/vuln";
 import { ActiveService } from "src/app/services/actives/actives.service";
 import { RiskService } from "src/app/services/risks/risk.service";
@@ -14,7 +15,7 @@ import { VulnService } from "src/app/services/vulns/vuln.service";
     templateUrl: './modal_risk.component.html',
     styleUrls: ['./modal_risk.component.css']
 })
-export class ModalVuln implements OnInit {
+export class ModalRisk implements OnInit {
 
     // user can edit?
     @Input()
@@ -54,13 +55,20 @@ export class ModalVuln implements OnInit {
 
     constructor(public formBuilder: FormBuilder, public vulnService: VulnService, public activeService: ActiveService, public riskService: RiskService, public riskFreqService: RiskFreqService, public riskDimService: RiskDimService) {
         this.formRisk = this.formBuilder.group({
-            name: ['', [Validators.required]]
+            name: ['', [Validators.required]],
+            description: ['', []],
+            riskCalc: this.formBuilder.array([]),
+            riskSfg: this.formBuilder.array([])
         })
         this.formAddActive = this.formBuilder.group({
-            name: ['', [Validators.required]],
+            id: ['', []],
+            code: ['', []],
+            name: ['', []]
         })
         this.formAddVuln = this.formBuilder.group({
-            name: ['', [Validators.required]],
+            id: ['', []],
+            code: ['', []],
+            name: ['', []]
         })
     }
 
@@ -141,11 +149,56 @@ export class ModalVuln implements OnInit {
     }
 
     newRisk() {
+        if (this.projectId) {
+            // create object
+            let createRisk: RiskCreateDto = new RiskCreateDto(this.formRisk.value.name, this.formRisk.value.description, this.formAddActive.value.id, this.formAddVuln.value.id, this.formRisk.value.riskType, [], [])
 
+            // rest
+            this.riskService.createRisk(this.projectId, createRisk).subscribe({
+                next: (n) => {
+                    this.handleNext(n)
+                },
+                error: (e) => {
+                    this.handleError(e)
+                }
+            })
+        }
     }
 
     editRisk() {
+        if (this.projectId && this.selectedRisk) {
+            // create object
+            let updateRisk: RiskUpdateDto = new RiskUpdateDto(this.selectedRisk.id, this.formRisk.value.name, this.formRisk.value.description, this.formAddActive.value.id, this.formAddVuln.value.id, this.formRisk.value.riskType, [], [])
 
+            // rest
+            this.riskService.updateRisk(updateRisk).subscribe({
+                next: (n) => {
+                    this.handleNext(n)
+                },
+                error: (e) => {
+                    this.handleError(e)
+                }
+            })
+        }
+    }
+
+
+    /***************************
+        METHODS -> AUXILIAR
+    ***************************/
+
+    // TIME
+    getFormatedDate(date: Date, format: string) {
+        let datePipe = new DatePipe('en-US');
+        return datePipe.transform(date, format);
+    }
+
+    // NUMBERS
+    transformNumberToString(n: number, integers: number, fraction: number): string {
+        return n.toLocaleString('en-US', {
+            minimumIntegerDigits: integers,
+            maximumFractionDigits: fraction
+        })
     }
 
 
