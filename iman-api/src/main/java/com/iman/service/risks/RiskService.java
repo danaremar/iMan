@@ -178,8 +178,11 @@ public class RiskService {
 		riskCalc.setTotalWoSfg(totalWoSfg);
 
 		// TOTAL
-		Double total = totalWoSfg * Math.pow(1.0 - sfgReductionMap.get(riskCalcUpdateDto.getRiskDimensionId()), 2)
-				- sfgCostMap.get(riskCalcUpdateDto.getRiskDimensionId());
+		Double total = totalWoSfg;
+		if(sfgReductionMap.size()!=0 || sfgCostMap.size()!=0){
+			total = totalWoSfg * Math.pow(1.0 - sfgReductionMap.get(riskCalcUpdateDto.getRiskDimensionId()), 2)
+			- sfgCostMap.get(riskCalcUpdateDto.getRiskDimensionId());
+		}
 		riskCalc.setTotal(total);
 
 		return riskCalc;
@@ -323,11 +326,11 @@ public class RiskService {
 		Project project = oldRisk.getProject();
 		projectService.verifyOwnerOrAdmin(project);
 
-		// ---> riskCalc List<RiskCalcUpdateDto>
-		List<RiskCalc> riskCalcLs = getRiskCalcLs(riskUpdateDto.getRiskCalc(), riskUpdateDto.getRiskSfg(), project);
-		
 		// ---> riskSfg List<RiskSfgUpdateDto>
 		List<RiskSfg> riskSfgLs = getRiskSfgLs(riskUpdateDto.getRiskSfg(), project);
+
+		// ---> riskCalc List<RiskCalcUpdateDto>
+		List<RiskCalc> riskCalcLs = getRiskCalcLs(riskUpdateDto.getRiskCalc(), riskUpdateDto.getRiskSfg(), project);
 		
 		riskUpdateDto.setRiskCalc(null);
 		riskUpdateDto.setRiskSfg(null);
