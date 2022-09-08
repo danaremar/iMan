@@ -133,10 +133,10 @@
                                                     <div *ngIf="formRiskConfig.get('quantity'+i)?.errors?.required">
                                                         Cannot be empty
                                                     </div>
-                                                    <div *ngIf="formRiskConfig.get('name_f'+i)?.errors?.min">
+                                                    <div *ngIf="formRiskConfig.get('quantity'+i)?.errors?.min">
                                                         Minimum is 0
                                                     </div>
-                                                    <div *ngIf="formRiskConfig.get('name_f'+i)?.errors?.max">
+                                                    <div *ngIf="formRiskConfig.get('quantity'+i)?.errors?.max">
                                                         Maximum is 1
                                                     </div>
                                                 </div>
