@@ -5,7 +5,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -40,13 +40,13 @@ public class RiskCalc {
 	@Min(value = 0)
 	private Double total;
 	
-	@ManyToOne
-	@JoinColumn(name = "risk_freq_id")
+	@OneToOne
+	@JoinColumn(name = "risk_freq_id", updatable = false, insertable = false)
 	@JsonIgnore
 	private RiskFreq riskFreq;
 	
-	@ManyToOne
-	@JoinColumn(name = "risk_dim_id")
+	@OneToOne
+	@JoinColumn(name = "risk_dim_id", updatable = false, insertable = false)
 	@JsonIgnore
 	private RiskDimension riskDimension;
 

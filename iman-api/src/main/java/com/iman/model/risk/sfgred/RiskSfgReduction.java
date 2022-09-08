@@ -1,20 +1,16 @@
 package com.iman.model.risk.sfgred;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Min;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.iman.model.risk.dimension.RiskDimension;
-import com.iman.model.risk.sfg.RiskSfg;
-
 import lombok.Data;
 
 @Entity
@@ -32,7 +28,7 @@ public class RiskSfgReduction {
 	@Min(value = 0)
 	private Double cost;
 	
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToOne
 	@JoinColumn(name="risk_dim_id")
 	@JsonIgnore
 	private RiskDimension riskDimension;

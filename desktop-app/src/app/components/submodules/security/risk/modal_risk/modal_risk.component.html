@@ -302,7 +302,7 @@
                                                 <td>
                                                     <input class="form-control {{inputClass(formRisk, 'rc_calc'+i)}}"
                                                         value="0" type="number" step="100" formControlName="value"
-                                                        required min="0" max="10000000" />
+                                                        required min="0" max="1000000000" />
                                                 </td>
 
                                                 <!-- degradation -->
@@ -314,9 +314,10 @@
 
                                                 <!-- frequency -->
                                                 <td class="my-auto">
-                                                    <select class="m-auto" >
-                                                        <option class="dark-text" *ngFor="let f of riskFreqLs" formControlName="freq"
-                                                            [attr.selected]="f.id==a.value.freq?true:null" [ngValue]="f" value="{{f.id}}">
+                                                    <select class="m-auto" formControlName="freq">
+                                                        <option class="dark-text" *ngFor="let f of riskFreqLs"
+                                                            selected="{{f.id===a.value.freq?'true':'false'}}"
+                                                            value="{{f.id}}">
                                                             {{f.name}}</option>
                                                     </select>
                                                 </td>
@@ -335,15 +336,110 @@
                             </div>
 
                             <!-- RIGHT CONTAINER: safeguards -->
-                            <div class="d-flex flex-wrap col-lg-4 p-3">
+                            <div class="col-lg-4 p-3" formArrayName="riskSfg">
 
-                                <!-- name + active -->
-                                <input class="form-check-input" type="checkbox" formControlName="active" class="me-2">
+                                <div class="d-flex flex-wrap">
 
-                                <!-- description -->
+                                    <!-- title -->
+                                    <div class="b-text my-auto me-auto">Safeguards</div>
 
-                                <!-- RISK REDUCTION TABLE -->
+                                    <!-- add safeguard -->
+                                    <a ngbTooltip="Add safeguard" placement="left" [openDelay]="300"
+                                        (click)="addRiskSfgEmpty()">
+                                        <em class="bi bi-plus-lg"></em>
+                                    </a>
+                                </div>
 
+
+
+                                <!-- card -->
+                                <div class="card inc-upd-card p-3 mt-3"
+                                    *ngFor="let a of riskSfg.controls; let i = index" [formGroupName]="i">
+
+                                    <div class="d-flex flex-wrap">
+
+                                        <!-- active -->
+                                        <input class="form-check-input" type="checkbox" formControlName="active"
+                                            class="me-2">
+
+                                        <!-- name -->
+                                        <div class="my-3 d-flex">
+                                            <input class="form-control {{inputClass(formRisk, 'name_sfg_'+i)}}"
+                                                type="text" formControlName="name" maxlength="50" minlength="2"
+                                                required />
+                                            <div class="invalid-feedback" *ngIf="formRisk.get('name_sfg_'+i)?.touched 
+                                                    && formRisk.get('name_sfg_'+i)?.invalid">
+                                                <div *ngIf="formRisk.get('name_sfg_'+i)?.errors?.required">
+                                                    Cannot be empty
+                                                </div>
+                                                <div *ngIf="formRisk.get('name_sfg_'+i)?.errors?.minlength">
+                                                    Must containt at least 2 characters
+                                                </div>
+                                                <div *ngIf="formRisk.get('name_sfg_'+i)?.errors?.maxlength">
+                                                    Only 50 characters are allowed
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- remove -->
+                                        <em class="bi bi-sm bi-trash-fill my-auto ms-auto"
+                                            (click)="removeRiskSfgForm(i)"></em>
+                                    </div>
+
+                                    <!-- description -->
+                                    <textarea class="form-control {{inputClass(formRisk, 'description_sfg_'+i)}}"
+                                        formControlName="description" maxlength="255" rows="2"></textarea>
+                                    <div class="invalid-feedback" *ngIf="formRisk.get('description_sfg_'+i)?.touched 
+                                        && formRisk.get('description_sfg_'+i)?.invalid">
+                                        <div *ngIf="formRisk.get('description_sfg_'+i)?.errors?.maxlength">
+                                            Only 255 characters are allowed
+                                        </div>
+                                    </div>
+
+                                    <!-- RISK REDUCTION TABLE -->
+                                    <div formArrayName="riskSfgReduction" class="mt-3">
+                                        <table class="table table-dark table-sm table-responsive">
+                                            <thead>
+                                                <th>Dim.</th>
+                                                <th>Red.</th>
+                                                <th>Cost</th>
+                                            </thead>
+                                            <tbody>
+                                                <tr *ngFor="let b of riskSfgRedForm(i).controls; let j = index"
+                                                    [formGroupName]="j">
+
+                                                    <!-- dimension -->
+                                                    <td class="my-auto">{{getDimension(b.value.dim)}}
+                                                    </td>
+
+                                                    <!-- reduction -->
+                                                    <td>
+                                                        <input
+                                                            class="form-control {{inputClass(formRisk, 'red_sfg_red'+i+'_'+j)}}"
+                                                            value="1" type="number" step="0.1"
+                                                            formControlName="reduction" required min="0" max="1" />
+                                                    </td>
+
+                                                    <!-- cost -->
+                                                    <td>
+                                                        <input
+                                                            class="form-control {{inputClass(formRisk, 'red_sfg_cost'+i+'_'+j)}}"
+                                                            value="1" type="number" step="0.1" formControlName="cost"
+                                                            required min="0" max="1000000000" />
+                                                    </td>
+
+
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+
+
+
+
+
+                                </div>
                             </div>
 
                         </form>

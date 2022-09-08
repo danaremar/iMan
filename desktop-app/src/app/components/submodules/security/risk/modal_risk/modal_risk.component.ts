@@ -7,7 +7,7 @@ import { RiskCalcShowDto, RiskCalcUpdateDto } from "src/app/models/risks/risk_ca
 import { RiskDimShowDto } from "src/app/models/risks/risk_dim";
 import { RiskFreqShowDto } from "src/app/models/risks/risk_freq";
 import { RiskSfgShowDto, RiskSfgUpdateDto } from "src/app/models/risks/risk_sfg";
-import { RiskSfgRedShowDto } from "src/app/models/risks/risk_sfg_red";
+import { RiskSfgRedShowDto, RiskSfgRedUpdateDto } from "src/app/models/risks/risk_sfg_red";
 import { VulnListDto } from "src/app/models/vulns/vuln";
 import { ActiveService } from "src/app/services/actives/actives.service";
 import { RiskService } from "src/app/services/risks/risk.service";
@@ -247,11 +247,13 @@ export class ModalRisk implements OnChanges {
     }
 
     getRiskCalcUpdateLs(): Array<RiskCalcUpdateDto> {
-        return this.riskCalcs.controls.map(a => new RiskCalcUpdateDto(0, a.value.id, a.value.degradation, a.value.freq, a.value.dim))
+        return this.riskCalcs.controls.map(a => new RiskCalcUpdateDto(a.value.id, a.value.value, a.value.degradation, a.value.freq, a.value.dim))
     }
 
     getRiskSfgUpdateLs(): Array<RiskSfgUpdateDto> {
-        return this.riskSfg.controls.map(a => new RiskSfgUpdateDto(0, a.value.name, a.value.description, a.value.active, []))
+        return this.riskSfg.controls.map(a => new RiskSfgUpdateDto(a.value.id, a.value.name, a.value.description, a.value.active,
+            a.value.riskSfgReduction.map((b: { id: number; reduction: number; cost: number; dim: number; }) =>
+                new RiskSfgRedUpdateDto(b.id, b.reduction, b.cost, b.dim))))
     }
 
     editRisk() {
@@ -420,7 +422,7 @@ export class ModalRisk implements OnChanges {
                 name: [c.name, []],
                 description: [c.description, []],
                 active: [c.active, []],
-                riskSfgRed: this.formBuilder.array([
+                riskSfgReduction: this.formBuilder.array(
                     c.riskSfgReduction.map(
                         r => this.formBuilder.group({
                             id: [r.id, []],
@@ -429,7 +431,7 @@ export class ModalRisk implements OnChanges {
                             dim: [r.riskDimension.id, []],
                         })
                     )
-                ])
+                )
             })
             this.riskSfg.push(fg)
         }
@@ -442,6 +444,11 @@ export class ModalRisk implements OnChanges {
         this.riskDimLs.forEach(a => riskSfgRed.push(new RiskSfgRedShowDto(0, 0, 0, a)))
         let riskSfg: RiskSfgShowDto = new RiskSfgShowDto(0, '', '', true, riskSfgRed)
         this.addRiskSfgForm(riskSfg)
+    }
+
+    // RISK SFG RED
+    riskSfgRedForm(sfgNum: number): FormArray {
+        return this.riskSfg.at(sfgNum).get('riskSfgReduction') as FormArray
     }
 
     getDimension(id: number) {
