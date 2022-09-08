@@ -144,20 +144,209 @@
 
 
                             </div>
+
+                            <!-- edit button -->
+                            <div *ngIf="isEditable && selectedRisk!=undefined" class="w-100 d-flex p-2 mt-2">
+                                <button type="button" class="btn btn-secondary ms-auto d-flex" (click)="edit()">
+                                    <em class="bi bi-sm bi-pencil-fill ms-auto me-2"></em>
+                                    <div class="my-auto">Edit</div>
+                                </button>
+                            </div>
+
                         </div>
                     </div>
 
                     <!-- EDIT RISK -->
                     <div *ngIf="isEditing" class="container">
-                        <div class="row">
+                        <form class="row" [formGroup]="formRisk" (ngSubmit)="uploadRisk()">
 
                             <!-- LEFT CONTAINER: common things -->
-                            <div class="d-flex flex-wrap col-lg-8 p-3"></div>
+                            <div class="d-flex flex-wrap col-lg-8 p-3">
+
+                                <!-- name -->
+                                <div class="col-lg-12 my-3 d-flex">
+                                    <div class="my-auto me-2">Name:</div>
+                                    <input class="form-control {{inputClass(formRisk, 'name')}}" type="text"
+                                        formControlName="name" maxlength="50" minlength="2" required />
+                                    <div class="invalid-feedback" *ngIf="formRisk.get('name')?.touched 
+                                            && formRisk.get('name')?.invalid">
+                                        <div *ngIf="formRisk.get('name')?.errors?.required">
+                                            Cannot be empty
+                                        </div>
+                                        <div *ngIf="formRisk.get('name')?.errors?.minlength">
+                                            Must containt at least 2 characters
+                                        </div>
+                                        <div *ngIf="formRisk.get('name')?.errors?.maxlength">
+                                            Only 50 characters are allowed
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- description -->
+                                <div class="col-lg-12 my-3">
+                                    <div class="my-auto me-2">Description:</div>
+                                    <textarea class="form-control {{inputClass(formRisk, 'description')}}"
+                                        formControlName="description" maxlength="255" rows="2"></textarea>
+                                    <div class="invalid-feedback" *ngIf="formRisk.get('description')?.touched 
+                                        && formRisk.get('description')?.invalid">
+                                        <div *ngIf="formRisk.get('description')?.errors?.maxlength">
+                                            Only 255 characters are allowed
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- riskType -->
+                                <div class="col-lg-12 d-flex my-3">
+                                    <div class="my-auto me-2">Risk type:</div>
+                                    <input class="form-control {{inputClass(formRisk, 'riskType')}}" type="text"
+                                        formControlName="riskType" list="riskTypeLs" maxlength="50" />
+                                    <div class="invalid-feedback"
+                                        *ngIf="formRisk.get('riskType')?.touched && formRisk.get('riskType')?.invalid">
+                                        <div *ngIf="formRisk.get('riskType')?.errors?.maxlength">
+                                            Only 50 characters are allowed
+                                        </div>
+                                    </div>
+                                    <datalist id="riskTypeLs">
+                                        <option>Natural disaster</option>
+                                        <option>Industrial</option>
+                                        <option>Unintentional errors & mistakes</option>
+                                        <option>Deliberate attacks</option>
+                                    </datalist>
+                                </div>
+
+                                <!-- assignedActive -->
+                                <div class="col-lg-12 d-flex mt-4 mb-2">
+                                    <em class="bi bi-diagram-2 my-auto me-3"></em>
+                                    <div class="m-text my-auto">Active</div>
+                                </div>
+                                <form [formGroup]="formAddActive" class="col-lg-12 d-flex mt-1 mb-2">
+                                    <em class="bi bi-search bi-sm my-auto me-3"></em>
+
+                                    <!-- search by id -->
+                                    <input class="form-control me-2" type="text" formControlName="id" hidden />
+
+                                    <!-- search by code -->
+                                    <div class="m-text my-auto">#</div>
+                                    <input class="form-control me-2" list="searchChildrenByCode" type="text"
+                                        (keyup)="searchActiveByCode($event.target)" (mouseleave)="addActiveFormInput()"
+                                        formControlName="code" style="width: 100px;" />
+                                    <datalist id="searchChildrenByCode">
+                                        <option *ngFor="let s of searchActives" [attr.data-value]="s.code">
+                                            {{s.code}}
+                                        </option>
+                                    </datalist>
+
+                                    <!-- search by name -->
+                                    <div class="ms-2 s-text my-auto">Name:</div>
+                                    <input class="form-control" list="searchChildrenByName" type="text"
+                                        (keyup)="searchActiveByName($event.target)" (mouseleave)="addActiveFormInput()"
+                                        formControlName="name" />
+                                    <datalist id="searchChildrenByName">
+                                        <option *ngFor="let s of searchActives" [ngValue]="s"
+                                            [attr.data-value]="s.name">
+                                            {{s.name}}
+                                        </option>
+                                    </datalist>
+                                </form>
+
+                                <!-- assignedVuln -->
+                                <div class="col-lg-12 d-flex mt-4 mb-2">
+                                    <em class="bi bi-diagram-2 my-auto me-3"></em>
+                                    <div class="m-text my-auto">Vulnerability</div>
+                                </div>
+                                <form [formGroup]="formAddVuln" class="col-lg-12 d-flex mt-1 mb-2">
+                                    <em class="bi bi-search bi-sm my-auto me-3"></em>
+
+                                    <!-- search by id -->
+                                    <input class="form-control me-2" type="text" formControlName="id" hidden />
+
+                                    <!-- search by code -->
+                                    <div class="m-text my-auto">#</div>
+                                    <input class="form-control me-2" list="searchChildrenByCode" type="text"
+                                        (keyup)="searchVulnByCode($event.target)" (mouseleave)="addVulnFormInput()"
+                                        formControlName="code" style="width: 100px;" />
+                                    <datalist id="searchChildrenByCode">
+                                        <option *ngFor="let s of searchVulns" [attr.data-value]="s.code">
+                                            {{s.code}}
+                                        </option>
+                                    </datalist>
+
+                                    <!-- search by name -->
+                                    <div class="ms-2 s-text my-auto">Name:</div>
+                                    <input class="form-control" list="searchChildrenByName" type="text"
+                                        (keyup)="searchVulnByName($event.target)" (mouseleave)="addVulnFormInput()"
+                                        formControlName="name" />
+                                    <datalist id="searchChildrenByName">
+                                        <option *ngFor="let s of searchVulns" [ngValue]="s" [attr.data-value]="s.name">
+                                            {{s.name}}
+                                        </option>
+                                    </datalist>
+                                </form>
+
+                                <!-- RISK CALC TABLE -->
+                                <div formArrayName="riskCalc" *ngIf="riskCalcs && riskCalcs.length!=0" class="mt-3">
+                                    <table class="table table-dark table-sm table-responsive">
+                                        <thead>
+                                            <th>Dimension</th>
+                                            <th>Value</th>
+                                            <th>Deg.</th>
+                                            <th>Freq.</th>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let a of riskCalcs.controls; let i = index" [formGroupName]="i">
+
+                                                <!-- dimension -->
+                                                <td class="my-auto">{{getDimension(a.value.dim)}}</td>
+
+                                                <!-- value -->
+                                                <td>
+                                                    <input class="form-control {{inputClass(formRisk, 'rc_calc'+i)}}"
+                                                        value="0" type="number" step="100" formControlName="value"
+                                                        required min="0" max="10000000" />
+                                                </td>
+
+                                                <!-- degradation -->
+                                                <td>
+                                                    <input class="form-control {{inputClass(formRisk, 'rc_calc'+i)}}"
+                                                        value="1" type="number" step="0.1" formControlName="degradation"
+                                                        required min="0" max="1" />
+                                                </td>
+
+                                                <!-- frequency -->
+                                                <td class="my-auto">
+                                                    <select class="m-auto" >
+                                                        <option class="dark-text" *ngFor="let f of riskFreqLs" formControlName="freq"
+                                                            [attr.selected]="f.id==a.value.freq?true:null" [ngValue]="f" value="{{f.id}}">
+                                                            {{f.name}}</option>
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <!-- actions -->
+                                <div class="col-lg-12 form-group d-flex flex-row-reverse mt-3">
+                                    <button type="button" class="btn btn-danger" (click)="edit()">Close</button>
+                                    <button type="submit" class="btn btn-success me-2"
+                                        [disabled]="!formRisk.valid">{{selectedRisk==undefined?'Create':'Edit'}}</button>
+                                </div>
+
+                            </div>
 
                             <!-- RIGHT CONTAINER: safeguards -->
-                            <div class="d-flex flex-wrap col-lg-8 p-3"></div>
-                            
-                        </div>
+                            <div class="d-flex flex-wrap col-lg-4 p-3">
+
+                                <!-- name + active -->
+                                <input class="form-check-input" type="checkbox" formControlName="active" class="me-2">
+
+                                <!-- description -->
+
+                                <!-- RISK REDUCTION TABLE -->
+
+                            </div>
+
+                        </form>
                     </div>
 
 

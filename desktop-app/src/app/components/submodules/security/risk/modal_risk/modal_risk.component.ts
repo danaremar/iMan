@@ -1,10 +1,13 @@
 import { DatePipe } from "@angular/common";
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from "@angular/core";
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, ViewChild } from "@angular/core";
 import { FormArray, FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { ActiveListDto } from "src/app/models/actives/actives";
 import { RiskCreateDto, RiskShowDto, RiskUpdateDto } from "src/app/models/risks/risk";
-import { RiskCalcShowDto } from "src/app/models/risks/risk_calc";
-import { RiskSfgShowDto } from "src/app/models/risks/risk_sfg";
+import { RiskCalcShowDto, RiskCalcUpdateDto } from "src/app/models/risks/risk_calc";
+import { RiskDimShowDto } from "src/app/models/risks/risk_dim";
+import { RiskFreqShowDto } from "src/app/models/risks/risk_freq";
+import { RiskSfgShowDto, RiskSfgUpdateDto } from "src/app/models/risks/risk_sfg";
+import { RiskSfgRedShowDto } from "src/app/models/risks/risk_sfg_red";
 import { VulnListDto } from "src/app/models/vulns/vuln";
 import { ActiveService } from "src/app/services/actives/actives.service";
 import { RiskService } from "src/app/services/risks/risk.service";
@@ -17,7 +20,7 @@ import { VulnService } from "src/app/services/vulns/vuln.service";
     templateUrl: './modal_risk.component.html',
     styleUrls: ['./modal_risk.component.css']
 })
-export class ModalRisk implements OnInit {
+export class ModalRisk implements OnChanges {
 
     // user can edit?
     @Input()
@@ -38,6 +41,10 @@ export class ModalRisk implements OnInit {
     // selected risk
     @Input()
     selectedRisk: RiskShowDto | undefined
+
+    // get configuration
+    riskFreqLs: Array<RiskFreqShowDto> = []
+    riskDimLs: Array<RiskDimShowDto> = []
 
     // selected project id
     @Input()
@@ -80,8 +87,41 @@ export class ModalRisk implements OnInit {
         METHODS -> GENERAL
     ***************************/
 
-    ngOnInit(): void {
-        // NOTHING
+    ngOnChanges(): void {
+        // get risk config
+        this.getRiskFreq()
+        this.getRiskDim()
+
+        // build form
+        this.buildForm()
+    }
+
+    getRiskFreq() {
+        if (this.projectId) {
+            this.riskFreqService.getRiskFreqByProjectId(this.projectId).subscribe({
+                next: (n) => {
+                    this.riskFreqLs = n
+                    this.containError = false
+                },
+                error: (e) => {
+                    this.handleError(e)
+                }
+            })
+        }
+    }
+
+    getRiskDim() {
+        if (this.projectId) {
+            this.riskDimService.getRiskDimByProjectId(this.projectId).subscribe({
+                next: (n) => {
+                    this.riskDimLs = n
+                    this.containError = false
+                },
+                error: (e) => {
+                    this.handleError(e)
+                }
+            })
+        }
     }
 
     inputClass(form: FormGroup, property: string) {
@@ -119,30 +159,38 @@ export class ModalRisk implements OnInit {
                 riskCalc: this.formBuilder.array([]),
                 riskSfg: this.formBuilder.array([])
             })
-            this.formAddActive = this.formBuilder.group({
-                id: [this.selectedRisk.assignedActive.id, []],
-                code: [this.selectedRisk.assignedActive.code, []],
-                name: [this.selectedRisk.assignedActive.name, []]
-            })
-            this.formAddVuln = this.formBuilder.group({
-                id: ['', []],
-                code: ['', []],
-                name: ['', []]
-            })
+            if (this.selectedRisk.assignedActive) {
+                this.formAddActive = this.formBuilder.group({
+                    id: [this.selectedRisk.assignedActive.id, []],
+                    code: [this.selectedRisk.assignedActive.code, []],
+                    name: [this.selectedRisk.assignedActive.name, []]
+                })
+            }
+            if (this.selectedRisk.assignedVuln) {
+                this.formAddVuln = this.formBuilder.group({
+                    id: [this.selectedRisk.assignedVuln.id, []],
+                    code: [this.selectedRisk.assignedVuln.code, []],
+                    name: [this.selectedRisk.assignedVuln.name, []]
+                })
+            }
 
             // add riskCalc
-            if(this.selectedRisk.riskCalc) {
+            if (this.selectedRisk.riskCalc) {
                 this.selectedRisk.riskCalc.forEach(a => this.addRiskCalcForm(a))
+            } else if (this.riskDimLs) {
+                this.riskDimLs.forEach(a => this.addRiskCalcEmpty(a))
             }
 
             // add riskSfg
-            if(this.selectedRisk.riskSfg) {
+            if (this.selectedRisk.riskSfg) {
                 this.selectedRisk.riskSfg.forEach(a => this.addRiskSfgForm(a))
+            } else if (this.riskDimLs) {
+                this.addRiskSfgEmpty()
             }
-
-
         }
     }
+
+
 
     /***************************
         METHODS -> HANDLERS
@@ -198,10 +246,18 @@ export class ModalRisk implements OnInit {
         }
     }
 
+    getRiskCalcUpdateLs(): Array<RiskCalcUpdateDto> {
+        return this.riskCalcs.controls.map(a => new RiskCalcUpdateDto(0, a.value.id, a.value.degradation, a.value.freq, a.value.dim))
+    }
+
+    getRiskSfgUpdateLs(): Array<RiskSfgUpdateDto> {
+        return this.riskSfg.controls.map(a => new RiskSfgUpdateDto(0, a.value.name, a.value.description, a.value.active, []))
+    }
+
     editRisk() {
         if (this.projectId && this.selectedRisk) {
             // create object
-            let updateRisk: RiskUpdateDto = new RiskUpdateDto(this.selectedRisk.id, this.formRisk.value.name, this.formRisk.value.description, this.formAddActive.value.id, this.formAddVuln.value.id, this.formRisk.value.riskType, [], [])
+            let updateRisk: RiskUpdateDto = new RiskUpdateDto(this.selectedRisk.id, this.formRisk.value.name, this.formRisk.value.description, this.formAddActive.value.id, this.formAddVuln.value.id, this.formRisk.value.riskType, this.getRiskCalcUpdateLs(), this.getRiskSfgUpdateLs())
 
             // rest
             this.riskService.updateRisk(updateRisk).subscribe({
@@ -234,6 +290,96 @@ export class ModalRisk implements OnInit {
         })
     }
 
+    // ACTIVE
+    searchActiveByName(activeName: any) {
+        if (this.projectId) {
+            this.activeService.findActivesByProject(this.projectId, 0, 5, [],
+                { name: { filterType: 'text', type: 'contains', filter: activeName.value } },
+                [{ field: "name" }]).subscribe(
+                    data => {
+                        this.searchActives = data.content
+                    })
+        }
+    }
+    searchActiveByCode(activeCode: any) {
+        if (this.projectId) {
+            this.activeService.findActivesByProject(this.projectId, 0, 5, [],
+                { code: { filterType: 'text', type: 'contains', filter: activeCode.value } },
+                [{ field: "code" }]).subscribe(
+                    data => {
+                        this.searchActives = data.content
+                    })
+        }
+    }
+    addActiveFormInput() {
+        // declare active
+        let a: ActiveListDto | undefined = undefined
+
+        // filter if posible
+        let c = this.searchActives.filter(x => x.code == this.formAddActive.value.code)[0]
+        let n = this.searchActives.filter(x => x.name == this.formAddActive.value.name)[0]
+
+        // check, set active & set other value
+        if (this.searchActives && c != undefined) {
+            a = c
+            this.formAddActive.controls['name'].setValue(a.name)
+        } else if (this.searchActives && n != undefined) {
+            a = n
+            this.formAddActive.controls['code'].setValue(a.code)
+        }
+
+        // set id
+        if (a != undefined) {
+            // set id to form
+            this.formAddActive.controls['id'].setValue(a ? a.id : undefined)
+        }
+    }
+
+    // VULN
+    searchVulnByName(vulnName: any) {
+        if (this.projectId) {
+            this.vulnService.findVulnsByProject(this.projectId, 0, 5, [],
+                { name: { filterType: 'text', type: 'contains', filter: vulnName.value } },
+                [{ field: "name" }]).subscribe(
+                    data => {
+                        this.searchActives = data.content
+                    })
+        }
+    }
+    searchVulnByCode(vulnCode: any) {
+        if (this.projectId) {
+            this.vulnService.findVulnsByProject(this.projectId, 0, 5, [],
+                { code: { filterType: 'text', type: 'contains', filter: vulnCode.value } },
+                [{ field: "code" }]).subscribe(
+                    data => {
+                        this.searchActives = data.content
+                    })
+        }
+    }
+    addVulnFormInput() {
+        // declare vuln
+        let a: VulnListDto | undefined = undefined
+
+        // filter if posible
+        let c = this.searchVulns.filter(x => x.code == this.formAddVuln.value.code)[0]
+        let n = this.searchVulns.filter(x => x.name == this.formAddVuln.value.name)[0]
+
+        // check, set active & set other value
+        if (this.searchVulns && c != undefined) {
+            a = c
+            this.formAddVuln.controls['name'].setValue(a.name)
+        } else if (this.searchVulns && n != undefined) {
+            a = n
+            this.formAddVuln.controls['code'].setValue(a.code)
+        }
+
+        // set id
+        if (a != undefined) {
+            // set id to form
+            this.formAddVuln.controls['id'].setValue(a ? a.id : undefined)
+        }
+    }
+
     // RISK CALC
     get riskCalcs(): FormArray {
         return this.formRisk.get("riskCalc") as FormArray
@@ -242,10 +388,10 @@ export class ModalRisk implements OnInit {
         if (c) {
             let fg = this.formBuilder.group({
                 id: [c.id, []],
-                dim: [c.riskDimension.name + ' (' + c.riskDimension.abbreviation + ')', []],
+                dim: [c.riskDimension.id, []],
                 value: [c.value, []],
                 degradation: [c.degradation, []],
-                freq: [c.riskDimension.name, []],
+                freq: [c.riskFreq.id, []],
                 totalWoSfg: [c.totalWoSfg, []],
                 sfgRed: ['', []],
                 sfgCost: ['', []],
@@ -257,13 +403,18 @@ export class ModalRisk implements OnInit {
     removeRiskCalcForm(i: number) {
         this.riskCalcs.removeAt(i)
     }
+    addRiskCalcEmpty(riskDimShowDto: RiskDimShowDto) {
+        let riskCalc: RiskCalcShowDto = new RiskCalcShowDto(0, 0, 0, 0, 0, this.riskFreqLs[0], riskDimShowDto)
+        this.addRiskCalcForm(riskCalc)
+    }
+
 
     // RISK SFG
     get riskSfg(): FormArray {
         return this.formRisk.get("riskSfg") as FormArray
     }
     addRiskSfgForm(c: RiskSfgShowDto | undefined) {
-        if(c) {
+        if (c) {
             let fg = this.formBuilder.group({
                 id: [c.id, []],
                 name: [c.name, []],
@@ -275,7 +426,7 @@ export class ModalRisk implements OnInit {
                             id: [r.id, []],
                             reduction: [r.reduction, []],
                             cost: [r.cost, []],
-                            dim: [r.riskDimension.name + ' (' + r.riskDimension.abbreviation + ')', []],
+                            dim: [r.riskDimension.id, []],
                         })
                     )
                 ])
@@ -285,6 +436,17 @@ export class ModalRisk implements OnInit {
     }
     removeRiskSfgForm(i: number) {
         this.riskSfg.removeAt(i)
+    }
+    addRiskSfgEmpty() {
+        let riskSfgRed: Array<RiskSfgRedShowDto> = []
+        this.riskDimLs.forEach(a => riskSfgRed.push(new RiskSfgRedShowDto(0, 0, 0, a)))
+        let riskSfg: RiskSfgShowDto = new RiskSfgShowDto(0, '', '', true, riskSfgRed)
+        this.addRiskSfgForm(riskSfg)
+    }
+
+    getDimension(id: number) {
+        let selectedDim: RiskDimShowDto = this.riskDimLs.filter(a => a.id == id)[0]
+        return selectedDim.name + ' (' + selectedDim.abbreviation + ')'
     }
 
 
