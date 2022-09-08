@@ -184,7 +184,7 @@
 
                                 <!-- description -->
                                 <div class="col-lg-12 my-3">
-                                    <div class="my-auto me-2">Description:</div>
+                                    <div class="my-auto me-2 text-nowrap">Description:</div>
                                     <textarea class="form-control {{inputClass(formRisk, 'description')}}"
                                         formControlName="description" maxlength="255" rows="2"></textarea>
                                     <div class="invalid-feedback" *ngIf="formRisk.get('description')?.touched 
@@ -284,7 +284,7 @@
                                 </form>
 
                                 <!-- RISK CALC TABLE -->
-                                <div formArrayName="riskCalc" *ngIf="riskCalcs && riskCalcs.length!=0" class="mt-3">
+                                <div formArrayName="riskCalc" class="mt-3">
                                     <table class="table table-dark table-sm table-responsive">
                                         <thead>
                                             <th>Dimension</th>

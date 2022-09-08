@@ -181,7 +181,7 @@ public class RiskService {
 		Double total = totalWoSfg;
 		if(sfgReductionMap.size()!=0 || sfgCostMap.size()!=0){
 			total = totalWoSfg * Math.pow(1.0 - sfgReductionMap.get(riskCalcUpdateDto.getRiskDimensionId()), 2)
-			- sfgCostMap.get(riskCalcUpdateDto.getRiskDimensionId());
+			+ sfgCostMap.get(riskCalcUpdateDto.getRiskDimensionId());
 		}
 		riskCalc.setTotal(total);
 
@@ -190,7 +190,7 @@ public class RiskService {
 
 	List<RiskCalc> getRiskCalcLs(List<RiskCalcUpdateDto> riskCalcUpdateDtoLs, List<RiskSfgUpdateDto> riskSfgUpdateDtoLs,
 			Project project) {
-		if (riskCalcUpdateDtoLs != null && !riskCalcUpdateDtoLs.isEmpty() && riskSfgUpdateDtoLs != null && !riskSfgUpdateDtoLs.isEmpty()) {
+		if (riskCalcUpdateDtoLs != null && !riskCalcUpdateDtoLs.isEmpty()) {
 
 			Map<Long, Double> sfgReductionMap = riskSfgUpdateDtoLs.stream()
 					.filter(RiskSfgUpdateDto::getActive)
@@ -283,13 +283,15 @@ public class RiskService {
 				
 		// ---> riskCalc List<RiskCalcUpdateDto>
 		List<RiskCalc> riskCalcLs = getRiskCalcLs(riskCreateDto.getRiskCalc(), riskCreateDto.getRiskSfg(), project);
+
+		// Properties not allowed to map
+		Vuln vuln = riskCreateDto.getVulnId()!=null?vulnService.findVerifiedVulnById(riskCreateDto.getVulnId()):null;
+		Active active = riskCreateDto.getActiveId()!=null?activeService.findVerifiedActiveById(riskCreateDto.getActiveId()):null;
+		
+		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 		
 		riskCreateDto.setRiskSfg(null);
 		riskCreateDto.setRiskCalc(null);
-
-		// Properties not allowed to map
-		Vuln vuln = vulnService.findVerifiedVulnById(riskCreateDto.getVulnId());
-		Active active = activeService.findVerifiedActiveById(riskCreateDto.getActiveId());
 		
 		// Creation
 		Risk risk = modelMapper.map(riskCreateDto, Risk.class);
@@ -332,12 +334,15 @@ public class RiskService {
 		// ---> riskCalc List<RiskCalcUpdateDto>
 		List<RiskCalc> riskCalcLs = getRiskCalcLs(riskUpdateDto.getRiskCalc(), riskUpdateDto.getRiskSfg(), project);
 		
-		riskUpdateDto.setRiskCalc(null);
-		riskUpdateDto.setRiskSfg(null);
-		
 		// Properties not allowed to map
-		Vuln vuln = vulnService.findVerifiedVulnById(riskUpdateDto.getVulnId());
-		Active active = activeService.findVerifiedActiveById(riskUpdateDto.getActiveId());
+		// Properties not allowed to map
+		Vuln vuln = riskUpdateDto.getVulnId()!=null?vulnService.findVerifiedVulnById(riskUpdateDto.getVulnId()):null;
+		Active active = riskUpdateDto.getActiveId()!=null?activeService.findVerifiedActiveById(riskUpdateDto.getActiveId()):null;
+		
+		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+		
+		riskUpdateDto.setRiskSfg(null);
+		riskUpdateDto.setRiskCalc(null);
 
 		// Update & fetch from previous
 		Risk newRisk = modelMapper.map(riskUpdateDto, Risk.class);

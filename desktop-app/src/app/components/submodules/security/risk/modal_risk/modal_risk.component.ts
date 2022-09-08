@@ -63,6 +63,8 @@ export class ModalRisk implements OnChanges {
     @ViewChild('closeButtonRisk') closeButtonTask: any
 
     constructor(public formBuilder: FormBuilder, public vulnService: VulnService, public activeService: ActiveService, public riskService: RiskService, public riskFreqService: RiskFreqService, public riskDimService: RiskDimService) {
+        
+        // build empty forms
         this.formRisk = this.formBuilder.group({
             name: ['', [Validators.required]],
             description: ['', []],
@@ -80,6 +82,7 @@ export class ModalRisk implements OnChanges {
             code: ['', []],
             name: ['', []]
         })
+
     }
 
 
@@ -142,6 +145,8 @@ export class ModalRisk implements OnChanges {
     }
 
     clearForms() {
+        this.riskCalcs.clear()
+        this.riskSfg.clear()
         this.formRisk.reset()
         this.formAddActive.reset()
         this.formAddVuln.reset()
@@ -184,9 +189,9 @@ export class ModalRisk implements OnChanges {
             // add riskSfg
             if (this.selectedRisk.riskSfg) {
                 this.selectedRisk.riskSfg.forEach(a => this.addRiskSfgForm(a))
-            } else if (this.riskDimLs) {
-                this.addRiskSfgEmpty()
             }
+        } else {
+            this.riskDimLs.forEach(a => this.addRiskCalcEmpty(a))
         }
     }
 
@@ -232,7 +237,7 @@ export class ModalRisk implements OnChanges {
     newRisk() {
         if (this.projectId) {
             // create object
-            let createRisk: RiskCreateDto = new RiskCreateDto(this.formRisk.value.name, this.formRisk.value.description, this.formAddActive.value.id, this.formAddVuln.value.id, this.formRisk.value.riskType, [], [])
+            let createRisk: RiskCreateDto = new RiskCreateDto(this.formRisk.value.name, this.formRisk.value.description, this.formAddActive.value.id, this.formAddVuln.value.id, this.formRisk.value.riskType, this.getRiskCalcUpdateLs(), this.getRiskSfgUpdateLs())
 
             // rest
             this.riskService.createRisk(this.projectId, createRisk).subscribe({
