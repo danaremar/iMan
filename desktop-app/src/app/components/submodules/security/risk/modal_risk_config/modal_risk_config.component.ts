@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnChanges, Output, ViewChild } from "@a
 import { FormArray, FormBuilder, FormGroup } from "@angular/forms"
 import { RiskDimShowDto, RiskDimUpdateDto } from "src/app/models/risks/risk_dim"
 import { RiskFreqShowDto, RiskFreqUpdateDto } from "src/app/models/risks/risk_freq"
+import { RiskService } from "src/app/services/risks/risk.service"
 import { RiskDimService } from "src/app/services/risks/risk_dim.service"
 import { RiskFreqService } from "src/app/services/risks/risk_freq.service"
 
@@ -24,13 +25,15 @@ export class ModalRiskConfig implements OnChanges {
     @Input()
     projectId: number | null | undefined
 
+    isRemovable: boolean = true
+
     // form
     formRiskConfig: FormGroup
 
     // close modal button
     @ViewChild('closeButtonRiskConfig') closeButtonRiskConfig: any
 
-    constructor(public formBuilder: FormBuilder, public riskFreqService: RiskFreqService, public riskDimService: RiskDimService) {
+    constructor(public formBuilder: FormBuilder, public riskFreqService: RiskFreqService, public riskDimService: RiskDimService, public riskService: RiskService) {
         this.formRiskConfig = this.formBuilder.group({
             riskDim: this.formBuilder.array([]),
             riskFreq: this.formBuilder.array([])
@@ -61,6 +64,18 @@ export class ModalRiskConfig implements OnChanges {
         // get risk freq & dim
         this.getRiskFreq()
         this.getRiskDim()
+
+        this.getIsRemovable()
+    }
+
+    getIsRemovable() {
+        if(this.projectId) {
+            this.riskService.findRisksByProject(this.projectId, 0,1,[],{},[]).subscribe(
+                data => {
+                    this.isRemovable = data.content.length == 0
+                }
+            )
+        }
     }
 
     getRiskFreq() {

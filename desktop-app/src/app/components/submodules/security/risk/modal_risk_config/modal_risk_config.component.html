@@ -78,7 +78,7 @@
                                             </div>
 
                                             <!-- remove -->
-                                            <em class="bi bi-sm bi-trash-fill my-auto ms-auto"
+                                            <em class="bi bi-sm bi-trash-fill my-auto ms-auto" *ngIf="isRemovable"
                                                 (click)="removeRiskDimForm(i)"></em>
 
                                         </div>
@@ -143,7 +143,7 @@
                                             </div>
 
                                             <!-- remove -->
-                                            <em class="bi bi-sm bi-trash-fill my-auto ms-auto"
+                                            <em class="bi bi-sm bi-trash-fill my-auto ms-auto" *ngIf="isRemovable"
                                                 (click)="removeRiskFreqForm(i)"></em>
 
                                         </div>
