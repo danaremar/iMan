@@ -214,9 +214,47 @@
                                     </datalist>
                                 </div>
 
+                                <!-- assignedVuln -->
+                                <div class="col-lg-12 d-flex mt-4 mb-2">
+                                    <em class="bi bi-incognito my-auto me-3"></em>
+                                    <div class="m-text my-auto">Vulnerability</div>
+                                </div>
+                                <form [formGroup]="formAddVuln" class="col-lg-12 d-flex mt-1 mb-2">
+                                    <em class="bi bi-search bi-sm my-auto me-3"></em>
+
+                                    <!-- search by id -->
+                                    <input class="form-control me-2" type="text" formControlName="id" hidden />
+
+                                    <!-- search by code -->
+                                    <div class="m-text my-auto">#</div>
+                                    <input class="form-control me-2" list="searchChildrenByCode" type="text"
+                                        (keyup)="searchVulnByCode($event.target)" (mouseleave)="addVulnFormInput()"
+                                        formControlName="code" style="width: 100px;" />
+                                    <datalist id="searchChildrenByCode">
+                                        <option *ngFor="let s of searchVulns" [attr.data-value]="s.code">
+                                            {{s.code}}
+                                        </option>
+                                    </datalist>
+
+                                    <!-- search by name -->
+                                    <div class="ms-2 s-text my-auto">Name:</div>
+                                    <input class="form-control" list="searchChildrenByName" type="text"
+                                        (keyup)="searchVulnByName($event.target)" (mouseleave)="addVulnFormInput()"
+                                        formControlName="name" />
+                                    <datalist id="searchChildrenByName">
+                                        <option *ngFor="let s of searchVulns" [ngValue]="s" [attr.data-value]="s.name">
+                                            {{s.name}}
+                                        </option>
+                                    </datalist>
+
+                                    <!-- remove -->
+                                    <em class="bi bi-sm bi-trash-fill my-auto ms-auto"
+                                        (click)="deleteVulnFormInput()"></em>
+                                </form>
+
                                 <!-- assignedActive -->
                                 <div class="col-lg-12 d-flex mt-4 mb-2">
-                                    <em class="bi bi-diagram-2 my-auto me-3"></em>
+                                    <em class="bi bi-laptop my-auto me-3"></em>
                                     <div class="m-text my-auto">Active</div>
                                 </div>
                                 <form [formGroup]="formAddActive" class="col-lg-12 d-flex mt-1 mb-2">
@@ -247,41 +285,13 @@
                                             {{s.name}}
                                         </option>
                                     </datalist>
+
+                                    <!-- remove -->
+                                    <em class="bi bi-sm bi-trash-fill my-auto ms-auto"
+                                        (click)="deleteActiveFormInput()"></em>
                                 </form>
 
-                                <!-- assignedVuln -->
-                                <div class="col-lg-12 d-flex mt-4 mb-2">
-                                    <em class="bi bi-diagram-2 my-auto me-3"></em>
-                                    <div class="m-text my-auto">Vulnerability</div>
-                                </div>
-                                <form [formGroup]="formAddVuln" class="col-lg-12 d-flex mt-1 mb-2">
-                                    <em class="bi bi-search bi-sm my-auto me-3"></em>
-
-                                    <!-- search by id -->
-                                    <input class="form-control me-2" type="text" formControlName="id" hidden />
-
-                                    <!-- search by code -->
-                                    <div class="m-text my-auto">#</div>
-                                    <input class="form-control me-2" list="searchChildrenByCode" type="text"
-                                        (keyup)="searchVulnByCode($event.target)" (mouseleave)="addVulnFormInput()"
-                                        formControlName="code" style="width: 100px;" />
-                                    <datalist id="searchChildrenByCode">
-                                        <option *ngFor="let s of searchVulns" [attr.data-value]="s.code">
-                                            {{s.code}}
-                                        </option>
-                                    </datalist>
-
-                                    <!-- search by name -->
-                                    <div class="ms-2 s-text my-auto">Name:</div>
-                                    <input class="form-control" list="searchChildrenByName" type="text"
-                                        (keyup)="searchVulnByName($event.target)" (mouseleave)="addVulnFormInput()"
-                                        formControlName="name" />
-                                    <datalist id="searchChildrenByName">
-                                        <option *ngFor="let s of searchVulns" [ngValue]="s" [attr.data-value]="s.name">
-                                            {{s.name}}
-                                        </option>
-                                    </datalist>
-                                </form>
+                                
 
                                 <!-- RISK CALC TABLE -->
                                 <div formArrayName="riskCalc" class="mt-3">

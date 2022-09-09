@@ -341,6 +341,11 @@ export class ModalRisk implements OnChanges {
             this.formAddActive.controls['id'].setValue(a ? a.id : undefined)
         }
     }
+    deleteActiveFormInput() {
+        this.formAddActive.controls['id'].setValue('')
+        this.formAddActive.controls['code'].setValue('')
+        this.formAddActive.controls['name'].setValue('')
+    }
 
     // VULN
     searchVulnByName(vulnName: any) {
@@ -349,7 +354,7 @@ export class ModalRisk implements OnChanges {
                 { name: { filterType: 'text', type: 'contains', filter: vulnName.value } },
                 [{ field: "name" }]).subscribe(
                     data => {
-                        this.searchActives = data.content
+                        this.searchVulns = data.content
                     })
         }
     }
@@ -359,7 +364,7 @@ export class ModalRisk implements OnChanges {
                 { code: { filterType: 'text', type: 'contains', filter: vulnCode.value } },
                 [{ field: "code" }]).subscribe(
                     data => {
-                        this.searchActives = data.content
+                        this.searchVulns = data.content
                     })
         }
     }
@@ -385,6 +390,11 @@ export class ModalRisk implements OnChanges {
             // set id to form
             this.formAddVuln.controls['id'].setValue(a ? a.id : undefined)
         }
+    }
+    deleteVulnFormInput() {
+        this.formAddVuln.controls['id'].setValue('')
+        this.formAddVuln.controls['code'].setValue('')
+        this.formAddVuln.controls['name'].setValue('')
     }
 
     // RISK CALC

@@ -41,12 +41,12 @@ public class RiskCalc {
 	private Double total;
 	
 	@OneToOne
-	@JoinColumn(name = "risk_freq_id", updatable = false, insertable = false)
+	@JoinColumn(name = "risk_freq_id")
 	@JsonIgnore
 	private RiskFreq riskFreq;
 	
 	@OneToOne
-	@JoinColumn(name = "risk_dim_id", updatable = false, insertable = false)
+	@JoinColumn(name = "risk_dim_id")
 	@JsonIgnore
 	private RiskDimension riskDimension;
 

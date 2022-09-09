@@ -329,5 +329,10 @@ export class ModalVuln implements OnInit {
             this.formVuln.controls['relActiveId'].setValue(a ? a.id : undefined)
         }
     }
+    deleteActiveFormInput() {
+        this.formVuln.controls['relActiveId'].setValue(undefined)
+        this.formAddActive.controls['code'].setValue('')
+        this.formAddActive.controls['name'].setValue('')
+    }
 
 }
