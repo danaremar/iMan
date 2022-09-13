@@ -47,7 +47,7 @@ export class ModalActive implements OnInit {
     searchChildren: Array<ActiveShowChildrenDto> = []
 
     // close modal button
-    @ViewChild('closeButtonActive') closeButtonTask: any
+    @ViewChild('closeModalActive') closeModalActive: any
 
     // CHILDRENS
     assignedChildrens: Array<ActiveListDto> = []
@@ -238,6 +238,20 @@ export class ModalActive implements OnInit {
             this.activeService.updateActive(updateActive).subscribe({
                 next: (n) => {
                     this.handleNext(n)
+                },
+                error: (e) => {
+                    this.handleError(e)
+                }
+            })
+        }
+    }
+
+    disableActive() {
+        if(this.selectedActive) {
+            this.activeService.disableActive(this.selectedActive.id).subscribe({
+                next: (n) => {
+                    this.handleNext(undefined)
+                    this.closeModalActive.nativeElement.click()
                 },
                 error: (e) => {
                     this.handleError(e)

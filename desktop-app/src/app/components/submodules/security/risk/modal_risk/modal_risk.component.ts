@@ -60,10 +60,10 @@ export class ModalRisk implements OnChanges {
     searchVulns: Array<VulnListDto> = []
 
     // close modal button
-    @ViewChild('closeButtonRisk') closeButtonTask: any
+    @ViewChild('closeButtonRisk') closeButtonRisk: any
 
     constructor(public formBuilder: FormBuilder, public vulnService: VulnService, public activeService: ActiveService, public riskService: RiskService, public riskFreqService: RiskFreqService, public riskDimService: RiskDimService) {
-        
+
         // build empty forms
         this.formRisk = this.formBuilder.group({
             name: ['', [Validators.required]],
@@ -278,6 +278,20 @@ export class ModalRisk implements OnChanges {
         }
     }
 
+    disableRisk() {
+        if (this.selectedRisk) {
+            this.riskService.disableRisk(this.selectedRisk.id).subscribe({
+                next: (n) => {
+                    this.handleNext(undefined)
+                    this.closeButtonRisk.nativeElement.click()
+                },
+                error: (e) => {
+                    this.handleError(e)
+                }
+            })
+        }
+    }
+
 
     /***************************
         METHODS -> AUXILIAR
@@ -387,8 +401,24 @@ export class ModalRisk implements OnChanges {
 
         // set id
         if (a != undefined) {
+            let vulnId = a ? a.id : undefined
+
             // set id to form
-            this.formAddVuln.controls['id'].setValue(a ? a.id : undefined)
+            this.formAddVuln.controls['id'].setValue(vulnId)
+
+            // set active if not exists
+            if (vulnId && this.formAddActive.controls['code']) {
+                this.vulnService.getVulnById(vulnId).subscribe({
+                    next: (n) => {
+                        let active = n.relActive
+                        if (active) {
+                            this.formAddActive.controls['id'].setValue(active.id)
+                            this.formAddActive.controls['code'].setValue(active.code)
+                            this.formAddActive.controls['name'].setValue(active.name)
+                        }
+                    }
+                })
+            }
         }
     }
     deleteVulnFormInput() {

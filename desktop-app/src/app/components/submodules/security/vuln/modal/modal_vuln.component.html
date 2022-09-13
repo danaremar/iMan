@@ -9,7 +9,7 @@
                         <div class="flex-grow-1 card-title mt-2">{{selectedVuln!=undefined?
                             (isEditing?'Update vuln': selectedVuln.name):
                             'New vuln'}}</div>
-                        <div class="close-card-button" data-bs-dismiss="modal">
+                        <div class="close-card-button" #closeButtonVuln data-bs-dismiss="modal">
                             <em class="bi bi-x"></em>
                         </div>
                     </div>
@@ -342,6 +342,7 @@
                             <!-- actions -->
                             <div class="col-lg-12 form-group d-flex flex-row-reverse mt-3">
                                 <button type="button" class="btn btn-danger" (click)="edit()">Close</button>
+                                <button type="button" class="btn btn-danger me-2" *ngIf="selectedVuln!=undefined" (click)="disableVuln()">Disable</button>
                                 <button type="submit" class="btn btn-success me-2"
                                     [disabled]="!formVuln.valid">{{selectedVuln==undefined?'Create':'Edit'}}</button>
                             </div>

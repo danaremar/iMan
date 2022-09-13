@@ -49,7 +49,7 @@ export class ModalVuln implements OnInit {
     searchVulnlibs: Array<VulnLibListDto> = []
 
     // close modal button
-    @ViewChild('closeButtonVulnLib') closeButtonTask: any
+    @ViewChild('closeButtonVuln') closeButtonVuln: any
 
     constructor(public formBuilder: FormBuilder, public vulnService: VulnService, public activeService: ActiveService, public vulnLibService: VulnLibService) {
         this.formVuln = this.formBuilder.group({
@@ -219,6 +219,20 @@ export class ModalVuln implements OnInit {
             this.vulnService.updateVuln(updateVuln).subscribe({
                 next: (n) => {
                     this.handleNext(n)
+                },
+                error: (e) => {
+                    this.handleError(e)
+                }
+            })
+        }
+    }
+
+    disableVuln() {
+        if(this.selectedVuln) {
+            this.vulnService.disableVuln(this.selectedVuln.id).subscribe({
+                next: (n) => {
+                    this.handleNext(undefined)
+                    this.closeButtonVuln.nativeElement.click()
                 },
                 error: (e) => {
                     this.handleError(e)
