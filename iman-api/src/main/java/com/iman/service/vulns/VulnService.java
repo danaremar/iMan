@@ -18,13 +18,13 @@ import org.springframework.transaction.annotation.Transactional;
 import com.iman.model.actives.Active;
 import com.iman.model.projects.Project;
 import com.iman.model.users.User;
-import com.iman.model.vulnerability.Vuln;
-import com.iman.model.vulnerability.VulnCreateDto;
-import com.iman.model.vulnerability.VulnLib;
-import com.iman.model.vulnerability.VulnListDto;
-import com.iman.model.vulnerability.VulnSearchDto;
-import com.iman.model.vulnerability.VulnShowDto;
-import com.iman.model.vulnerability.VulnUpdateDto;
+import com.iman.model.vulnerability.vuln.Vuln;
+import com.iman.model.vulnerability.vuln.VulnCreateDto;
+import com.iman.model.vulnerability.vuln.VulnListDto;
+import com.iman.model.vulnerability.vuln.VulnSearchDto;
+import com.iman.model.vulnerability.vuln.VulnShowDto;
+import com.iman.model.vulnerability.vuln.VulnUpdateDto;
+import com.iman.model.vulnerability.vulnlib.VulnLib;
 import com.iman.repository.vulns.VulnRepository;
 import com.iman.service.actives.ActiveService;
 import com.iman.service.projects.ProjectService;
@@ -34,19 +34,19 @@ import com.iman.service.users.UserService;
 public class VulnService {
 
     @Autowired
-    private VulnRepository vulnRepository;
+    VulnRepository vulnRepository;
 
     @Autowired
-    private ProjectService projectService;
+    ProjectService projectService;
 
     @Autowired
-    private UserService userService;
+    UserService userService;
 
     @Autowired
-    private ActiveService activeService;
+    ActiveService activeService;
 
     @Autowired
-    private VulnLibService vulnLibService;
+    VulnLibService vulnLibService;
 
     @Autowired(required = true)
     protected ModelMapper modelMapper;
@@ -78,7 +78,7 @@ public class VulnService {
         return vulnRepository.findOne(example).orElseThrow();
     }
 
-    public Long countVulnsInProject(Project project) {
+    Long countVulnsInProject(Project project) {
         Vuln exampleVuln = new Vuln();
         exampleVuln.setProject(project);
         Example<Vuln> example = Example.of(exampleVuln);
@@ -215,7 +215,8 @@ public class VulnService {
      * DISABLE -> Set no active
      * 
      */
-
+    
+    @Transactional
     public void disableVuln(Long vulnId) {
 
         // Get previous vuln

@@ -44,12 +44,12 @@ export class ModalVuln implements OnInit {
     formAddActive: FormGroup
     formAddVulnLib: FormGroup
 
-    // search actives
+    // search actives & vulnlib
     searchActives: Array<ActiveListDto> = []
     searchVulnlibs: Array<VulnLibListDto> = []
 
     // close modal button
-    @ViewChild('closeButtonVulnLib') closeButtonTask: any
+    @ViewChild('closeButtonVuln') closeButtonVuln: any
 
     constructor(public formBuilder: FormBuilder, public vulnService: VulnService, public activeService: ActiveService, public vulnLibService: VulnLibService) {
         this.formVuln = this.formBuilder.group({
@@ -105,7 +105,7 @@ export class ModalVuln implements OnInit {
     }
 
     buildForm() {
-        this.formVuln.reset()
+        this.clearForms()
         if (this.selectedVuln != undefined) {
             this.formVuln = this.formBuilder.group({
                 name: [this.selectedVuln.name, [Validators.required]],
@@ -141,6 +141,8 @@ export class ModalVuln implements OnInit {
 
     clearForms() {
         this.formVuln.reset()
+        this.formAddActive.reset()
+        this.formAddVulnLib.reset()
     }
 
 
@@ -217,6 +219,20 @@ export class ModalVuln implements OnInit {
             this.vulnService.updateVuln(updateVuln).subscribe({
                 next: (n) => {
                     this.handleNext(n)
+                },
+                error: (e) => {
+                    this.handleError(e)
+                }
+            })
+        }
+    }
+
+    disableVuln() {
+        if(this.selectedVuln) {
+            this.vulnService.disableVuln(this.selectedVuln.id).subscribe({
+                next: (n) => {
+                    this.handleNext(undefined)
+                    this.closeButtonVuln.nativeElement.click()
                 },
                 error: (e) => {
                     this.handleError(e)
@@ -326,6 +342,11 @@ export class ModalVuln implements OnInit {
             // set id to form
             this.formVuln.controls['relActiveId'].setValue(a ? a.id : undefined)
         }
+    }
+    deleteActiveFormInput() {
+        this.formVuln.controls['relActiveId'].setValue(undefined)
+        this.formAddActive.controls['code'].setValue('')
+        this.formAddActive.controls['name'].setValue('')
     }
 
 }

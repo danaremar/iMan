@@ -1,0 +1,169 @@
+<div class="modal fade" id="riskConfigModal" tabindex="-1" aria-labelledby="riskConfigModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content bg-dark-5">
+            <div class="modal-body">
+                <div class="card overflow-auto">
+
+                    <!-- title -->
+                    <div class="d-flex">
+                        <div class="flex-grow-1 card-title mt-2">Risk config</div>
+                        <div class="close-card-button" data-bs-dismiss="modal">
+                            <em class="bi bi-x"></em>
+                        </div>
+                    </div>
+
+                    <!-- errors -->
+                    <div *ngIf="containError" class="alert alert-danger mt-5">
+                        {{messageError}}
+                    </div>
+
+                    <button hidden type="button" #reloadRiskConfigViewModal class="btn btn-danger" (click)="buildForm()">
+                    </button>
+
+                    <!-- EDIT RISK CONFIG FOR PROJECT -->
+                    <div class="container" *ngIf="projectId!= undefined">
+                        <form class="row" [formGroup]="formRiskConfig" (ngSubmit)="uploadRiskConfig()">
+
+                            <!-- RISK DIMENSIONS -->
+                            <div class="col-lg-6 my-3 px-3">
+
+                                <div class="d-flex">
+
+                                    <!-- title -->
+                                    <div class="m-text me-auto my-auto">Dimensions</div>
+
+                                    <!-- add button -->
+                                    <a ngbTooltip="Add dimension" placement="left" [openDelay]="300"
+                                        (click)="addRiskDimForm(undefined)">
+                                        <em class="bi bi-plus-lg"></em>
+                                    </a>
+                                </div>
+
+                                <div formArrayName="riskDim">
+                                    <div *ngFor="let rd of riskDimForm.controls; let i = index">
+                                        <div class="d-flex" [formGroupName]="i">
+
+                                            <!-- abbreviation -->
+                                            <div class="d-flex me-3">
+                                                <div class="my-auto me-2 text-nowrap">Char:</div>
+                                                <input style="width: 35px;"
+                                                    class="form-control {{inputClass(formRiskConfig, 'abbreviation'+i)}}"
+                                                    type="text" formControlName="abbreviation" maxlength="1" required />
+                                                <div class="invalid-feedback" *ngIf="formRiskConfig.get('abbreviation'+i)?.touched 
+                                                        && formRiskConfig.get('abbreviation'+i)?.invalid">
+                                                    <div *ngIf="formRiskConfig.get('abbreviation'+i)?.errors?.required">
+                                                        Cannot be empty
+                                                    </div>
+                                                    <div
+                                                        *ngIf="formRiskConfig.get('abbreviation'+i)?.errors?.maxlength">
+                                                        Only 1 character is allowed
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- name -->
+                                            <div class="d-flex me-3">
+                                                <div class="my-auto me-2 text-nowrap">Name:</div>
+                                                <input class="form-control {{inputClass(formRiskConfig, 'name_d'+i)}}"
+                                                    type="text" formControlName="name" maxlength="50" required />
+                                                <div class="invalid-feedback" *ngIf="formRiskConfig.get('name_d'+i)?.touched 
+                                                        && formRiskConfig.get('name_d'+i)?.invalid">
+                                                    <div *ngIf="formRiskConfig.get('name_d'+i)?.errors?.required">
+                                                        Cannot be empty
+                                                    </div>
+                                                    <div *ngIf="formRiskConfig.get('name_d'+i)?.errors?.maxlength">
+                                                        Only 50 character is allowed
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- remove -->
+                                            <em class="bi bi-sm bi-trash-fill my-auto ms-auto" *ngIf="isRemovable"
+                                                (click)="removeRiskDimForm(i)"></em>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- RISK FREQUENCY -->
+                            <div class="col-lg-6 my-3 px-3">
+
+                                <div class="d-flex">
+
+                                    <!-- title -->
+                                    <div class="m-text me-auto my-auto">Frequency</div>
+
+                                    <!-- add button -->
+                                    <a ngbTooltip="Add frequency" placement="left" [openDelay]="300"
+                                        (click)="addRiskFreqForm(undefined)">
+                                        <em class="bi bi-plus-lg"></em>
+                                    </a>
+
+                                </div>
+
+                                <div formArrayName="riskFreq">
+                                    <div *ngFor="let rd of riskFreqForm.controls; let i = index">
+                                        <div class="d-flex" [formGroupName]="i">
+
+                                            <!-- name -->
+                                            <div class="d-flex me-3">
+                                                <div class="my-auto me-2 text-nowrap">Name:</div>
+                                                <input class="form-control {{inputClass(formRiskConfig, 'name_f'+i)}}"
+                                                    type="text" formControlName="name" maxlength="50" required />
+                                                <div class="invalid-feedback" *ngIf="formRiskConfig.get('name_f'+i)?.touched 
+                                                    && formRiskConfig.get('name_f'+i)?.invalid">
+                                                    <div *ngIf="formRiskConfig.get('name_f'+i)?.errors?.required">
+                                                        Cannot be empty
+                                                    </div>
+                                                    <div *ngIf="formRiskConfig.get('name_f'+i)?.errors?.maxlength">
+                                                        Only 50 character is allowed
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- quantity -->
+                                            <div class="d-flex me-3">
+                                                <div class="my-auto me-2 text-nowrap">Quantity:</div>
+                                                <input class="form-control {{inputClass(formRiskConfig, 'quantity'+i)}}"
+                                                    value="1" type="number" step="0.1" formControlName="quantity"
+                                                    required min="0" max="1" />
+                                                <div class="invalid-feedback" *ngIf="formRiskConfig.get('quantity'+i)?.touched 
+                                                    && formRiskConfig.get('quantity'+i)?.invalid">
+                                                    <div *ngIf="formRiskConfig.get('quantity'+i)?.errors?.required">
+                                                        Cannot be empty
+                                                    </div>
+                                                    <div *ngIf="formRiskConfig.get('quantity'+i)?.errors?.min">
+                                                        Minimum is 0
+                                                    </div>
+                                                    <div *ngIf="formRiskConfig.get('quantity'+i)?.errors?.max">
+                                                        Maximum is 1
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- remove -->
+                                            <em class="bi bi-sm bi-trash-fill my-auto ms-auto" *ngIf="isRemovable"
+                                                (click)="removeRiskFreqForm(i)"></em>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <!-- actions -->
+                            <div class="col-lg-12 form-group d-flex flex-row-reverse mt-3">
+                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-success me-2"
+                                    [disabled]="!formRiskConfig.valid">Save</button>
+                            </div>
+
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

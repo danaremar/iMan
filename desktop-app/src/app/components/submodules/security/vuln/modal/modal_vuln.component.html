@@ -9,7 +9,7 @@
                         <div class="flex-grow-1 card-title mt-2">{{selectedVuln!=undefined?
                             (isEditing?'Update vuln': selectedVuln.name):
                             'New vuln'}}</div>
-                        <div class="close-card-button" data-bs-dismiss="modal">
+                        <div class="close-card-button" #closeButtonVuln data-bs-dismiss="modal">
                             <em class="bi bi-x"></em>
                         </div>
                     </div>
@@ -94,7 +94,7 @@
                                 </div>
 
                                 <!-- relActive -->
-                                <div class="w-100 d-flex flex-wrap my-3" *ngIf="selectedVuln.affectedVersion">
+                                <div class="w-100 d-flex flex-wrap my-3" *ngIf="selectedVuln.relActive">
                                     <div class="me-2">Active:</div>
                                     <div>(#{{selectedVuln.relActive.code}}) {{selectedVuln.relActive.name}}</div>
                                 </div>
@@ -145,7 +145,7 @@
                             <div class="col-lg-12 my-3 d-flex">
                                 <div class="my-auto me-2">Name:</div>
                                 <input class="form-control {{inputClass(formVuln, 'name')}}" type="text"
-                                    formControlName="name" maxlength="50" minlength="2" />
+                                    formControlName="name" maxlength="50" minlength="2" required/>
                                 <div class="invalid-feedback" *ngIf="formVuln.get('name')?.touched 
                                         && formVuln.get('name')?.invalid">
                                     <div *ngIf="formVuln.get('name')?.errors?.required">
@@ -292,6 +292,10 @@
                                         {{s.name}}
                                     </option>
                                 </datalist>
+
+                                <!-- remove -->
+                                <em class="bi bi-sm bi-trash-fill my-auto ms-auto"
+                                (click)="deleteActiveFormInput()"></em>
                             </form>
 
                             <!-- vulnlibs -->
@@ -338,6 +342,7 @@
                             <!-- actions -->
                             <div class="col-lg-12 form-group d-flex flex-row-reverse mt-3">
                                 <button type="button" class="btn btn-danger" (click)="edit()">Close</button>
+                                <button type="button" class="btn btn-danger me-2" *ngIf="selectedVuln!=undefined" (click)="disableVuln()">Disable</button>
                                 <button type="submit" class="btn btn-success me-2"
                                     [disabled]="!formVuln.valid">{{selectedVuln==undefined?'Create':'Edit'}}</button>
                             </div>

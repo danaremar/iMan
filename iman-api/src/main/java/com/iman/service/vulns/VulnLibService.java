@@ -15,12 +15,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.iman.model.projects.Project;
-import com.iman.model.vulnerability.VulnLib;
-import com.iman.model.vulnerability.VulnLibCreateDto;
-import com.iman.model.vulnerability.VulnLibListDto;
-import com.iman.model.vulnerability.VulnLibSearchDto;
-import com.iman.model.vulnerability.VulnLibShowDto;
-import com.iman.model.vulnerability.VulnLibUpdateDto;
+import com.iman.model.vulnerability.vulnlib.VulnLib;
+import com.iman.model.vulnerability.vulnlib.VulnLibCreateDto;
+import com.iman.model.vulnerability.vulnlib.VulnLibListDto;
+import com.iman.model.vulnerability.vulnlib.VulnLibSearchDto;
+import com.iman.model.vulnerability.vulnlib.VulnLibShowDto;
+import com.iman.model.vulnerability.vulnlib.VulnLibUpdateDto;
 import com.iman.repository.vulns.VulnLibRepository;
 import com.iman.service.projects.ProjectService;
 
@@ -28,10 +28,10 @@ import com.iman.service.projects.ProjectService;
 public class VulnLibService {
 
     @Autowired
-    private VulnLibRepository vulnLibRepository;
+    VulnLibRepository vulnLibRepository;
 
     @Autowired
-    private ProjectService projectService;
+    ProjectService projectService;
 
     @Autowired(required = true)
     protected ModelMapper modelMapper;
@@ -40,15 +40,15 @@ public class VulnLibService {
      * AUX
      * 
      */
-    public VulnLibListDto mapVulnLibToList(VulnLib vl) {
+    VulnLibListDto mapVulnLibToList(VulnLib vl) {
         return modelMapper.map(vl, VulnLibListDto.class);
     }
 
-    public Page<VulnLibListDto> mapPageToPageDto(Page<VulnLib> vl) {
+    Page<VulnLibListDto> mapPageToPageDto(Page<VulnLib> vl) {
         return vl.map(this::mapVulnLibToList);
     }
 
-    public VulnLib findVulnLibById(Long id) {
+    VulnLib findVulnLibById(Long id) {
         VulnLib exampleVulnLib = new VulnLib();
         exampleVulnLib.setId(id);
         exampleVulnLib.setActive(true);
@@ -100,7 +100,7 @@ public class VulnLibService {
      * SHOW
      * 
      */
-    public VulnLib findVerifiedVulnLib(Long vulnLibId) {
+    VulnLib findVerifiedVulnLib(Long vulnLibId) {
         VulnLib vulnLib = findVulnLibById(vulnLibId);
         if (!vulnLib.getStandard()) {
             projectService.verifyUserRelatedWithProject(vulnLib.getProject());
@@ -143,7 +143,7 @@ public class VulnLibService {
      * UPDATE
      * 
      */
-    public void verifyEditVulnLib(VulnLib vulnLib) {
+    void verifyEditVulnLib(VulnLib vulnLib) {
         if (!vulnLib.getStandard()) {
             projectService.verifyMember(vulnLib.getProject());
         } else {

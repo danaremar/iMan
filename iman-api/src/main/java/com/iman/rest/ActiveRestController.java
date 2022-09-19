@@ -54,7 +54,7 @@ public class ActiveRestController {
 	}
 
 	@GetMapping(value = "/project/{projectId}")
-	public ResponseEntity<Object> getIncidentsByProject(@Valid ActiveSearchDto activeSearch,
+	public ResponseEntity<Object> getActivesByProject(@Valid ActiveSearchDto activeSearch,
 			@PathVariable Long projectId, Pageable pageable) {
 		try {
 			Page<ActiveListDto> activeListDto = activeService.findActives(activeSearch, projectId, pageable);
