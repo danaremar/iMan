@@ -6,7 +6,8 @@ export class Task {
         text: string,
         progress: number,
         duration: number,
-        parent: number
+        parent: number,
+        users: string
     ) {
         this.id = id
         this.start_date = start_date
@@ -14,6 +15,7 @@ export class Task {
         this.progress = progress
         this.duration = duration
         this.parent = parent
+        this.users = users
     }
 
     id: number;
@@ -22,4 +24,5 @@ export class Task {
     progress: number;
     duration: number;
     parent: number;
+    users: string
 }

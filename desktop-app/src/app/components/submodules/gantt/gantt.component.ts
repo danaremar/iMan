@@ -29,6 +29,22 @@ export class GanttComponent extends ImanSubmodule implements AfterViewInit {
         super(effortService, kanbanService, sprintService, projectService, formBuilder, tokenService)
     }
 
+    reloadGantt() {
+        gantt.clearAll()
+        this.loadData()
+    }
+
+    loadAfterTask() {
+        this.reloadGantt()
+    }
+
+    loadData() {
+        let ganttTask = this.ganttService.getGanttTasks(this.myTasks)
+        let ganttLinks = this.ganttService.getGanttLinks(this.myTasks)
+        gantt.parse({ "data": ganttTask, "links": ganttLinks });
+        gantt.refreshData()
+    }
+
     ngAfterViewInit(): void {
         this.loadTasks = true
         this.loadKanban = true
@@ -40,12 +56,16 @@ export class GanttComponent extends ImanSubmodule implements AfterViewInit {
         gantt.init(this.ganttContainer.nativeElement)
         gantt.config.sort = true
         gantt.config.columns = [
-            { name: "text", label: "Task name", width: "*", resize: true },
-            { name: "start_date", label: "Start", align: "center", resize: true },
-            { name: "end_date", label: "Finish", width: 80, align: "center", resize: true },
-            { name: "duration", label: "Days", align: "center", resize: true },
+            { name: "text", label: "Task name", width: "*" },
+            { name: "start_date", label: "Start", min_width: 80, align: "center" },
+            { name: "end_date", label: "Finish", min_width: 80, align: "center" },
+            { name: "duration", label: "Days", align: "center" },
+            { name: "users", label: "Assignations", min_width: 150, align: "center" },
             // { name: "add", label: "", width: 44 }
         ]
+
+        // OPTIONS
+        // this.enableZoom()
 
         // TASK RESIZE
         gantt.attachEvent("onBeforeTaskUpdate", (id: any, updateTask: any) => {
@@ -109,12 +129,12 @@ export class GanttComponent extends ImanSubmodule implements AfterViewInit {
         gantt.attachEvent("onTaskDblClick", (id, item) => {
             this.selectedTask = this.getTaskById(id)
             this.openTaskModal.nativeElement.click()
-        },'')
+        }, '')
     }
 
     addTask() {
         this.selectedTask = undefined
-        if(this.kanban && this.kanban.length!=0) {
+        if (this.kanban && this.kanban.length != 0) {
             this.selectedKanbanColumnId = this.kanban[0].id
         }
         this.openTaskModal.nativeElement.click()
@@ -124,12 +144,39 @@ export class GanttComponent extends ImanSubmodule implements AfterViewInit {
         return this.myTasks.find(x => x.id == id)
     }
 
-    loadAfterTask() {
-        
-        let ganttTask = this.ganttService.getGanttTasks(this.myTasks)
-        let ganttLinks = this.ganttService.getGanttLinks(this.myTasks)
-        gantt.parse({ "data": ganttTask, "links": ganttLinks });
-        gantt.refreshData()
+    enableZoom() {
+        let hourToStr = gantt.date.date_to_str("%H:%i");
+        let hourRangeFormat = function (step: any) {
+            return function (date: any) {
+                let mDate: number = gantt.date.add(date, step, "hour").getTime()
+                let intervalEnd = new Date(mDate - 1)
+                return hourToStr(date) + " - " + hourToStr(intervalEnd);
+            };
+        };
+        let zoomConfig = {
+            levels: [
+                [
+                    { unit: "month", format: "%M %Y", step: 1 },
+                ],
+                [
+                    { unit: "month", format: "%M %Y", step: 1 },
+                    { unit: "day", format: "%d %M", step: 1 }
+                ],
+                [
+                    { unit: "day", format: "%d %M", step: 1 },
+                    { unit: "hour", format: hourRangeFormat(12), step: 12 }
+                ],
+                [
+                    { unit: "day", format: "%d %M", step: 1 },
+                    { unit: "hour", format: hourRangeFormat(6), step: 6 }
+                ],
+                [
+                    { unit: "day", format: "%d %M", step: 1 },
+                    { unit: "hour", format: "%H:%i", step: 1 }
+                ]
+            ]
+        }
+        gantt.ext.zoom.init(zoomConfig);
     }
 
 
