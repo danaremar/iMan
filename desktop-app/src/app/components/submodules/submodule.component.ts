@@ -43,7 +43,13 @@ export class ImanSubmodule {
     containError: boolean = false
     messageError: string | undefined
 
-    constructor(public effortService: EffortService, public kanbanService: KanbanService, public sprintService: SprintService, public projectService: ProjectService, public formBuilder: FormBuilder, public tokenService: TokenService) { }
+    now: any
+
+    constructor(public effortService: EffortService, public kanbanService: KanbanService, public sprintService: SprintService, public projectService: ProjectService, public formBuilder: FormBuilder, public tokenService: TokenService) { 
+        setInterval(()=>{
+            this.now = Date.now()
+        }, 1)
+    }
 
     /***************************
             GENERAL

@@ -204,4 +204,8 @@ export class EffortComponent extends ImanSubmodule implements OnInit {
     changeViewDescription() {
         this.changedToDescription = !this.changedToDescription
     }
+
+    getHoursActiveEffort(date: any): string {
+        return this.getDifferenceFormatted(date, new Date())
+    }
 }
