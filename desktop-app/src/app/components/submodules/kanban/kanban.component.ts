@@ -12,7 +12,6 @@ import { ProjectService } from "src/app/services/projects/project.service";
 import { SprintService } from "src/app/services/sprints/sprint.service";
 import { UserService } from "src/app/services/user/user.service";
 import { ImanSubmodule } from "../submodule.component";
-import { TaskComponent } from "./task/task.component";
 
 @Component({
     selector: 'iMan-kanban',
@@ -213,7 +212,7 @@ export class KanbanComponent extends ImanSubmodule implements OnInit {
     // TASKS
 
     showTask(kanbanTask: KanbanTask, kanbanColumn: KanbanColumn) {
-        if(kanbanTask!=undefined && kanbanColumn!=undefined) {
+        if (kanbanTask != undefined && kanbanColumn != undefined) {
             this.selectedTask = kanbanTask
             this.selectedColumnId = kanbanColumn.id
         }
@@ -222,7 +221,7 @@ export class KanbanComponent extends ImanSubmodule implements OnInit {
     }
 
     newTask(kanbanColumn: KanbanColumn) {
-        if(kanbanColumn!=undefined) {
+        if (kanbanColumn != undefined) {
             this.selectedColumnId = kanbanColumn.id
         }
         this.selectedTask = undefined
@@ -231,7 +230,7 @@ export class KanbanComponent extends ImanSubmodule implements OnInit {
     }
 
     editTask(kanbanTask: KanbanTask, kanbanColumn: KanbanColumn) {
-        if(kanbanTask!=undefined) {
+        if (kanbanTask != undefined) {
             this.selectedTask = kanbanTask
             this.selectedColumnId = kanbanColumn.id
         }
@@ -260,14 +259,19 @@ export class KanbanComponent extends ImanSubmodule implements OnInit {
     ***************************/
 
     updateTemporallyDragDrop(event: CdkDragDrop<any>) {
+
+        // get column
+        let old_column = this.kanban.filter((x: { id: number; }) => x.id == (event.previousContainer.data.id))[0]
+
         // saved task
-        let task = this.kanban[event.previousContainer.data.id - 1].tasks[event.previousIndex]
+        let task = old_column.tasks[event.previousIndex]
 
         // delete previous
-        this.kanban[event.previousContainer.data.id - 1].tasks.splice(event.previousIndex, 1)
+        old_column.tasks.splice(event.previousIndex, 1)
 
         // add new
-        this.kanban[event.container.data.id - 1].tasks.splice(event.currentIndex, 0, task)
+        let new_column = this.kanban.filter((x: { id: number; }) => x.id == (event.container.data.id))[0]
+        new_column.tasks.splice(event.currentIndex, 0, task)
     }
 
     dropTask(event: CdkDragDrop<any>) {
