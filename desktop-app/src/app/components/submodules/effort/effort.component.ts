@@ -87,21 +87,21 @@ export class EffortComponent extends ImanSubmodule implements OnInit {
     ***************************/
 
     loadActiveEffort() {
-        this.effortService.getActiveEffort().subscribe(
-            data => {
+        this.effortService.getActiveEffort().subscribe({
+            next: (n) => {
                 this.containError = false
-                this.activeEffort = data
-                if (data != null) {
-                    if (data.project != null) this.projectService.setStoredProjectId(data.project.id)
-                    if (data.sprint != null) this.sprintService.setStoredSprintId(data.sprint.id)
-                    if (data.kanbanTask != null) this.kanbanService.setStoredKanbanTaskId(data.kanbanTask.id)
+                this.activeEffort = n
+                if (n != null) {
+                    if (n.project != null) this.projectService.setStoredProjectId(n.project.id)
+                    if (n.sprint != null) this.sprintService.setStoredSprintId(n.sprint.id)
+                    if (n.kanbanTask != null) this.kanbanService.setStoredKanbanTaskId(n.kanbanTask.id)
                 }
                 this.loadDescriptionOrTaskEffort()
             },
-            err => {
-                this.returnPrincipalError(err)
+            error: (e) => {
+                this.returnPrincipalError(e)
             }
-        )
+        })
     }
 
     loadDescriptionOrTaskEffort() {
@@ -121,15 +121,15 @@ export class EffortComponent extends ImanSubmodule implements OnInit {
         } else {
             newEffort = new EffortStart("", taskId)
         }
-        this.effortService.startEffort(newEffort).subscribe(
-            data => {
+        this.effortService.startEffort(newEffort).subscribe({
+            next: (n) => {
                 this.containError = false
                 this.getEfforts()
             },
-            err => {
-                this.returnPrincipalError(err)
+            error: (e) => {
+                this.returnPrincipalError(e)
             }
-        )
+        })
     }
 
     fillUpdateForm(effort: Effort) {
@@ -148,50 +148,50 @@ export class EffortComponent extends ImanSubmodule implements OnInit {
         if (this.effortSelected != undefined && this.effortSelected != null) {
             let kanbanTaskId: any = this.effortSelected.kanbanTask == null ? 0 : this.effortSelected.kanbanTask.id
             let updateEffort: EffortUpdate = new EffortUpdate(this.effortSelected.id, this.formUpdateEffort.value.description, kanbanTaskId, new Date(this.formUpdateEffort.value.startDate), new Date(this.formUpdateEffort.value.endDate))
-            this.effortService.updateEffort(updateEffort).subscribe(
-                data => {
+            this.effortService.updateEffort(updateEffort).subscribe({
+                next: (n) => {
                     this.effortSelected = undefined
                     this.formUpdateEffort.reset()
                     this.closebuttonUpdateEffort.nativeElement.click()
                     this.updateEffortContainError = false
                     this.getEfforts()
                 },
-                err => {
-                    let r = err.error.text
+                error: (e) => {
+                    let r = e.error.text
                     if (r == undefined) {
                         r = 'Error produced'
                     }
                     this.updateEffortMessageError = r;
                     this.updateEffortContainError = true
                 }
-            )
+            })
         }
 
     }
 
     endEffort() {
-        this.effortService.endEffort(this.activeEffort.id).subscribe(
-            data => {
+        this.effortService.endEffort(this.activeEffort.id).subscribe({
+            next: (n) => {
                 this.containError = false
                 this.getEfforts()
             },
-            err => {
-                this.returnPrincipalError(err)
+            error: (e) => {
+                this.returnPrincipalError(e)
             }
-        )
+        })
     }
 
     deleteEffort(effortId: number) {
         if (confirm("Are you sure to delete this effort?")) {
-            this.effortService.deleteEffort(effortId).subscribe(
-                data => {
+            this.effortService.deleteEffort(effortId).subscribe({
+                next: (n) => {
                     this.containError = false
                     this.getEfforts()
                 },
-                err => {
-                    this.returnPrincipalError(err)
+                error: (e) => {
+                    this.returnPrincipalError(e)
                 }
-            )
+            })
         }
     }
 

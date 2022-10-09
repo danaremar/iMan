@@ -106,27 +106,27 @@ export class KanbanComponent extends ImanSubmodule implements OnInit {
 
     startEffort(kanbanTaskId: number) {
         let newEffort: EffortStart = new EffortStart("", kanbanTaskId)
-        this.effortService.startEffort(newEffort).subscribe(
-            data => {
+        this.effortService.startEffort(newEffort).subscribe({
+            next: (n) => {
                 this.containError = false
                 this.loadKanbanBySelectedSprint()
             },
-            err => {
-                this.returnPrincipalError(err)
+            error: (e) => {
+                this.returnPrincipalError(e)
             }
-        )
+        })
     }
 
     endEffort() {
-        this.effortService.endEffort(this.activeEffort.id).subscribe(
-            data => {
+        this.effortService.endEffort(this.activeEffort.id).subscribe({
+            next: (n) => {
                 this.containError = false
                 this.loadKanbanBySelectedSprint()
             },
-            err => {
-                this.returnPrincipalError(err)
+            error: (e) => {
+                this.returnPrincipalError(e)
             }
-        )
+        })
     }
 
 
@@ -139,21 +139,21 @@ export class KanbanComponent extends ImanSubmodule implements OnInit {
         let sprintId = this.sprintService.getStoredSprintId()
         if (sprintId != null && sprintId != 0) {
             let newColumn: KanbanColumnCreate = new KanbanColumnCreate(this.formNewColumn.value.title, sprintId)
-            this.kanbanService.createKanbanColumn(newColumn).subscribe(
-                res => {
+            this.kanbanService.createKanbanColumn(newColumn).subscribe({
+                next: (n) => {
                     this.formNewColumn.reset()
                     this.closebuttonCreateColumn.nativeElement.click()
                     this.loadKanbanBySelectedSprint()
                 },
-                err => {
-                    let r = err.error.text
+                error: (e) => {
+                    let r = e.error.text
                     if (r == undefined) {
                         r = 'Error produced'
                     }
                     this.newColumnMessageError = r;
                     this.newColumnContainError = true
                 }
-            )
+            })
         }
     }
 
@@ -168,34 +168,34 @@ export class KanbanComponent extends ImanSubmodule implements OnInit {
 
     editColumn() {
         let updateColumn: KanbanColumnUpdate = new KanbanColumnUpdate(this.kanbanColumnSelected.id, this.formUpdateColumn.value.title, this.formUpdateColumn.value.columnOrder)
-        this.kanbanService.updateKanbanColumn(updateColumn).subscribe(
-            res => {
+        this.kanbanService.updateKanbanColumn(updateColumn).subscribe({
+            next: (n) => {
                 this.formUpdateColumn.reset()
                 this.closebuttonUpdateColumn.nativeElement.click()
                 this.loadKanbanBySelectedSprint()
             },
-            err => {
-                let r = err.error.text
+            error: (e) => {
+                let r = e.error.text
                 if (r == undefined) {
                     r = 'Error produced'
                 }
                 this.updateColumnMessageError = r;
                 this.updateColumnContainError = true
             }
-        )
+        })
     }
 
     disableColumn(kanbanColumn: any) {
         if (confirm("Are you sure to disable " + kanbanColumn.title + '?')) {
-            this.kanbanService.disableKanbanColumn(kanbanColumn.id).subscribe(
-                res => {
+            this.kanbanService.disableKanbanColumn(kanbanColumn.id).subscribe({
+                next: (n) => {
                     this.containError = false
                     this.loadKanbanBySelectedSprint()
                 },
-                err => {
-                    this.returnPrincipalError(err)
+                error: (e) => {
+                    this.returnPrincipalError(e)
                 }
-            )
+            })
         }
     }
 
@@ -240,15 +240,15 @@ export class KanbanComponent extends ImanSubmodule implements OnInit {
 
     disableTask(kanbanTask: any) {
         if (confirm("Are you sure to disable #" + kanbanTask.number + ' ' + kanbanTask.title + '?')) {
-            this.kanbanService.disableKanbanTask(kanbanTask.id).subscribe(
-                res => {
+            this.kanbanService.disableKanbanTask(kanbanTask.id).subscribe({
+                next: (e) => {
                     this.containError = false
                     this.loadKanbanBySelectedSprint()
                 },
-                err => {
-                    this.returnPrincipalError(err)
+                error: (e) => {
+                    this.returnPrincipalError(e)
                 }
-            )
+            })
         }
     }
 
@@ -282,15 +282,15 @@ export class KanbanComponent extends ImanSubmodule implements OnInit {
 
         // BACKEND
         let kanbanTaskMove: KanbanTaskMove = new KanbanTaskMove(event.item.data.id, event.container.data.id, event.currentIndex)
-        this.kanbanService.moveKanbanTask(kanbanTaskMove).subscribe(
-            data => {
+        this.kanbanService.moveKanbanTask(kanbanTaskMove).subscribe({
+            next: (n) => {
                 this.containError = false
                 this.loadKanbanBySelectedSprint()
             },
-            err => {
-                this.returnPrincipalError(err)
+            error: (e) => {
+                this.returnPrincipalError(e)
             }
-        )
+        })
     }
 
 

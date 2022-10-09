@@ -70,17 +70,17 @@ export class ProjectComponent extends ImanSubmodule implements OnInit {
     }
 
     loadMyProjects(): any {
-        this.projectService.myProjects().subscribe(
-            data => {
+        this.projectService.myProjects().subscribe({
+            next: (n) => {
                 this.containError = false
-                this.myProjects = data
+                this.myProjects = n
                 this.loadMyRoles()
                 this.loadNotAcceptedProjects()
             },
-            err => {
-                this.returnPrincipalError(err)
+            error: (e) => {
+                this.returnPrincipalError(e)
             }
-        )
+        })
     }
 
     loadMyRoles() {
@@ -97,32 +97,31 @@ export class ProjectComponent extends ImanSubmodule implements OnInit {
     }
 
     loadNotAcceptedProjects() {
-        this.projectService.getAllMineNotAcceptedProjectRoles().subscribe(
-            data => {
+        this.projectService.getAllMineNotAcceptedProjectRoles().subscribe({
+            next: (n) => {
                 this.containError = false
-                this.notAcceptedProjects = data
+                this.notAcceptedProjects = n
             },
-            err => {
-                this.returnPrincipalError(err)
+            error: (e) => {
+                this.returnPrincipalError(e)
             }
-
-        )
+        })
     }
 
     newProject() {
         let newProject: NewProject = new NewProject(this.formNewProject.value.name, this.formNewProject.value.description)
-        this.projectService.createProject(newProject).subscribe(
-            res => {
+        this.projectService.createProject(newProject).subscribe({
+            next: (n) => {
                 this.newProjectContainError = false
                 this.closebuttonNew.nativeElement.click();
                 this.formNewProject.reset()
                 this.loadMyProjects()           // refresh my projects from API
             },
-            err => {
+            error: (e) => {
                 this.newProjectContainError = true
-                this.newProjectMessageError = err.error.text
+                this.newProjectMessageError = e.error.text
             }
-        )
+        })
     }
 
     fillUpdateForm(project: Project) {
@@ -135,31 +134,31 @@ export class ProjectComponent extends ImanSubmodule implements OnInit {
 
     updateProject() {
         let project: UpdateProject = new UpdateProject(this.formUpdateProject.value.id, this.formUpdateProject.value.name, this.formUpdateProject.value.description)
-        this.projectService.updateProject(project).subscribe(
-            res => {
+        this.projectService.updateProject(project).subscribe({
+            next: (n) => {
                 this.updateProjectContainError = false
                 this.closebuttonUpdate.nativeElement.click();
                 this.formNewProject.reset()
                 this.loadMyProjects()           // refresh my projects from API
             },
-            err => {
+            error: (e) => {
                 this.updateProjectContainError = true
-                this.updateProjectMessageError = err.error.text
+                this.updateProjectMessageError = e.error.text
             }
-        )
+        })
     }
 
     enableDisableProject(project: Project) {
         if (confirm("Are you sure to disable project " + project.name + '?')) {
-            this.projectService.enableDisableProject(project.id).subscribe(
-                res => {
+            this.projectService.enableDisableProject(project.id).subscribe({
+                next: (n) => {
                     this.containError = false
                     this.loadMyProjects()           // refresh my projects from API
                 },
-                err => {
-                    this.returnPrincipalError(err)
+                error: (e) => {
+                    this.returnPrincipalError(e)
                 }
-            )
+            })
         }
     }
 
@@ -176,34 +175,34 @@ export class ProjectComponent extends ImanSubmodule implements OnInit {
         let role = Number(this.getKeyByValue(this.rolesDictionary, this.formNewProjectRole.value.role))
         let newProjectRole: CreateProjectRole = new CreateProjectRole(this.myProjects[this.selectedProject].id,
             this.formNewProjectRole.value.username, role)
-        this.projectService.createProjectRole(newProjectRole).subscribe(
-            res => {
+        this.projectService.createProjectRole(newProjectRole).subscribe({
+            next: (n) => {
                 this.newProjectRoleContainError = false
                 this.formNewProjectRole.reset()
                 this.formNewProjectRole.controls['role'].setValue('Member')
                 this.loadMyProjects()
                 this.closebuttonUsers.nativeElement.click()
             },
-            err => {
-                this.projectRoleError(err, "Error adding the user")
+            error: (e) => {
+                this.projectRoleError(e, "Error adding the user")
             }
-        )
+        })
     }
 
     updateProjectRole(role: any, roleTypeEvent: any) {
         let roleTypeStr = roleTypeEvent.value
         let roleType = Number(this.getKeyByValue(this.rolesDictionary, roleTypeStr))
         let updateProjectRole: UpdateProjectRole = new UpdateProjectRole(role.id, roleType)
-        this.projectService.updateProjectRole(updateProjectRole).subscribe(
-            res => {
+        this.projectService.updateProjectRole(updateProjectRole).subscribe({
+            next: (n) => {
                 this.newProjectRoleContainError = false
                 this.closebuttonUsers.nativeElement.click()
                 this.loadMyProjects()
             },
-            err => {
-                this.projectRoleError(err, "Error updating the user")
+            error: (e) => {
+                this.projectRoleError(e, "Error updating the user")
             }
-        )
+        })
     }
 
     roleInvitationError() {
@@ -222,25 +221,25 @@ export class ProjectComponent extends ImanSubmodule implements OnInit {
     }
 
     acceptRole(id: number) {
-        this.projectService.acceptProjectRole(id).subscribe(
-            res => {
+        this.projectService.acceptProjectRole(id).subscribe({
+            next: (n) => {
                 this.roleInvitationError()
             },
-            err => {
-                this.roleError(err, "Error accepting invitation")
+            error: (e) => {
+                this.roleError(e, "Error accepting invitation")
             }
-        )
+        })
     }
 
     declineRole(id: number) {
-        this.projectService.declineProjectRole(id).subscribe(
-            res => {
+        this.projectService.declineProjectRole(id).subscribe({
+            next: (n) => {
                 this.roleInvitationError()
             },
-            err => {
-                this.roleError(err, "Error declining invitation")
+            error: (e) => {
+                this.roleError(e, "Error declining invitation")
             }
-        )
+        })
     }
 
     public getProfileImageUrlFromRole(role: ProjectRole): any {

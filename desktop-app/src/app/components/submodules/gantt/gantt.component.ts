@@ -60,8 +60,7 @@ export class GanttComponent extends ImanSubmodule implements AfterViewInit {
             { name: "start_date", label: "Start", min_width: 80, align: "center" },
             { name: "end_date", label: "Finish", min_width: 80, align: "center" },
             { name: "duration", label: "Days", align: "center" },
-            { name: "users", label: "Assignations", min_width: 150, align: "center" },
-            // { name: "add", label: "", width: 44 }
+            { name: "users", label: "Assignations", min_width: 150, align: "center" }
         ]
 
         // OPTIONS
@@ -73,14 +72,14 @@ export class GanttComponent extends ImanSubmodule implements AfterViewInit {
             if (selTask != undefined) {
                 let updTask = new KanbanTaskUpdate(selTask.id, selTask.title, selTask.description, selTask.estimatedTime, selTask.tags, selTask.importance,
                     updateTask.start_date, updateTask.end_date, selTask.assignedUsers.map(x => x.username), selTask.children.map(x => x.id))
-                this.kanbanService.updateKanbanTask(updTask).subscribe(
-                    data => {
+                this.kanbanService.updateKanbanTask(updTask).subscribe({
+                    next: (n) => {
                         console.log('Task with id ' + id.toString() + ' have been updated')
                     },
-                    err => {
-                        this.returnPrincipalError(err)
+                    error: (e) => {
+                        this.returnPrincipalError(e)
                     }
-                )
+            })
             }
         }, '');
 
@@ -92,15 +91,15 @@ export class GanttComponent extends ImanSubmodule implements AfterViewInit {
                 childrens.push(item.target)
                 let updTask = new KanbanTaskUpdate(selTask.id, selTask.title, selTask.description, selTask.estimatedTime, selTask.tags, selTask.importance,
                     selTask.dueStartDate, selTask.dueEndDate, selTask.assignedUsers.map(x => x.username), childrens)
-                this.kanbanService.updateKanbanTask(updTask).subscribe(
-                    data => {
+                this.kanbanService.updateKanbanTask(updTask).subscribe({
+                    next: (n) => {
                         console.log('Link with source task id ' + item.source.toString() +
                             ' and target task id ' + item.target.toString() + ' created')
                     },
-                    err => {
-                        this.returnPrincipalError(err)
+                    error: (e) => {
+                        this.returnPrincipalError(e)
                     }
-                )
+                })
             }
         }, '')
 
@@ -113,15 +112,15 @@ export class GanttComponent extends ImanSubmodule implements AfterViewInit {
                 childrens.splice(indexToRemove, 1)
                 let updTask = new KanbanTaskUpdate(selTask.id, selTask.title, selTask.description, selTask.estimatedTime, selTask.tags, selTask.importance,
                     selTask.dueStartDate, selTask.dueEndDate, selTask.assignedUsers.map(x => x.username), childrens)
-                this.kanbanService.updateKanbanTask(updTask).subscribe(
-                    data => {
+                this.kanbanService.updateKanbanTask(updTask).subscribe({
+                    next: (n) => {
                         console.log('Link with source task id ' + item.source.toString() +
                             ' and target task id ' + item.target.toString() + ' deleted')
                     },
-                    err => {
-                        this.returnPrincipalError(err)
+                    error: (e) => {
+                        this.returnPrincipalError(e)
                     }
-                )
+                })
             }
         }, '')
 

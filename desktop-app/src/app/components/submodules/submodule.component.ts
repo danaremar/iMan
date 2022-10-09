@@ -45,8 +45,8 @@ export class ImanSubmodule {
 
     now: any
 
-    constructor(public effortService: EffortService, public kanbanService: KanbanService, public sprintService: SprintService, public projectService: ProjectService, public formBuilder: FormBuilder, public tokenService: TokenService) { 
-        setInterval(()=>{
+    constructor(public effortService: EffortService, public kanbanService: KanbanService, public sprintService: SprintService, public projectService: ProjectService, public formBuilder: FormBuilder, public tokenService: TokenService) {
+        setInterval(() => {
             this.now = Date.now()
         }, 1)
     }
@@ -84,18 +84,18 @@ export class ImanSubmodule {
     }
 
     loadMyProjects(): any {
-        this.projectService.myProjects().subscribe(
-            data => {
-                this.myProjects = data
+        this.projectService.myProjects().subscribe({
+            next: (n) => {
+                this.myProjects = n
                 if (this.loadProject || this.loadSprint || this.loadKanban || this.loadTasks || this.loadEfforts) {
                     this.projectSelectedId = this.projectService.getStoredProjectId()
                     this.loadFirstProject()
                 }
             },
-            err => {
-                this.returnPrincipalError(err)
+            error: (e) => {
+                this.returnPrincipalError(e)
             }
-        )
+        })
     }
 
     loadFirstProject() {
@@ -155,9 +155,9 @@ export class ImanSubmodule {
     loadSprintsBySelectedProject() {
         let projectId = this.projectService.getStoredProjectId()
         if (projectId != null && projectId != 0) {
-            this.sprintService.sprintFromProject(projectId).subscribe(
-                data => {
-                    this.mySprints = data
+            this.sprintService.sprintFromProject(projectId).subscribe({
+                next: (n) => {
+                    this.mySprints = n
                     if (this.mySprints != undefined && this.mySprints.length == 0) {
                         this.sprintService.setStoredSprintId(0)
                         this.myTasks = []
@@ -166,10 +166,10 @@ export class ImanSubmodule {
                     this.sprintSelectedId = this.sprintService.getStoredSprintId()
                     this.loadFirstSprint()
                 },
-                err => {
-                    this.returnPrincipalError(err)
+                error: (e) => {
+                    this.returnPrincipalError(e)
                 }
-            )
+            })
         }
     }
 
@@ -207,15 +207,15 @@ export class ImanSubmodule {
     loadKanbanBySelectedSprint() {
         let sprintId = this.sprintService.getStoredSprintId()
         if (sprintId != null && sprintId != 0) {
-            this.kanbanService.getAllKanbanBySprintId(sprintId).subscribe(
-                data => {
-                    this.kanban = data
+            this.kanbanService.getAllKanbanBySprintId(sprintId).subscribe({
+                next: (n) => {
+                    this.kanban = n
                     this.loadActiveEffort()
                 },
-                err => {
-                    this.returnPrincipalError(err)
+                error: (e) => {
+                    this.returnPrincipalError(e)
                 }
-            )
+            })
         }
     }
 
@@ -232,17 +232,17 @@ export class ImanSubmodule {
     loadTasksBySelectedSprint() {
         let sprintId = this.sprintService.getStoredSprintId()
         if (sprintId != null && sprintId != 0) {
-            this.kanbanService.getAllKanbanTasksBySprintId(sprintId).subscribe(
-                data => {
-                    this.myTasks = data
+            this.kanbanService.getAllKanbanTasksBySprintId(sprintId).subscribe({
+                next: (n) => {
+                    this.myTasks = n
                     this.containError = false
                     this.loadFirstTask()
                     this.kanbanTaskSelectedId = this.kanbanService.getStoredKanbanTaskId()
                 },
-                err => {
-                    this.returnPrincipalError(err)
+                error: (e) => {
+                    this.returnPrincipalError(e)
                 }
-            )
+            })
         }
     }
 
@@ -268,28 +268,28 @@ export class ImanSubmodule {
     ***************************/
 
     loadActiveEffort() {
-        this.effortService.getActiveEffort().subscribe(
-            data => {
+        this.effortService.getActiveEffort().subscribe({
+            next: (n) => {
                 this.containError = false
-                this.activeEffort = data
+                this.activeEffort = n
             },
-            err => {
-                this.returnPrincipalError(err)
+            error: (e) => {
+                this.returnPrincipalError(e)
             }
-        )
+        })
     }
 
     getEfforts() {
         this.loadActiveEffort()
-        this.effortService.getAllMyEfforts().subscribe(
-            data => {
+        this.effortService.getAllMyEfforts().subscribe({
+            next: (n) => {
                 this.containError = false
-                this.efforts = data
+                this.efforts = n
             },
-            err => {
-                this.returnPrincipalError(err)
+            error: (e) => {
+                this.returnPrincipalError(e)
             }
-        )
+    })
     }
 
     /***************************

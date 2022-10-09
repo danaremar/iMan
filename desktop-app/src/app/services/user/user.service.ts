@@ -53,14 +53,14 @@ export class UserService {
 
     public getUrlFromProfile(image: string | null): string | null {
         // not exists
-        if(image==null || image==''){
+        if (image == null || image == '') {
             return null
 
-        // URL from external site
-        } else if(image.includes('/')) {
+            // URL from external site
+        } else if (image.includes('/')) {
             return image
 
-        // URL from backend
+            // URL from backend
         } else {
             return environment.backendEndpoint + '/images/' + image
         }
@@ -73,16 +73,15 @@ export class UserService {
 
     // RELOAD
     public reloadProfileImage(): void {
-        this.getMyProfile().subscribe(
-            data => {
-                let profileImageUid = data.imageUid
+        this.getMyProfile().subscribe({
+            next: (n) => {
+                let profileImageUid = n.imageUid
                 this.setImage(profileImageUid ? profileImageUid : null)
             },
-            res => {
+            error: (e) => {
                 this.setImage(null)
             }
-        )
-
+        })
     }
 
     // UPLOAD REMOTE

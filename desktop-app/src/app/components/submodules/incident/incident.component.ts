@@ -33,7 +33,7 @@ export class IncidentComponent extends ImanSubmodule implements OnInit {
             maxWidth: 120,
             unSortIcon: true,
             pinned: 'left',
-            valueFormatter: (params: { data: IncidentShowDto }) => params.data!=undefined&&params.data.code!=undefined?'#'+params.data.code:''
+            valueFormatter: (params: { data: IncidentShowDto }) => params.data != undefined && params.data.code != undefined ? '#' + params.data.code : ''
         },
         {
             headerName: "Title",
@@ -106,14 +106,14 @@ export class IncidentComponent extends ImanSubmodule implements OnInit {
             field: "username",
             filter: true,
             resizable: true,
-            valueFormatter: (params: { data: IncidentShowDto }) => params.data!=undefined?this.formatUsername(params.data.username):''
+            valueFormatter: (params: { data: IncidentShowDto }) => params.data != undefined ? this.formatUsername(params.data.username) : ''
         },
         {
             headerName: "Assigned",
             field: "assignedUsername",
             filter: true,
             resizable: true,
-            valueFormatter: (params: { data: IncidentShowDto }) => params.data!=undefined?this.formatUsername(params.data.assignedUsername):''
+            valueFormatter: (params: { data: IncidentShowDto }) => params.data != undefined ? this.formatUsername(params.data.assignedUsername) : ''
         }
     ]
 
@@ -199,17 +199,17 @@ export class IncidentComponent extends ImanSubmodule implements OnInit {
     }
 
     loadSelectedData(obj: any) {
-        this.incidentService.getIncidentById(obj.id).subscribe(
-            data => {
+        this.incidentService.getIncidentById(obj.id).subscribe({
+            next: (n) => {
                 this.containError = false
-                this.selectedIncident = data
+                this.selectedIncident = n
                 this.isEditable = false
                 this.buildIncidentForm()
             },
-            err => {
-                this.returnPrincipalError(err)
+            error: (e) => {
+                this.returnPrincipalError(e)
             }
-        )
+        })
     }
 
     buildIncidentForm() {
@@ -286,62 +286,61 @@ export class IncidentComponent extends ImanSubmodule implements OnInit {
         if (!this.selectedIncident) {
             if (this.projectSelectedId != undefined) {
                 let newIncident = new IncidentCreateDto(this.projectSelectedId, this.formIncident.value.title, this.formIncident.value.description, this.formIncident.value.reported)
-                this.incidentService.createIncident(newIncident).subscribe(
-                    res => {
+                this.incidentService.createIncident(newIncident).subscribe({
+                    next: (n) => {
                         this.reloadGridTable()
                         this.closebuttonModalView.nativeElement.click()
                     },
-                    err => {
-                        let r = err.error.text
+                    error: (e) => {
+                        let r = e.error.text
                         if (r == undefined) {
                             r = 'Error produced'
                         }
                         this.incidentMessageError = r;
                         this.incidentContainError = true
                     }
-                )
+                })
             }
 
             //UPDATE
         } else {
             let updateIncident = new IncidentUpdateDto(this.selectedIncident.id, this.formIncident.value.title, this.formIncident.value.description, this.formIncident.value.reported)
-            this.incidentService.updateIncident(updateIncident).subscribe(
-                res => {
+            this.incidentService.updateIncident(updateIncident).subscribe({
+                next: (n) => {
                     this.loadSelectedData(this.selectedIncident)
                     this.reloadGridTable()
                     this.isEditable = false
                 },
-                err => {
-                    let r = err.error.text
+                error: (e) => {
+                    let r = e.error.text
                     if (r == undefined) {
                         r = 'Error produced'
                     }
                     this.incidentMessageError = r;
                     this.incidentContainError = true
                 }
-            )
-
+            })
         }
     }
 
     createNewIncidentUpdate() {
         if (this.selectedIncident != undefined) {
             let createIncidentUpdate = new IncidentUpdateCreateDto(this.formIncidentUpdate.value.description, this.formIncidentUpdate.value.estimatedTime, this.formIncidentUpdate.value.affects, this.formIncidentUpdate.value.priority, this.formIncidentUpdate.value.status, this.formIncidentUpdate.value.assignedUsername)
-            this.incidentService.createIncidentUpdate(this.selectedIncident.id, createIncidentUpdate).subscribe(
-                res => {
+            this.incidentService.createIncidentUpdate(this.selectedIncident.id, createIncidentUpdate).subscribe({
+                next: (n) => {
                     this.loadSelectedData(this.selectedIncident)
                     this.formIncidentUpdate.reset()
                     this.reloadGridTable()
                 },
-                err => {
-                    let r = err.error.text
+                error: (e) => {
+                    let r = e.error.text
                     if (r == undefined) {
                         r = 'Error produced'
                     }
                     this.incidentMessageError = r;
                     this.incidentContainError = true
                 }
-            )
+            })
         }
     }
 
@@ -372,20 +371,20 @@ export class IncidentComponent extends ImanSubmodule implements OnInit {
         if (this.projectSelectedId) {
             this.pageSize = this.gridApi.paginationGetPageSize()
             this.pageNumber = this.gridApi.paginationGetCurrentPage() + 1
-            this.incidentService.findIncidentsByProject(this.projectSelectedId, this.pageNumber, this.pageSize, params.sortModel, params.filterModel, this.incCol).subscribe(
-                data => {
+            this.incidentService.findIncidentsByProject(this.projectSelectedId, this.pageNumber, this.pageSize, params.sortModel, params.filterModel, this.incCol).subscribe({
+                next: (n) => {
                     this.containError = false
-                    this.incidents = data.content
-                    this.pageNumber = data.pageable.pageNumber + 1
-                    this.pageSize = data.pageable.pageSize
-                    this.totalElements = data.totalElements
+                    this.incidents = n.content
+                    this.pageNumber = n.pageable.pageNumber + 1
+                    this.pageSize = n.pageable.pageSize
+                    this.totalElements = n.totalElements
                     params.successCallback(this.incidents, this.totalElements)
                 },
-                err => {
-                    this.returnPrincipalError(err)
+                error: (e) => {
+                    this.returnPrincipalError(e)
                     params.failCallback()
                 }
-            )
+            })
         }
     }
 
