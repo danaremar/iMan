@@ -35,4 +35,4 @@
 </button>
 
 <task-modal-view [isEditable]="memberAccess" [selectedTask]="selectedTask" [selectedKanbanColumnId]="selectedKanbanColumnId" [usersInProject]="usersInProject"
-    [isEditing]="false" [myTasks]="myTasks"></task-modal-view>
+    [isEditing]="false" [myTasks]="myTasks" (reload)="this.loadTasksBySelectedSprint()"></task-modal-view>
