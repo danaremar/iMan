@@ -16,7 +16,7 @@ import { VulnComponent } from './components/submodules/security/vuln/vuln.compon
 import { RiskComponent } from './components/submodules/security/risk/risk.component';
 
 const routes: Routes = [
-  { path: '', component: AppComponent },
+  { path: '', component: AuthComponent },
   { path: 'login', component: AuthComponent },
   {
     path: 'app', component: MenuComponent,
@@ -34,6 +34,7 @@ const routes: Routes = [
       { path: 'risks', component: RiskComponent },
     ],
   },
+  { path: '**', redirectTo: '/app/effort' },
 
 ];
 
