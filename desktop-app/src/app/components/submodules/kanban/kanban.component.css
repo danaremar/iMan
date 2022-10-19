@@ -1,8 +1,10 @@
 .column-card {
-    background-color: var(--dark-pallete-3) !important;
+    /* background-color: var(--dark-pallete-3) !important; */
     min-width: 400px;
     width: 400px;
-    height: calc(100vh - var(--navbar-size) - 150px);
+    height: calc(100vh - var(--navbar-size) - 120px) !important;
+
+    border-right: 2px solid var(--dark-pallete-0);
 }
 
 .task-card {
@@ -17,4 +19,8 @@
 .scrollable-x{
     overflow-x: auto;
     width: calc(100vw - 50px - var(--sidebar-size)) !important;
+}
+
+.cdk-drop-list {
+    height: calc(100vh - 175px - var(--navbar-size)) !important;
 }
