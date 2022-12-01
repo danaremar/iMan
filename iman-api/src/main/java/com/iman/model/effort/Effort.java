@@ -37,6 +37,7 @@ public class Effort {
 	@PastOrPresent
 	private Date startDate;
 
+	@PastOrPresent
 	private Date endDate;
 
 	@ManyToOne

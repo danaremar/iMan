@@ -14,7 +14,8 @@ export class GanttService {
             id: task.id, text: task.title, start_date: this.getGanttDate(task.dueStartDate),
             duration: this.getDifferenceInDays(task.dueStartDate, task.dueEndDate),
             progress: task.computedTime <= task.estimatedTime ? (task.computedTime / task.estimatedTime) * 100 : (task.estimatedTime / task.computedTime) * 100,
-            color: task.computedTime <= task.estimatedTime ? 'rgb(25,135,84)' : 'rgb(220,53,69)'
+            color: task.computedTime <= task.estimatedTime ? 'rgb(25,135,84)' : 'rgb(220,53,69)',
+            users: task.assignedUsers.map(x => '@'+x.username).join(', ')
         }
     }
 

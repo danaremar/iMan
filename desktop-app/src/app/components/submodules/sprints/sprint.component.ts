@@ -34,8 +34,8 @@ export class SprintComponent extends ImanSubmodule implements OnInit {
     pieChartEffortsByUser = [] as any
 
     constructor(private effortReportService: EffortReportService, effortService: EffortService, kanbanService: KanbanService, sprintService: SprintService, projectService: ProjectService, formBuilder: FormBuilder, tokenService: TokenService) {
-        
-        super(effortService,kanbanService,sprintService,projectService,formBuilder,tokenService)
+
+        super(effortService, kanbanService, sprintService, projectService, formBuilder, tokenService)
 
         this.formNewSprint = formBuilder.group({
             title: ['', [Validators.required]],
@@ -82,17 +82,17 @@ export class SprintComponent extends ImanSubmodule implements OnInit {
         let projectId = this.projectService.getStoredProjectId()
         if (projectId != null && projectId != 0) {
             let newSprint: SprintCreate = new SprintCreate(this.formNewSprint.value.title, this.formNewSprint.value.description, this.formNewSprint.value.startDate, this.formNewSprint.value.estimatedDate, projectId)
-            this.sprintService.createSprint(newSprint).subscribe(
-                res => {
+            this.sprintService.createSprint(newSprint).subscribe({
+                next: (n) => {
                     this.formNewSprint.reset()
                     this.closebuttonCreate.nativeElement.click()
                     this.loadSprintsBySelectedProject()
                     this.newSprintContainError = false
                 },
-                err => {
-                    this.returnNewError(err)
+                error: (e) => {
+                    this.returnNewError(e)
                 }
-            )
+            })
         } else {
             this.newSprintContainError = true
             this.newSprintMessageError = 'No project selected to create an Sprint'
@@ -111,84 +111,84 @@ export class SprintComponent extends ImanSubmodule implements OnInit {
     updateSprint() {
         let updateSprint: SprintUpdate = new SprintUpdate(this.sprintSelectedId, this.formUpdateSprint.value.title, this.formUpdateSprint.value.description, this.formUpdateSprint.value.startDate, this.formUpdateSprint.value.estimatedDate)
 
-        this.sprintService.updateSprint(updateSprint).subscribe(
-            res => {
+        this.sprintService.updateSprint(updateSprint).subscribe({
+            next: (n) => {
                 this.formNewSprint.reset()
                 this.closebuttonUpdate.nativeElement.click()
                 this.loadSprintsBySelectedProject()
                 this.updateSprintContainError = false
             },
-            err => {
-                let r = err.error.text
+            error: (e) => {
+                let r = e.error.text
                 if (r == undefined) {
                     r = "Error adding the user"
                 }
                 this.updateSprintContainError = true
                 this.updateSprintMessageError = r
             }
-        )
+        })
     }
 
     disableSprint(sprint: SprintShow) {
         if (confirm("Are you sure to disable sprint #" + sprint.number + " " + sprint.title + "?")) {
-            this.sprintService.disableSprint(sprint.id).subscribe(
-                res => {
+            this.sprintService.disableSprint(sprint.id).subscribe({
+                next: (n) => {
                     this.containError = false
                     this.loadSprintsBySelectedProject()
                 },
-                err => {
-                    this.returnPrincipalError(err)
+                error: (e) => {
+                    this.returnPrincipalError(e)
                 }
-            )
+            })
         }
     }
 
     startSprint(sprint: SprintShow) {
         if (confirm("Are you sure to start sprint #" + sprint.number + " " + sprint.title + "?")) {
-            this.sprintService.startSprint(sprint.id).subscribe(
-                res => {
+            this.sprintService.startSprint(sprint.id).subscribe({
+                next: (n) => {
                     this.containError = false
                     this.loadSprintsBySelectedProject()
                 },
-                err => {
-                    this.returnPrincipalError(err)
+                error: (e) => {
+                    this.returnPrincipalError(e)
                 }
-            )
+            })
         }
     }
 
     closeSprint(sprint: SprintShow) {
         if (confirm("Are you sure to close sprint #" + sprint.number + " " + sprint.title + "?")) {
-            this.sprintService.closeSprint(sprint.id).subscribe(
-                res => {
+            this.sprintService.closeSprint(sprint.id).subscribe({
+                next: (n) => {
                     this.containError = false
                     this.loadSprintsBySelectedProject()
                 },
-                err => {
-                    this.returnPrincipalError(err)
+                error: (e) => {
+                    this.returnPrincipalError(e)
                 }
-            )
+            })
         }
     }
 
 
     loadEffortReport(sprint: SprintShow) {
         this.sprintSelected = sprint
-        this.effortReportService.getEffortReportBySprintId(sprint.id).subscribe(
-            data => {
-                this.effortReport = data
+        this.effortReportService.getEffortReportBySprintId(sprint.id).subscribe({
+            next: (n) => {
+                this.effortReport = n
                 this.containError = false
                 this.loadPieChartEffortsByTask()
                 this.loadPieChartEffortsByUser()
             },
-            err => {
-                this.returnPrincipalError(err)
+            error: (e) => {
+                this.returnPrincipalError(e)
             }
-        )
+        })
     }
 
     loadPieChartEffortsByTask() {
-        this.pieChartEffortsByTask=[]
+        this.pieChartEffortsByTask = []
         for (let e of this.effortReport.effortsByTask) {
             this.pieChartEffortsByTask.push({
                 name: '#' + e.kanbanTask.number + ': ' + e.kanbanTask.title,
@@ -198,7 +198,7 @@ export class SprintComponent extends ImanSubmodule implements OnInit {
     }
 
     loadPieChartEffortsByUser() {
-        this.pieChartEffortsByUser=[]
+        this.pieChartEffortsByUser = []
         for (let e of this.effortReport.effortsByUser) {
             this.pieChartEffortsByUser.push({
                 name: '@' + e.user.username,
@@ -206,5 +206,5 @@ export class SprintComponent extends ImanSubmodule implements OnInit {
             })
         }
     }
-    
+
 }

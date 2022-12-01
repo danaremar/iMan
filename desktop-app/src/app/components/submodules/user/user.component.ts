@@ -35,9 +35,9 @@ export class UserComponent extends ImanSubmodule implements OnInit {
             CONSTRUCTOR
     ***************************/
 
-    constructor(private userService: UserService, private countryService: CountryService,effortService: EffortService, kanbanService: KanbanService, sprintService: SprintService, projectService: ProjectService, formBuilder: FormBuilder, tokenService: TokenService) {
-        super(effortService,kanbanService,sprintService,projectService,formBuilder,tokenService)
-        
+    constructor(private userService: UserService, private countryService: CountryService, effortService: EffortService, kanbanService: KanbanService, sprintService: SprintService, projectService: ProjectService, formBuilder: FormBuilder, tokenService: TokenService) {
+        super(effortService, kanbanService, sprintService, projectService, formBuilder, tokenService)
+
         this.formUpdateProfile = formBuilder.group({
             name: ['', [Validators.required]],
             lastName: ['', [Validators.required]],
@@ -60,9 +60,9 @@ export class UserComponent extends ImanSubmodule implements OnInit {
     }
 
     loadMyProfile() {
-        this.userService.getMyProfile().subscribe(
-            data => {
-                this.myProfile = data
+        this.userService.getMyProfile().subscribe({
+            next: (n) => {
+                this.myProfile = n
                 let country = this.countriesDictionary[this.myProfile.country]
                 this.formUpdateProfile = this.formBuilder.group({
                     name: [this.myProfile.name, [Validators.required]],
@@ -75,25 +75,25 @@ export class UserComponent extends ImanSubmodule implements OnInit {
                     sector: [this.myProfile.sector, [Validators.required]],
                 })
             },
-            err => {
-                this.returnPrincipalError(err)
+            error: (e) => {
+                this.returnPrincipalError(e)
             }
-        )
+        })
     }
 
     editProfile() {
         if (confirm("Are you sure to modify your profile?")) {
             let country = this.getKeyByValue(this.countriesDictionary, this.formUpdateProfile.value.country)
             let userUpdate: UserUpdate = new UserUpdate(this.formUpdateProfile.value.username, this.formUpdateProfile.value.name, this.formUpdateProfile.value.lastName, this.formUpdateProfile.value.email, country == undefined ? "" : country, this.formUpdateProfile.value.sector, this.formUpdateProfile.value.oldPassword, this.formUpdateProfile.value.newPassword)
-            this.userService.updateProfile(userUpdate).subscribe(
-                data => {
+            this.userService.updateProfile(userUpdate).subscribe({
+                next: (n) => {
                     this.containError = false
                     this.loadMyProfile()
                 },
-                err => {
-                    this.returnPrincipalError(err)
+                error: (e) => {
+                    this.returnPrincipalError(e)
                 }
-            )
+            })
         }
     }
 
@@ -103,33 +103,33 @@ export class UserComponent extends ImanSubmodule implements OnInit {
 
     uploadProfileImage(images: any) {
         let file: File = images.files[0]
-        if(file && file.size > 4000000) {
+        if (file && file.size > 4000000) {
             this.returnPrincipalError('Profile image can\'t be bigger than 4MB')
-        } else if(file?.type != 'image/jpeg' && file?.type != 'image/jpg' && file?.type != 'image/png'){
+        } else if (file?.type != 'image/jpeg' && file?.type != 'image/jpg' && file?.type != 'image/png') {
             this.returnPrincipalError('Profile image must be jpeg, jpg or png')
         } else {
-            this.userService.uploadUserImageProfile(file).subscribe(
-                data => {
+            this.userService.uploadUserImageProfile(file).subscribe({
+                next: (n) => {
                     this.userService.reloadProfileImage()
                 },
-                err => {
-                    this.returnPrincipalError(err)
+                error: (e) => {
+                    this.returnPrincipalError(e)
                 }
-            )
+            })
         }
 
     }
 
     deleteProfileImage() {
         if (confirm("Are you sure to change your profile image?")) {
-            this.userService.deleteUserImageProfile().subscribe(
-                data => {
+            this.userService.deleteUserImageProfile().subscribe({
+                next: (n) => {
                     this.userService.reloadProfileImage()
                 },
-                err => {
-                    this.returnPrincipalError(err)
+                error: (e) => {
+                    this.returnPrincipalError(e)
                 }
-            )
+            })
         }
     }
 

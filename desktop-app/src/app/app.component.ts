@@ -28,9 +28,7 @@ export class AppComponent {
     } else if (token && this.isExpiredToken(token)) {
       this.tokenService.logOut();
       this.toastr.error("Expired session")
-      this.reload()
-    } else if(["","/","/app","/app/"].includes(this.router.url)) {
-      this.router.navigate(["/app/effort"])
+      this.router.navigate(["/login"])
     }
 
     Aos.init({

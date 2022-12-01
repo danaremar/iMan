@@ -51,7 +51,7 @@ export class AuthComponent implements OnInit {
     ngOnInit(): void {
         if (this.tokenService.getToken()) {
             this.isLogged = true
-            this.router.navigateByUrl("/")
+            this.router.navigateByUrl("/app/effort")
         }
         this.enabledElectron = environment.enableElectron
     }

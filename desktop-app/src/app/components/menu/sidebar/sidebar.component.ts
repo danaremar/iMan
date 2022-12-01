@@ -1,4 +1,5 @@
 import { Component, OnInit } from "@angular/core";
+import { Router } from '@angular/router';
 import { TokenService } from "src/app/services/authentication/token.service";
 import { UserService } from "src/app/services/user/user.service";
 
@@ -9,7 +10,7 @@ import { UserService } from "src/app/services/user/user.service";
 })
 export class SidebarComponent implements OnInit {
 
-    constructor(private tokenService: TokenService, private userService: UserService) {
+    constructor(private tokenService: TokenService, private userService: UserService, private router: Router) {
     }
 
     ngOnInit(): void {
@@ -18,7 +19,8 @@ export class SidebarComponent implements OnInit {
 
     onLogout(): void {
         this.tokenService.logOut();
-        this.reloadWindow();
+        this.router.navigate(["/login"])
+        // this.reloadWindow();
     }
 
     reloadWindow() {

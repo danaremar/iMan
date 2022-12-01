@@ -55,7 +55,8 @@
 
     </div>
 
-    <div *ngIf="changedToDescription || (myTasks!=null&&myTasks.length!=0)" class="mx-3 ms-auto">
+    <div *ngIf="changedToDescription || (myTasks!=null&&myTasks.length!=0)" class="d-flex mx-3 ms-auto">
+
         <ng-container
             *ngIf="activeEffort==null || (activeEffort.kanbanTask==null && !changedToDescription) || (activeEffort.kanbanTask!=null && (changedToDescription || kanbanTaskSelectedId!=activeEffort.kanbanTask.id)); else startedTask">
 
@@ -67,6 +68,11 @@
 
         </ng-container>
         <ng-template #startedTask>
+
+            <!-- COUNT TIME -->
+            <div class="my-auto b-text me-3">
+                {{getDifferenceFormatted(activeEffort.startDate, now)}}
+            </div>
 
             <!-- END TASK -->
             <a (click)="endEffort()" ngbTooltip="Stop effort" placement="left" [openDelay]="300" data-bs-toggle="modal">
@@ -113,6 +119,12 @@
                                     [openDelay]="300"></em>
                                 <div class="m-auto">#{{effort.kanbanTask.number}}: {{effort.kanbanTask.title}}</div>
                             </div>
+
+                            <!-- user -->
+                            <div class="d-flex mx-3">
+                                <show-user [user]="effort.user" [showMargin]="false"></show-user>
+                            </div>
+
                         </ng-container>
 
                         <!-- SHOW EFFORT WITH DESCRIPTION -->

@@ -30,13 +30,14 @@
 <hr style="height: 2px">
 
 <div *ngIf="containError" class="alert alert-danger mt-3 mb-3">{{messageError}}</div>
-<div class="scrollable-x">
+
+<div class="scrollable-x mt-2">
     <div class="d-flex" cdkDropListGroup>
-        <div class="card column-card m-3 user-select-none" *ngFor="let column of kanban">
+        <div class="column-card user-select-none" *ngFor="let column of kanban">
 
             <!-- COLUMN -->
-            <div class="d-flex">
-                <div class="b-text my-4 text-center flex-grow-1">{{column.title}}</div>
+            <div class="d-flex mb-3">
+                <div class="b-text my-auto text-center flex-grow-1">{{column.title}}</div>
                 <div class="m-auto">
 
                     <!-- ADD TASK -->
@@ -62,7 +63,7 @@
 
 
             <!-- TASKS -->
-            <div id="dropList_{{column}}" class="overflow-auto scrollable-content" cdkDropList
+            <div id="dropList_{{column}}" class="overflow-auto" cdkDropList
                 [cdkDropListData]="column" (cdkDropListDropped)="dropTask($event)">
                 <div class="card task-card mb-3 mx-3" *ngFor="let task of column.tasks" cdkDrag [cdkDragData]="task">
                     <div class="m-3">
@@ -86,7 +87,7 @@
                                 </ng-template>
 
                                 <!-- SHOW TASK -->
-                                <a *ngIf="memberAccess" (click)="showTask(task, column)" ngbTooltip="Edit"
+                                <a *ngIf="memberAccess" (click)="showTask(task, column)" ngbTooltip="Show"
                                     placement="left" [openDelay]="300">
                                     <em class="bi bi-sm bi-info-circle me-2"></em>
                                 </a>

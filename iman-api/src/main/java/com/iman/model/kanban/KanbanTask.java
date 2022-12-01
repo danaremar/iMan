@@ -71,7 +71,7 @@ public class KanbanTask {
 	private KanbanColumn kanbanColumn;
 
 	@OneToOne
-	@JsonIncludeProperties({ "id", "username", "imageUid" })
+	@JsonIncludeProperties({ "username", "imageUid" })
 	private User creator;
 
 	@Length(max = 255)
