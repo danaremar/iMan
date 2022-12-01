@@ -4,6 +4,8 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.iman.model.effort.EffortSearchDto;
 import com.iman.model.effort.EffortShowDto;
 import com.iman.model.effort.EffortStartDto;
 import com.iman.model.effort.EffortUpdateDto;
@@ -40,23 +43,13 @@ public class EffortRestController {
 	}
 
 	@GetMapping
-	public ResponseEntity<Object> getAllMyEfforts() {
-		try {
-			List<EffortShowDto> efforts = effortService.getAllMyEfforts();
-			return new ResponseEntity<>(efforts, HttpStatus.OK);
-		} catch (Exception e) {
-			return new ResponseEntity<>(new Message(e.getMessage()), HttpStatus.CONFLICT);
-		}
-	}
-
-	@GetMapping(value = "/task/{taskId}")
-	public ResponseEntity<Object> getAllEffortsByTaskId(@PathVariable Long taskId) {
-		try {
-			List<EffortShowDto> efforts = effortService.getAllEffortsByTaskId(taskId);
-			return new ResponseEntity<>(efforts, HttpStatus.OK);
-		} catch (Exception e) {
-			return new ResponseEntity<>(new Message(e.getMessage()), HttpStatus.CONFLICT);
-		}
+	public ResponseEntity<Object> getAllEfforts(@Valid EffortSearchDto effortSearchDto, Pageable pageable) {
+	    try {
+            Page<EffortShowDto> efforts = effortService.getAllEfforts(effortSearchDto, pageable);
+            return new ResponseEntity<>(efforts, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new Message(e.getMessage()), HttpStatus.CONFLICT);
+        }
 	}
 
 	@GetMapping(value = "/active")

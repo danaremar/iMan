@@ -119,6 +119,12 @@
                                     [openDelay]="300"></em>
                                 <div class="m-auto">#{{effort.kanbanTask.number}}: {{effort.kanbanTask.title}}</div>
                             </div>
+
+                            <!-- user -->
+                            <div class="d-flex mx-3">
+                                <show-user [user]="effort.user" [showMargin]="false"></show-user>
+                            </div>
+
                         </ng-container>
 
                         <!-- SHOW EFFORT WITH DESCRIPTION -->

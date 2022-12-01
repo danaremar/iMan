@@ -3,6 +3,7 @@ import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { Effort, EffortStart, EffortUpdate } from "src/app/models/effort/effort";
 import { environment } from "src/environments/environment";
+import { AgGridApi } from "../ag-grid-api/ag-grid-api";
 
 @Injectable({
     providedIn: 'root'
@@ -22,8 +23,13 @@ export class EffortService {
     */
 
     // GET
-    public getAllMyEfforts(): Observable<any> {
+    public getEfforts(pageNumber: number, pageSize: number, order: Array<any>, filter: any, incCol: any): Observable<any> {
         let url = this.hostUrl
+        let params = AgGridApi.getAgGridParams(pageNumber, pageSize, order, filter, incCol)
+        return this.httpClient.get<Effort>(url, { params })
+    }
+    public getAllMyEfforts(): Observable<any> {
+        let url = this.hostUrl + 'my-efforts/'
         return this.httpClient.get<Effort>(url)
     }
     public getAllEffortsByTaskId(taskId: number): Observable<any> {

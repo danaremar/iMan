@@ -281,10 +281,15 @@ export class ImanSubmodule {
 
     getEfforts() {
         this.loadActiveEffort()
-        this.effortService.getAllMyEfforts().subscribe({
+        this.effortService.getEfforts(1,10000,
+            [{
+                "sort": "desc",
+                "colId": "startDate"
+            }], 
+            '', '').subscribe({
             next: (n) => {
                 this.containError = false
-                this.efforts = n
+                this.efforts = n.content
             },
             error: (e) => {
                 this.returnPrincipalError(e)

@@ -29,6 +29,9 @@ export class ShowUserPhoto implements OnInit {
     @Input()
     imageUrl: string = ''
 
+    @Input()
+    showMargin: boolean = true
+
 
     ngOnInit(): void {
         if (this.user != undefined) {
