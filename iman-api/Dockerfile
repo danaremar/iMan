@@ -5,7 +5,6 @@ RUN gradle build --no-daemon
 
 FROM openjdk:17-slim
 EXPOSE 8080
-# EXPOSE 3306
 RUN mkdir /app
 COPY --from=build /home/gradle/src/build/libs/*.jar /app/spring-boot-application.jar
 ENTRYPOINT ["java","-XX:+UnlockExperimentalVMOptions", "-jar","/app/spring-boot-application.jar"]

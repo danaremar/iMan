@@ -1,28 +1,42 @@
+version: '0.0.1'
+
 services:
+
+  web:
+    container_name: web
+    build: ./desktop-app
+    ports:
+      - "$IMAN_WEB_LOCAL_PORT:4200"
+
   api:
+    container_name: api
     depends_on:
-      - mariadb
-    build:
-      context: iman-api
-      target: builder
+      - db
+    build: ./iman-api
     env_file:
       - .env
-    restart: always
-    ports:
-      - '8081:8080'
-  mariadb:
-    image: mariadb:10.2
+    restart: on-failure
     environment:
-      MYSQL_ROOT_PASSWORD: aH4jK?21AZbX
-      MYSQL_DATABASE: iman_db
-      MYSQL_USER: iman_user
-      MYSQL_PASSWORD: aH4jK?21AZbX
-    logging:
-      driver: syslog
-      options:
-        tag: "{{.DaemonName}}(image={{.ImageName}};name={{.Name}};id={{.ID}})"
-    networks:
-      - backend
+      DB_MODE: $IMAN_DB_MODE
+      SPRING_APPLICATION_JSON: '{
+        "spring.datasource.url"  : "jdbc:mariadb://$IMAN_DB_HOST:$IMAN_DB_DOCKER_PORT/$IMAN_DB_NAME?useUnicode=true&useJDBCCompliantTimezoneShift=true",
+        "spring.datasource.username" : "$IMAN_DB_USER",
+        "spring.datasource.password" : "$IMAN_DB_USER_PASS",
+        "spring.datasource.driver-class-name" : "$IMAN_DB_DRIVER"
+        }'
+    ports:
+      - '$IMAN_API_LOCAL_PORT:8080'
+
+  db:
+    image: mariadb:10.2
+    container_name: db
+    environment: 
+      MYSQL_ROOT_PASSWORD: $IMAN_DB_ROOT_PASS
+      MYSQL_DATABASE: $IMAN_DB_NAME
+      MYSQL_USER: $IMAN_DB_USER
+      MYSQL_PASSWORD: $IMAN_DB_USER_PASS
     restart: unless-stopped
-    volumes:
-     - ${PWD}/mariadb:/var/lib/mysql
+    ports:
+      - $IMAN_DB_LOCAL_PORT:$IMAN_DB_DOCKER_PORT
+
+  
