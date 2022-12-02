@@ -1,0 +1,28 @@
+services:
+  api:
+    depends_on:
+      - mariadb
+    build:
+      context: iman-api
+      target: builder
+    env_file:
+      - .env
+    restart: always
+    ports:
+      - '8081:8080'
+  mariadb:
+    image: mariadb:10.2
+    environment:
+      MYSQL_ROOT_PASSWORD: aH4jK?21AZbX
+      MYSQL_DATABASE: iman_db
+      MYSQL_USER: iman_user
+      MYSQL_PASSWORD: aH4jK?21AZbX
+    logging:
+      driver: syslog
+      options:
+        tag: "{{.DaemonName}}(image={{.ImageName}};name={{.Name}};id={{.ID}})"
+    networks:
+      - backend
+    restart: unless-stopped
+    volumes:
+     - ${PWD}/mariadb:/var/lib/mysql
