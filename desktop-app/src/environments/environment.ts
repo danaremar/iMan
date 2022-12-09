@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  backendEndpoint: "https://api-danaremar.cloud.okteto.net",
+  backendEndpoint: "http://localhost:8080",
   enableElectron: false,
   defaultPageSize: 5
 };
