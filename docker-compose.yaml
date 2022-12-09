@@ -1,7 +1,8 @@
 version: '0.0.1'
 
-services:
+name: iman
 
+services:
   web:
     container_name: web
     build: ./desktop-app
