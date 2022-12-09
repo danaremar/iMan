@@ -10,6 +10,7 @@ RUN npm run build-prod
 
 # EXECUTE DIST
 FROM nginx:1.17.1-alpine
-EXPOSE 4200
+EXPOSE 80
+COPY nginx.conf /etc/nginx/nginx.conf
 COPY --from=build-step /app/dist /usr/share/nginx/html
 VOLUME /usr/share/nginx/html

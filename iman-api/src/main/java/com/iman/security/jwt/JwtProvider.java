@@ -26,7 +26,7 @@ public class JwtProvider {
 	private String secret;
 
 	@Value("${jwt.expiration}")
-	private int expiration;
+	private Long expiration;
 
 	public String generateToken(Authentication authentication) {
 		PrincipalUser principalUser = (PrincipalUser) authentication.getPrincipal();

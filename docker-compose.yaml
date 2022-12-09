@@ -6,7 +6,7 @@ services:
     container_name: web
     build: ./desktop-app
     ports:
-      - "$IMAN_WEB_LOCAL_PORT:4200"
+      - "$IMAN_WEB_LOCAL_PORT:80"
 
   api:
     container_name: api
@@ -19,7 +19,7 @@ services:
     environment:
       DB_MODE: $IMAN_DB_MODE
       SPRING_APPLICATION_JSON: '{
-        "spring.datasource.url"  : "jdbc:mariadb://$IMAN_DB_HOST:$IMAN_DB_DOCKER_PORT/$IMAN_DB_NAME?useUnicode=true&useJDBCCompliantTimezoneShift=true",
+        "spring.datasource.url"  : "jdbc:mariadb://$IMAN_DB_HOST:$IMAN_DB_DOCKER_PORT/$IMAN_DB_NAME?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC",
         "spring.datasource.username" : "$IMAN_DB_USER",
         "spring.datasource.password" : "$IMAN_DB_USER_PASS",
         "spring.datasource.driver-class-name" : "$IMAN_DB_DRIVER"
