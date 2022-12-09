@@ -1,0 +1,5 @@
+requests
+lxml
+sqlalchemy
+bs4
+mariadb

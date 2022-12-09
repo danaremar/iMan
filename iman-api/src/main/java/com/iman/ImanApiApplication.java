@@ -1,5 +1,6 @@
 package com.iman;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -13,6 +14,9 @@ public class ImanApiApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(ImanApiApplication.class, args);
 	}
+
+	@Value("${iman.resource.images}")
+	private String imageUrl;
 	
 	@Bean
 	public WebMvcConfigurer configurer() {
@@ -20,7 +24,7 @@ public class ImanApiApplication {
 			@Override
 			public void addResourceHandlers(ResourceHandlerRegistry registry) {
 				registry.addResourceHandler("/images/**")
-					.addResourceLocations("file:src/main/resources/images/");
+					.addResourceLocations("file:" + imageUrl);
 	        		//.addResourceLocations("file:///D:/images/");
 			}
 			@Override
@@ -28,7 +32,7 @@ public class ImanApiApplication {
 				registry.addMapping("/**")
 				
 						// WEB RESTRICTED
-						.allowedOrigins("http://localhost:4200", "https://danaremar.github.io");
+						.allowedOrigins("http://localhost:4200", "http://localhost:8080", "https://danaremar.github.io");
 				
 						// VISIBLE FOR ALL
 						// .allowedOrigins("*");
