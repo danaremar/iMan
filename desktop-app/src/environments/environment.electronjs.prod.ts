@@ -1,6 +1,6 @@
 export const environment = {
     production: true,
-    backendEndpoint: "https://iman-back.herokuapp.com",
+    backendEndpoint: "https://api-danaremar.cloud.okteto.net",
     enableElectron: true,
     defaultPageSize: 25
 };

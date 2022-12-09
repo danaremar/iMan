@@ -32,7 +32,7 @@ public class ImanApiApplication {
 				registry.addMapping("/**")
 				
 						// WEB RESTRICTED
-						.allowedOrigins("http://localhost:4200", "http://localhost:8080", "https://danaremar.github.io");
+						.allowedOrigins("http://localhost:4200", "http://localhost:8080", "https://danaremar.github.io", "https://web-danaremar.cloud.okteto.net");
 				
 						// VISIBLE FOR ALL
 						// .allowedOrigins("*");
