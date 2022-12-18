@@ -12,7 +12,9 @@
     "electron": "ng build --configuration=electronjs && electron .",
     "electron-prod": "ng build --configuration=electronjs-prod && electron .",
     "electron-make": "electron-forge make",
-    "electron-compile": "ng build --configuration=electronjs-prod && electron-packager . --platform=win32 --arch=x64 --configuration=electronjs-prod --icon=src/favicon.ico --out=pack"
+    "electron-compile-win": "ng build --configuration=electronjs-prod && electron-packager . --platform=win32 --arch=x64 --configuration=electronjs-prod --icon=src/favicon.ico --out=pack --ignore=/.gitignore",
+    "electron-compile-linux": "ng build --configuration=electronjs-prod && electron-packager . --platform=linux --arch=x64 --configuration=electronjs-prod --icon=src/favicon.ico --out=pack --ignore=/.gitignore"
+
   },
   "private": true,
   "dependencies": {
