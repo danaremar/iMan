@@ -1,10 +1,11 @@
 import { HttpClient } from "@angular/common/http"
 import { Injectable } from "@angular/core"
 import { Observable } from "rxjs"
-import { SprintCreate, SprintShow, SprintUpdate } from "src/app/models/sprint/sprint"
+import { Sprint, SprintCreate, SprintShow, SprintUpdate } from "src/app/models/sprint/sprint"
 import { environment } from "src/environments/environment"
 
 const SPRINT_ID = 'SprintId'
+const SPRINTS = 'Sprints'
 
 @Injectable({
     providedIn: 'root'
@@ -65,4 +66,15 @@ export class SprintService {
         localStorage.setItem(SPRINT_ID, String(sprintId))
     }
 
+    public getStoredSprints(): Array<Sprint> {
+        let a = localStorage.getItem(SPRINTS)
+        if(a!=null) {
+            return JSON.parse(a)
+        }
+        return []
+    }
+
+    public setStoredSprints(sprints: Array<Sprint>) {
+        localStorage.setItem(SPRINTS, JSON.stringify(sprints))
+    }
 }

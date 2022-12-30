@@ -12,6 +12,8 @@ import { KanbanService } from "src/app/services/kanban/kanban.service"
 import { ProjectService } from "src/app/services/projects/project.service"
 import { SprintService } from "src/app/services/sprints/sprint.service"
 
+type id = number | null | undefined
+
 @Injectable()
 export class ImanSubmodule {
 
@@ -25,9 +27,9 @@ export class ImanSubmodule {
 
     actualDate: any
 
-    projectSelectedId: number | null | undefined
-    sprintSelectedId: number | null | undefined
-    kanbanTaskSelectedId: number | null | undefined
+    projectSelectedId: id
+    sprintSelectedId: id
+    kanbanTaskSelectedId: id
 
     loadProject: boolean = false
     loadSprint: boolean = false
@@ -80,13 +82,24 @@ export class ImanSubmodule {
     ***************************/
 
     ngOnInit(): void {
+        this.loadBeforeBackend()
         this.loadMyProjects()
+    }
+
+    loadBeforeBackend() {
+        this.myProjects = this.projectService.getStoredProjects()
+        this.projectSelectedId = this.projectService.getStoredProjectId()
+        this.mySprints = this.sprintService.getStoredSprints()
+        this.sprintSelectedId = this.sprintService.getStoredSprintId()
+        this.myTasks = this.kanbanService.getStoredKanbanTasks()
+        this.kanbanTaskSelectedId = this.kanbanService.getStoredKanbanTaskId()
     }
 
     loadMyProjects(): any {
         this.projectService.myProjects().subscribe({
             next: (n) => {
                 this.myProjects = n
+                this.projectService.setStoredProjects(n)
                 if (this.loadProject || this.loadSprint || this.loadKanban || this.loadTasks || this.loadEfforts) {
                     this.projectSelectedId = this.projectService.getStoredProjectId()
                     this.loadFirstProject()
@@ -158,6 +171,7 @@ export class ImanSubmodule {
             this.sprintService.sprintFromProject(projectId).subscribe({
                 next: (n) => {
                     this.mySprints = n
+                    this.sprintService.setStoredSprints(n)
                     if (this.mySprints != undefined && this.mySprints.length == 0) {
                         this.sprintService.setStoredSprintId(0)
                         this.myTasks = []
@@ -235,6 +249,7 @@ export class ImanSubmodule {
             this.kanbanService.getAllKanbanTasksBySprintId(sprintId).subscribe({
                 next: (n) => {
                     this.myTasks = n
+                    this.kanbanService.setStoredKanbanTasks(n)
                     this.containError = false
                     this.loadFirstTask()
                     this.kanbanTaskSelectedId = this.kanbanService.getStoredKanbanTaskId()

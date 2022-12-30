@@ -6,6 +6,7 @@ import { NewProject, Project, UpdateProject } from "src/app/models/project/proje
 import { CreateProjectRole, NotAcceptedProjectRole, UpdateProjectRole } from "src/app/models/project/roles"
 
 const PROJECT_ID = 'ProjectId'
+const PROJECTS = 'Projects'
 
 @Injectable({
     providedIn: 'root'
@@ -75,6 +76,18 @@ export class ProjectService {
 
     public setStoredProjectId(projectId: number): void {
         localStorage.setItem(PROJECT_ID,String(projectId))
+    }
+
+    public getStoredProjects(): Array<Project> {
+        let a = localStorage.getItem(PROJECTS)
+        if(a!=null) {
+            return JSON.parse(a)
+        }
+        return []
+    }
+
+    public setStoredProjects(projects: Array<Project>) {
+        localStorage.setItem(PROJECTS, JSON.stringify(projects))
     }
 
     public getAllRoles() {

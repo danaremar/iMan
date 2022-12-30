@@ -6,6 +6,7 @@ import { KanbanTask, KanbanTaskCreate, KanbanTaskMove, KanbanTaskUpdate } from "
 import { environment } from "src/environments/environment";
 
 const KANBAN_TASK_ID = 'KanbanTaskId'
+const KANBAN_TASKS = 'KanbanTasks'
 
 @Injectable({
     providedIn: 'root'
@@ -77,6 +78,18 @@ export class KanbanService {
 
     public setStoredKanbanTaskId(sprintId: number): void {
         localStorage.setItem(KANBAN_TASK_ID, String(sprintId))
+    }
+
+    public getStoredKanbanTasks(): Array<KanbanTask> {
+        let a = localStorage.getItem(KANBAN_TASKS)
+        if(a!=null) {
+            return JSON.parse(a)
+        }
+        return []
+    }
+
+    public setStoredKanbanTasks(projects: Array<KanbanTask>) {
+        localStorage.setItem(KANBAN_TASKS, JSON.stringify(projects))
     }
 
 }
