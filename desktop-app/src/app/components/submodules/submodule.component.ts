@@ -96,6 +96,7 @@ export class ImanSubmodule {
     }
 
     loadMyProjects(): any {
+        this.loadBeforeBackend()
         this.projectService.myProjects().subscribe({
             next: (n) => {
                 this.myProjects = n
